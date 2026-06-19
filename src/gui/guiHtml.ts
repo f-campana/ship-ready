@@ -1,0 +1,61 @@
+export function renderGuiHtml(): string {
+  return `<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ShipReady local UI</title>
+  <link rel="stylesheet" href="/assets/gui.css">
+  <script defer src="/assets/gui.js"></script>
+</head>
+<body>
+  <main class="shell">
+    <header class="connect-panel">
+      <div class="connect-copy">
+        <p class="eyebrow">ShipReady local UI</p>
+        <h1>Check if your website is ready to share and index.</h1>
+        <p>Check launch-readiness, understand the local project, and preview safe crawl files before anything changes.</p>
+      </div>
+      <form class="connect-form" data-connect-form novalidate>
+        <label>
+          <span>Website URL</span>
+          <input name="url" type="text" inputmode="url" placeholder="https://example.com" autocomplete="url" required>
+        </label>
+        <label>
+          <span>Local repo path <small>optional</small></span>
+          <input name="repoPath" type="text" placeholder="/path/to/repo" autocomplete="off">
+        </label>
+        <div class="button-row">
+          <button type="submit" class="primary-action">Check site</button>
+          <button type="button" class="secondary-action" data-url-only>URL-only check</button>
+        </div>
+      </form>
+    </header>
+
+    <section class="status-panel" data-status hidden aria-live="polite"></section>
+    <section class="error-panel" data-error hidden aria-live="polite"></section>
+
+    <nav class="flow-strip" aria-label="Report sections">
+      <span>1 · Connect</span>
+      <span>2 · Check launch-readiness</span>
+      <span>3 · Preview safe crawl files</span>
+      <span>4 · Copy guarded command</span>
+    </nav>
+
+    <section class="report" data-report hidden>
+      <section class="section"><h2>Decision panel</h2></section>
+      <section class="section"><h2>Readiness</h2></section>
+      <section class="section"><h2>Preview cards</h2></section>
+      <section class="section"><h2>Project understanding</h2></section>
+      <section class="section"><h2>Fix plan</h2></section>
+      <section class="section"><h2>Patch preview</h2></section>
+      <section class="section"><h2>Safe apply</h2></section>
+      <details class="developer-details">
+        <summary>Developer details</summary>
+        <pre></pre>
+      </details>
+    </section>
+  </main>
+</body>
+</html>`;
+}
