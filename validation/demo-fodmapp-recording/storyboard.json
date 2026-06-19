@@ -1,0 +1,37 @@
+[
+  {
+    "start": 0,
+    "end": 8,
+    "beat": "Generated sites can look ready but miss crawler launch-readiness files."
+  },
+  {
+    "start": 8,
+    "end": 18,
+    "beat": "Enter the live URL and local project folder."
+  },
+  {
+    "start": 18,
+    "end": 32,
+    "beat": "Check what crawlers and preview bots can see."
+  },
+  {
+    "start": 32,
+    "end": 48,
+    "beat": "Needs attention separates safe work from review-required changes."
+  },
+  {
+    "start": 48,
+    "end": 62,
+    "beat": "Preview the two safe crawl files: app/robots.ts and app/sitemap.ts."
+  },
+  {
+    "start": 62,
+    "end": 78,
+    "beat": "The GUI writes nothing; copy the guarded creation-only command. No overwrites, content edits, commits, or deploys."
+  },
+  {
+    "start": 78,
+    "end": 86,
+    "beat": "Review locally, deploy when ready, then re-check the live site."
+  }
+]

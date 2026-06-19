@@ -1,0 +1,27 @@
+1
+00:00:00,000 --> 00:00:08,000
+Generated sites can look ready but miss crawler launch-readiness files.
+
+2
+00:00:08,000 --> 00:00:18,000
+Enter the live URL and local project folder.
+
+3
+00:00:18,000 --> 00:00:32,000
+Check what crawlers and preview bots can see.
+
+4
+00:00:32,000 --> 00:00:48,000
+Needs attention separates safe work from review-required changes.
+
+5
+00:00:48,000 --> 00:01:02,000
+Preview the two safe crawl files: app/robots.ts and app/sitemap.ts.
+
+6
+00:01:02,000 --> 00:01:18,000
+The GUI writes nothing; copy the guarded creation-only command. No overwrites, content edits, commits, or deploys.
+
+7
+00:01:18,000 --> 00:01:26,000
+Review locally, deploy when ready, then re-check the live site.

@@ -13,7 +13,12 @@
     "build": "tsup",
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
-    "playwright:install": "playwright install chromium"
+    "playwright:install": "playwright install chromium",
+    "demo:fodmapp:record": "tsx scripts/demo/recordFodmappDemo.ts",
+    "demo:fodmapp:captions": "tsx scripts/demo/createFodmappCaptions.ts",
+    "demo:fodmapp:voice": "tsx scripts/demo/generateFodmappVoiceover.ts",
+    "demo:fodmapp:compose": "tsx scripts/demo/composeFodmappDemo.ts",
+    "demo:fodmapp:all": "pnpm demo:fodmapp:captions && pnpm demo:fodmapp:record && pnpm demo:fodmapp:voice && pnpm demo:fodmapp:compose"
   },
   "dependencies": {
     "cheerio": "^1.1.2",
