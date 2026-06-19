@@ -1,0 +1,3895 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ShipReady report - https://mon-guide-fodmap.com/</title>
+<style>
+:root {
+  color-scheme: light;
+  --bg: #f7f8fa;
+  --paper: #ffffff;
+  --text: #202327;
+  --muted: #626a73;
+  --line: #e1e5ea;
+  --line-strong: #c9d0d8;
+  --positive-bg: #eaf7ef;
+  --positive-text: #17633a;
+  --caution-bg: #fff6df;
+  --caution-text: #7a5200;
+  --attention-bg: #fff0ee;
+  --attention-text: #9b2c20;
+  --info-bg: #eef5ff;
+  --info-text: #295b9a;
+  --code-bg: #171b20;
+  --code-text: #eef2f6;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+.shell {
+  width: min(1120px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 32px 0 56px;
+}
+
+.hero {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 28px;
+  box-shadow: 0 1px 2px rgba(20, 24, 28, 0.04);
+}
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 24px;
+  align-items: start;
+}
+
+.hero-status {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-end;
+}
+
+.section {
+  margin-top: 34px;
+}
+
+.section-heading {
+  max-width: 760px;
+  margin-bottom: 16px;
+}
+
+.section-heading h2,
+.hero h1 {
+  margin: 0;
+  font-size: 28px;
+  line-height: 1.2;
+  letter-spacing: 0;
+}
+
+.hero h1 {
+  font-size: 34px;
+}
+
+h3,
+h4,
+p {
+  margin-top: 0;
+}
+
+h3 {
+  font-size: 17px;
+  line-height: 1.3;
+  margin-bottom: 12px;
+}
+
+h4 {
+  font-size: 15px;
+  line-height: 1.35;
+  margin-bottom: 8px;
+}
+
+p {
+  margin-bottom: 12px;
+}
+
+.lede {
+  color: var(--muted);
+  font-size: 18px;
+  margin-bottom: 0;
+}
+
+.audited-url {
+  color: var(--muted);
+  overflow-wrap: anywhere;
+  margin: 8px 0 14px;
+}
+
+.eyebrow {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+
+.meta-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  border-top: 1px solid var(--line);
+  margin: 24px 0 0;
+  padding-top: 18px;
+}
+
+.meta-grid div {
+  min-width: 0;
+}
+
+dt,
+.field-label {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0;
+  margin: 0 0 4px;
+  text-transform: uppercase;
+}
+
+dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.score {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.three-column,
+.preview-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.preview-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.action-groups,
+.patch-list,
+.skipped-actions,
+.blocked-files {
+  display: grid;
+  gap: 16px;
+}
+
+.action-group {
+  display: grid;
+  gap: 10px;
+}
+
+.card {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.card-title-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.card-title-row h3,
+.card-title-row h4 {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.badge-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  border-radius: 999px;
+  padding: 3px 8px;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.positive {
+  background: var(--positive-bg);
+  color: var(--positive-text);
+}
+
+.caution {
+  background: var(--caution-bg);
+  color: var(--caution-text);
+}
+
+.attention {
+  background: var(--attention-bg);
+  color: var(--attention-text);
+}
+
+.muted,
+.subtle {
+  background: #f1f3f5;
+  color: #4b535c;
+}
+
+.notice {
+  background: var(--info-bg);
+  border: 1px solid #d3e3fb;
+  border-radius: 8px;
+  color: var(--info-text);
+  margin-bottom: 16px;
+  padding: 14px 16px;
+}
+
+.notice.warning {
+  background: var(--attention-bg);
+  border-color: #f5c7c0;
+  color: var(--attention-text);
+}
+
+.notice.deploy {
+  background: var(--caution-bg);
+  border-color: #f1ddad;
+  color: var(--caution-text);
+}
+
+.notice p:last-child {
+  margin-bottom: 0;
+}
+
+.field {
+  border-top: 1px solid var(--line);
+  padding-top: 10px;
+  margin-top: 10px;
+}
+
+.field p:last-child,
+.key-value {
+  overflow-wrap: anywhere;
+}
+
+.key-value span {
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.project-summary {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.compact-list {
+  margin: 0;
+  padding-left: 18px;
+}
+
+.compact-list li {
+  margin: 4px 0;
+  overflow-wrap: anywhere;
+}
+
+.empty,
+.missing,
+.muted-text,
+.more-count {
+  color: var(--muted);
+}
+
+pre {
+  max-height: 520px;
+  overflow: auto;
+  background: var(--code-bg);
+  color: var(--code-text);
+  border-radius: 8px;
+  padding: 14px;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  font-size: 12px;
+  line-height: 1.55;
+  white-space: pre;
+}
+
+pre.command {
+  max-height: none;
+  margin: 8px 0 0;
+}
+
+details {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 14px 16px;
+}
+
+summary {
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.developer-details h3,
+.secondary-details h3 {
+  margin-top: 18px;
+}
+
+@media (max-width: 980px) {
+  .three-column,
+  .preview-grid,
+  .meta-grid,
+  .project-summary {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .shell {
+    width: min(100% - 20px, 1120px);
+    padding-top: 16px;
+  }
+
+  .hero {
+    padding: 20px;
+  }
+
+  .hero-grid,
+  .three-column,
+  .preview-grid,
+  .meta-grid,
+  .project-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-status {
+    align-items: flex-start;
+  }
+
+  .section-heading h2,
+  .hero h1 {
+    font-size: 25px;
+  }
+}
+</style>
+</head>
+<body>
+<main class="shell">
+
+<header class="hero">
+  <div class="eyebrow">ShipReady</div>
+  <div class="hero-grid">
+    <div>
+      <h1>ShipReady report</h1>
+      <p class="audited-url">https://mon-guide-fodmap.com/</p>
+      <p class="lede">7 issue(s) need review before this page should be considered launch-ready.</p>
+    </div>
+    <div class="hero-status">
+      <span class="badge attention">Needs attention</span>
+      <span class="score">60 / 100</span>
+    </div>
+  </div>
+  <dl class="meta-grid">
+    <div>
+      <dt>Audited URL</dt>
+      <dd>https://mon-guide-fodmap.com/</dd>
+    </div>
+    
+    <div>
+      <dt>Repository</dt>
+      <dd>/Users/fabiencampana/Documents/jade/mon-guide-fodmap-2</dd>
+    </div>
+    <div>
+      <dt>Generated</dt>
+      <dd><time datetime="2026-06-15T21:46:47.652Z">2026-06-15T21:46:47.652Z</time></dd>
+    </div>
+    <div>
+      <dt>Mode</dt>
+      <dd>URL + repository</dd>
+    </div>
+  </dl>
+</header>
+
+<section class="section">
+  <div class="section-heading">
+    <p class="eyebrow">Readiness overview</p>
+    <h2>Needs attention before launch</h2>
+    <p>7 issue(s) need review before this page should be considered launch-ready.</p>
+  </div>
+  
+  <div class="three-column">
+    
+<section class="issue-column">
+  <h3>Top issues</h3>
+  
+<article class="card issue-card">
+  <div class="card-title-row">
+    <h4>Search engines do not have a clear preferred URL.</h4>
+    <span class="badge caution">Important</span>
+  </div>
+  <p>This page is missing a canonical URL, which helps search engines understand the main address for this content.</p>
+  <p class="muted-text">Without it, duplicate or alternate URLs can be harder to consolidate.</p>
+</article>
+<article class="card issue-card">
+  <div class="card-title-row">
+    <h4>Missing og:url</h4>
+    <span class="badge caution">Important</span>
+  </div>
+  <p>Open Graph metadata should include the canonical page URL.</p>
+  <p class="muted-text">This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.</p>
+</article>
+<article class="card issue-card">
+  <div class="card-title-row">
+    <h4>The page does not have a clear main heading.</h4>
+    <span class="badge caution">Important</span>
+  </div>
+  <p>ShipReady did not find an H1 in the page content.</p>
+  <p class="muted-text">A clear H1 helps visitors, assistive technology, and search engines understand the page topic.</p>
+</article>
+<article class="card issue-card">
+  <div class="card-title-row">
+    <h4>Your sitemap address does not return a real sitemap.</h4>
+    <span class="badge caution">Important</span>
+  </div>
+  <p>The sitemap URL exists, but it appears to return a normal app page instead of sitemap XML.</p>
+  <p class="muted-text">A valid sitemap helps crawlers discover the pages you want indexed.</p>
+</article>
+<article class="card issue-card">
+  <div class="card-title-row">
+    <h4>No favicon links found</h4>
+    <span class="badge muted">Recommended</span>
+  </div>
+  <p>Favicons and app icons help the site look complete in tabs, bookmarks, and device surfaces.</p>
+  <p class="muted-text">This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.</p>
+</article>
+  
+</section>
+    
+<section class="issue-column">
+  <h3>Optional polish</h3>
+  
+<article class="card issue-card">
+  <div class="card-title-row">
+    <h4>Theme color is not set</h4>
+    <span class="badge muted">Optional</span>
+  </div>
+  <p>Optional theme-color metadata was not found in the initial HTML.</p>
+  <p class="muted-text">Add a theme-color meta tag if you want branded browser UI on supported surfaces.</p>
+</article>
+  
+</section>
+    
+<section class="issue-column">
+  <h3>Passed highlights</h3>
+  
+<article class="card issue-card">
+  <div class="card-title-row">
+    <h4>Page returns HTTP success</h4>
+    <span class="badge positive">Passed</span>
+  </div>
+  <p>The audited URL returned a 2xx HTTP status.</p>
+  <p class="muted-text">This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.</p>
+</article>
+<article class="card issue-card">
+  <div class="card-title-row">
+    <h4>Title present</h4>
+    <span class="badge positive">Passed</span>
+  </div>
+  <p>Raw title: MonGuide FODMAP - Votre guide alimentaire personnalisé</p>
+  <p class="muted-text">This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.</p>
+</article>
+<article class="card issue-card">
+  <div class="card-title-row">
+    <h4>Meta description present</h4>
+    <span class="badge positive">Passed</span>
+  </div>
+  <p>Raw meta description is present.</p>
+  <p class="muted-text">This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.</p>
+</article>
+<article class="card issue-card">
+  <div class="card-title-row">
+    <h4>Page is not marked noindex</h4>
+    <span class="badge positive">Passed</span>
+  </div>
+  <p>No noindex robots meta directive was detected.</p>
+  <p class="muted-text">This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.</p>
+</article>
+<article class="card issue-card">
+  <div class="card-title-row">
+    <h4>HTML lang attribute present</h4>
+    <span class="badge positive">Passed</span>
+  </div>
+  <p>fr</p>
+  <p class="muted-text">This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.</p>
+</article>
+<article class="card issue-card">
+  <div class="card-title-row">
+    <h4>Viewport present</h4>
+    <span class="badge positive">Passed</span>
+  </div>
+  <p>width=device-width, initial-scale=1.0</p>
+  <p class="muted-text">This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.</p>
+</article>
+  <p class="more-count">+ 9 more</p>
+</section>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-heading">
+    <p class="eyebrow">Preview cards</p>
+    <h2>How the page appears to crawlers and preview bots</h2>
+  </div>
+  
+  <div class="preview-grid">
+    
+<article class="card">
+  <div class="card-title-row">
+    <h3>Google preview</h3>
+    <span class="badge positive">Raw HTML</span>
+  </div>
+  
+<div class="field">
+  <p class="field-label">Title</p>
+  <p>MonGuide FODMAP - Votre guide alimentaire personnalisé</p>
+</div>
+<div class="field">
+  <p class="field-label">URL</p>
+  <p>https://mon-guide-fodmap.com/</p>
+</div>
+<div class="field">
+  <p class="field-label">Description</p>
+  <p>Guide alimentaire personnalisé pour le régime FODMAP. Gérez vos intolérances spécifiques au syndrome de l&#39;intestin irritable (SII).</p>
+</div>
+  
+</article>
+    
+<article class="card">
+  <div class="card-title-row">
+    <h3>Social preview</h3>
+    <span class="badge positive">Raw HTML</span>
+  </div>
+  
+<div class="field">
+  <p class="field-label">Title</p>
+  <p>MonGuide FODMAP - Guide alimentaire personnalisé</p>
+</div>
+<div class="field">
+  <p class="field-label">URL</p>
+  <p>https://mon-guide-fodmap.com/</p>
+</div>
+<div class="field">
+  <p class="field-label">Description</p>
+  <p>Guide alimentaire personnalisé pour le régime FODMAP. Gérez vos intolérances spécifiques au SII.</p>
+</div>
+<div class="field">
+  <p class="field-label">Image URL</p>
+  <p>https://mon-guide-fodmap.com/og-image.png</p>
+</div>
+  
+</article>
+    
+<article class="card">
+  <div class="card-title-row">
+    <h3>X/Twitter preview</h3>
+    <span class="badge positive">Raw HTML</span>
+  </div>
+  
+<div class="field">
+  <p class="field-label">Card</p>
+  <p>summary_large_image</p>
+</div>
+<div class="field">
+  <p class="field-label">Title</p>
+  <p>MonGuide FODMAP</p>
+</div>
+<div class="field">
+  <p class="field-label">Description</p>
+  <p>Votre guide alimentaire personnalisé pour le régime FODMAP</p>
+</div>
+<div class="field">
+  <p class="field-label">Image URL</p>
+  <p>https://mon-guide-fodmap.com/og-image.png</p>
+</div>
+  
+</article>
+    <article class="card">
+      <div class="card-title-row">
+        <h3>Crawler view</h3>
+        <span class="badge subtle">Raw vs rendered</span>
+      </div>
+      <p class="field-label">Raw HTML</p>
+      <p>Raw HTML includes title, description, language, 4 Open Graph field(s), 3 Twitter/X field(s), and 0 JSON-LD block(s).</p>
+      <p class="field-label">Rendered HTML</p>
+      <p>Rendered HTML includes title, description, language, 4 Open Graph field(s), 3 Twitter/X field(s), and 0 JSON-LD block(s).</p>
+      
+    </article>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-heading">
+    <p class="eyebrow">Project understanding</p>
+    <h2>Vite React</h2>
+    <p>ShipReady detected Vite React from local project files.</p>
+  </div>
+  <div class="project-summary">
+    <div>
+      <p class="field-label">Confidence</p>
+      <span class="badge positive">Good match</span>
+    </div>
+    <div>
+      <p class="field-label">Important files</p>
+      
+<ul class="compact-list">
+  <li>package.json</li><li>package-lock.json</li><li>bun.lockb</li><li>vite.config.ts</li><li>tsconfig.json</li><li>src/pages/</li><li>src/</li><li>public/</li><li>index.html</li><li>src/main.tsx</li><li>src/App.tsx</li><li>public/robots.txt</li>
+</ul>
+    </div>
+    <div>
+      <p class="field-label">Supported fixes</p>
+      
+<ul class="compact-list">
+  <li>Update static index.html metadata</li><li>Add static robots.txt</li><li>Add static sitemap.xml</li><li>Add JSON-LD fallback</li><li>Recommend React Helmet integration</li>
+</ul>
+    </div>
+    <div>
+      <p class="field-label">Limitations</p>
+      
+<ul class="compact-list">
+  <li>File writing is disabled; use `shipready fix --dry-run` for supported patch previews.</li><li>This command is read-only and does not modify repository files.</li><li>Route-specific metadata in a Vite SPA may only appear after JavaScript rendering.</li><li>Future fixes may need to recommend prerendering or SSG instead of relying on JS-injected metadata for crawler visibility.</li>
+</ul>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-heading">
+    <p class="eyebrow">Fix plan</p>
+    <h2>Grouped actions</h2>
+  </div>
+  <div class="action-groups">
+    
+<section class="action-group">
+  <h3>Safe to apply</h3>
+  <p class="empty">No safe automatic changes.</p>
+</section>
+    
+<section class="action-group">
+  <h3>Needs review</h3>
+  
+<article class="card action-card">
+  <div class="card-title-row">
+    <h4>Update index.html</h4>
+    <span class="badge caution">Needs review</span>
+  </div>
+  <p>Add or update Vite app-shell fallback metadata. Add conservative WebSite JSON-LD for human review.</p>
+  
+<p class="key-value"><span>Target:</span> index.html</p>
+  
+<p class="key-value"><span>Safety:</span> Not eligible for V1 safe apply</p>
+  
+<p class="key-value"><span>Review reason:</span> HTML, metadata, and config updates are outside the V1 write policy.</p>
+</article>
+<article class="card action-card">
+  <div class="card-title-row">
+    <h4>Create public/sitemap.xml</h4>
+    <span class="badge caution">Needs review</span>
+  </div>
+  <p>Create a valid single-URL sitemap.xml preview.</p>
+  
+<p class="key-value"><span>Target:</span> public/sitemap.xml</p>
+  
+<p class="key-value"><span>Safety:</span> Not eligible for V1 safe apply</p>
+  
+<p class="key-value"><span>Review reason:</span> Review status must be auto_candidate; dry-run status was review_required. Changes that require human review are not writable.</p>
+</article>
+<article class="card action-card">
+  <div class="card-title-row">
+    <h4>Review page heading structure</h4>
+    <span class="badge caution">Needs review</span>
+  </div>
+  <p>The page should have one clear H1.</p>
+  
+<p class="key-value"><span>Target:</span> src/main.tsx, src/App.tsx</p>
+  
+<p class="key-value"><span>Safety:</span> Not eligible for V1 safe apply</p>
+  
+<p class="key-value"><span>Review reason:</span> H1 review is a content change and requires human review.</p>
+</article>
+</section>
+    
+<section class="action-group">
+  <h3>Manual only</h3>
+  <p class="empty">No manual-only actions.</p>
+</section>
+    
+<section class="action-group">
+  <h3>Already good</h3>
+  
+<article class="card issue-card">
+  <div class="card-title-row">
+    <h4>Page returns HTTP success</h4>
+    <span class="badge positive">Passed</span>
+  </div>
+  <p>The audited URL returned a 2xx HTTP status.</p>
+  <p class="muted-text">This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.</p>
+</article>
+<article class="card issue-card">
+  <div class="card-title-row">
+    <h4>Title present</h4>
+    <span class="badge positive">Passed</span>
+  </div>
+  <p>Raw title: MonGuide FODMAP - Votre guide alimentaire personnalisé</p>
+  <p class="muted-text">This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.</p>
+</article>
+<article class="card issue-card">
+  <div class="card-title-row">
+    <h4>Meta description present</h4>
+    <span class="badge positive">Passed</span>
+  </div>
+  <p>Raw meta description is present.</p>
+  <p class="muted-text">This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.</p>
+</article>
+<article class="card issue-card">
+  <div class="card-title-row">
+    <h4>Page is not marked noindex</h4>
+    <span class="badge positive">Passed</span>
+  </div>
+  <p>No noindex robots meta directive was detected.</p>
+  <p class="muted-text">This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.</p>
+</article>
+<article class="card issue-card">
+  <div class="card-title-row">
+    <h4>HTML lang attribute present</h4>
+    <span class="badge positive">Passed</span>
+  </div>
+  <p>fr</p>
+  <p class="muted-text">This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.</p>
+</article>
+<article class="card issue-card">
+  <div class="card-title-row">
+    <h4>Viewport present</h4>
+    <span class="badge positive">Passed</span>
+  </div>
+  <p>width=device-width, initial-scale=1.0</p>
+  <p class="muted-text">This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.</p>
+</article>
+<article class="card issue-card">
+  <div class="card-title-row">
+    <h4>og:title present</h4>
+    <span class="badge positive">Passed</span>
+  </div>
+  <p>MonGuide FODMAP - Guide alimentaire personnalisé</p>
+  <p class="muted-text">This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.</p>
+</article>
+<article class="card issue-card">
+  <div class="card-title-row">
+    <h4>og:description present</h4>
+    <span class="badge positive">Passed</span>
+  </div>
+  <p>Open Graph description is present.</p>
+  <p class="muted-text">This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.</p>
+</article>
+<article class="card issue-card">
+  <div class="card-title-row">
+    <h4>og:image present</h4>
+    <span class="badge positive">Passed</span>
+  </div>
+  <p>https://mon-guide-fodmap.com/og-image.png</p>
+  <p class="muted-text">This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.</p>
+</article>
+<article class="card issue-card">
+  <div class="card-title-row">
+    <h4>og:type present</h4>
+    <span class="badge positive">Passed</span>
+  </div>
+  <p>website</p>
+  <p class="muted-text">This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.</p>
+</article>
+<article class="card issue-card">
+  <div class="card-title-row">
+    <h4>twitter:card present</h4>
+    <span class="badge positive">Passed</span>
+  </div>
+  <p>summary_large_image</p>
+  <p class="muted-text">This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.</p>
+</article>
+<article class="card issue-card">
+  <div class="card-title-row">
+    <h4>twitter:title present</h4>
+    <span class="badge positive">Passed</span>
+  </div>
+  <p>MonGuide FODMAP</p>
+  <p class="muted-text">This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.</p>
+</article>
+<article class="card issue-card">
+  <div class="card-title-row">
+    <h4>twitter:description present</h4>
+    <span class="badge positive">Passed</span>
+  </div>
+  <p>Twitter/X description is present.</p>
+  <p class="muted-text">This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.</p>
+</article>
+<article class="card issue-card">
+  <div class="card-title-row">
+    <h4>robots.txt found</h4>
+    <span class="badge positive">Passed</span>
+  </div>
+  <p>https://mon-guide-fodmap.com/robots.txt</p>
+  <p class="muted-text">This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.</p>
+</article>
+<article class="card issue-card">
+  <div class="card-title-row">
+    <h4>Key metadata present in raw HTML</h4>
+    <span class="badge positive">Passed</span>
+  </div>
+  <p>No render-only metadata fields were detected.</p>
+  <p class="muted-text">This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.</p>
+</article>
+</section>
+    
+<section class="action-group">
+  <h3>Optional polish</h3>
+  
+<article class="card issue-card">
+  <div class="card-title-row">
+    <h4>Theme color is not set</h4>
+    <span class="badge muted">Optional</span>
+  </div>
+  <p>Optional theme-color metadata was not found in the initial HTML.</p>
+  <p class="muted-text">Add a theme-color meta tag if you want branded browser UI on supported surfaces.</p>
+</article>
+</section>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-heading">
+    <p class="eyebrow">Patch preview</p>
+    <h2>Files ShipReady would create or update</h2>
+  </div>
+  <div class="patch-list">
+    
+<article class="card patch-card">
+  <div class="card-title-row">
+    <h3>Update index.html</h3>
+    <span class="badge caution">Review required</span>
+  </div>
+  <div class="badge-row">
+    <span class="badge subtle">update</span>
+    <span class="badge subtle">Risk: medium</span>
+    <span class="badge subtle">Review: review_required</span>
+  </div>
+  
+<p class="key-value"><span>Blocked reason:</span> HTML, metadata, and config updates are outside the V1 write policy.</p>
+  <pre>--- index.html
++++ index.html
+@@ -15,6 +15,19 @@
+     &lt;meta name=&quot;twitter:card&quot; content=&quot;summary_large_image&quot; /&gt;
+     &lt;meta name=&quot;twitter:title&quot; content=&quot;MonGuide FODMAP&quot; /&gt;
+     &lt;meta name=&quot;twitter:description&quot; content=&quot;Votre guide alimentaire personnalisé pour le régime FODMAP&quot; /&gt;
++    &lt;link rel=&quot;canonical&quot; href=&quot;https://mon-guide-fodmap.com/&quot; /&gt;
++    &lt;meta property=&quot;og:url&quot; content=&quot;https://mon-guide-fodmap.com/&quot; /&gt;
++    &lt;!-- TODO(shipready): Replace with an absolute public Twitter/X image URL. --&gt;
++    &lt;meta name=&quot;twitter:image&quot; content=&quot;TODO: Absolute image URL&quot; /&gt;
++    &lt;!-- TODO(shipready): Confirm this structured data before applying. --&gt;
++    &lt;script type=&quot;application/ld+json&quot;&gt;
++      {
++        &quot;@context&quot;: &quot;https://schema.org&quot;,
++        &quot;@type&quot;: &quot;WebSite&quot;,
++        &quot;name&quot;: &quot;MonGuide FODMAP - Votre guide alimentaire personnalisé&quot;,
++        &quot;url&quot;: &quot;https://mon-guide-fodmap.com/&quot;
++      }
++    &lt;/script&gt;
+   &lt;/head&gt;
+ 
+   &lt;body&gt;</pre>
+</article>
+<article class="card patch-card">
+  <div class="card-title-row">
+    <h3>Create public/sitemap.xml</h3>
+    <span class="badge caution">Review required</span>
+  </div>
+  <div class="badge-row">
+    <span class="badge subtle">create</span>
+    <span class="badge subtle">Risk: low</span>
+    <span class="badge subtle">Review: review_required</span>
+  </div>
+  
+<p class="key-value"><span>Blocked reason:</span> Review status must be auto_candidate; dry-run status was review_required. Changes that require human review are not writable.</p>
+  <pre>--- /dev/null
++++ public/sitemap.xml
+@@
++&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
++&lt;urlset xmlns=&quot;http://www.sitemaps.org/schemas/sitemap/0.9&quot;&gt;
++  &lt;url&gt;
++    &lt;loc&gt;https://mon-guide-fodmap.com/&lt;/loc&gt;
++  &lt;/url&gt;
++&lt;/urlset&gt;
++</pre>
+</article>
+  </div>
+  
+    <div class="skipped-actions">
+      <h3>Skipped actions</h3>
+      
+        <article class="card">
+          <h4>Review page heading structure</h4>
+          <p>H1 review is a content change and requires human review.</p>
+        </article>
+    </div>
+</section>
+
+<section class="section">
+  <div class="section-heading">
+    <p class="eyebrow">Safe apply</p>
+    <h2>No safe automatic changes</h2>
+    <p>ShipReady found no safe automatic changes for V1.</p>
+  </div>
+  
+<div class="blocked-files">
+  <h3>Blocked files</h3>
+  
+    <article class="card">
+      <h4>index.html</h4>
+      <p>HTML, metadata, and config updates are outside the V1 write policy.</p>
+    </article>
+    <article class="card">
+      <h4>public/sitemap.xml</h4>
+      <p>Review status must be auto_candidate; dry-run status was review_required. Changes that require human review are not writable.</p>
+    </article>
+</div>
+</section>
+
+<section class="section">
+  <div class="notice deploy">
+    <strong>Local changes do not affect the live website until you deploy.</strong>
+    <p>Local changes will not affect the live site until this repository is deployed and the URL is re-checked.</p>
+  </div>
+</section>
+
+<section class="section">
+  <details class="developer-details">
+    <summary>Developer details</summary>
+    <p><strong>Schema version:</strong> ui-report-v1</p>
+    <h3>Raw JSON report</h3>
+    <pre>{
+  &quot;schemaVersion&quot;: &quot;ui-report-v1&quot;,
+  &quot;generatedAt&quot;: &quot;2026-06-15T21:46:47.652Z&quot;,
+  &quot;input&quot;: {
+    &quot;url&quot;: &quot;https://mon-guide-fodmap.com/&quot;,
+    &quot;repoPath&quot;: &quot;/Users/fabiencampana/Documents/jade/mon-guide-fodmap-2&quot;,
+    &quot;mode&quot;: &quot;url_and_repo&quot;
+  },
+  &quot;workflow&quot;: {
+    &quot;currentRecommendedStep&quot;: &quot;review_patch_preview&quot;,
+    &quot;completedStages&quot;: [
+      &quot;audit&quot;,
+      &quot;repo_inspection&quot;,
+      &quot;fix_plan&quot;,
+      &quot;dry_run&quot;
+    ],
+    &quot;availableNextActions&quot;: [
+      {
+        &quot;label&quot;: &quot;Review patch preview&quot;,
+        &quot;action&quot;: &quot;review_patch_preview&quot;,
+        &quot;primary&quot;: true,
+        &quot;enabled&quot;: true,
+        &quot;explanation&quot;: &quot;Generated previews require human review before any future write path.&quot;
+      }
+    ]
+  },
+  &quot;readiness&quot;: {
+    &quot;label&quot;: &quot;needs_attention&quot;,
+    &quot;title&quot;: &quot;Needs attention before launch&quot;,
+    &quot;summary&quot;: &quot;7 issue(s) need review before this page should be considered launch-ready.&quot;,
+    &quot;score&quot;: 60,
+    &quot;topIssues&quot;: [
+      {
+        &quot;id&quot;: &quot;metadata.canonical.missing&quot;,
+        &quot;title&quot;: &quot;Search engines do not have a clear preferred URL.&quot;,
+        &quot;explanation&quot;: &quot;This page is missing a canonical URL, which helps search engines understand the main address for this content.&quot;,
+        &quot;whyItMatters&quot;: &quot;Without it, duplicate or alternate URLs can be harder to consolidate.&quot;,
+        &quot;userSeverity&quot;: &quot;important&quot;,
+        &quot;technicalSeverity&quot;: &quot;critical&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;metadata.canonical.missing&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;Missing canonical URL&quot;,
+          &quot;rawDescription&quot;: &quot;The raw HTML does not include a canonical link.&quot;,
+          &quot;category&quot;: &quot;metadata&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;auto_fixable&quot;,
+          &quot;fixStrategy&quot;: &quot;Add a canonical link in the page head or framework metadata config.&quot;,
+          &quot;recommendation&quot;: &quot;Add a canonical link that points to the preferred public URL for this page.&quot;
+        }
+      },
+      {
+        &quot;id&quot;: &quot;social.og.url_missing&quot;,
+        &quot;title&quot;: &quot;Missing og:url&quot;,
+        &quot;explanation&quot;: &quot;Open Graph metadata should include the canonical page URL.&quot;,
+        &quot;whyItMatters&quot;: &quot;This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.&quot;,
+        &quot;userSeverity&quot;: &quot;important&quot;,
+        &quot;technicalSeverity&quot;: &quot;warning&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;social.og.url_missing&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;Missing og:url&quot;,
+          &quot;rawDescription&quot;: &quot;Open Graph metadata should include the canonical page URL.&quot;,
+          &quot;category&quot;: &quot;social&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;plan_only&quot;
+        }
+      },
+      {
+        &quot;id&quot;: &quot;structure.h1.missing&quot;,
+        &quot;title&quot;: &quot;The page does not have a clear main heading.&quot;,
+        &quot;explanation&quot;: &quot;ShipReady did not find an H1 in the page content.&quot;,
+        &quot;whyItMatters&quot;: &quot;A clear H1 helps visitors, assistive technology, and search engines understand the page topic.&quot;,
+        &quot;userSeverity&quot;: &quot;important&quot;,
+        &quot;technicalSeverity&quot;: &quot;warning&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;structure.h1.missing&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;No H1 found&quot;,
+          &quot;rawDescription&quot;: &quot;The page should have one clear H1.&quot;,
+          &quot;category&quot;: &quot;structure&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;plan_only&quot;
+        }
+      },
+      {
+        &quot;id&quot;: &quot;crawl.sitemap.invalid&quot;,
+        &quot;title&quot;: &quot;Your sitemap address does not return a real sitemap.&quot;,
+        &quot;explanation&quot;: &quot;The sitemap URL exists, but it appears to return a normal app page instead of sitemap XML.&quot;,
+        &quot;whyItMatters&quot;: &quot;A valid sitemap helps crawlers discover the pages you want indexed.&quot;,
+        &quot;userSeverity&quot;: &quot;important&quot;,
+        &quot;technicalSeverity&quot;: &quot;warning&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;crawl.sitemap.invalid&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;sitemap.xml is not a valid sitemap&quot;,
+          &quot;rawDescription&quot;: &quot;The sitemap.xml URL returned a success response, but the body did not look like an XML sitemap.&quot;,
+          &quot;category&quot;: &quot;crawlability&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;plan_only&quot;,
+          &quot;evidence&quot;: {
+            &quot;url&quot;: &quot;https://mon-guide-fodmap.com/sitemap.xml&quot;,
+            &quot;statusCode&quot;: 200,
+            &quot;error&quot;: &quot;Response did not look like an XML sitemap.&quot;
+          }
+        }
+      },
+      {
+        &quot;id&quot;: &quot;metadata.favicon.missing&quot;,
+        &quot;title&quot;: &quot;No favicon links found&quot;,
+        &quot;explanation&quot;: &quot;Favicons and app icons help the site look complete in tabs, bookmarks, and device surfaces.&quot;,
+        &quot;whyItMatters&quot;: &quot;This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.&quot;,
+        &quot;userSeverity&quot;: &quot;recommended&quot;,
+        &quot;technicalSeverity&quot;: &quot;warning&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;metadata.favicon.missing&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;No favicon links found&quot;,
+          &quot;rawDescription&quot;: &quot;Favicons and app icons help the site look complete in tabs, bookmarks, and device surfaces.&quot;,
+          &quot;category&quot;: &quot;metadata&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;plan_only&quot;
+        }
+      }
+    ],
+    &quot;passedHighlights&quot;: [
+      {
+        &quot;id&quot;: &quot;crawl.status.ok&quot;,
+        &quot;title&quot;: &quot;Page returns HTTP success&quot;,
+        &quot;explanation&quot;: &quot;The audited URL returned a 2xx HTTP status.&quot;,
+        &quot;whyItMatters&quot;: &quot;This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.&quot;,
+        &quot;userSeverity&quot;: &quot;ready&quot;,
+        &quot;technicalSeverity&quot;: &quot;passed&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;crawl.status.ok&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;Page returns HTTP success&quot;,
+          &quot;rawDescription&quot;: &quot;The audited URL returned a 2xx HTTP status.&quot;,
+          &quot;category&quot;: &quot;crawlability&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        }
+      },
+      {
+        &quot;id&quot;: &quot;metadata.title.present&quot;,
+        &quot;title&quot;: &quot;Title present&quot;,
+        &quot;explanation&quot;: &quot;Raw title: MonGuide FODMAP - Votre guide alimentaire personnalisé&quot;,
+        &quot;whyItMatters&quot;: &quot;This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.&quot;,
+        &quot;userSeverity&quot;: &quot;ready&quot;,
+        &quot;technicalSeverity&quot;: &quot;passed&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;metadata.title.present&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;Title present&quot;,
+          &quot;rawDescription&quot;: &quot;Raw title: MonGuide FODMAP - Votre guide alimentaire personnalisé&quot;,
+          &quot;category&quot;: &quot;metadata&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        }
+      },
+      {
+        &quot;id&quot;: &quot;metadata.description.present&quot;,
+        &quot;title&quot;: &quot;Meta description present&quot;,
+        &quot;explanation&quot;: &quot;Raw meta description is present.&quot;,
+        &quot;whyItMatters&quot;: &quot;This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.&quot;,
+        &quot;userSeverity&quot;: &quot;ready&quot;,
+        &quot;technicalSeverity&quot;: &quot;passed&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;metadata.description.present&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;Meta description present&quot;,
+          &quot;rawDescription&quot;: &quot;Raw meta description is present.&quot;,
+          &quot;category&quot;: &quot;metadata&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        }
+      },
+      {
+        &quot;id&quot;: &quot;metadata.robots.indexable&quot;,
+        &quot;title&quot;: &quot;Page is not marked noindex&quot;,
+        &quot;explanation&quot;: &quot;No noindex robots meta directive was detected.&quot;,
+        &quot;whyItMatters&quot;: &quot;This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.&quot;,
+        &quot;userSeverity&quot;: &quot;ready&quot;,
+        &quot;technicalSeverity&quot;: &quot;passed&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;metadata.robots.indexable&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;Page is not marked noindex&quot;,
+          &quot;rawDescription&quot;: &quot;No noindex robots meta directive was detected.&quot;,
+          &quot;category&quot;: &quot;crawlability&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        }
+      },
+      {
+        &quot;id&quot;: &quot;metadata.lang.present&quot;,
+        &quot;title&quot;: &quot;HTML lang attribute present&quot;,
+        &quot;explanation&quot;: &quot;fr&quot;,
+        &quot;whyItMatters&quot;: &quot;This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.&quot;,
+        &quot;userSeverity&quot;: &quot;ready&quot;,
+        &quot;technicalSeverity&quot;: &quot;passed&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;metadata.lang.present&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;HTML lang attribute present&quot;,
+          &quot;rawDescription&quot;: &quot;fr&quot;,
+          &quot;category&quot;: &quot;metadata&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        }
+      },
+      {
+        &quot;id&quot;: &quot;metadata.viewport.present&quot;,
+        &quot;title&quot;: &quot;Viewport present&quot;,
+        &quot;explanation&quot;: &quot;width=device-width, initial-scale=1.0&quot;,
+        &quot;whyItMatters&quot;: &quot;This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.&quot;,
+        &quot;userSeverity&quot;: &quot;ready&quot;,
+        &quot;technicalSeverity&quot;: &quot;passed&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;metadata.viewport.present&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;Viewport present&quot;,
+          &quot;rawDescription&quot;: &quot;width=device-width, initial-scale=1.0&quot;,
+          &quot;category&quot;: &quot;metadata&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        }
+      },
+      {
+        &quot;id&quot;: &quot;social.og.title_present&quot;,
+        &quot;title&quot;: &quot;og:title present&quot;,
+        &quot;explanation&quot;: &quot;MonGuide FODMAP - Guide alimentaire personnalisé&quot;,
+        &quot;whyItMatters&quot;: &quot;This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.&quot;,
+        &quot;userSeverity&quot;: &quot;ready&quot;,
+        &quot;technicalSeverity&quot;: &quot;passed&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;social.og.title_present&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;og:title present&quot;,
+          &quot;rawDescription&quot;: &quot;MonGuide FODMAP - Guide alimentaire personnalisé&quot;,
+          &quot;category&quot;: &quot;social&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        }
+      },
+      {
+        &quot;id&quot;: &quot;social.og.description_present&quot;,
+        &quot;title&quot;: &quot;og:description present&quot;,
+        &quot;explanation&quot;: &quot;Open Graph description is present.&quot;,
+        &quot;whyItMatters&quot;: &quot;This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.&quot;,
+        &quot;userSeverity&quot;: &quot;ready&quot;,
+        &quot;technicalSeverity&quot;: &quot;passed&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;social.og.description_present&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;og:description present&quot;,
+          &quot;rawDescription&quot;: &quot;Open Graph description is present.&quot;,
+          &quot;category&quot;: &quot;social&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        }
+      },
+      {
+        &quot;id&quot;: &quot;social.og.image_present&quot;,
+        &quot;title&quot;: &quot;og:image present&quot;,
+        &quot;explanation&quot;: &quot;https://mon-guide-fodmap.com/og-image.png&quot;,
+        &quot;whyItMatters&quot;: &quot;This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.&quot;,
+        &quot;userSeverity&quot;: &quot;ready&quot;,
+        &quot;technicalSeverity&quot;: &quot;passed&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;social.og.image_present&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;og:image present&quot;,
+          &quot;rawDescription&quot;: &quot;https://mon-guide-fodmap.com/og-image.png&quot;,
+          &quot;category&quot;: &quot;social&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        }
+      },
+      {
+        &quot;id&quot;: &quot;social.og.type_present&quot;,
+        &quot;title&quot;: &quot;og:type present&quot;,
+        &quot;explanation&quot;: &quot;website&quot;,
+        &quot;whyItMatters&quot;: &quot;This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.&quot;,
+        &quot;userSeverity&quot;: &quot;ready&quot;,
+        &quot;technicalSeverity&quot;: &quot;passed&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;social.og.type_present&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;og:type present&quot;,
+          &quot;rawDescription&quot;: &quot;website&quot;,
+          &quot;category&quot;: &quot;social&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        }
+      },
+      {
+        &quot;id&quot;: &quot;social.twitter.card_present&quot;,
+        &quot;title&quot;: &quot;twitter:card present&quot;,
+        &quot;explanation&quot;: &quot;summary_large_image&quot;,
+        &quot;whyItMatters&quot;: &quot;This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.&quot;,
+        &quot;userSeverity&quot;: &quot;ready&quot;,
+        &quot;technicalSeverity&quot;: &quot;passed&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;social.twitter.card_present&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;twitter:card present&quot;,
+          &quot;rawDescription&quot;: &quot;summary_large_image&quot;,
+          &quot;category&quot;: &quot;social&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        }
+      },
+      {
+        &quot;id&quot;: &quot;social.twitter.title_present&quot;,
+        &quot;title&quot;: &quot;twitter:title present&quot;,
+        &quot;explanation&quot;: &quot;MonGuide FODMAP&quot;,
+        &quot;whyItMatters&quot;: &quot;This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.&quot;,
+        &quot;userSeverity&quot;: &quot;ready&quot;,
+        &quot;technicalSeverity&quot;: &quot;passed&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;social.twitter.title_present&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;twitter:title present&quot;,
+          &quot;rawDescription&quot;: &quot;MonGuide FODMAP&quot;,
+          &quot;category&quot;: &quot;social&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        }
+      },
+      {
+        &quot;id&quot;: &quot;social.twitter.description_present&quot;,
+        &quot;title&quot;: &quot;twitter:description present&quot;,
+        &quot;explanation&quot;: &quot;Twitter/X description is present.&quot;,
+        &quot;whyItMatters&quot;: &quot;This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.&quot;,
+        &quot;userSeverity&quot;: &quot;ready&quot;,
+        &quot;technicalSeverity&quot;: &quot;passed&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;social.twitter.description_present&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;twitter:description present&quot;,
+          &quot;rawDescription&quot;: &quot;Twitter/X description is present.&quot;,
+          &quot;category&quot;: &quot;social&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        }
+      },
+      {
+        &quot;id&quot;: &quot;crawl.robots_txt.found&quot;,
+        &quot;title&quot;: &quot;robots.txt found&quot;,
+        &quot;explanation&quot;: &quot;https://mon-guide-fodmap.com/robots.txt&quot;,
+        &quot;whyItMatters&quot;: &quot;This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.&quot;,
+        &quot;userSeverity&quot;: &quot;ready&quot;,
+        &quot;technicalSeverity&quot;: &quot;passed&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;crawl.robots_txt.found&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;robots.txt found&quot;,
+          &quot;rawDescription&quot;: &quot;https://mon-guide-fodmap.com/robots.txt&quot;,
+          &quot;category&quot;: &quot;crawlability&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        }
+      },
+      {
+        &quot;id&quot;: &quot;crawl.raw_render.consistent&quot;,
+        &quot;title&quot;: &quot;Key metadata present in raw HTML&quot;,
+        &quot;explanation&quot;: &quot;No render-only metadata fields were detected.&quot;,
+        &quot;whyItMatters&quot;: &quot;This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.&quot;,
+        &quot;userSeverity&quot;: &quot;ready&quot;,
+        &quot;technicalSeverity&quot;: &quot;passed&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;crawl.raw_render.consistent&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;Key metadata present in raw HTML&quot;,
+          &quot;rawDescription&quot;: &quot;No render-only metadata fields were detected.&quot;,
+          &quot;category&quot;: &quot;crawlability&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        }
+      }
+    ],
+    &quot;optionalPolish&quot;: [
+      {
+        &quot;id&quot;: &quot;metadata.theme_color.missing&quot;,
+        &quot;title&quot;: &quot;Theme color is not set&quot;,
+        &quot;explanation&quot;: &quot;Optional theme-color metadata was not found in the initial HTML.&quot;,
+        &quot;whyItMatters&quot;: &quot;Add a theme-color meta tag if you want branded browser UI on supported surfaces.&quot;,
+        &quot;userSeverity&quot;: &quot;optional_polish&quot;,
+        &quot;technicalSeverity&quot;: &quot;info&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;metadata.theme_color.missing&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;Theme color is not set&quot;,
+          &quot;rawDescription&quot;: &quot;Optional theme-color metadata was not found in the initial HTML.&quot;,
+          &quot;category&quot;: &quot;metadata&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;plan_only&quot;,
+          &quot;recommendation&quot;: &quot;Add a theme-color meta tag if you want branded browser UI on supported surfaces.&quot;
+        }
+      }
+    ]
+  },
+  &quot;previews&quot;: {
+    &quot;google&quot;: {
+      &quot;title&quot;: &quot;MonGuide FODMAP - Votre guide alimentaire personnalisé&quot;,
+      &quot;url&quot;: &quot;https://mon-guide-fodmap.com/&quot;,
+      &quot;description&quot;: &quot;Guide alimentaire personnalisé pour le régime FODMAP. Gérez vos intolérances spécifiques au syndrome de l&#39;intestin irritable (SII).&quot;,
+      &quot;missingFields&quot;: [],
+      &quot;source&quot;: &quot;raw&quot;
+    },
+    &quot;social&quot;: {
+      &quot;title&quot;: &quot;MonGuide FODMAP - Guide alimentaire personnalisé&quot;,
+      &quot;url&quot;: &quot;https://mon-guide-fodmap.com/&quot;,
+      &quot;description&quot;: &quot;Guide alimentaire personnalisé pour le régime FODMAP. Gérez vos intolérances spécifiques au SII.&quot;,
+      &quot;image&quot;: &quot;https://mon-guide-fodmap.com/og-image.png&quot;,
+      &quot;missingFields&quot;: [],
+      &quot;source&quot;: &quot;raw&quot;
+    },
+    &quot;twitter&quot;: {
+      &quot;title&quot;: &quot;MonGuide FODMAP&quot;,
+      &quot;description&quot;: &quot;Votre guide alimentaire personnalisé pour le régime FODMAP&quot;,
+      &quot;image&quot;: &quot;https://mon-guide-fodmap.com/og-image.png&quot;,
+      &quot;card&quot;: &quot;summary_large_image&quot;,
+      &quot;missingFields&quot;: [],
+      &quot;source&quot;: &quot;raw&quot;
+    },
+    &quot;crawlerView&quot;: {
+      &quot;rawHtmlSummary&quot;: &quot;Raw HTML includes title, description, language, 4 Open Graph field(s), 3 Twitter/X field(s), and 0 JSON-LD block(s).&quot;,
+      &quot;renderedHtmlSummary&quot;: &quot;Rendered HTML includes title, description, language, 4 Open Graph field(s), 3 Twitter/X field(s), and 0 JSON-LD block(s).&quot;,
+      &quot;renderOnlyWarnings&quot;: []
+    }
+  },
+  &quot;project&quot;: {
+    &quot;detected&quot;: true,
+    &quot;frameworkLabel&quot;: &quot;Vite React&quot;,
+    &quot;confidenceLabel&quot;: &quot;good_match&quot;,
+    &quot;explanation&quot;: &quot;ShipReady detected Vite React from local project files.&quot;,
+    &quot;importantFiles&quot;: [
+      &quot;package.json&quot;,
+      &quot;package-lock.json&quot;,
+      &quot;bun.lockb&quot;,
+      &quot;vite.config.ts&quot;,
+      &quot;tsconfig.json&quot;,
+      &quot;src/pages/&quot;,
+      &quot;src/&quot;,
+      &quot;public/&quot;,
+      &quot;index.html&quot;,
+      &quot;src/main.tsx&quot;,
+      &quot;src/App.tsx&quot;,
+      &quot;public/robots.txt&quot;
+    ],
+    &quot;supportedFixes&quot;: [
+      &quot;Update static index.html metadata&quot;,
+      &quot;Add static robots.txt&quot;,
+      &quot;Add static sitemap.xml&quot;,
+      &quot;Add JSON-LD fallback&quot;,
+      &quot;Recommend React Helmet integration&quot;
+    ],
+    &quot;limitations&quot;: [
+      &quot;File writing is disabled; use `shipready fix --dry-run` for supported patch previews.&quot;,
+      &quot;This command is read-only and does not modify repository files.&quot;,
+      &quot;Route-specific metadata in a Vite SPA may only appear after JavaScript rendering.&quot;,
+      &quot;Future fixes may need to recommend prerendering or SSG instead of relying on JS-injected metadata for crawler visibility.&quot;
+    ]
+  },
+  &quot;actionGroups&quot;: {
+    &quot;safeToApply&quot;: [],
+    &quot;needsReview&quot;: [
+      {
+        &quot;id&quot;: &quot;file.index.html&quot;,
+        &quot;title&quot;: &quot;Update index.html&quot;,
+        &quot;explanation&quot;: &quot;Add or update Vite app-shell fallback metadata. Add conservative WebSite JSON-LD for human review.&quot;,
+        &quot;targetLabel&quot;: &quot;index.html&quot;,
+        &quot;affectsLiveSiteAfterDeploy&quot;: true,
+        &quot;safety&quot;: &quot;needs_review&quot;,
+        &quot;canApplyInV1&quot;: false,
+        &quot;reviewReason&quot;: &quot;HTML, metadata, and config updates are outside the V1 write policy.&quot;,
+        &quot;sourceActionIds&quot;: [
+          &quot;vite_react.json_ld_review&quot;,
+          &quot;vite_react.metadata_review&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;changeType&quot;: &quot;update&quot;,
+          &quot;risk&quot;: &quot;medium&quot;,
+          &quot;reviewStatus&quot;: &quot;review_required&quot;,
+          &quot;requiresHumanReview&quot;: true
+        }
+      },
+      {
+        &quot;id&quot;: &quot;file.public/sitemap.xml&quot;,
+        &quot;title&quot;: &quot;Create public/sitemap.xml&quot;,
+        &quot;explanation&quot;: &quot;Create a valid single-URL sitemap.xml preview.&quot;,
+        &quot;targetLabel&quot;: &quot;public/sitemap.xml&quot;,
+        &quot;affectsLiveSiteAfterDeploy&quot;: true,
+        &quot;safety&quot;: &quot;needs_review&quot;,
+        &quot;canApplyInV1&quot;: false,
+        &quot;reviewReason&quot;: &quot;Review status must be auto_candidate; dry-run status was review_required. Changes that require human review are not writable.&quot;,
+        &quot;sourceActionIds&quot;: [
+          &quot;vite_react.sitemap&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;changeType&quot;: &quot;create&quot;,
+          &quot;risk&quot;: &quot;low&quot;,
+          &quot;reviewStatus&quot;: &quot;review_required&quot;,
+          &quot;requiresHumanReview&quot;: true
+        }
+      },
+      {
+        &quot;id&quot;: &quot;skipped.vite_react.heading&quot;,
+        &quot;title&quot;: &quot;Review page heading structure&quot;,
+        &quot;explanation&quot;: &quot;The page should have one clear H1.&quot;,
+        &quot;targetLabel&quot;: &quot;src/main.tsx, src/App.tsx&quot;,
+        &quot;affectsLiveSiteAfterDeploy&quot;: true,
+        &quot;safety&quot;: &quot;needs_review&quot;,
+        &quot;canApplyInV1&quot;: false,
+        &quot;reviewReason&quot;: &quot;H1 review is a content change and requires human review.&quot;,
+        &quot;sourceActionIds&quot;: [
+          &quot;structure.h1.missing&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;reasonKind&quot;: &quot;requires_more_information&quot;,
+          &quot;risk&quot;: &quot;medium&quot;,
+          &quot;planAction&quot;: {
+            &quot;id&quot;: &quot;vite_react.heading&quot;,
+            &quot;title&quot;: &quot;Review page heading structure&quot;,
+            &quot;description&quot;: &quot;The page should have one clear H1.&quot;,
+            &quot;sourceCheckIds&quot;: [
+              &quot;structure.h1.missing&quot;
+            ],
+            &quot;category&quot;: &quot;automated_with_review&quot;,
+            &quot;priority&quot;: &quot;medium&quot;,
+            &quot;risk&quot;: &quot;medium&quot;,
+            &quot;confidence&quot;: &quot;high&quot;,
+            &quot;frameworkStrategy&quot;: &quot;Locate the relevant page or component and make semantic/content changes with review.&quot;,
+            &quot;targetFiles&quot;: [
+              &quot;src/main.tsx&quot;,
+              &quot;src/App.tsx&quot;
+            ],
+            &quot;targetLocations&quot;: [
+              &quot;src/main.tsx&quot;,
+              &quot;src/App.tsx&quot;
+            ],
+            &quot;futureAutomation&quot;: {
+              &quot;canAutomate&quot;: true,
+              &quot;requiresHumanReview&quot;: true,
+              &quot;reason&quot;: &quot;Content and accessibility text changes require human review for accuracy.&quot;
+            }
+          }
+        }
+      }
+    ],
+    &quot;manualOnly&quot;: [],
+    &quot;alreadyGood&quot;: [
+      {
+        &quot;id&quot;: &quot;crawl.status.ok&quot;,
+        &quot;title&quot;: &quot;Page returns HTTP success&quot;,
+        &quot;explanation&quot;: &quot;The audited URL returned a 2xx HTTP status.&quot;,
+        &quot;whyItMatters&quot;: &quot;This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.&quot;,
+        &quot;userSeverity&quot;: &quot;ready&quot;,
+        &quot;technicalSeverity&quot;: &quot;passed&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;crawl.status.ok&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;Page returns HTTP success&quot;,
+          &quot;rawDescription&quot;: &quot;The audited URL returned a 2xx HTTP status.&quot;,
+          &quot;category&quot;: &quot;crawlability&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        }
+      },
+      {
+        &quot;id&quot;: &quot;metadata.title.present&quot;,
+        &quot;title&quot;: &quot;Title present&quot;,
+        &quot;explanation&quot;: &quot;Raw title: MonGuide FODMAP - Votre guide alimentaire personnalisé&quot;,
+        &quot;whyItMatters&quot;: &quot;This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.&quot;,
+        &quot;userSeverity&quot;: &quot;ready&quot;,
+        &quot;technicalSeverity&quot;: &quot;passed&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;metadata.title.present&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;Title present&quot;,
+          &quot;rawDescription&quot;: &quot;Raw title: MonGuide FODMAP - Votre guide alimentaire personnalisé&quot;,
+          &quot;category&quot;: &quot;metadata&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        }
+      },
+      {
+        &quot;id&quot;: &quot;metadata.description.present&quot;,
+        &quot;title&quot;: &quot;Meta description present&quot;,
+        &quot;explanation&quot;: &quot;Raw meta description is present.&quot;,
+        &quot;whyItMatters&quot;: &quot;This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.&quot;,
+        &quot;userSeverity&quot;: &quot;ready&quot;,
+        &quot;technicalSeverity&quot;: &quot;passed&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;metadata.description.present&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;Meta description present&quot;,
+          &quot;rawDescription&quot;: &quot;Raw meta description is present.&quot;,
+          &quot;category&quot;: &quot;metadata&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        }
+      },
+      {
+        &quot;id&quot;: &quot;metadata.robots.indexable&quot;,
+        &quot;title&quot;: &quot;Page is not marked noindex&quot;,
+        &quot;explanation&quot;: &quot;No noindex robots meta directive was detected.&quot;,
+        &quot;whyItMatters&quot;: &quot;This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.&quot;,
+        &quot;userSeverity&quot;: &quot;ready&quot;,
+        &quot;technicalSeverity&quot;: &quot;passed&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;metadata.robots.indexable&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;Page is not marked noindex&quot;,
+          &quot;rawDescription&quot;: &quot;No noindex robots meta directive was detected.&quot;,
+          &quot;category&quot;: &quot;crawlability&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        }
+      },
+      {
+        &quot;id&quot;: &quot;metadata.lang.present&quot;,
+        &quot;title&quot;: &quot;HTML lang attribute present&quot;,
+        &quot;explanation&quot;: &quot;fr&quot;,
+        &quot;whyItMatters&quot;: &quot;This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.&quot;,
+        &quot;userSeverity&quot;: &quot;ready&quot;,
+        &quot;technicalSeverity&quot;: &quot;passed&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;metadata.lang.present&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;HTML lang attribute present&quot;,
+          &quot;rawDescription&quot;: &quot;fr&quot;,
+          &quot;category&quot;: &quot;metadata&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        }
+      },
+      {
+        &quot;id&quot;: &quot;metadata.viewport.present&quot;,
+        &quot;title&quot;: &quot;Viewport present&quot;,
+        &quot;explanation&quot;: &quot;width=device-width, initial-scale=1.0&quot;,
+        &quot;whyItMatters&quot;: &quot;This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.&quot;,
+        &quot;userSeverity&quot;: &quot;ready&quot;,
+        &quot;technicalSeverity&quot;: &quot;passed&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;metadata.viewport.present&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;Viewport present&quot;,
+          &quot;rawDescription&quot;: &quot;width=device-width, initial-scale=1.0&quot;,
+          &quot;category&quot;: &quot;metadata&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        }
+      },
+      {
+        &quot;id&quot;: &quot;social.og.title_present&quot;,
+        &quot;title&quot;: &quot;og:title present&quot;,
+        &quot;explanation&quot;: &quot;MonGuide FODMAP - Guide alimentaire personnalisé&quot;,
+        &quot;whyItMatters&quot;: &quot;This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.&quot;,
+        &quot;userSeverity&quot;: &quot;ready&quot;,
+        &quot;technicalSeverity&quot;: &quot;passed&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;social.og.title_present&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;og:title present&quot;,
+          &quot;rawDescription&quot;: &quot;MonGuide FODMAP - Guide alimentaire personnalisé&quot;,
+          &quot;category&quot;: &quot;social&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        }
+      },
+      {
+        &quot;id&quot;: &quot;social.og.description_present&quot;,
+        &quot;title&quot;: &quot;og:description present&quot;,
+        &quot;explanation&quot;: &quot;Open Graph description is present.&quot;,
+        &quot;whyItMatters&quot;: &quot;This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.&quot;,
+        &quot;userSeverity&quot;: &quot;ready&quot;,
+        &quot;technicalSeverity&quot;: &quot;passed&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;social.og.description_present&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;og:description present&quot;,
+          &quot;rawDescription&quot;: &quot;Open Graph description is present.&quot;,
+          &quot;category&quot;: &quot;social&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        }
+      },
+      {
+        &quot;id&quot;: &quot;social.og.image_present&quot;,
+        &quot;title&quot;: &quot;og:image present&quot;,
+        &quot;explanation&quot;: &quot;https://mon-guide-fodmap.com/og-image.png&quot;,
+        &quot;whyItMatters&quot;: &quot;This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.&quot;,
+        &quot;userSeverity&quot;: &quot;ready&quot;,
+        &quot;technicalSeverity&quot;: &quot;passed&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;social.og.image_present&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;og:image present&quot;,
+          &quot;rawDescription&quot;: &quot;https://mon-guide-fodmap.com/og-image.png&quot;,
+          &quot;category&quot;: &quot;social&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        }
+      },
+      {
+        &quot;id&quot;: &quot;social.og.type_present&quot;,
+        &quot;title&quot;: &quot;og:type present&quot;,
+        &quot;explanation&quot;: &quot;website&quot;,
+        &quot;whyItMatters&quot;: &quot;This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.&quot;,
+        &quot;userSeverity&quot;: &quot;ready&quot;,
+        &quot;technicalSeverity&quot;: &quot;passed&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;social.og.type_present&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;og:type present&quot;,
+          &quot;rawDescription&quot;: &quot;website&quot;,
+          &quot;category&quot;: &quot;social&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        }
+      },
+      {
+        &quot;id&quot;: &quot;social.twitter.card_present&quot;,
+        &quot;title&quot;: &quot;twitter:card present&quot;,
+        &quot;explanation&quot;: &quot;summary_large_image&quot;,
+        &quot;whyItMatters&quot;: &quot;This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.&quot;,
+        &quot;userSeverity&quot;: &quot;ready&quot;,
+        &quot;technicalSeverity&quot;: &quot;passed&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;social.twitter.card_present&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;twitter:card present&quot;,
+          &quot;rawDescription&quot;: &quot;summary_large_image&quot;,
+          &quot;category&quot;: &quot;social&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        }
+      },
+      {
+        &quot;id&quot;: &quot;social.twitter.title_present&quot;,
+        &quot;title&quot;: &quot;twitter:title present&quot;,
+        &quot;explanation&quot;: &quot;MonGuide FODMAP&quot;,
+        &quot;whyItMatters&quot;: &quot;This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.&quot;,
+        &quot;userSeverity&quot;: &quot;ready&quot;,
+        &quot;technicalSeverity&quot;: &quot;passed&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;social.twitter.title_present&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;twitter:title present&quot;,
+          &quot;rawDescription&quot;: &quot;MonGuide FODMAP&quot;,
+          &quot;category&quot;: &quot;social&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        }
+      },
+      {
+        &quot;id&quot;: &quot;social.twitter.description_present&quot;,
+        &quot;title&quot;: &quot;twitter:description present&quot;,
+        &quot;explanation&quot;: &quot;Twitter/X description is present.&quot;,
+        &quot;whyItMatters&quot;: &quot;This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.&quot;,
+        &quot;userSeverity&quot;: &quot;ready&quot;,
+        &quot;technicalSeverity&quot;: &quot;passed&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;social.twitter.description_present&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;twitter:description present&quot;,
+          &quot;rawDescription&quot;: &quot;Twitter/X description is present.&quot;,
+          &quot;category&quot;: &quot;social&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        }
+      },
+      {
+        &quot;id&quot;: &quot;crawl.robots_txt.found&quot;,
+        &quot;title&quot;: &quot;robots.txt found&quot;,
+        &quot;explanation&quot;: &quot;https://mon-guide-fodmap.com/robots.txt&quot;,
+        &quot;whyItMatters&quot;: &quot;This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.&quot;,
+        &quot;userSeverity&quot;: &quot;ready&quot;,
+        &quot;technicalSeverity&quot;: &quot;passed&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;crawl.robots_txt.found&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;robots.txt found&quot;,
+          &quot;rawDescription&quot;: &quot;https://mon-guide-fodmap.com/robots.txt&quot;,
+          &quot;category&quot;: &quot;crawlability&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        }
+      },
+      {
+        &quot;id&quot;: &quot;crawl.raw_render.consistent&quot;,
+        &quot;title&quot;: &quot;Key metadata present in raw HTML&quot;,
+        &quot;explanation&quot;: &quot;No render-only metadata fields were detected.&quot;,
+        &quot;whyItMatters&quot;: &quot;This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.&quot;,
+        &quot;userSeverity&quot;: &quot;ready&quot;,
+        &quot;technicalSeverity&quot;: &quot;passed&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;crawl.raw_render.consistent&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;Key metadata present in raw HTML&quot;,
+          &quot;rawDescription&quot;: &quot;No render-only metadata fields were detected.&quot;,
+          &quot;category&quot;: &quot;crawlability&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        }
+      }
+    ],
+    &quot;optionalPolish&quot;: [
+      {
+        &quot;id&quot;: &quot;metadata.theme_color.missing&quot;,
+        &quot;title&quot;: &quot;Theme color is not set&quot;,
+        &quot;explanation&quot;: &quot;Optional theme-color metadata was not found in the initial HTML.&quot;,
+        &quot;whyItMatters&quot;: &quot;Add a theme-color meta tag if you want branded browser UI on supported surfaces.&quot;,
+        &quot;userSeverity&quot;: &quot;optional_polish&quot;,
+        &quot;technicalSeverity&quot;: &quot;info&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;metadata.theme_color.missing&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;Theme color is not set&quot;,
+          &quot;rawDescription&quot;: &quot;Optional theme-color metadata was not found in the initial HTML.&quot;,
+          &quot;category&quot;: &quot;metadata&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;plan_only&quot;,
+          &quot;recommendation&quot;: &quot;Add a theme-color meta tag if you want branded browser UI on supported surfaces.&quot;
+        }
+      }
+    ]
+  },
+  &quot;patchPreview&quot;: {
+    &quot;hasPreview&quot;: true,
+    &quot;fileChanges&quot;: [
+      {
+        &quot;path&quot;: &quot;index.html&quot;,
+        &quot;changeType&quot;: &quot;update&quot;,
+        &quot;title&quot;: &quot;Update index.html&quot;,
+        &quot;risk&quot;: &quot;medium&quot;,
+        &quot;reviewStatus&quot;: &quot;review_required&quot;,
+        &quot;eligibleForWrite&quot;: false,
+        &quot;writePolicy&quot;: &quot;creation_only_robots_sitemap_v1&quot;,
+        &quot;writeBlockReason&quot;: &quot;HTML, metadata, and config updates are outside the V1 write policy.&quot;,
+        &quot;sourceActionIds&quot;: [
+          &quot;vite_react.json_ld_review&quot;,
+          &quot;vite_react.metadata_review&quot;
+        ],
+        &quot;diff&quot;: &quot;--- index.html\n+++ index.html\n@@ -15,6 +15,19 @@\n     &lt;meta name=\&quot;twitter:card\&quot; content=\&quot;summary_large_image\&quot; /&gt;\n     &lt;meta name=\&quot;twitter:title\&quot; content=\&quot;MonGuide FODMAP\&quot; /&gt;\n     &lt;meta name=\&quot;twitter:description\&quot; content=\&quot;Votre guide alimentaire personnalisé pour le régime FODMAP\&quot; /&gt;\n+    &lt;link rel=\&quot;canonical\&quot; href=\&quot;https://mon-guide-fodmap.com/\&quot; /&gt;\n+    &lt;meta property=\&quot;og:url\&quot; content=\&quot;https://mon-guide-fodmap.com/\&quot; /&gt;\n+    &lt;!-- TODO(shipready): Replace with an absolute public Twitter/X image URL. --&gt;\n+    &lt;meta name=\&quot;twitter:image\&quot; content=\&quot;TODO: Absolute image URL\&quot; /&gt;\n+    &lt;!-- TODO(shipready): Confirm this structured data before applying. --&gt;\n+    &lt;script type=\&quot;application/ld+json\&quot;&gt;\n+      {\n+        \&quot;@context\&quot;: \&quot;https://schema.org\&quot;,\n+        \&quot;@type\&quot;: \&quot;WebSite\&quot;,\n+        \&quot;name\&quot;: \&quot;MonGuide FODMAP - Votre guide alimentaire personnalisé\&quot;,\n+        \&quot;url\&quot;: \&quot;https://mon-guide-fodmap.com/\&quot;\n+      }\n+    &lt;/script&gt;\n   &lt;/head&gt;\n \n   &lt;body&gt;&quot;
+      },
+      {
+        &quot;path&quot;: &quot;public/sitemap.xml&quot;,
+        &quot;changeType&quot;: &quot;create&quot;,
+        &quot;title&quot;: &quot;Create public/sitemap.xml&quot;,
+        &quot;risk&quot;: &quot;low&quot;,
+        &quot;reviewStatus&quot;: &quot;review_required&quot;,
+        &quot;eligibleForWrite&quot;: false,
+        &quot;writePolicy&quot;: &quot;creation_only_robots_sitemap_v1&quot;,
+        &quot;writeBlockReason&quot;: &quot;Review status must be auto_candidate; dry-run status was review_required. Changes that require human review are not writable.&quot;,
+        &quot;sourceActionIds&quot;: [
+          &quot;vite_react.sitemap&quot;
+        ],
+        &quot;diff&quot;: &quot;--- /dev/null\n+++ public/sitemap.xml\n@@\n+&lt;?xml version=\&quot;1.0\&quot; encoding=\&quot;UTF-8\&quot;?&gt;\n+&lt;urlset xmlns=\&quot;http://www.sitemaps.org/schemas/sitemap/0.9\&quot;&gt;\n+  &lt;url&gt;\n+    &lt;loc&gt;https://mon-guide-fodmap.com/&lt;/loc&gt;\n+  &lt;/url&gt;\n+&lt;/urlset&gt;\n+&quot;
+      }
+    ],
+    &quot;skippedActions&quot;: [
+      {
+        &quot;title&quot;: &quot;Review page heading structure&quot;,
+        &quot;reason&quot;: &quot;H1 review is a content change and requires human review.&quot;
+      }
+    ]
+  },
+  &quot;safeApply&quot;: {
+    &quot;available&quot;: false,
+    &quot;buttonLabel&quot;: &quot;No safe automatic fixes&quot;,
+    &quot;explanation&quot;: &quot;No dry-run file change currently qualifies for V1 safe apply.&quot;,
+    &quot;eligibleFiles&quot;: [],
+    &quot;blockedFiles&quot;: [
+      {
+        &quot;path&quot;: &quot;index.html&quot;,
+        &quot;reason&quot;: &quot;HTML, metadata, and config updates are outside the V1 write policy.&quot;
+      },
+      {
+        &quot;path&quot;: &quot;public/sitemap.xml&quot;,
+        &quot;reason&quot;: &quot;Review status must be auto_candidate; dry-run status was review_required. Changes that require human review are not writable.&quot;
+      }
+    ],
+    &quot;policy&quot;: &quot;creation_only_robots_sitemap_v1&quot;,
+    &quot;safetyNotes&quot;: [
+      &quot;This ui-report command never writes files.&quot;,
+      &quot;V1 safe apply is limited to creation-only robots/sitemap files.&quot;,
+      &quot;ShipReady will not overwrite existing files in V1 safe apply.&quot;,
+      &quot;ShipReady will not edit metadata, JSON-LD, page content, package files, or configuration in V1 safe apply.&quot;,
+      &quot;ShipReady will not run Git operations, create commits, push, or deploy.&quot;,
+      &quot;Dry-run only. No files were modified.&quot;,
+      &quot;This is fallback metadata for the app shell. Route-specific metadata may require prerendering, SSR, or a later framework-specific strategy.&quot;,
+      &quot;Review generated changes before applying.&quot;,
+      &quot;TODO placeholder metadata is for preview only and must be replaced before any future write.&quot;,
+      &quot;JSON-LD previews use only conservative WebSite schema and require human confirmation.&quot;
+    ]
+  },
+  &quot;liveVsLocal&quot;: {
+    &quot;localChangesAffectLiveSite&quot;: false,
+    &quot;deploymentRequired&quot;: true,
+    &quot;message&quot;: &quot;Local changes will not affect the live site until this repository is deployed and the URL is re-checked.&quot;
+  },
+  &quot;errors&quot;: [],
+  &quot;developerDetails&quot;: {
+    &quot;rawAudit&quot;: {
+      &quot;url&quot;: &quot;https://mon-guide-fodmap.com/&quot;,
+      &quot;finalUrl&quot;: &quot;https://mon-guide-fodmap.com/&quot;,
+      &quot;auditedAt&quot;: &quot;2026-06-15T21:46:48.897Z&quot;,
+      &quot;httpStatus&quot;: 200,
+      &quot;score&quot;: 60,
+      &quot;status&quot;: &quot;needs_work&quot;,
+      &quot;raw&quot;: {
+        &quot;source&quot;: &quot;raw&quot;,
+        &quot;url&quot;: &quot;https://mon-guide-fodmap.com/&quot;,
+        &quot;metadata&quot;: {
+          &quot;htmlLang&quot;: &quot;fr&quot;,
+          &quot;title&quot;: &quot;MonGuide FODMAP - Votre guide alimentaire personnalisé&quot;,
+          &quot;description&quot;: &quot;Guide alimentaire personnalisé pour le régime FODMAP. Gérez vos intolérances spécifiques au syndrome de l&#39;intestin irritable (SII).&quot;,
+          &quot;viewport&quot;: &quot;width=device-width, initial-scale=1.0&quot;,
+          &quot;faviconLinks&quot;: [],
+          &quot;openGraph&quot;: {
+            &quot;title&quot;: &quot;MonGuide FODMAP - Guide alimentaire personnalisé&quot;,
+            &quot;description&quot;: &quot;Guide alimentaire personnalisé pour le régime FODMAP. Gérez vos intolérances spécifiques au SII.&quot;,
+            &quot;image&quot;: &quot;https://mon-guide-fodmap.com/og-image.png&quot;,
+            &quot;type&quot;: &quot;website&quot;
+          },
+          &quot;twitter&quot;: {
+            &quot;card&quot;: &quot;summary_large_image&quot;,
+            &quot;title&quot;: &quot;MonGuide FODMAP&quot;,
+            &quot;description&quot;: &quot;Votre guide alimentaire personnalisé pour le régime FODMAP&quot;
+          }
+        },
+        &quot;headings&quot;: {
+          &quot;h1&quot;: [],
+          &quot;all&quot;: []
+        },
+        &quot;images&quot;: {
+          &quot;total&quot;: 0,
+          &quot;missingAlt&quot;: 0,
+          &quot;items&quot;: []
+        },
+        &quot;links&quot;: {
+          &quot;total&quot;: 0,
+          &quot;missingAccessibleText&quot;: 0,
+          &quot;items&quot;: []
+        },
+        &quot;jsonLd&quot;: []
+      },
+      &quot;rendered&quot;: {
+        &quot;source&quot;: &quot;rendered&quot;,
+        &quot;url&quot;: &quot;https://mon-guide-fodmap.com/&quot;,
+        &quot;metadata&quot;: {
+          &quot;htmlLang&quot;: &quot;fr&quot;,
+          &quot;title&quot;: &quot;MonGuide FODMAP - Votre guide alimentaire personnalisé&quot;,
+          &quot;description&quot;: &quot;Guide alimentaire personnalisé pour le régime FODMAP. Gérez vos intolérances spécifiques au syndrome de l&#39;intestin irritable (SII).&quot;,
+          &quot;viewport&quot;: &quot;width=device-width, initial-scale=1.0&quot;,
+          &quot;faviconLinks&quot;: [],
+          &quot;openGraph&quot;: {
+            &quot;title&quot;: &quot;MonGuide FODMAP - Guide alimentaire personnalisé&quot;,
+            &quot;description&quot;: &quot;Guide alimentaire personnalisé pour le régime FODMAP. Gérez vos intolérances spécifiques au SII.&quot;,
+            &quot;image&quot;: &quot;https://mon-guide-fodmap.com/og-image.png&quot;,
+            &quot;type&quot;: &quot;website&quot;
+          },
+          &quot;twitter&quot;: {
+            &quot;card&quot;: &quot;summary_large_image&quot;,
+            &quot;title&quot;: &quot;MonGuide FODMAP&quot;,
+            &quot;description&quot;: &quot;Votre guide alimentaire personnalisé pour le régime FODMAP&quot;
+          }
+        },
+        &quot;headings&quot;: {
+          &quot;h1&quot;: [
+            &quot;MonGuide FODMAP&quot;
+          ],
+          &quot;all&quot;: [
+            {
+              &quot;level&quot;: 1,
+              &quot;text&quot;: &quot;MonGuide FODMAP&quot;
+            },
+            {
+              &quot;level&quot;: 2,
+              &quot;text&quot;: &quot;Qu&#39;est-ce que les FODMAPs ?&quot;
+            },
+            {
+              &quot;level&quot;: 2,
+              &quot;text&quot;: &quot;Comment ça marche&quot;
+            },
+            {
+              &quot;level&quot;: 3,
+              &quot;text&quot;: &quot;Configurez votre profil&quot;
+            },
+            {
+              &quot;level&quot;: 3,
+              &quot;text&quot;: &quot;Recherchez et explorez&quot;
+            },
+            {
+              &quot;level&quot;: 3,
+              &quot;text&quot;: &quot;Mangez en confiance&quot;
+            },
+            {
+              &quot;level&quot;: 2,
+              &quot;text&quot;: &quot;Cette application est pour vous si...&quot;
+            },
+            {
+              &quot;level&quot;: 2,
+              &quot;text&quot;: &quot;Avertissement Important&quot;
+            },
+            {
+              &quot;level&quot;: 2,
+              &quot;text&quot;: &quot;Prêt à commencer ?&quot;
+            },
+            {
+              &quot;level&quot;: 3,
+              &quot;text&quot;: &quot;Informations Légales&quot;
+            },
+            {
+              &quot;level&quot;: 3,
+              &quot;text&quot;: &quot;Sources de Données&quot;
+            },
+            {
+              &quot;level&quot;: 3,
+              &quot;text&quot;: &quot;Contact&quot;
+            }
+          ]
+        },
+        &quot;images&quot;: {
+          &quot;total&quot;: 0,
+          &quot;missingAlt&quot;: 0,
+          &quot;items&quot;: []
+        },
+        &quot;links&quot;: {
+          &quot;total&quot;: 5,
+          &quot;missingAccessibleText&quot;: 0,
+          &quot;items&quot;: [
+            {
+              &quot;href&quot;: &quot;/legal&quot;,
+              &quot;text&quot;: &quot;Mentions Légales &amp; Avertissements&quot;
+            },
+            {
+              &quot;href&quot;: &quot;/about&quot;,
+              &quot;text&quot;: &quot;À Propos&quot;
+            },
+            {
+              &quot;href&quot;: &quot;https://www.monashfodmap.com/&quot;,
+              &quot;text&quot;: &quot;Monash University&quot;
+            },
+            {
+              &quot;href&quot;: &quot;https://www.linkedin.com/in/hernandez-jade/&quot;,
+              &quot;text&quot;: &quot;LinkedIn&quot;
+            },
+            {
+              &quot;href&quot;: &quot;https://github.com/jade-hernandez/guide-monf&quot;,
+              &quot;text&quot;: &quot;Voir sur GitHub&quot;
+            }
+          ]
+        },
+        &quot;jsonLd&quot;: []
+      },
+      &quot;comparison&quot;: {
+        &quot;fields&quot;: [
+          {
+            &quot;field&quot;: &quot;title&quot;,
+            &quot;rawValue&quot;: &quot;MonGuide FODMAP - Votre guide alimentaire personnalisé&quot;,
+            &quot;renderedValue&quot;: &quot;MonGuide FODMAP - Votre guide alimentaire personnalisé&quot;,
+            &quot;status&quot;: &quot;present_in_raw&quot;
+          },
+          {
+            &quot;field&quot;: &quot;description&quot;,
+            &quot;rawValue&quot;: &quot;Guide alimentaire personnalisé pour le régime FODMAP. Gérez vos intolérances spécifiques au syndrome de l&#39;intestin irritable (SII).&quot;,
+            &quot;renderedValue&quot;: &quot;Guide alimentaire personnalisé pour le régime FODMAP. Gérez vos intolérances spécifiques au syndrome de l&#39;intestin irritable (SII).&quot;,
+            &quot;status&quot;: &quot;present_in_raw&quot;
+          },
+          {
+            &quot;field&quot;: &quot;canonical&quot;,
+            &quot;status&quot;: &quot;missing_in_both&quot;
+          },
+          {
+            &quot;field&quot;: &quot;robots&quot;,
+            &quot;status&quot;: &quot;missing_in_both&quot;
+          },
+          {
+            &quot;field&quot;: &quot;html.lang&quot;,
+            &quot;rawValue&quot;: &quot;fr&quot;,
+            &quot;renderedValue&quot;: &quot;fr&quot;,
+            &quot;status&quot;: &quot;present_in_raw&quot;
+          },
+          {
+            &quot;field&quot;: &quot;viewport&quot;,
+            &quot;rawValue&quot;: &quot;width=device-width, initial-scale=1.0&quot;,
+            &quot;renderedValue&quot;: &quot;width=device-width, initial-scale=1.0&quot;,
+            &quot;status&quot;: &quot;present_in_raw&quot;
+          },
+          {
+            &quot;field&quot;: &quot;theme-color&quot;,
+            &quot;status&quot;: &quot;missing_in_both&quot;
+          },
+          {
+            &quot;field&quot;: &quot;favicon&quot;,
+            &quot;status&quot;: &quot;missing_in_both&quot;
+          },
+          {
+            &quot;field&quot;: &quot;og:title&quot;,
+            &quot;rawValue&quot;: &quot;MonGuide FODMAP - Guide alimentaire personnalisé&quot;,
+            &quot;renderedValue&quot;: &quot;MonGuide FODMAP - Guide alimentaire personnalisé&quot;,
+            &quot;status&quot;: &quot;present_in_raw&quot;
+          },
+          {
+            &quot;field&quot;: &quot;og:description&quot;,
+            &quot;rawValue&quot;: &quot;Guide alimentaire personnalisé pour le régime FODMAP. Gérez vos intolérances spécifiques au SII.&quot;,
+            &quot;renderedValue&quot;: &quot;Guide alimentaire personnalisé pour le régime FODMAP. Gérez vos intolérances spécifiques au SII.&quot;,
+            &quot;status&quot;: &quot;present_in_raw&quot;
+          },
+          {
+            &quot;field&quot;: &quot;og:image&quot;,
+            &quot;rawValue&quot;: &quot;https://mon-guide-fodmap.com/og-image.png&quot;,
+            &quot;renderedValue&quot;: &quot;https://mon-guide-fodmap.com/og-image.png&quot;,
+            &quot;status&quot;: &quot;present_in_raw&quot;
+          },
+          {
+            &quot;field&quot;: &quot;og:url&quot;,
+            &quot;status&quot;: &quot;missing_in_both&quot;
+          },
+          {
+            &quot;field&quot;: &quot;og:type&quot;,
+            &quot;rawValue&quot;: &quot;website&quot;,
+            &quot;renderedValue&quot;: &quot;website&quot;,
+            &quot;status&quot;: &quot;present_in_raw&quot;
+          },
+          {
+            &quot;field&quot;: &quot;og:site_name&quot;,
+            &quot;status&quot;: &quot;missing_in_both&quot;
+          },
+          {
+            &quot;field&quot;: &quot;twitter:card&quot;,
+            &quot;rawValue&quot;: &quot;summary_large_image&quot;,
+            &quot;renderedValue&quot;: &quot;summary_large_image&quot;,
+            &quot;status&quot;: &quot;present_in_raw&quot;
+          },
+          {
+            &quot;field&quot;: &quot;twitter:title&quot;,
+            &quot;rawValue&quot;: &quot;MonGuide FODMAP&quot;,
+            &quot;renderedValue&quot;: &quot;MonGuide FODMAP&quot;,
+            &quot;status&quot;: &quot;present_in_raw&quot;
+          },
+          {
+            &quot;field&quot;: &quot;twitter:description&quot;,
+            &quot;rawValue&quot;: &quot;Votre guide alimentaire personnalisé pour le régime FODMAP&quot;,
+            &quot;renderedValue&quot;: &quot;Votre guide alimentaire personnalisé pour le régime FODMAP&quot;,
+            &quot;status&quot;: &quot;present_in_raw&quot;
+          },
+          {
+            &quot;field&quot;: &quot;twitter:image&quot;,
+            &quot;status&quot;: &quot;missing_in_both&quot;
+          }
+        ]
+      },
+      &quot;checks&quot;: [
+        {
+          &quot;id&quot;: &quot;crawl.status.ok&quot;,
+          &quot;category&quot;: &quot;crawlability&quot;,
+          &quot;severity&quot;: &quot;passed&quot;,
+          &quot;title&quot;: &quot;Page returns HTTP success&quot;,
+          &quot;description&quot;: &quot;The audited URL returned a 2xx HTTP status.&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        },
+        {
+          &quot;id&quot;: &quot;metadata.title.present&quot;,
+          &quot;category&quot;: &quot;metadata&quot;,
+          &quot;severity&quot;: &quot;passed&quot;,
+          &quot;title&quot;: &quot;Title present&quot;,
+          &quot;description&quot;: &quot;Raw title: MonGuide FODMAP - Votre guide alimentaire personnalisé&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        },
+        {
+          &quot;id&quot;: &quot;metadata.description.present&quot;,
+          &quot;category&quot;: &quot;metadata&quot;,
+          &quot;severity&quot;: &quot;passed&quot;,
+          &quot;title&quot;: &quot;Meta description present&quot;,
+          &quot;description&quot;: &quot;Raw meta description is present.&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        },
+        {
+          &quot;id&quot;: &quot;metadata.canonical.missing&quot;,
+          &quot;category&quot;: &quot;metadata&quot;,
+          &quot;severity&quot;: &quot;critical&quot;,
+          &quot;title&quot;: &quot;Missing canonical URL&quot;,
+          &quot;description&quot;: &quot;The raw HTML does not include a canonical link.&quot;,
+          &quot;recommendation&quot;: &quot;Add a canonical link that points to the preferred public URL for this page.&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;auto_fixable&quot;,
+          &quot;fixStrategy&quot;: &quot;Add a canonical link in the page head or framework metadata config.&quot;
+        },
+        {
+          &quot;id&quot;: &quot;metadata.robots.indexable&quot;,
+          &quot;category&quot;: &quot;crawlability&quot;,
+          &quot;severity&quot;: &quot;passed&quot;,
+          &quot;title&quot;: &quot;Page is not marked noindex&quot;,
+          &quot;description&quot;: &quot;No noindex robots meta directive was detected.&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        },
+        {
+          &quot;id&quot;: &quot;metadata.lang.present&quot;,
+          &quot;category&quot;: &quot;metadata&quot;,
+          &quot;severity&quot;: &quot;passed&quot;,
+          &quot;title&quot;: &quot;HTML lang attribute present&quot;,
+          &quot;description&quot;: &quot;fr&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        },
+        {
+          &quot;id&quot;: &quot;metadata.viewport.present&quot;,
+          &quot;category&quot;: &quot;metadata&quot;,
+          &quot;severity&quot;: &quot;passed&quot;,
+          &quot;title&quot;: &quot;Viewport present&quot;,
+          &quot;description&quot;: &quot;width=device-width, initial-scale=1.0&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        },
+        {
+          &quot;id&quot;: &quot;metadata.theme_color.missing&quot;,
+          &quot;category&quot;: &quot;metadata&quot;,
+          &quot;severity&quot;: &quot;info&quot;,
+          &quot;title&quot;: &quot;Theme color is not set&quot;,
+          &quot;description&quot;: &quot;Optional theme-color metadata was not found in the initial HTML.&quot;,
+          &quot;recommendation&quot;: &quot;Add a theme-color meta tag if you want branded browser UI on supported surfaces.&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;plan_only&quot;
+        },
+        {
+          &quot;id&quot;: &quot;metadata.favicon.missing&quot;,
+          &quot;category&quot;: &quot;metadata&quot;,
+          &quot;severity&quot;: &quot;warning&quot;,
+          &quot;title&quot;: &quot;No favicon links found&quot;,
+          &quot;description&quot;: &quot;Favicons and app icons help the site look complete in tabs, bookmarks, and device surfaces.&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;plan_only&quot;
+        },
+        {
+          &quot;id&quot;: &quot;social.og.title_present&quot;,
+          &quot;category&quot;: &quot;social&quot;,
+          &quot;severity&quot;: &quot;passed&quot;,
+          &quot;title&quot;: &quot;og:title present&quot;,
+          &quot;description&quot;: &quot;MonGuide FODMAP - Guide alimentaire personnalisé&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        },
+        {
+          &quot;id&quot;: &quot;social.og.description_present&quot;,
+          &quot;category&quot;: &quot;social&quot;,
+          &quot;severity&quot;: &quot;passed&quot;,
+          &quot;title&quot;: &quot;og:description present&quot;,
+          &quot;description&quot;: &quot;Open Graph description is present.&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        },
+        {
+          &quot;id&quot;: &quot;social.og.image_present&quot;,
+          &quot;category&quot;: &quot;social&quot;,
+          &quot;severity&quot;: &quot;passed&quot;,
+          &quot;title&quot;: &quot;og:image present&quot;,
+          &quot;description&quot;: &quot;https://mon-guide-fodmap.com/og-image.png&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        },
+        {
+          &quot;id&quot;: &quot;social.og.url_missing&quot;,
+          &quot;category&quot;: &quot;social&quot;,
+          &quot;severity&quot;: &quot;warning&quot;,
+          &quot;title&quot;: &quot;Missing og:url&quot;,
+          &quot;description&quot;: &quot;Open Graph metadata should include the canonical page URL.&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;plan_only&quot;
+        },
+        {
+          &quot;id&quot;: &quot;social.og.type_present&quot;,
+          &quot;category&quot;: &quot;social&quot;,
+          &quot;severity&quot;: &quot;passed&quot;,
+          &quot;title&quot;: &quot;og:type present&quot;,
+          &quot;description&quot;: &quot;website&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        },
+        {
+          &quot;id&quot;: &quot;social.twitter.card_present&quot;,
+          &quot;category&quot;: &quot;social&quot;,
+          &quot;severity&quot;: &quot;passed&quot;,
+          &quot;title&quot;: &quot;twitter:card present&quot;,
+          &quot;description&quot;: &quot;summary_large_image&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        },
+        {
+          &quot;id&quot;: &quot;social.twitter.title_present&quot;,
+          &quot;category&quot;: &quot;social&quot;,
+          &quot;severity&quot;: &quot;passed&quot;,
+          &quot;title&quot;: &quot;twitter:title present&quot;,
+          &quot;description&quot;: &quot;MonGuide FODMAP&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        },
+        {
+          &quot;id&quot;: &quot;social.twitter.description_present&quot;,
+          &quot;category&quot;: &quot;social&quot;,
+          &quot;severity&quot;: &quot;passed&quot;,
+          &quot;title&quot;: &quot;twitter:description present&quot;,
+          &quot;description&quot;: &quot;Twitter/X description is present.&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        },
+        {
+          &quot;id&quot;: &quot;social.twitter.image_missing&quot;,
+          &quot;category&quot;: &quot;social&quot;,
+          &quot;severity&quot;: &quot;warning&quot;,
+          &quot;title&quot;: &quot;Missing twitter:image&quot;,
+          &quot;description&quot;: &quot;Twitter/X cards should include an image when possible.&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;plan_only&quot;
+        },
+        {
+          &quot;id&quot;: &quot;schema.jsonld.missing&quot;,
+          &quot;category&quot;: &quot;schema&quot;,
+          &quot;severity&quot;: &quot;critical&quot;,
+          &quot;title&quot;: &quot;No JSON-LD detected&quot;,
+          &quot;description&quot;: &quot;No structured data script tags were found in the raw HTML.&quot;,
+          &quot;recommendation&quot;: &quot;Add conservative, factual JSON-LD such as WebSite or Organization when appropriate.&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;plan_only&quot;
+        },
+        {
+          &quot;id&quot;: &quot;structure.h1.missing&quot;,
+          &quot;category&quot;: &quot;structure&quot;,
+          &quot;severity&quot;: &quot;warning&quot;,
+          &quot;title&quot;: &quot;No H1 found&quot;,
+          &quot;description&quot;: &quot;The page should have one clear H1.&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;plan_only&quot;
+        },
+        {
+          &quot;id&quot;: &quot;crawl.robots_txt.found&quot;,
+          &quot;category&quot;: &quot;crawlability&quot;,
+          &quot;severity&quot;: &quot;passed&quot;,
+          &quot;title&quot;: &quot;robots.txt found&quot;,
+          &quot;description&quot;: &quot;https://mon-guide-fodmap.com/robots.txt&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        },
+        {
+          &quot;id&quot;: &quot;crawl.sitemap.invalid&quot;,
+          &quot;category&quot;: &quot;crawlability&quot;,
+          &quot;severity&quot;: &quot;warning&quot;,
+          &quot;title&quot;: &quot;sitemap.xml is not a valid sitemap&quot;,
+          &quot;description&quot;: &quot;The sitemap.xml URL returned a success response, but the body did not look like an XML sitemap.&quot;,
+          &quot;evidence&quot;: {
+            &quot;url&quot;: &quot;https://mon-guide-fodmap.com/sitemap.xml&quot;,
+            &quot;statusCode&quot;: 200,
+            &quot;error&quot;: &quot;Response did not look like an XML sitemap.&quot;
+          },
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;plan_only&quot;
+        },
+        {
+          &quot;id&quot;: &quot;crawl.raw_render.consistent&quot;,
+          &quot;category&quot;: &quot;crawlability&quot;,
+          &quot;severity&quot;: &quot;passed&quot;,
+          &quot;title&quot;: &quot;Key metadata present in raw HTML&quot;,
+          &quot;description&quot;: &quot;No render-only metadata fields were detected.&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        }
+      ],
+      &quot;resources&quot;: {
+        &quot;robotsTxt&quot;: {
+          &quot;url&quot;: &quot;https://mon-guide-fodmap.com/robots.txt&quot;,
+          &quot;finalUrl&quot;: &quot;https://mon-guide-fodmap.com/robots.txt&quot;,
+          &quot;exists&quot;: true,
+          &quot;ok&quot;: true,
+          &quot;statusCode&quot;: 200,
+          &quot;blocksPage&quot;: false
+        },
+        &quot;sitemapXml&quot;: {
+          &quot;url&quot;: &quot;https://mon-guide-fodmap.com/sitemap.xml&quot;,
+          &quot;finalUrl&quot;: &quot;https://mon-guide-fodmap.com/sitemap.xml&quot;,
+          &quot;exists&quot;: false,
+          &quot;ok&quot;: false,
+          &quot;statusCode&quot;: 200,
+          &quot;error&quot;: &quot;Response did not look like an XML sitemap.&quot;,
+          &quot;includesAuditedUrl&quot;: false
+        }
+      }
+    },
+    &quot;rawRepoInspection&quot;: {
+      &quot;path&quot;: &quot;/Users/fabiencampana/Documents/jade/mon-guide-fodmap-2&quot;,
+      &quot;inspectedAt&quot;: &quot;2026-06-15T21:46:47.671Z&quot;,
+      &quot;packageManager&quot;: &quot;npm&quot;,
+      &quot;framework&quot;: {
+        &quot;id&quot;: &quot;vite_react&quot;,
+        &quot;name&quot;: &quot;Vite React&quot;,
+        &quot;confidence&quot;: &quot;high&quot;,
+        &quot;evidence&quot;: [
+          {
+            &quot;kind&quot;: &quot;package_dependency&quot;,
+            &quot;path&quot;: &quot;package.json&quot;,
+            &quot;value&quot;: &quot;package.json includes dependency \&quot;vite\&quot;&quot;,
+            &quot;weight&quot;: &quot;strong&quot;
+          },
+          {
+            &quot;kind&quot;: &quot;package_dependency&quot;,
+            &quot;path&quot;: &quot;package.json&quot;,
+            &quot;value&quot;: &quot;package.json includes dependency \&quot;react\&quot;&quot;,
+            &quot;weight&quot;: &quot;weak&quot;
+          },
+          {
+            &quot;kind&quot;: &quot;package_dependency&quot;,
+            &quot;path&quot;: &quot;package.json&quot;,
+            &quot;value&quot;: &quot;package.json includes dependency \&quot;react-router-dom\&quot;&quot;,
+            &quot;weight&quot;: &quot;weak&quot;
+          },
+          {
+            &quot;kind&quot;: &quot;file&quot;,
+            &quot;path&quot;: &quot;vite.config.ts&quot;,
+            &quot;value&quot;: &quot;Vite config found&quot;,
+            &quot;weight&quot;: &quot;medium&quot;
+          },
+          {
+            &quot;kind&quot;: &quot;file&quot;,
+            &quot;path&quot;: &quot;index.html&quot;,
+            &quot;value&quot;: &quot;Vite root index.html found&quot;,
+            &quot;weight&quot;: &quot;medium&quot;
+          },
+          {
+            &quot;kind&quot;: &quot;file&quot;,
+            &quot;path&quot;: &quot;src/main.tsx&quot;,
+            &quot;value&quot;: &quot;React entry file found&quot;,
+            &quot;weight&quot;: &quot;medium&quot;
+          },
+          {
+            &quot;kind&quot;: &quot;file&quot;,
+            &quot;path&quot;: &quot;src/App.tsx&quot;,
+            &quot;value&quot;: &quot;React app component found&quot;,
+            &quot;weight&quot;: &quot;weak&quot;
+          }
+        ]
+      },
+      &quot;importantFiles&quot;: [
+        {
+          &quot;path&quot;: &quot;package.json&quot;,
+          &quot;kind&quot;: &quot;package_file&quot;,
+          &quot;reason&quot;: &quot;Project package manifest&quot;
+        },
+        {
+          &quot;path&quot;: &quot;package-lock.json&quot;,
+          &quot;kind&quot;: &quot;lockfile&quot;,
+          &quot;reason&quot;: &quot;Package manager lockfile&quot;
+        },
+        {
+          &quot;path&quot;: &quot;bun.lockb&quot;,
+          &quot;kind&quot;: &quot;lockfile&quot;,
+          &quot;reason&quot;: &quot;Package manager lockfile&quot;
+        },
+        {
+          &quot;path&quot;: &quot;vite.config.ts&quot;,
+          &quot;kind&quot;: &quot;config_file&quot;,
+          &quot;reason&quot;: &quot;Framework or TypeScript config&quot;
+        },
+        {
+          &quot;path&quot;: &quot;tsconfig.json&quot;,
+          &quot;kind&quot;: &quot;config_file&quot;,
+          &quot;reason&quot;: &quot;Framework or TypeScript config&quot;
+        },
+        {
+          &quot;path&quot;: &quot;src/pages/&quot;,
+          &quot;kind&quot;: &quot;directory&quot;,
+          &quot;reason&quot;: &quot;Important project directory&quot;
+        },
+        {
+          &quot;path&quot;: &quot;src/&quot;,
+          &quot;kind&quot;: &quot;directory&quot;,
+          &quot;reason&quot;: &quot;Important project directory&quot;
+        },
+        {
+          &quot;path&quot;: &quot;public/&quot;,
+          &quot;kind&quot;: &quot;directory&quot;,
+          &quot;reason&quot;: &quot;Important project directory&quot;
+        },
+        {
+          &quot;path&quot;: &quot;index.html&quot;,
+          &quot;kind&quot;: &quot;metadata_file&quot;,
+          &quot;reason&quot;: &quot;Vite React entry file&quot;
+        },
+        {
+          &quot;path&quot;: &quot;src/main.tsx&quot;,
+          &quot;kind&quot;: &quot;source_file&quot;,
+          &quot;reason&quot;: &quot;Vite React entry file&quot;
+        },
+        {
+          &quot;path&quot;: &quot;src/App.tsx&quot;,
+          &quot;kind&quot;: &quot;source_file&quot;,
+          &quot;reason&quot;: &quot;Vite React entry file&quot;
+        },
+        {
+          &quot;path&quot;: &quot;public/robots.txt&quot;,
+          &quot;kind&quot;: &quot;public_asset&quot;,
+          &quot;reason&quot;: &quot;Crawlability asset&quot;
+        }
+      ],
+      &quot;routes&quot;: [
+        {
+          &quot;path&quot;: &quot;src/main.tsx&quot;,
+          &quot;kind&quot;: &quot;app_entry&quot;,
+          &quot;confidence&quot;: &quot;low&quot;,
+          &quot;reason&quot;: &quot;SPA entry or root component; route-to-URL mapping requires source review&quot;
+        },
+        {
+          &quot;path&quot;: &quot;src/App.tsx&quot;,
+          &quot;kind&quot;: &quot;app_entry&quot;,
+          &quot;confidence&quot;: &quot;low&quot;,
+          &quot;reason&quot;: &quot;SPA entry or root component; route-to-URL mapping requires source review&quot;
+        }
+      ],
+      &quot;metadataLocations&quot;: [
+        {
+          &quot;path&quot;: &quot;index.html&quot;,
+          &quot;kind&quot;: &quot;file&quot;,
+          &quot;exists&quot;: true,
+          &quot;reason&quot;: &quot;Static fallback metadata for the SPA shell&quot;
+        },
+        {
+          &quot;path&quot;: &quot;src/App.tsx&quot;,
+          &quot;kind&quot;: &quot;file&quot;,
+          &quot;exists&quot;: true,
+          &quot;reason&quot;: &quot;App-level component or entry point&quot;
+        },
+        {
+          &quot;path&quot;: &quot;src/main.tsx&quot;,
+          &quot;kind&quot;: &quot;file&quot;,
+          &quot;exists&quot;: true,
+          &quot;reason&quot;: &quot;App-level component or entry point&quot;
+        },
+        {
+          &quot;path&quot;: &quot;public/robots.txt&quot;,
+          &quot;kind&quot;: &quot;file&quot;,
+          &quot;exists&quot;: true,
+          &quot;reason&quot;: &quot;Static robots file&quot;
+        },
+        {
+          &quot;path&quot;: &quot;public/sitemap.xml&quot;,
+          &quot;kind&quot;: &quot;file&quot;,
+          &quot;exists&quot;: false,
+          &quot;reason&quot;: &quot;Static sitemap file&quot;
+        }
+      ],
+      &quot;supportedFixes&quot;: [
+        {
+          &quot;id&quot;: &quot;vite.index_html_metadata&quot;,
+          &quot;title&quot;: &quot;Update static index.html metadata&quot;,
+          &quot;description&quot;: &quot;Improve fallback metadata in index.html.&quot;,
+          &quot;safety&quot;: &quot;review_required&quot;
+        },
+        {
+          &quot;id&quot;: &quot;vite.robots_txt&quot;,
+          &quot;title&quot;: &quot;Add static robots.txt&quot;,
+          &quot;description&quot;: &quot;Add public/robots.txt.&quot;,
+          &quot;safety&quot;: &quot;review_required&quot;
+        },
+        {
+          &quot;id&quot;: &quot;vite.sitemap_xml&quot;,
+          &quot;title&quot;: &quot;Add static sitemap.xml&quot;,
+          &quot;description&quot;: &quot;Add public/sitemap.xml.&quot;,
+          &quot;safety&quot;: &quot;review_required&quot;
+        },
+        {
+          &quot;id&quot;: &quot;vite.json_ld_fallback&quot;,
+          &quot;title&quot;: &quot;Add JSON-LD fallback&quot;,
+          &quot;description&quot;: &quot;Add static JSON-LD where it accurately describes the app shell.&quot;,
+          &quot;safety&quot;: &quot;review_required&quot;
+        },
+        {
+          &quot;id&quot;: &quot;vite.helmet_future&quot;,
+          &quot;title&quot;: &quot;Recommend React Helmet integration&quot;,
+          &quot;description&quot;: &quot;Plan a route-aware metadata strategy when client-side routes need distinct metadata.&quot;,
+          &quot;safety&quot;: &quot;review_required&quot;
+        }
+      ],
+      &quot;limitations&quot;: [
+        &quot;File writing is disabled; use `shipready fix --dry-run` for supported patch previews.&quot;,
+        &quot;This command is read-only and does not modify repository files.&quot;,
+        &quot;Route-specific metadata in a Vite SPA may only appear after JavaScript rendering.&quot;,
+        &quot;Future fixes may need to recommend prerendering or SSG instead of relying on JS-injected metadata for crawler visibility.&quot;
+      ],
+      &quot;warnings&quot;: []
+    },
+    &quot;rawFixPlan&quot;: {
+      &quot;url&quot;: &quot;https://mon-guide-fodmap.com/&quot;,
+      &quot;repoPath&quot;: &quot;/Users/fabiencampana/Documents/jade/mon-guide-fodmap-2&quot;,
+      &quot;plannedAt&quot;: &quot;2026-06-15T21:46:48.900Z&quot;,
+      &quot;auditSummary&quot;: {
+        &quot;score&quot;: 60,
+        &quot;status&quot;: &quot;needs_work&quot;,
+        &quot;criticalCount&quot;: 2,
+        &quot;warningCount&quot;: 5,
+        &quot;noteCount&quot;: 1
+      },
+      &quot;repoSummary&quot;: {
+        &quot;frameworkId&quot;: &quot;vite_react&quot;,
+        &quot;frameworkName&quot;: &quot;Vite React&quot;,
+        &quot;confidence&quot;: &quot;high&quot;,
+        &quot;packageManager&quot;: &quot;npm&quot;
+      },
+      &quot;actions&quot;: [
+        {
+          &quot;id&quot;: &quot;vite_react.metadata_review&quot;,
+          &quot;title&quot;: &quot;Add fallback metadata to index.html&quot;,
+          &quot;description&quot;: &quot;Add missing metadata in the framework&#39;s server-visible metadata surface.&quot;,
+          &quot;sourceCheckIds&quot;: [
+            &quot;metadata.canonical.missing&quot;,
+            &quot;metadata.favicon.missing&quot;,
+            &quot;social.og.url_missing&quot;,
+            &quot;social.twitter.image_missing&quot;
+          ],
+          &quot;category&quot;: &quot;automated_with_review&quot;,
+          &quot;priority&quot;: &quot;critical&quot;,
+          &quot;risk&quot;: &quot;medium&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;frameworkStrategy&quot;: &quot;Update index.html for crawler-visible fallback metadata; route-specific metadata may need prerendering or SSR.&quot;,
+          &quot;targetFiles&quot;: [
+            &quot;index.html&quot;,
+            &quot;src/App.tsx&quot;,
+            &quot;src/main.tsx&quot;,
+            &quot;public/robots.txt&quot;
+          ],
+          &quot;targetLocations&quot;: [
+            &quot;index.html&quot;,
+            &quot;src/App.tsx&quot;,
+            &quot;src/main.tsx&quot;,
+            &quot;public/robots.txt&quot;,
+            &quot;public/sitemap.xml&quot;
+          ],
+          &quot;futureAutomation&quot;: {
+            &quot;canAutomate&quot;: true,
+            &quot;requiresHumanReview&quot;: true,
+            &quot;reason&quot;: &quot;Metadata changes affect production copy and crawler/share-preview signals, so generated changes should be reviewed.&quot;
+          }
+        },
+        {
+          &quot;id&quot;: &quot;vite_react.json_ld_review&quot;,
+          &quot;title&quot;: &quot;Add JSON-LD with review&quot;,
+          &quot;description&quot;: &quot;Add or fix conservative structured data only after confirming schema type and business facts.&quot;,
+          &quot;sourceCheckIds&quot;: [
+            &quot;schema.jsonld.missing&quot;
+          ],
+          &quot;category&quot;: &quot;automated_with_review&quot;,
+          &quot;priority&quot;: &quot;critical&quot;,
+          &quot;risk&quot;: &quot;medium&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;frameworkStrategy&quot;: &quot;Add static JSON-LD only when it accurately describes the app shell.&quot;,
+          &quot;targetFiles&quot;: [
+            &quot;index.html&quot;,
+            &quot;src/App.tsx&quot;,
+            &quot;src/main.tsx&quot;,
+            &quot;public/robots.txt&quot;
+          ],
+          &quot;targetLocations&quot;: [
+            &quot;index.html&quot;,
+            &quot;src/App.tsx&quot;,
+            &quot;src/main.tsx&quot;,
+            &quot;public/robots.txt&quot;,
+            &quot;public/sitemap.xml&quot;
+          ],
+          &quot;futureAutomation&quot;: {
+            &quot;canAutomate&quot;: true,
+            &quot;requiresHumanReview&quot;: true,
+            &quot;reason&quot;: &quot;Structured data must be factually accurate; ShipReady should not invent schema facts without review.&quot;
+          }
+        },
+        {
+          &quot;id&quot;: &quot;vite_react.heading&quot;,
+          &quot;title&quot;: &quot;Review page heading structure&quot;,
+          &quot;description&quot;: &quot;The page should have one clear H1.&quot;,
+          &quot;sourceCheckIds&quot;: [
+            &quot;structure.h1.missing&quot;
+          ],
+          &quot;category&quot;: &quot;automated_with_review&quot;,
+          &quot;priority&quot;: &quot;medium&quot;,
+          &quot;risk&quot;: &quot;medium&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;frameworkStrategy&quot;: &quot;Locate the relevant page or component and make semantic/content changes with review.&quot;,
+          &quot;targetFiles&quot;: [
+            &quot;src/main.tsx&quot;,
+            &quot;src/App.tsx&quot;
+          ],
+          &quot;targetLocations&quot;: [
+            &quot;src/main.tsx&quot;,
+            &quot;src/App.tsx&quot;
+          ],
+          &quot;futureAutomation&quot;: {
+            &quot;canAutomate&quot;: true,
+            &quot;requiresHumanReview&quot;: true,
+            &quot;reason&quot;: &quot;Content and accessibility text changes require human review for accuracy.&quot;
+          }
+        },
+        {
+          &quot;id&quot;: &quot;vite_react.sitemap&quot;,
+          &quot;title&quot;: &quot;Update sitemap.xml&quot;,
+          &quot;description&quot;: &quot;Replace the invalid sitemap response with a valid sitemap.&quot;,
+          &quot;sourceCheckIds&quot;: [
+            &quot;crawl.sitemap.invalid&quot;
+          ],
+          &quot;category&quot;: &quot;automated_with_review&quot;,
+          &quot;priority&quot;: &quot;high&quot;,
+          &quot;risk&quot;: &quot;low&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;frameworkStrategy&quot;: &quot;Add a public sitemap.xml file using the framework&#39;s static asset convention. Use audited URL https://mon-guide-fodmap.com/.&quot;,
+          &quot;targetFiles&quot;: [
+            &quot;public/sitemap.xml&quot;
+          ],
+          &quot;targetLocations&quot;: [
+            &quot;public/sitemap.xml&quot;
+          ],
+          &quot;futureAutomation&quot;: {
+            &quot;canAutomate&quot;: true,
+            &quot;requiresHumanReview&quot;: true,
+            &quot;reason&quot;: &quot;The URL set or lower-confidence repo detection should be reviewed before generating sitemap changes.&quot;
+          }
+        }
+      ],
+      &quot;noActionChecks&quot;: [
+        {
+          &quot;checkId&quot;: &quot;crawl.status.ok&quot;,
+          &quot;title&quot;: &quot;Page returns HTTP success&quot;,
+          &quot;reason&quot;: &quot;This audit check passed, so ShipReady is not proposing a change.&quot;
+        },
+        {
+          &quot;checkId&quot;: &quot;metadata.title.present&quot;,
+          &quot;title&quot;: &quot;Title present&quot;,
+          &quot;reason&quot;: &quot;This audit check passed, so ShipReady is not proposing a change.&quot;
+        },
+        {
+          &quot;checkId&quot;: &quot;metadata.description.present&quot;,
+          &quot;title&quot;: &quot;Meta description present&quot;,
+          &quot;reason&quot;: &quot;This audit check passed, so ShipReady is not proposing a change.&quot;
+        },
+        {
+          &quot;checkId&quot;: &quot;metadata.robots.indexable&quot;,
+          &quot;title&quot;: &quot;Page is not marked noindex&quot;,
+          &quot;reason&quot;: &quot;This audit check passed, so ShipReady is not proposing a change.&quot;
+        },
+        {
+          &quot;checkId&quot;: &quot;metadata.lang.present&quot;,
+          &quot;title&quot;: &quot;HTML lang attribute present&quot;,
+          &quot;reason&quot;: &quot;This audit check passed, so ShipReady is not proposing a change.&quot;
+        },
+        {
+          &quot;checkId&quot;: &quot;metadata.viewport.present&quot;,
+          &quot;title&quot;: &quot;Viewport present&quot;,
+          &quot;reason&quot;: &quot;This audit check passed, so ShipReady is not proposing a change.&quot;
+        },
+        {
+          &quot;checkId&quot;: &quot;social.og.title_present&quot;,
+          &quot;title&quot;: &quot;og:title present&quot;,
+          &quot;reason&quot;: &quot;This audit check passed, so ShipReady is not proposing a change.&quot;
+        },
+        {
+          &quot;checkId&quot;: &quot;social.og.description_present&quot;,
+          &quot;title&quot;: &quot;og:description present&quot;,
+          &quot;reason&quot;: &quot;This audit check passed, so ShipReady is not proposing a change.&quot;
+        },
+        {
+          &quot;checkId&quot;: &quot;social.og.image_present&quot;,
+          &quot;title&quot;: &quot;og:image present&quot;,
+          &quot;reason&quot;: &quot;This audit check passed, so ShipReady is not proposing a change.&quot;
+        },
+        {
+          &quot;checkId&quot;: &quot;social.og.type_present&quot;,
+          &quot;title&quot;: &quot;og:type present&quot;,
+          &quot;reason&quot;: &quot;This audit check passed, so ShipReady is not proposing a change.&quot;
+        },
+        {
+          &quot;checkId&quot;: &quot;social.twitter.card_present&quot;,
+          &quot;title&quot;: &quot;twitter:card present&quot;,
+          &quot;reason&quot;: &quot;This audit check passed, so ShipReady is not proposing a change.&quot;
+        },
+        {
+          &quot;checkId&quot;: &quot;social.twitter.title_present&quot;,
+          &quot;title&quot;: &quot;twitter:title present&quot;,
+          &quot;reason&quot;: &quot;This audit check passed, so ShipReady is not proposing a change.&quot;
+        },
+        {
+          &quot;checkId&quot;: &quot;social.twitter.description_present&quot;,
+          &quot;title&quot;: &quot;twitter:description present&quot;,
+          &quot;reason&quot;: &quot;This audit check passed, so ShipReady is not proposing a change.&quot;
+        },
+        {
+          &quot;checkId&quot;: &quot;crawl.robots_txt.found&quot;,
+          &quot;title&quot;: &quot;robots.txt found&quot;,
+          &quot;reason&quot;: &quot;This audit check passed, so ShipReady is not proposing a change.&quot;
+        },
+        {
+          &quot;checkId&quot;: &quot;crawl.raw_render.consistent&quot;,
+          &quot;title&quot;: &quot;Key metadata present in raw HTML&quot;,
+          &quot;reason&quot;: &quot;This audit check passed, so ShipReady is not proposing a change.&quot;
+        }
+      ],
+      &quot;optionalNotes&quot;: [
+        &quot;Theme color is not set: Optional theme-color metadata was not found in the initial HTML.&quot;
+      ],
+      &quot;limitations&quot;: [
+        &quot;This is a read-only plan. No files were modified and no patches were generated.&quot;,
+        &quot;Future automation must re-check the repo before writing changes.&quot;,
+        &quot;File writing is disabled; use `shipready fix --dry-run` for supported patch previews.&quot;,
+        &quot;This command is read-only and does not modify repository files.&quot;,
+        &quot;Route-specific metadata in a Vite SPA may only appear after JavaScript rendering.&quot;,
+        &quot;Future fixes may need to recommend prerendering or SSG instead of relying on JS-injected metadata for crawler visibility.&quot;
+      ],
+      &quot;recommendedNextStep&quot;: &quot;review_plan&quot;
+    },
+    &quot;rawDryRun&quot;: {
+      &quot;url&quot;: &quot;https://mon-guide-fodmap.com/&quot;,
+      &quot;repoPath&quot;: &quot;/Users/fabiencampana/Documents/jade/mon-guide-fodmap-2&quot;,
+      &quot;generatedAt&quot;: &quot;2026-06-15T21:46:48.905Z&quot;,
+      &quot;mode&quot;: &quot;dry_run&quot;,
+      &quot;wroteFiles&quot;: false,
+      &quot;planSummary&quot;: {
+        &quot;auditScore&quot;: 60,
+        &quot;auditStatus&quot;: &quot;needs_work&quot;,
+        &quot;frameworkId&quot;: &quot;vite_react&quot;,
+        &quot;frameworkName&quot;: &quot;Vite React&quot;,
+        &quot;recommendedNextStep&quot;: &quot;review_plan&quot;
+      },
+      &quot;fileChanges&quot;: [
+        {
+          &quot;path&quot;: &quot;index.html&quot;,
+          &quot;changeType&quot;: &quot;update&quot;,
+          &quot;reason&quot;: &quot;Add or update Vite app-shell fallback metadata. Add conservative WebSite JSON-LD for human review.&quot;,
+          &quot;sourceActionIds&quot;: [
+            &quot;vite_react.json_ld_review&quot;,
+            &quot;vite_react.metadata_review&quot;
+          ],
+          &quot;risk&quot;: &quot;medium&quot;,
+          &quot;requiresHumanReview&quot;: true,
+          &quot;reviewStatus&quot;: &quot;review_required&quot;,
+          &quot;before&quot;: &quot;&lt;!doctype html&gt;\n&lt;html lang=\&quot;fr\&quot;&gt;\n  &lt;head&gt;\n    &lt;meta charset=\&quot;UTF-8\&quot; /&gt;\n    &lt;meta name=\&quot;viewport\&quot; content=\&quot;width=device-width, initial-scale=1.0\&quot; /&gt;\n    &lt;title&gt;MonGuide FODMAP - Votre guide alimentaire personnalisé&lt;/title&gt;\n    &lt;meta name=\&quot;description\&quot; content=\&quot;Guide alimentaire personnalisé pour le régime FODMAP. Gérez vos intolérances spécifiques au syndrome de l&#39;intestin irritable (SII).\&quot; /&gt;\n    &lt;meta name=\&quot;author\&quot; content=\&quot;MonGuide FODMAP\&quot; /&gt;\n\n    &lt;meta property=\&quot;og:title\&quot; content=\&quot;MonGuide FODMAP - Guide alimentaire personnalisé\&quot; /&gt;\n    &lt;meta property=\&quot;og:description\&quot; content=\&quot;Guide alimentaire personnalisé pour le régime FODMAP. Gérez vos intolérances spécifiques au SII.\&quot; /&gt;\n    &lt;meta property=\&quot;og:type\&quot; content=\&quot;website\&quot; /&gt;\n    &lt;meta property=\&quot;og:image\&quot; content=\&quot;/og-image.png\&quot; /&gt;\n\n    &lt;meta name=\&quot;twitter:card\&quot; content=\&quot;summary_large_image\&quot; /&gt;\n    &lt;meta name=\&quot;twitter:title\&quot; content=\&quot;MonGuide FODMAP\&quot; /&gt;\n    &lt;meta name=\&quot;twitter:description\&quot; content=\&quot;Votre guide alimentaire personnalisé pour le régime FODMAP\&quot; /&gt;\n  &lt;/head&gt;\n\n  &lt;body&gt;\n    &lt;div id=\&quot;root\&quot;&gt;&lt;/div&gt;\n    &lt;script type=\&quot;module\&quot; src=\&quot;/src/main.tsx\&quot;&gt;&lt;/script&gt;\n  &lt;/body&gt;\n&lt;/html&gt;\n&quot;,
+          &quot;after&quot;: &quot;&lt;!doctype html&gt;\n&lt;html lang=\&quot;fr\&quot;&gt;\n  &lt;head&gt;\n    &lt;meta charset=\&quot;UTF-8\&quot; /&gt;\n    &lt;meta name=\&quot;viewport\&quot; content=\&quot;width=device-width, initial-scale=1.0\&quot; /&gt;\n    &lt;title&gt;MonGuide FODMAP - Votre guide alimentaire personnalisé&lt;/title&gt;\n    &lt;meta name=\&quot;description\&quot; content=\&quot;Guide alimentaire personnalisé pour le régime FODMAP. Gérez vos intolérances spécifiques au syndrome de l&#39;intestin irritable (SII).\&quot; /&gt;\n    &lt;meta name=\&quot;author\&quot; content=\&quot;MonGuide FODMAP\&quot; /&gt;\n\n    &lt;meta property=\&quot;og:title\&quot; content=\&quot;MonGuide FODMAP - Guide alimentaire personnalisé\&quot; /&gt;\n    &lt;meta property=\&quot;og:description\&quot; content=\&quot;Guide alimentaire personnalisé pour le régime FODMAP. Gérez vos intolérances spécifiques au SII.\&quot; /&gt;\n    &lt;meta property=\&quot;og:type\&quot; content=\&quot;website\&quot; /&gt;\n    &lt;meta property=\&quot;og:image\&quot; content=\&quot;/og-image.png\&quot; /&gt;\n\n    &lt;meta name=\&quot;twitter:card\&quot; content=\&quot;summary_large_image\&quot; /&gt;\n    &lt;meta name=\&quot;twitter:title\&quot; content=\&quot;MonGuide FODMAP\&quot; /&gt;\n    &lt;meta name=\&quot;twitter:description\&quot; content=\&quot;Votre guide alimentaire personnalisé pour le régime FODMAP\&quot; /&gt;\n    &lt;link rel=\&quot;canonical\&quot; href=\&quot;https://mon-guide-fodmap.com/\&quot; /&gt;\n    &lt;meta property=\&quot;og:url\&quot; content=\&quot;https://mon-guide-fodmap.com/\&quot; /&gt;\n    &lt;!-- TODO(shipready): Replace with an absolute public Twitter/X image URL. --&gt;\n    &lt;meta name=\&quot;twitter:image\&quot; content=\&quot;TODO: Absolute image URL\&quot; /&gt;\n    &lt;!-- TODO(shipready): Confirm this structured data before applying. --&gt;\n    &lt;script type=\&quot;application/ld+json\&quot;&gt;\n      {\n        \&quot;@context\&quot;: \&quot;https://schema.org\&quot;,\n        \&quot;@type\&quot;: \&quot;WebSite\&quot;,\n        \&quot;name\&quot;: \&quot;MonGuide FODMAP - Votre guide alimentaire personnalisé\&quot;,\n        \&quot;url\&quot;: \&quot;https://mon-guide-fodmap.com/\&quot;\n      }\n    &lt;/script&gt;\n  &lt;/head&gt;\n\n  &lt;body&gt;\n    &lt;div id=\&quot;root\&quot;&gt;&lt;/div&gt;\n    &lt;script type=\&quot;module\&quot; src=\&quot;/src/main.tsx\&quot;&gt;&lt;/script&gt;\n  &lt;/body&gt;\n&lt;/html&gt;\n&quot;,
+          &quot;diff&quot;: &quot;--- index.html\n+++ index.html\n@@ -15,6 +15,19 @@\n     &lt;meta name=\&quot;twitter:card\&quot; content=\&quot;summary_large_image\&quot; /&gt;\n     &lt;meta name=\&quot;twitter:title\&quot; content=\&quot;MonGuide FODMAP\&quot; /&gt;\n     &lt;meta name=\&quot;twitter:description\&quot; content=\&quot;Votre guide alimentaire personnalisé pour le régime FODMAP\&quot; /&gt;\n+    &lt;link rel=\&quot;canonical\&quot; href=\&quot;https://mon-guide-fodmap.com/\&quot; /&gt;\n+    &lt;meta property=\&quot;og:url\&quot; content=\&quot;https://mon-guide-fodmap.com/\&quot; /&gt;\n+    &lt;!-- TODO(shipready): Replace with an absolute public Twitter/X image URL. --&gt;\n+    &lt;meta name=\&quot;twitter:image\&quot; content=\&quot;TODO: Absolute image URL\&quot; /&gt;\n+    &lt;!-- TODO(shipready): Confirm this structured data before applying. --&gt;\n+    &lt;script type=\&quot;application/ld+json\&quot;&gt;\n+      {\n+        \&quot;@context\&quot;: \&quot;https://schema.org\&quot;,\n+        \&quot;@type\&quot;: \&quot;WebSite\&quot;,\n+        \&quot;name\&quot;: \&quot;MonGuide FODMAP - Votre guide alimentaire personnalisé\&quot;,\n+        \&quot;url\&quot;: \&quot;https://mon-guide-fodmap.com/\&quot;\n+      }\n+    &lt;/script&gt;\n   &lt;/head&gt;\n \n   &lt;body&gt;&quot;
+        },
+        {
+          &quot;path&quot;: &quot;public/sitemap.xml&quot;,
+          &quot;changeType&quot;: &quot;create&quot;,
+          &quot;reason&quot;: &quot;Create a valid single-URL sitemap.xml preview.&quot;,
+          &quot;sourceActionIds&quot;: [
+            &quot;vite_react.sitemap&quot;
+          ],
+          &quot;risk&quot;: &quot;low&quot;,
+          &quot;requiresHumanReview&quot;: true,
+          &quot;reviewStatus&quot;: &quot;review_required&quot;,
+          &quot;after&quot;: &quot;&lt;?xml version=\&quot;1.0\&quot; encoding=\&quot;UTF-8\&quot;?&gt;\n&lt;urlset xmlns=\&quot;http://www.sitemaps.org/schemas/sitemap/0.9\&quot;&gt;\n  &lt;url&gt;\n    &lt;loc&gt;https://mon-guide-fodmap.com/&lt;/loc&gt;\n  &lt;/url&gt;\n&lt;/urlset&gt;\n&quot;,
+          &quot;diff&quot;: &quot;--- /dev/null\n+++ public/sitemap.xml\n@@\n+&lt;?xml version=\&quot;1.0\&quot; encoding=\&quot;UTF-8\&quot;?&gt;\n+&lt;urlset xmlns=\&quot;http://www.sitemaps.org/schemas/sitemap/0.9\&quot;&gt;\n+  &lt;url&gt;\n+    &lt;loc&gt;https://mon-guide-fodmap.com/&lt;/loc&gt;\n+  &lt;/url&gt;\n+&lt;/urlset&gt;\n+&quot;
+        }
+      ],
+      &quot;skippedActions&quot;: [
+        {
+          &quot;actionId&quot;: &quot;vite_react.heading&quot;,
+          &quot;title&quot;: &quot;Review page heading structure&quot;,
+          &quot;reasonKind&quot;: &quot;requires_more_information&quot;,
+          &quot;reason&quot;: &quot;H1 review is a content change and requires human review.&quot;,
+          &quot;sourceActionIds&quot;: [
+            &quot;structure.h1.missing&quot;
+          ],
+          &quot;risk&quot;: &quot;medium&quot;
+        }
+      ],
+      &quot;safetyNotes&quot;: [
+        &quot;Dry-run only. No files were modified.&quot;,
+        &quot;This is fallback metadata for the app shell. Route-specific metadata may require prerendering, SSR, or a later framework-specific strategy.&quot;,
+        &quot;Review generated changes before applying.&quot;,
+        &quot;TODO placeholder metadata is for preview only and must be replaced before any future write.&quot;,
+        &quot;JSON-LD previews use only conservative WebSite schema and require human confirmation.&quot;
+      ],
+      &quot;recommendedNextStep&quot;: &quot;review_patch_preview&quot;
+    }
+  }
+}</pre>
+    <h3>Raw developer details</h3>
+    <pre>{
+  &quot;rawAudit&quot;: {
+    &quot;url&quot;: &quot;https://mon-guide-fodmap.com/&quot;,
+    &quot;finalUrl&quot;: &quot;https://mon-guide-fodmap.com/&quot;,
+    &quot;auditedAt&quot;: &quot;2026-06-15T21:46:48.897Z&quot;,
+    &quot;httpStatus&quot;: 200,
+    &quot;score&quot;: 60,
+    &quot;status&quot;: &quot;needs_work&quot;,
+    &quot;raw&quot;: {
+      &quot;source&quot;: &quot;raw&quot;,
+      &quot;url&quot;: &quot;https://mon-guide-fodmap.com/&quot;,
+      &quot;metadata&quot;: {
+        &quot;htmlLang&quot;: &quot;fr&quot;,
+        &quot;title&quot;: &quot;MonGuide FODMAP - Votre guide alimentaire personnalisé&quot;,
+        &quot;description&quot;: &quot;Guide alimentaire personnalisé pour le régime FODMAP. Gérez vos intolérances spécifiques au syndrome de l&#39;intestin irritable (SII).&quot;,
+        &quot;viewport&quot;: &quot;width=device-width, initial-scale=1.0&quot;,
+        &quot;faviconLinks&quot;: [],
+        &quot;openGraph&quot;: {
+          &quot;title&quot;: &quot;MonGuide FODMAP - Guide alimentaire personnalisé&quot;,
+          &quot;description&quot;: &quot;Guide alimentaire personnalisé pour le régime FODMAP. Gérez vos intolérances spécifiques au SII.&quot;,
+          &quot;image&quot;: &quot;https://mon-guide-fodmap.com/og-image.png&quot;,
+          &quot;type&quot;: &quot;website&quot;
+        },
+        &quot;twitter&quot;: {
+          &quot;card&quot;: &quot;summary_large_image&quot;,
+          &quot;title&quot;: &quot;MonGuide FODMAP&quot;,
+          &quot;description&quot;: &quot;Votre guide alimentaire personnalisé pour le régime FODMAP&quot;
+        }
+      },
+      &quot;headings&quot;: {
+        &quot;h1&quot;: [],
+        &quot;all&quot;: []
+      },
+      &quot;images&quot;: {
+        &quot;total&quot;: 0,
+        &quot;missingAlt&quot;: 0,
+        &quot;items&quot;: []
+      },
+      &quot;links&quot;: {
+        &quot;total&quot;: 0,
+        &quot;missingAccessibleText&quot;: 0,
+        &quot;items&quot;: []
+      },
+      &quot;jsonLd&quot;: []
+    },
+    &quot;rendered&quot;: {
+      &quot;source&quot;: &quot;rendered&quot;,
+      &quot;url&quot;: &quot;https://mon-guide-fodmap.com/&quot;,
+      &quot;metadata&quot;: {
+        &quot;htmlLang&quot;: &quot;fr&quot;,
+        &quot;title&quot;: &quot;MonGuide FODMAP - Votre guide alimentaire personnalisé&quot;,
+        &quot;description&quot;: &quot;Guide alimentaire personnalisé pour le régime FODMAP. Gérez vos intolérances spécifiques au syndrome de l&#39;intestin irritable (SII).&quot;,
+        &quot;viewport&quot;: &quot;width=device-width, initial-scale=1.0&quot;,
+        &quot;faviconLinks&quot;: [],
+        &quot;openGraph&quot;: {
+          &quot;title&quot;: &quot;MonGuide FODMAP - Guide alimentaire personnalisé&quot;,
+          &quot;description&quot;: &quot;Guide alimentaire personnalisé pour le régime FODMAP. Gérez vos intolérances spécifiques au SII.&quot;,
+          &quot;image&quot;: &quot;https://mon-guide-fodmap.com/og-image.png&quot;,
+          &quot;type&quot;: &quot;website&quot;
+        },
+        &quot;twitter&quot;: {
+          &quot;card&quot;: &quot;summary_large_image&quot;,
+          &quot;title&quot;: &quot;MonGuide FODMAP&quot;,
+          &quot;description&quot;: &quot;Votre guide alimentaire personnalisé pour le régime FODMAP&quot;
+        }
+      },
+      &quot;headings&quot;: {
+        &quot;h1&quot;: [
+          &quot;MonGuide FODMAP&quot;
+        ],
+        &quot;all&quot;: [
+          {
+            &quot;level&quot;: 1,
+            &quot;text&quot;: &quot;MonGuide FODMAP&quot;
+          },
+          {
+            &quot;level&quot;: 2,
+            &quot;text&quot;: &quot;Qu&#39;est-ce que les FODMAPs ?&quot;
+          },
+          {
+            &quot;level&quot;: 2,
+            &quot;text&quot;: &quot;Comment ça marche&quot;
+          },
+          {
+            &quot;level&quot;: 3,
+            &quot;text&quot;: &quot;Configurez votre profil&quot;
+          },
+          {
+            &quot;level&quot;: 3,
+            &quot;text&quot;: &quot;Recherchez et explorez&quot;
+          },
+          {
+            &quot;level&quot;: 3,
+            &quot;text&quot;: &quot;Mangez en confiance&quot;
+          },
+          {
+            &quot;level&quot;: 2,
+            &quot;text&quot;: &quot;Cette application est pour vous si...&quot;
+          },
+          {
+            &quot;level&quot;: 2,
+            &quot;text&quot;: &quot;Avertissement Important&quot;
+          },
+          {
+            &quot;level&quot;: 2,
+            &quot;text&quot;: &quot;Prêt à commencer ?&quot;
+          },
+          {
+            &quot;level&quot;: 3,
+            &quot;text&quot;: &quot;Informations Légales&quot;
+          },
+          {
+            &quot;level&quot;: 3,
+            &quot;text&quot;: &quot;Sources de Données&quot;
+          },
+          {
+            &quot;level&quot;: 3,
+            &quot;text&quot;: &quot;Contact&quot;
+          }
+        ]
+      },
+      &quot;images&quot;: {
+        &quot;total&quot;: 0,
+        &quot;missingAlt&quot;: 0,
+        &quot;items&quot;: []
+      },
+      &quot;links&quot;: {
+        &quot;total&quot;: 5,
+        &quot;missingAccessibleText&quot;: 0,
+        &quot;items&quot;: [
+          {
+            &quot;href&quot;: &quot;/legal&quot;,
+            &quot;text&quot;: &quot;Mentions Légales &amp; Avertissements&quot;
+          },
+          {
+            &quot;href&quot;: &quot;/about&quot;,
+            &quot;text&quot;: &quot;À Propos&quot;
+          },
+          {
+            &quot;href&quot;: &quot;https://www.monashfodmap.com/&quot;,
+            &quot;text&quot;: &quot;Monash University&quot;
+          },
+          {
+            &quot;href&quot;: &quot;https://www.linkedin.com/in/hernandez-jade/&quot;,
+            &quot;text&quot;: &quot;LinkedIn&quot;
+          },
+          {
+            &quot;href&quot;: &quot;https://github.com/jade-hernandez/guide-monf&quot;,
+            &quot;text&quot;: &quot;Voir sur GitHub&quot;
+          }
+        ]
+      },
+      &quot;jsonLd&quot;: []
+    },
+    &quot;comparison&quot;: {
+      &quot;fields&quot;: [
+        {
+          &quot;field&quot;: &quot;title&quot;,
+          &quot;rawValue&quot;: &quot;MonGuide FODMAP - Votre guide alimentaire personnalisé&quot;,
+          &quot;renderedValue&quot;: &quot;MonGuide FODMAP - Votre guide alimentaire personnalisé&quot;,
+          &quot;status&quot;: &quot;present_in_raw&quot;
+        },
+        {
+          &quot;field&quot;: &quot;description&quot;,
+          &quot;rawValue&quot;: &quot;Guide alimentaire personnalisé pour le régime FODMAP. Gérez vos intolérances spécifiques au syndrome de l&#39;intestin irritable (SII).&quot;,
+          &quot;renderedValue&quot;: &quot;Guide alimentaire personnalisé pour le régime FODMAP. Gérez vos intolérances spécifiques au syndrome de l&#39;intestin irritable (SII).&quot;,
+          &quot;status&quot;: &quot;present_in_raw&quot;
+        },
+        {
+          &quot;field&quot;: &quot;canonical&quot;,
+          &quot;status&quot;: &quot;missing_in_both&quot;
+        },
+        {
+          &quot;field&quot;: &quot;robots&quot;,
+          &quot;status&quot;: &quot;missing_in_both&quot;
+        },
+        {
+          &quot;field&quot;: &quot;html.lang&quot;,
+          &quot;rawValue&quot;: &quot;fr&quot;,
+          &quot;renderedValue&quot;: &quot;fr&quot;,
+          &quot;status&quot;: &quot;present_in_raw&quot;
+        },
+        {
+          &quot;field&quot;: &quot;viewport&quot;,
+          &quot;rawValue&quot;: &quot;width=device-width, initial-scale=1.0&quot;,
+          &quot;renderedValue&quot;: &quot;width=device-width, initial-scale=1.0&quot;,
+          &quot;status&quot;: &quot;present_in_raw&quot;
+        },
+        {
+          &quot;field&quot;: &quot;theme-color&quot;,
+          &quot;status&quot;: &quot;missing_in_both&quot;
+        },
+        {
+          &quot;field&quot;: &quot;favicon&quot;,
+          &quot;status&quot;: &quot;missing_in_both&quot;
+        },
+        {
+          &quot;field&quot;: &quot;og:title&quot;,
+          &quot;rawValue&quot;: &quot;MonGuide FODMAP - Guide alimentaire personnalisé&quot;,
+          &quot;renderedValue&quot;: &quot;MonGuide FODMAP - Guide alimentaire personnalisé&quot;,
+          &quot;status&quot;: &quot;present_in_raw&quot;
+        },
+        {
+          &quot;field&quot;: &quot;og:description&quot;,
+          &quot;rawValue&quot;: &quot;Guide alimentaire personnalisé pour le régime FODMAP. Gérez vos intolérances spécifiques au SII.&quot;,
+          &quot;renderedValue&quot;: &quot;Guide alimentaire personnalisé pour le régime FODMAP. Gérez vos intolérances spécifiques au SII.&quot;,
+          &quot;status&quot;: &quot;present_in_raw&quot;
+        },
+        {
+          &quot;field&quot;: &quot;og:image&quot;,
+          &quot;rawValue&quot;: &quot;https://mon-guide-fodmap.com/og-image.png&quot;,
+          &quot;renderedValue&quot;: &quot;https://mon-guide-fodmap.com/og-image.png&quot;,
+          &quot;status&quot;: &quot;present_in_raw&quot;
+        },
+        {
+          &quot;field&quot;: &quot;og:url&quot;,
+          &quot;status&quot;: &quot;missing_in_both&quot;
+        },
+        {
+          &quot;field&quot;: &quot;og:type&quot;,
+          &quot;rawValue&quot;: &quot;website&quot;,
+          &quot;renderedValue&quot;: &quot;website&quot;,
+          &quot;status&quot;: &quot;present_in_raw&quot;
+        },
+        {
+          &quot;field&quot;: &quot;og:site_name&quot;,
+          &quot;status&quot;: &quot;missing_in_both&quot;
+        },
+        {
+          &quot;field&quot;: &quot;twitter:card&quot;,
+          &quot;rawValue&quot;: &quot;summary_large_image&quot;,
+          &quot;renderedValue&quot;: &quot;summary_large_image&quot;,
+          &quot;status&quot;: &quot;present_in_raw&quot;
+        },
+        {
+          &quot;field&quot;: &quot;twitter:title&quot;,
+          &quot;rawValue&quot;: &quot;MonGuide FODMAP&quot;,
+          &quot;renderedValue&quot;: &quot;MonGuide FODMAP&quot;,
+          &quot;status&quot;: &quot;present_in_raw&quot;
+        },
+        {
+          &quot;field&quot;: &quot;twitter:description&quot;,
+          &quot;rawValue&quot;: &quot;Votre guide alimentaire personnalisé pour le régime FODMAP&quot;,
+          &quot;renderedValue&quot;: &quot;Votre guide alimentaire personnalisé pour le régime FODMAP&quot;,
+          &quot;status&quot;: &quot;present_in_raw&quot;
+        },
+        {
+          &quot;field&quot;: &quot;twitter:image&quot;,
+          &quot;status&quot;: &quot;missing_in_both&quot;
+        }
+      ]
+    },
+    &quot;checks&quot;: [
+      {
+        &quot;id&quot;: &quot;crawl.status.ok&quot;,
+        &quot;category&quot;: &quot;crawlability&quot;,
+        &quot;severity&quot;: &quot;passed&quot;,
+        &quot;title&quot;: &quot;Page returns HTTP success&quot;,
+        &quot;description&quot;: &quot;The audited URL returned a 2xx HTTP status.&quot;,
+        &quot;confidence&quot;: &quot;high&quot;,
+        &quot;fixability&quot;: &quot;not_fixable&quot;
+      },
+      {
+        &quot;id&quot;: &quot;metadata.title.present&quot;,
+        &quot;category&quot;: &quot;metadata&quot;,
+        &quot;severity&quot;: &quot;passed&quot;,
+        &quot;title&quot;: &quot;Title present&quot;,
+        &quot;description&quot;: &quot;Raw title: MonGuide FODMAP - Votre guide alimentaire personnalisé&quot;,
+        &quot;confidence&quot;: &quot;high&quot;,
+        &quot;fixability&quot;: &quot;not_fixable&quot;
+      },
+      {
+        &quot;id&quot;: &quot;metadata.description.present&quot;,
+        &quot;category&quot;: &quot;metadata&quot;,
+        &quot;severity&quot;: &quot;passed&quot;,
+        &quot;title&quot;: &quot;Meta description present&quot;,
+        &quot;description&quot;: &quot;Raw meta description is present.&quot;,
+        &quot;confidence&quot;: &quot;high&quot;,
+        &quot;fixability&quot;: &quot;not_fixable&quot;
+      },
+      {
+        &quot;id&quot;: &quot;metadata.canonical.missing&quot;,
+        &quot;category&quot;: &quot;metadata&quot;,
+        &quot;severity&quot;: &quot;critical&quot;,
+        &quot;title&quot;: &quot;Missing canonical URL&quot;,
+        &quot;description&quot;: &quot;The raw HTML does not include a canonical link.&quot;,
+        &quot;recommendation&quot;: &quot;Add a canonical link that points to the preferred public URL for this page.&quot;,
+        &quot;confidence&quot;: &quot;high&quot;,
+        &quot;fixability&quot;: &quot;auto_fixable&quot;,
+        &quot;fixStrategy&quot;: &quot;Add a canonical link in the page head or framework metadata config.&quot;
+      },
+      {
+        &quot;id&quot;: &quot;metadata.robots.indexable&quot;,
+        &quot;category&quot;: &quot;crawlability&quot;,
+        &quot;severity&quot;: &quot;passed&quot;,
+        &quot;title&quot;: &quot;Page is not marked noindex&quot;,
+        &quot;description&quot;: &quot;No noindex robots meta directive was detected.&quot;,
+        &quot;confidence&quot;: &quot;high&quot;,
+        &quot;fixability&quot;: &quot;not_fixable&quot;
+      },
+      {
+        &quot;id&quot;: &quot;metadata.lang.present&quot;,
+        &quot;category&quot;: &quot;metadata&quot;,
+        &quot;severity&quot;: &quot;passed&quot;,
+        &quot;title&quot;: &quot;HTML lang attribute present&quot;,
+        &quot;description&quot;: &quot;fr&quot;,
+        &quot;confidence&quot;: &quot;high&quot;,
+        &quot;fixability&quot;: &quot;not_fixable&quot;
+      },
+      {
+        &quot;id&quot;: &quot;metadata.viewport.present&quot;,
+        &quot;category&quot;: &quot;metadata&quot;,
+        &quot;severity&quot;: &quot;passed&quot;,
+        &quot;title&quot;: &quot;Viewport present&quot;,
+        &quot;description&quot;: &quot;width=device-width, initial-scale=1.0&quot;,
+        &quot;confidence&quot;: &quot;high&quot;,
+        &quot;fixability&quot;: &quot;not_fixable&quot;
+      },
+      {
+        &quot;id&quot;: &quot;metadata.theme_color.missing&quot;,
+        &quot;category&quot;: &quot;metadata&quot;,
+        &quot;severity&quot;: &quot;info&quot;,
+        &quot;title&quot;: &quot;Theme color is not set&quot;,
+        &quot;description&quot;: &quot;Optional theme-color metadata was not found in the initial HTML.&quot;,
+        &quot;recommendation&quot;: &quot;Add a theme-color meta tag if you want branded browser UI on supported surfaces.&quot;,
+        &quot;confidence&quot;: &quot;high&quot;,
+        &quot;fixability&quot;: &quot;plan_only&quot;
+      },
+      {
+        &quot;id&quot;: &quot;metadata.favicon.missing&quot;,
+        &quot;category&quot;: &quot;metadata&quot;,
+        &quot;severity&quot;: &quot;warning&quot;,
+        &quot;title&quot;: &quot;No favicon links found&quot;,
+        &quot;description&quot;: &quot;Favicons and app icons help the site look complete in tabs, bookmarks, and device surfaces.&quot;,
+        &quot;confidence&quot;: &quot;high&quot;,
+        &quot;fixability&quot;: &quot;plan_only&quot;
+      },
+      {
+        &quot;id&quot;: &quot;social.og.title_present&quot;,
+        &quot;category&quot;: &quot;social&quot;,
+        &quot;severity&quot;: &quot;passed&quot;,
+        &quot;title&quot;: &quot;og:title present&quot;,
+        &quot;description&quot;: &quot;MonGuide FODMAP - Guide alimentaire personnalisé&quot;,
+        &quot;confidence&quot;: &quot;high&quot;,
+        &quot;fixability&quot;: &quot;not_fixable&quot;
+      },
+      {
+        &quot;id&quot;: &quot;social.og.description_present&quot;,
+        &quot;category&quot;: &quot;social&quot;,
+        &quot;severity&quot;: &quot;passed&quot;,
+        &quot;title&quot;: &quot;og:description present&quot;,
+        &quot;description&quot;: &quot;Open Graph description is present.&quot;,
+        &quot;confidence&quot;: &quot;high&quot;,
+        &quot;fixability&quot;: &quot;not_fixable&quot;
+      },
+      {
+        &quot;id&quot;: &quot;social.og.image_present&quot;,
+        &quot;category&quot;: &quot;social&quot;,
+        &quot;severity&quot;: &quot;passed&quot;,
+        &quot;title&quot;: &quot;og:image present&quot;,
+        &quot;description&quot;: &quot;https://mon-guide-fodmap.com/og-image.png&quot;,
+        &quot;confidence&quot;: &quot;high&quot;,
+        &quot;fixability&quot;: &quot;not_fixable&quot;
+      },
+      {
+        &quot;id&quot;: &quot;social.og.url_missing&quot;,
+        &quot;category&quot;: &quot;social&quot;,
+        &quot;severity&quot;: &quot;warning&quot;,
+        &quot;title&quot;: &quot;Missing og:url&quot;,
+        &quot;description&quot;: &quot;Open Graph metadata should include the canonical page URL.&quot;,
+        &quot;confidence&quot;: &quot;high&quot;,
+        &quot;fixability&quot;: &quot;plan_only&quot;
+      },
+      {
+        &quot;id&quot;: &quot;social.og.type_present&quot;,
+        &quot;category&quot;: &quot;social&quot;,
+        &quot;severity&quot;: &quot;passed&quot;,
+        &quot;title&quot;: &quot;og:type present&quot;,
+        &quot;description&quot;: &quot;website&quot;,
+        &quot;confidence&quot;: &quot;high&quot;,
+        &quot;fixability&quot;: &quot;not_fixable&quot;
+      },
+      {
+        &quot;id&quot;: &quot;social.twitter.card_present&quot;,
+        &quot;category&quot;: &quot;social&quot;,
+        &quot;severity&quot;: &quot;passed&quot;,
+        &quot;title&quot;: &quot;twitter:card present&quot;,
+        &quot;description&quot;: &quot;summary_large_image&quot;,
+        &quot;confidence&quot;: &quot;high&quot;,
+        &quot;fixability&quot;: &quot;not_fixable&quot;
+      },
+      {
+        &quot;id&quot;: &quot;social.twitter.title_present&quot;,
+        &quot;category&quot;: &quot;social&quot;,
+        &quot;severity&quot;: &quot;passed&quot;,
+        &quot;title&quot;: &quot;twitter:title present&quot;,
+        &quot;description&quot;: &quot;MonGuide FODMAP&quot;,
+        &quot;confidence&quot;: &quot;high&quot;,
+        &quot;fixability&quot;: &quot;not_fixable&quot;
+      },
+      {
+        &quot;id&quot;: &quot;social.twitter.description_present&quot;,
+        &quot;category&quot;: &quot;social&quot;,
+        &quot;severity&quot;: &quot;passed&quot;,
+        &quot;title&quot;: &quot;twitter:description present&quot;,
+        &quot;description&quot;: &quot;Twitter/X description is present.&quot;,
+        &quot;confidence&quot;: &quot;high&quot;,
+        &quot;fixability&quot;: &quot;not_fixable&quot;
+      },
+      {
+        &quot;id&quot;: &quot;social.twitter.image_missing&quot;,
+        &quot;category&quot;: &quot;social&quot;,
+        &quot;severity&quot;: &quot;warning&quot;,
+        &quot;title&quot;: &quot;Missing twitter:image&quot;,
+        &quot;description&quot;: &quot;Twitter/X cards should include an image when possible.&quot;,
+        &quot;confidence&quot;: &quot;high&quot;,
+        &quot;fixability&quot;: &quot;plan_only&quot;
+      },
+      {
+        &quot;id&quot;: &quot;schema.jsonld.missing&quot;,
+        &quot;category&quot;: &quot;schema&quot;,
+        &quot;severity&quot;: &quot;critical&quot;,
+        &quot;title&quot;: &quot;No JSON-LD detected&quot;,
+        &quot;description&quot;: &quot;No structured data script tags were found in the raw HTML.&quot;,
+        &quot;recommendation&quot;: &quot;Add conservative, factual JSON-LD such as WebSite or Organization when appropriate.&quot;,
+        &quot;confidence&quot;: &quot;high&quot;,
+        &quot;fixability&quot;: &quot;plan_only&quot;
+      },
+      {
+        &quot;id&quot;: &quot;structure.h1.missing&quot;,
+        &quot;category&quot;: &quot;structure&quot;,
+        &quot;severity&quot;: &quot;warning&quot;,
+        &quot;title&quot;: &quot;No H1 found&quot;,
+        &quot;description&quot;: &quot;The page should have one clear H1.&quot;,
+        &quot;confidence&quot;: &quot;high&quot;,
+        &quot;fixability&quot;: &quot;plan_only&quot;
+      },
+      {
+        &quot;id&quot;: &quot;crawl.robots_txt.found&quot;,
+        &quot;category&quot;: &quot;crawlability&quot;,
+        &quot;severity&quot;: &quot;passed&quot;,
+        &quot;title&quot;: &quot;robots.txt found&quot;,
+        &quot;description&quot;: &quot;https://mon-guide-fodmap.com/robots.txt&quot;,
+        &quot;confidence&quot;: &quot;high&quot;,
+        &quot;fixability&quot;: &quot;not_fixable&quot;
+      },
+      {
+        &quot;id&quot;: &quot;crawl.sitemap.invalid&quot;,
+        &quot;category&quot;: &quot;crawlability&quot;,
+        &quot;severity&quot;: &quot;warning&quot;,
+        &quot;title&quot;: &quot;sitemap.xml is not a valid sitemap&quot;,
+        &quot;description&quot;: &quot;The sitemap.xml URL returned a success response, but the body did not look like an XML sitemap.&quot;,
+        &quot;evidence&quot;: {
+          &quot;url&quot;: &quot;https://mon-guide-fodmap.com/sitemap.xml&quot;,
+          &quot;statusCode&quot;: 200,
+          &quot;error&quot;: &quot;Response did not look like an XML sitemap.&quot;
+        },
+        &quot;confidence&quot;: &quot;high&quot;,
+        &quot;fixability&quot;: &quot;plan_only&quot;
+      },
+      {
+        &quot;id&quot;: &quot;crawl.raw_render.consistent&quot;,
+        &quot;category&quot;: &quot;crawlability&quot;,
+        &quot;severity&quot;: &quot;passed&quot;,
+        &quot;title&quot;: &quot;Key metadata present in raw HTML&quot;,
+        &quot;description&quot;: &quot;No render-only metadata fields were detected.&quot;,
+        &quot;confidence&quot;: &quot;high&quot;,
+        &quot;fixability&quot;: &quot;not_fixable&quot;
+      }
+    ],
+    &quot;resources&quot;: {
+      &quot;robotsTxt&quot;: {
+        &quot;url&quot;: &quot;https://mon-guide-fodmap.com/robots.txt&quot;,
+        &quot;finalUrl&quot;: &quot;https://mon-guide-fodmap.com/robots.txt&quot;,
+        &quot;exists&quot;: true,
+        &quot;ok&quot;: true,
+        &quot;statusCode&quot;: 200,
+        &quot;blocksPage&quot;: false
+      },
+      &quot;sitemapXml&quot;: {
+        &quot;url&quot;: &quot;https://mon-guide-fodmap.com/sitemap.xml&quot;,
+        &quot;finalUrl&quot;: &quot;https://mon-guide-fodmap.com/sitemap.xml&quot;,
+        &quot;exists&quot;: false,
+        &quot;ok&quot;: false,
+        &quot;statusCode&quot;: 200,
+        &quot;error&quot;: &quot;Response did not look like an XML sitemap.&quot;,
+        &quot;includesAuditedUrl&quot;: false
+      }
+    }
+  },
+  &quot;rawRepoInspection&quot;: {
+    &quot;path&quot;: &quot;/Users/fabiencampana/Documents/jade/mon-guide-fodmap-2&quot;,
+    &quot;inspectedAt&quot;: &quot;2026-06-15T21:46:47.671Z&quot;,
+    &quot;packageManager&quot;: &quot;npm&quot;,
+    &quot;framework&quot;: {
+      &quot;id&quot;: &quot;vite_react&quot;,
+      &quot;name&quot;: &quot;Vite React&quot;,
+      &quot;confidence&quot;: &quot;high&quot;,
+      &quot;evidence&quot;: [
+        {
+          &quot;kind&quot;: &quot;package_dependency&quot;,
+          &quot;path&quot;: &quot;package.json&quot;,
+          &quot;value&quot;: &quot;package.json includes dependency \&quot;vite\&quot;&quot;,
+          &quot;weight&quot;: &quot;strong&quot;
+        },
+        {
+          &quot;kind&quot;: &quot;package_dependency&quot;,
+          &quot;path&quot;: &quot;package.json&quot;,
+          &quot;value&quot;: &quot;package.json includes dependency \&quot;react\&quot;&quot;,
+          &quot;weight&quot;: &quot;weak&quot;
+        },
+        {
+          &quot;kind&quot;: &quot;package_dependency&quot;,
+          &quot;path&quot;: &quot;package.json&quot;,
+          &quot;value&quot;: &quot;package.json includes dependency \&quot;react-router-dom\&quot;&quot;,
+          &quot;weight&quot;: &quot;weak&quot;
+        },
+        {
+          &quot;kind&quot;: &quot;file&quot;,
+          &quot;path&quot;: &quot;vite.config.ts&quot;,
+          &quot;value&quot;: &quot;Vite config found&quot;,
+          &quot;weight&quot;: &quot;medium&quot;
+        },
+        {
+          &quot;kind&quot;: &quot;file&quot;,
+          &quot;path&quot;: &quot;index.html&quot;,
+          &quot;value&quot;: &quot;Vite root index.html found&quot;,
+          &quot;weight&quot;: &quot;medium&quot;
+        },
+        {
+          &quot;kind&quot;: &quot;file&quot;,
+          &quot;path&quot;: &quot;src/main.tsx&quot;,
+          &quot;value&quot;: &quot;React entry file found&quot;,
+          &quot;weight&quot;: &quot;medium&quot;
+        },
+        {
+          &quot;kind&quot;: &quot;file&quot;,
+          &quot;path&quot;: &quot;src/App.tsx&quot;,
+          &quot;value&quot;: &quot;React app component found&quot;,
+          &quot;weight&quot;: &quot;weak&quot;
+        }
+      ]
+    },
+    &quot;importantFiles&quot;: [
+      {
+        &quot;path&quot;: &quot;package.json&quot;,
+        &quot;kind&quot;: &quot;package_file&quot;,
+        &quot;reason&quot;: &quot;Project package manifest&quot;
+      },
+      {
+        &quot;path&quot;: &quot;package-lock.json&quot;,
+        &quot;kind&quot;: &quot;lockfile&quot;,
+        &quot;reason&quot;: &quot;Package manager lockfile&quot;
+      },
+      {
+        &quot;path&quot;: &quot;bun.lockb&quot;,
+        &quot;kind&quot;: &quot;lockfile&quot;,
+        &quot;reason&quot;: &quot;Package manager lockfile&quot;
+      },
+      {
+        &quot;path&quot;: &quot;vite.config.ts&quot;,
+        &quot;kind&quot;: &quot;config_file&quot;,
+        &quot;reason&quot;: &quot;Framework or TypeScript config&quot;
+      },
+      {
+        &quot;path&quot;: &quot;tsconfig.json&quot;,
+        &quot;kind&quot;: &quot;config_file&quot;,
+        &quot;reason&quot;: &quot;Framework or TypeScript config&quot;
+      },
+      {
+        &quot;path&quot;: &quot;src/pages/&quot;,
+        &quot;kind&quot;: &quot;directory&quot;,
+        &quot;reason&quot;: &quot;Important project directory&quot;
+      },
+      {
+        &quot;path&quot;: &quot;src/&quot;,
+        &quot;kind&quot;: &quot;directory&quot;,
+        &quot;reason&quot;: &quot;Important project directory&quot;
+      },
+      {
+        &quot;path&quot;: &quot;public/&quot;,
+        &quot;kind&quot;: &quot;directory&quot;,
+        &quot;reason&quot;: &quot;Important project directory&quot;
+      },
+      {
+        &quot;path&quot;: &quot;index.html&quot;,
+        &quot;kind&quot;: &quot;metadata_file&quot;,
+        &quot;reason&quot;: &quot;Vite React entry file&quot;
+      },
+      {
+        &quot;path&quot;: &quot;src/main.tsx&quot;,
+        &quot;kind&quot;: &quot;source_file&quot;,
+        &quot;reason&quot;: &quot;Vite React entry file&quot;
+      },
+      {
+        &quot;path&quot;: &quot;src/App.tsx&quot;,
+        &quot;kind&quot;: &quot;source_file&quot;,
+        &quot;reason&quot;: &quot;Vite React entry file&quot;
+      },
+      {
+        &quot;path&quot;: &quot;public/robots.txt&quot;,
+        &quot;kind&quot;: &quot;public_asset&quot;,
+        &quot;reason&quot;: &quot;Crawlability asset&quot;
+      }
+    ],
+    &quot;routes&quot;: [
+      {
+        &quot;path&quot;: &quot;src/main.tsx&quot;,
+        &quot;kind&quot;: &quot;app_entry&quot;,
+        &quot;confidence&quot;: &quot;low&quot;,
+        &quot;reason&quot;: &quot;SPA entry or root component; route-to-URL mapping requires source review&quot;
+      },
+      {
+        &quot;path&quot;: &quot;src/App.tsx&quot;,
+        &quot;kind&quot;: &quot;app_entry&quot;,
+        &quot;confidence&quot;: &quot;low&quot;,
+        &quot;reason&quot;: &quot;SPA entry or root component; route-to-URL mapping requires source review&quot;
+      }
+    ],
+    &quot;metadataLocations&quot;: [
+      {
+        &quot;path&quot;: &quot;index.html&quot;,
+        &quot;kind&quot;: &quot;file&quot;,
+        &quot;exists&quot;: true,
+        &quot;reason&quot;: &quot;Static fallback metadata for the SPA shell&quot;
+      },
+      {
+        &quot;path&quot;: &quot;src/App.tsx&quot;,
+        &quot;kind&quot;: &quot;file&quot;,
+        &quot;exists&quot;: true,
+        &quot;reason&quot;: &quot;App-level component or entry point&quot;
+      },
+      {
+        &quot;path&quot;: &quot;src/main.tsx&quot;,
+        &quot;kind&quot;: &quot;file&quot;,
+        &quot;exists&quot;: true,
+        &quot;reason&quot;: &quot;App-level component or entry point&quot;
+      },
+      {
+        &quot;path&quot;: &quot;public/robots.txt&quot;,
+        &quot;kind&quot;: &quot;file&quot;,
+        &quot;exists&quot;: true,
+        &quot;reason&quot;: &quot;Static robots file&quot;
+      },
+      {
+        &quot;path&quot;: &quot;public/sitemap.xml&quot;,
+        &quot;kind&quot;: &quot;file&quot;,
+        &quot;exists&quot;: false,
+        &quot;reason&quot;: &quot;Static sitemap file&quot;
+      }
+    ],
+    &quot;supportedFixes&quot;: [
+      {
+        &quot;id&quot;: &quot;vite.index_html_metadata&quot;,
+        &quot;title&quot;: &quot;Update static index.html metadata&quot;,
+        &quot;description&quot;: &quot;Improve fallback metadata in index.html.&quot;,
+        &quot;safety&quot;: &quot;review_required&quot;
+      },
+      {
+        &quot;id&quot;: &quot;vite.robots_txt&quot;,
+        &quot;title&quot;: &quot;Add static robots.txt&quot;,
+        &quot;description&quot;: &quot;Add public/robots.txt.&quot;,
+        &quot;safety&quot;: &quot;review_required&quot;
+      },
+      {
+        &quot;id&quot;: &quot;vite.sitemap_xml&quot;,
+        &quot;title&quot;: &quot;Add static sitemap.xml&quot;,
+        &quot;description&quot;: &quot;Add public/sitemap.xml.&quot;,
+        &quot;safety&quot;: &quot;review_required&quot;
+      },
+      {
+        &quot;id&quot;: &quot;vite.json_ld_fallback&quot;,
+        &quot;title&quot;: &quot;Add JSON-LD fallback&quot;,
+        &quot;description&quot;: &quot;Add static JSON-LD where it accurately describes the app shell.&quot;,
+        &quot;safety&quot;: &quot;review_required&quot;
+      },
+      {
+        &quot;id&quot;: &quot;vite.helmet_future&quot;,
+        &quot;title&quot;: &quot;Recommend React Helmet integration&quot;,
+        &quot;description&quot;: &quot;Plan a route-aware metadata strategy when client-side routes need distinct metadata.&quot;,
+        &quot;safety&quot;: &quot;review_required&quot;
+      }
+    ],
+    &quot;limitations&quot;: [
+      &quot;File writing is disabled; use `shipready fix --dry-run` for supported patch previews.&quot;,
+      &quot;This command is read-only and does not modify repository files.&quot;,
+      &quot;Route-specific metadata in a Vite SPA may only appear after JavaScript rendering.&quot;,
+      &quot;Future fixes may need to recommend prerendering or SSG instead of relying on JS-injected metadata for crawler visibility.&quot;
+    ],
+    &quot;warnings&quot;: []
+  },
+  &quot;rawFixPlan&quot;: {
+    &quot;url&quot;: &quot;https://mon-guide-fodmap.com/&quot;,
+    &quot;repoPath&quot;: &quot;/Users/fabiencampana/Documents/jade/mon-guide-fodmap-2&quot;,
+    &quot;plannedAt&quot;: &quot;2026-06-15T21:46:48.900Z&quot;,
+    &quot;auditSummary&quot;: {
+      &quot;score&quot;: 60,
+      &quot;status&quot;: &quot;needs_work&quot;,
+      &quot;criticalCount&quot;: 2,
+      &quot;warningCount&quot;: 5,
+      &quot;noteCount&quot;: 1
+    },
+    &quot;repoSummary&quot;: {
+      &quot;frameworkId&quot;: &quot;vite_react&quot;,
+      &quot;frameworkName&quot;: &quot;Vite React&quot;,
+      &quot;confidence&quot;: &quot;high&quot;,
+      &quot;packageManager&quot;: &quot;npm&quot;
+    },
+    &quot;actions&quot;: [
+      {
+        &quot;id&quot;: &quot;vite_react.metadata_review&quot;,
+        &quot;title&quot;: &quot;Add fallback metadata to index.html&quot;,
+        &quot;description&quot;: &quot;Add missing metadata in the framework&#39;s server-visible metadata surface.&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;metadata.canonical.missing&quot;,
+          &quot;metadata.favicon.missing&quot;,
+          &quot;social.og.url_missing&quot;,
+          &quot;social.twitter.image_missing&quot;
+        ],
+        &quot;category&quot;: &quot;automated_with_review&quot;,
+        &quot;priority&quot;: &quot;critical&quot;,
+        &quot;risk&quot;: &quot;medium&quot;,
+        &quot;confidence&quot;: &quot;high&quot;,
+        &quot;frameworkStrategy&quot;: &quot;Update index.html for crawler-visible fallback metadata; route-specific metadata may need prerendering or SSR.&quot;,
+        &quot;targetFiles&quot;: [
+          &quot;index.html&quot;,
+          &quot;src/App.tsx&quot;,
+          &quot;src/main.tsx&quot;,
+          &quot;public/robots.txt&quot;
+        ],
+        &quot;targetLocations&quot;: [
+          &quot;index.html&quot;,
+          &quot;src/App.tsx&quot;,
+          &quot;src/main.tsx&quot;,
+          &quot;public/robots.txt&quot;,
+          &quot;public/sitemap.xml&quot;
+        ],
+        &quot;futureAutomation&quot;: {
+          &quot;canAutomate&quot;: true,
+          &quot;requiresHumanReview&quot;: true,
+          &quot;reason&quot;: &quot;Metadata changes affect production copy and crawler/share-preview signals, so generated changes should be reviewed.&quot;
+        }
+      },
+      {
+        &quot;id&quot;: &quot;vite_react.json_ld_review&quot;,
+        &quot;title&quot;: &quot;Add JSON-LD with review&quot;,
+        &quot;description&quot;: &quot;Add or fix conservative structured data only after confirming schema type and business facts.&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;schema.jsonld.missing&quot;
+        ],
+        &quot;category&quot;: &quot;automated_with_review&quot;,
+        &quot;priority&quot;: &quot;critical&quot;,
+        &quot;risk&quot;: &quot;medium&quot;,
+        &quot;confidence&quot;: &quot;high&quot;,
+        &quot;frameworkStrategy&quot;: &quot;Add static JSON-LD only when it accurately describes the app shell.&quot;,
+        &quot;targetFiles&quot;: [
+          &quot;index.html&quot;,
+          &quot;src/App.tsx&quot;,
+          &quot;src/main.tsx&quot;,
+          &quot;public/robots.txt&quot;
+        ],
+        &quot;targetLocations&quot;: [
+          &quot;index.html&quot;,
+          &quot;src/App.tsx&quot;,
+          &quot;src/main.tsx&quot;,
+          &quot;public/robots.txt&quot;,
+          &quot;public/sitemap.xml&quot;
+        ],
+        &quot;futureAutomation&quot;: {
+          &quot;canAutomate&quot;: true,
+          &quot;requiresHumanReview&quot;: true,
+          &quot;reason&quot;: &quot;Structured data must be factually accurate; ShipReady should not invent schema facts without review.&quot;
+        }
+      },
+      {
+        &quot;id&quot;: &quot;vite_react.heading&quot;,
+        &quot;title&quot;: &quot;Review page heading structure&quot;,
+        &quot;description&quot;: &quot;The page should have one clear H1.&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;structure.h1.missing&quot;
+        ],
+        &quot;category&quot;: &quot;automated_with_review&quot;,
+        &quot;priority&quot;: &quot;medium&quot;,
+        &quot;risk&quot;: &quot;medium&quot;,
+        &quot;confidence&quot;: &quot;high&quot;,
+        &quot;frameworkStrategy&quot;: &quot;Locate the relevant page or component and make semantic/content changes with review.&quot;,
+        &quot;targetFiles&quot;: [
+          &quot;src/main.tsx&quot;,
+          &quot;src/App.tsx&quot;
+        ],
+        &quot;targetLocations&quot;: [
+          &quot;src/main.tsx&quot;,
+          &quot;src/App.tsx&quot;
+        ],
+        &quot;futureAutomation&quot;: {
+          &quot;canAutomate&quot;: true,
+          &quot;requiresHumanReview&quot;: true,
+          &quot;reason&quot;: &quot;Content and accessibility text changes require human review for accuracy.&quot;
+        }
+      },
+      {
+        &quot;id&quot;: &quot;vite_react.sitemap&quot;,
+        &quot;title&quot;: &quot;Update sitemap.xml&quot;,
+        &quot;description&quot;: &quot;Replace the invalid sitemap response with a valid sitemap.&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;crawl.sitemap.invalid&quot;
+        ],
+        &quot;category&quot;: &quot;automated_with_review&quot;,
+        &quot;priority&quot;: &quot;high&quot;,
+        &quot;risk&quot;: &quot;low&quot;,
+        &quot;confidence&quot;: &quot;high&quot;,
+        &quot;frameworkStrategy&quot;: &quot;Add a public sitemap.xml file using the framework&#39;s static asset convention. Use audited URL https://mon-guide-fodmap.com/.&quot;,
+        &quot;targetFiles&quot;: [
+          &quot;public/sitemap.xml&quot;
+        ],
+        &quot;targetLocations&quot;: [
+          &quot;public/sitemap.xml&quot;
+        ],
+        &quot;futureAutomation&quot;: {
+          &quot;canAutomate&quot;: true,
+          &quot;requiresHumanReview&quot;: true,
+          &quot;reason&quot;: &quot;The URL set or lower-confidence repo detection should be reviewed before generating sitemap changes.&quot;
+        }
+      }
+    ],
+    &quot;noActionChecks&quot;: [
+      {
+        &quot;checkId&quot;: &quot;crawl.status.ok&quot;,
+        &quot;title&quot;: &quot;Page returns HTTP success&quot;,
+        &quot;reason&quot;: &quot;This audit check passed, so ShipReady is not proposing a change.&quot;
+      },
+      {
+        &quot;checkId&quot;: &quot;metadata.title.present&quot;,
+        &quot;title&quot;: &quot;Title present&quot;,
+        &quot;reason&quot;: &quot;This audit check passed, so ShipReady is not proposing a change.&quot;
+      },
+      {
+        &quot;checkId&quot;: &quot;metadata.description.present&quot;,
+        &quot;title&quot;: &quot;Meta description present&quot;,
+        &quot;reason&quot;: &quot;This audit check passed, so ShipReady is not proposing a change.&quot;
+      },
+      {
+        &quot;checkId&quot;: &quot;metadata.robots.indexable&quot;,
+        &quot;title&quot;: &quot;Page is not marked noindex&quot;,
+        &quot;reason&quot;: &quot;This audit check passed, so ShipReady is not proposing a change.&quot;
+      },
+      {
+        &quot;checkId&quot;: &quot;metadata.lang.present&quot;,
+        &quot;title&quot;: &quot;HTML lang attribute present&quot;,
+        &quot;reason&quot;: &quot;This audit check passed, so ShipReady is not proposing a change.&quot;
+      },
+      {
+        &quot;checkId&quot;: &quot;metadata.viewport.present&quot;,
+        &quot;title&quot;: &quot;Viewport present&quot;,
+        &quot;reason&quot;: &quot;This audit check passed, so ShipReady is not proposing a change.&quot;
+      },
+      {
+        &quot;checkId&quot;: &quot;social.og.title_present&quot;,
+        &quot;title&quot;: &quot;og:title present&quot;,
+        &quot;reason&quot;: &quot;This audit check passed, so ShipReady is not proposing a change.&quot;
+      },
+      {
+        &quot;checkId&quot;: &quot;social.og.description_present&quot;,
+        &quot;title&quot;: &quot;og:description present&quot;,
+        &quot;reason&quot;: &quot;This audit check passed, so ShipReady is not proposing a change.&quot;
+      },
+      {
+        &quot;checkId&quot;: &quot;social.og.image_present&quot;,
+        &quot;title&quot;: &quot;og:image present&quot;,
+        &quot;reason&quot;: &quot;This audit check passed, so ShipReady is not proposing a change.&quot;
+      },
+      {
+        &quot;checkId&quot;: &quot;social.og.type_present&quot;,
+        &quot;title&quot;: &quot;og:type present&quot;,
+        &quot;reason&quot;: &quot;This audit check passed, so ShipReady is not proposing a change.&quot;
+      },
+      {
+        &quot;checkId&quot;: &quot;social.twitter.card_present&quot;,
+        &quot;title&quot;: &quot;twitter:card present&quot;,
+        &quot;reason&quot;: &quot;This audit check passed, so ShipReady is not proposing a change.&quot;
+      },
+      {
+        &quot;checkId&quot;: &quot;social.twitter.title_present&quot;,
+        &quot;title&quot;: &quot;twitter:title present&quot;,
+        &quot;reason&quot;: &quot;This audit check passed, so ShipReady is not proposing a change.&quot;
+      },
+      {
+        &quot;checkId&quot;: &quot;social.twitter.description_present&quot;,
+        &quot;title&quot;: &quot;twitter:description present&quot;,
+        &quot;reason&quot;: &quot;This audit check passed, so ShipReady is not proposing a change.&quot;
+      },
+      {
+        &quot;checkId&quot;: &quot;crawl.robots_txt.found&quot;,
+        &quot;title&quot;: &quot;robots.txt found&quot;,
+        &quot;reason&quot;: &quot;This audit check passed, so ShipReady is not proposing a change.&quot;
+      },
+      {
+        &quot;checkId&quot;: &quot;crawl.raw_render.consistent&quot;,
+        &quot;title&quot;: &quot;Key metadata present in raw HTML&quot;,
+        &quot;reason&quot;: &quot;This audit check passed, so ShipReady is not proposing a change.&quot;
+      }
+    ],
+    &quot;optionalNotes&quot;: [
+      &quot;Theme color is not set: Optional theme-color metadata was not found in the initial HTML.&quot;
+    ],
+    &quot;limitations&quot;: [
+      &quot;This is a read-only plan. No files were modified and no patches were generated.&quot;,
+      &quot;Future automation must re-check the repo before writing changes.&quot;,
+      &quot;File writing is disabled; use `shipready fix --dry-run` for supported patch previews.&quot;,
+      &quot;This command is read-only and does not modify repository files.&quot;,
+      &quot;Route-specific metadata in a Vite SPA may only appear after JavaScript rendering.&quot;,
+      &quot;Future fixes may need to recommend prerendering or SSG instead of relying on JS-injected metadata for crawler visibility.&quot;
+    ],
+    &quot;recommendedNextStep&quot;: &quot;review_plan&quot;
+  },
+  &quot;rawDryRun&quot;: {
+    &quot;url&quot;: &quot;https://mon-guide-fodmap.com/&quot;,
+    &quot;repoPath&quot;: &quot;/Users/fabiencampana/Documents/jade/mon-guide-fodmap-2&quot;,
+    &quot;generatedAt&quot;: &quot;2026-06-15T21:46:48.905Z&quot;,
+    &quot;mode&quot;: &quot;dry_run&quot;,
+    &quot;wroteFiles&quot;: false,
+    &quot;planSummary&quot;: {
+      &quot;auditScore&quot;: 60,
+      &quot;auditStatus&quot;: &quot;needs_work&quot;,
+      &quot;frameworkId&quot;: &quot;vite_react&quot;,
+      &quot;frameworkName&quot;: &quot;Vite React&quot;,
+      &quot;recommendedNextStep&quot;: &quot;review_plan&quot;
+    },
+    &quot;fileChanges&quot;: [
+      {
+        &quot;path&quot;: &quot;index.html&quot;,
+        &quot;changeType&quot;: &quot;update&quot;,
+        &quot;reason&quot;: &quot;Add or update Vite app-shell fallback metadata. Add conservative WebSite JSON-LD for human review.&quot;,
+        &quot;sourceActionIds&quot;: [
+          &quot;vite_react.json_ld_review&quot;,
+          &quot;vite_react.metadata_review&quot;
+        ],
+        &quot;risk&quot;: &quot;medium&quot;,
+        &quot;requiresHumanReview&quot;: true,
+        &quot;reviewStatus&quot;: &quot;review_required&quot;,
+        &quot;before&quot;: &quot;&lt;!doctype html&gt;\n&lt;html lang=\&quot;fr\&quot;&gt;\n  &lt;head&gt;\n    &lt;meta charset=\&quot;UTF-8\&quot; /&gt;\n    &lt;meta name=\&quot;viewport\&quot; content=\&quot;width=device-width, initial-scale=1.0\&quot; /&gt;\n    &lt;title&gt;MonGuide FODMAP - Votre guide alimentaire personnalisé&lt;/title&gt;\n    &lt;meta name=\&quot;description\&quot; content=\&quot;Guide alimentaire personnalisé pour le régime FODMAP. Gérez vos intolérances spécifiques au syndrome de l&#39;intestin irritable (SII).\&quot; /&gt;\n    &lt;meta name=\&quot;author\&quot; content=\&quot;MonGuide FODMAP\&quot; /&gt;\n\n    &lt;meta property=\&quot;og:title\&quot; content=\&quot;MonGuide FODMAP - Guide alimentaire personnalisé\&quot; /&gt;\n    &lt;meta property=\&quot;og:description\&quot; content=\&quot;Guide alimentaire personnalisé pour le régime FODMAP. Gérez vos intolérances spécifiques au SII.\&quot; /&gt;\n    &lt;meta property=\&quot;og:type\&quot; content=\&quot;website\&quot; /&gt;\n    &lt;meta property=\&quot;og:image\&quot; content=\&quot;/og-image.png\&quot; /&gt;\n\n    &lt;meta name=\&quot;twitter:card\&quot; content=\&quot;summary_large_image\&quot; /&gt;\n    &lt;meta name=\&quot;twitter:title\&quot; content=\&quot;MonGuide FODMAP\&quot; /&gt;\n    &lt;meta name=\&quot;twitter:description\&quot; content=\&quot;Votre guide alimentaire personnalisé pour le régime FODMAP\&quot; /&gt;\n  &lt;/head&gt;\n\n  &lt;body&gt;\n    &lt;div id=\&quot;root\&quot;&gt;&lt;/div&gt;\n    &lt;script type=\&quot;module\&quot; src=\&quot;/src/main.tsx\&quot;&gt;&lt;/script&gt;\n  &lt;/body&gt;\n&lt;/html&gt;\n&quot;,
+        &quot;after&quot;: &quot;&lt;!doctype html&gt;\n&lt;html lang=\&quot;fr\&quot;&gt;\n  &lt;head&gt;\n    &lt;meta charset=\&quot;UTF-8\&quot; /&gt;\n    &lt;meta name=\&quot;viewport\&quot; content=\&quot;width=device-width, initial-scale=1.0\&quot; /&gt;\n    &lt;title&gt;MonGuide FODMAP - Votre guide alimentaire personnalisé&lt;/title&gt;\n    &lt;meta name=\&quot;description\&quot; content=\&quot;Guide alimentaire personnalisé pour le régime FODMAP. Gérez vos intolérances spécifiques au syndrome de l&#39;intestin irritable (SII).\&quot; /&gt;\n    &lt;meta name=\&quot;author\&quot; content=\&quot;MonGuide FODMAP\&quot; /&gt;\n\n    &lt;meta property=\&quot;og:title\&quot; content=\&quot;MonGuide FODMAP - Guide alimentaire personnalisé\&quot; /&gt;\n    &lt;meta property=\&quot;og:description\&quot; content=\&quot;Guide alimentaire personnalisé pour le régime FODMAP. Gérez vos intolérances spécifiques au SII.\&quot; /&gt;\n    &lt;meta property=\&quot;og:type\&quot; content=\&quot;website\&quot; /&gt;\n    &lt;meta property=\&quot;og:image\&quot; content=\&quot;/og-image.png\&quot; /&gt;\n\n    &lt;meta name=\&quot;twitter:card\&quot; content=\&quot;summary_large_image\&quot; /&gt;\n    &lt;meta name=\&quot;twitter:title\&quot; content=\&quot;MonGuide FODMAP\&quot; /&gt;\n    &lt;meta name=\&quot;twitter:description\&quot; content=\&quot;Votre guide alimentaire personnalisé pour le régime FODMAP\&quot; /&gt;\n    &lt;link rel=\&quot;canonical\&quot; href=\&quot;https://mon-guide-fodmap.com/\&quot; /&gt;\n    &lt;meta property=\&quot;og:url\&quot; content=\&quot;https://mon-guide-fodmap.com/\&quot; /&gt;\n    &lt;!-- TODO(shipready): Replace with an absolute public Twitter/X image URL. --&gt;\n    &lt;meta name=\&quot;twitter:image\&quot; content=\&quot;TODO: Absolute image URL\&quot; /&gt;\n    &lt;!-- TODO(shipready): Confirm this structured data before applying. --&gt;\n    &lt;script type=\&quot;application/ld+json\&quot;&gt;\n      {\n        \&quot;@context\&quot;: \&quot;https://schema.org\&quot;,\n        \&quot;@type\&quot;: \&quot;WebSite\&quot;,\n        \&quot;name\&quot;: \&quot;MonGuide FODMAP - Votre guide alimentaire personnalisé\&quot;,\n        \&quot;url\&quot;: \&quot;https://mon-guide-fodmap.com/\&quot;\n      }\n    &lt;/script&gt;\n  &lt;/head&gt;\n\n  &lt;body&gt;\n    &lt;div id=\&quot;root\&quot;&gt;&lt;/div&gt;\n    &lt;script type=\&quot;module\&quot; src=\&quot;/src/main.tsx\&quot;&gt;&lt;/script&gt;\n  &lt;/body&gt;\n&lt;/html&gt;\n&quot;,
+        &quot;diff&quot;: &quot;--- index.html\n+++ index.html\n@@ -15,6 +15,19 @@\n     &lt;meta name=\&quot;twitter:card\&quot; content=\&quot;summary_large_image\&quot; /&gt;\n     &lt;meta name=\&quot;twitter:title\&quot; content=\&quot;MonGuide FODMAP\&quot; /&gt;\n     &lt;meta name=\&quot;twitter:description\&quot; content=\&quot;Votre guide alimentaire personnalisé pour le régime FODMAP\&quot; /&gt;\n+    &lt;link rel=\&quot;canonical\&quot; href=\&quot;https://mon-guide-fodmap.com/\&quot; /&gt;\n+    &lt;meta property=\&quot;og:url\&quot; content=\&quot;https://mon-guide-fodmap.com/\&quot; /&gt;\n+    &lt;!-- TODO(shipready): Replace with an absolute public Twitter/X image URL. --&gt;\n+    &lt;meta name=\&quot;twitter:image\&quot; content=\&quot;TODO: Absolute image URL\&quot; /&gt;\n+    &lt;!-- TODO(shipready): Confirm this structured data before applying. --&gt;\n+    &lt;script type=\&quot;application/ld+json\&quot;&gt;\n+      {\n+        \&quot;@context\&quot;: \&quot;https://schema.org\&quot;,\n+        \&quot;@type\&quot;: \&quot;WebSite\&quot;,\n+        \&quot;name\&quot;: \&quot;MonGuide FODMAP - Votre guide alimentaire personnalisé\&quot;,\n+        \&quot;url\&quot;: \&quot;https://mon-guide-fodmap.com/\&quot;\n+      }\n+    &lt;/script&gt;\n   &lt;/head&gt;\n \n   &lt;body&gt;&quot;
+      },
+      {
+        &quot;path&quot;: &quot;public/sitemap.xml&quot;,
+        &quot;changeType&quot;: &quot;create&quot;,
+        &quot;reason&quot;: &quot;Create a valid single-URL sitemap.xml preview.&quot;,
+        &quot;sourceActionIds&quot;: [
+          &quot;vite_react.sitemap&quot;
+        ],
+        &quot;risk&quot;: &quot;low&quot;,
+        &quot;requiresHumanReview&quot;: true,
+        &quot;reviewStatus&quot;: &quot;review_required&quot;,
+        &quot;after&quot;: &quot;&lt;?xml version=\&quot;1.0\&quot; encoding=\&quot;UTF-8\&quot;?&gt;\n&lt;urlset xmlns=\&quot;http://www.sitemaps.org/schemas/sitemap/0.9\&quot;&gt;\n  &lt;url&gt;\n    &lt;loc&gt;https://mon-guide-fodmap.com/&lt;/loc&gt;\n  &lt;/url&gt;\n&lt;/urlset&gt;\n&quot;,
+        &quot;diff&quot;: &quot;--- /dev/null\n+++ public/sitemap.xml\n@@\n+&lt;?xml version=\&quot;1.0\&quot; encoding=\&quot;UTF-8\&quot;?&gt;\n+&lt;urlset xmlns=\&quot;http://www.sitemaps.org/schemas/sitemap/0.9\&quot;&gt;\n+  &lt;url&gt;\n+    &lt;loc&gt;https://mon-guide-fodmap.com/&lt;/loc&gt;\n+  &lt;/url&gt;\n+&lt;/urlset&gt;\n+&quot;
+      }
+    ],
+    &quot;skippedActions&quot;: [
+      {
+        &quot;actionId&quot;: &quot;vite_react.heading&quot;,
+        &quot;title&quot;: &quot;Review page heading structure&quot;,
+        &quot;reasonKind&quot;: &quot;requires_more_information&quot;,
+        &quot;reason&quot;: &quot;H1 review is a content change and requires human review.&quot;,
+        &quot;sourceActionIds&quot;: [
+          &quot;structure.h1.missing&quot;
+        ],
+        &quot;risk&quot;: &quot;medium&quot;
+      }
+    ],
+    &quot;safetyNotes&quot;: [
+      &quot;Dry-run only. No files were modified.&quot;,
+      &quot;This is fallback metadata for the app shell. Route-specific metadata may require prerendering, SSR, or a later framework-specific strategy.&quot;,
+      &quot;Review generated changes before applying.&quot;,
+      &quot;TODO placeholder metadata is for preview only and must be replaced before any future write.&quot;,
+      &quot;JSON-LD previews use only conservative WebSite schema and require human confirmation.&quot;
+    ],
+    &quot;recommendedNextStep&quot;: &quot;review_patch_preview&quot;
+  }
+}</pre>
+  </details>
+</section>
+</main>
+</body>
+</html>

@@ -1,0 +1,15 @@
+{
+  "status": 400,
+  "body": {
+    "ok": false,
+    "error": {
+      "message": "Invalid URL. Provide an absolute http:// or https:// URL.",
+      "stage": "audit",
+      "details": {
+        "name": "Error",
+        "message": "Invalid URL. Provide an absolute http:// or https:// URL.",
+        "stack": "Error: Invalid URL. Provide an absolute http:// or https:// URL.\n    at normalizeAuditUrl (/Users/fabiencampana/Documents/ship-ready/src/utils/url.ts:7:11)\n    at createUiReport (/Users/fabiencampana/Documents/ship-ready/src/report/createUiReport.ts:209:21)\n    at createUiReportApiResult (/Users/fabiencampana/Documents/ship-ready/src/gui/guiApi.ts:48:51)\n    at handleGuiRequest (/Users/fabiencampana/Documents/ship-ready/src/gui/startGuiServer.ts:105:15)\n    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)"
+      }
+    }
+  }
+}

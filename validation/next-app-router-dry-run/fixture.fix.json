@@ -1,0 +1,85 @@
+{
+  "url": "http://127.0.0.1:55783/",
+  "repoPath": "tests/fixtures/repos/next-app-router-dry-run",
+  "generatedAt": "2026-06-15T13:27:48.895Z",
+  "mode": "dry_run",
+  "wroteFiles": false,
+  "planSummary": {
+    "auditScore": 10,
+    "auditStatus": "critical",
+    "frameworkId": "next_app_router",
+    "frameworkName": "Next.js App Router",
+    "recommendedNextStep": "review_plan"
+  },
+  "fileChanges": [
+    {
+      "path": "src/app/layout.tsx",
+      "changeType": "update",
+      "reason": "Add root App Router metadata export for missing fields: title, description, canonical, openGraph.title, openGraph.description, openGraph.url, openGraph.type, twitter.card, twitter.title, twitter.description.",
+      "sourceActionIds": [
+        "next_app_router.metadata_review"
+      ],
+      "risk": "medium",
+      "requiresHumanReview": true,
+      "reviewStatus": "review_required",
+      "before": "export default function RootLayout({ children }: { children: React.ReactNode }) {\n  return <html lang=\"en\"><body>{children}</body></html>;\n}\n",
+      "after": "import type { Metadata } from \"next\";\n\nexport const metadata: Metadata = {\n  // TODO(shipready): Replace with the factual page title before applying.\n  title: \"TODO: Page title\",\n  // TODO(shipready): Replace with the factual page description before applying.\n  description: \"TODO: Page description\",\n  alternates: {\n    canonical: \"http://127.0.0.1:55783/\",\n  },\n  openGraph: {\n    // TODO(shipready): Replace with the factual Open Graph title before applying.\n    title: \"TODO: Page title\",\n    // TODO(shipready): Replace with the factual Open Graph description before applying.\n    description: \"TODO: Page description\",\n    url: \"http://127.0.0.1:55783/\",\n    type: \"website\",\n  },\n  twitter: {\n    card: \"summary_large_image\",\n    // TODO(shipready): Replace with the factual Twitter/X title before applying.\n    title: \"TODO: Page title\",\n    // TODO(shipready): Replace with the factual Twitter/X description before applying.\n    description: \"TODO: Page description\",\n  },\n};\n\nexport default function RootLayout({ children }: { children: React.ReactNode }) {\n  return <html lang=\"en\"><body>{children}</body></html>;\n}\n",
+      "diff": "--- src/app/layout.tsx\n+++ src/app/layout.tsx\n@@ -1,3 +1,30 @@\n+import type { Metadata } from \"next\";\n+\n+export const metadata: Metadata = {\n+  // TODO(shipready): Replace with the factual page title before applying.\n+  title: \"TODO: Page title\",\n+  // TODO(shipready): Replace with the factual page description before applying.\n+  description: \"TODO: Page description\",\n+  alternates: {\n+    canonical: \"http://127.0.0.1:55783/\",\n+  },\n+  openGraph: {\n+    // TODO(shipready): Replace with the factual Open Graph title before applying.\n+    title: \"TODO: Page title\",\n+    // TODO(shipready): Replace with the factual Open Graph description before applying.\n+    description: \"TODO: Page description\",\n+    url: \"http://127.0.0.1:55783/\",\n+    type: \"website\",\n+  },\n+  twitter: {\n+    card: \"summary_large_image\",\n+    // TODO(shipready): Replace with the factual Twitter/X title before applying.\n+    title: \"TODO: Page title\",\n+    // TODO(shipready): Replace with the factual Twitter/X description before applying.\n+    description: \"TODO: Page description\",\n+  },\n+};\n+\n export default function RootLayout({ children }: { children: React.ReactNode }) {\n   return <html lang=\"en\"><body>{children}</body></html>;\n }"
+    },
+    {
+      "path": "src/app/robots.ts",
+      "changeType": "create",
+      "reason": "Create an App Router robots.ts route that allows crawling and points to the sitemap.",
+      "sourceActionIds": [
+        "next_app_router.robots"
+      ],
+      "risk": "low",
+      "requiresHumanReview": false,
+      "reviewStatus": "auto_candidate",
+      "after": "import type { MetadataRoute } from \"next\";\n\nexport default function robots(): MetadataRoute.Robots {\n  return {\n    rules: {\n      userAgent: \"*\",\n      allow: \"/\",\n    },\n    sitemap: \"http://127.0.0.1:55783/sitemap.xml\",\n  };\n}\n",
+      "diff": "--- /dev/null\n+++ src/app/robots.ts\n@@\n+import type { MetadataRoute } from \"next\";\n+\n+export default function robots(): MetadataRoute.Robots {\n+  return {\n+    rules: {\n+      userAgent: \"*\",\n+      allow: \"/\",\n+    },\n+    sitemap: \"http://127.0.0.1:55783/sitemap.xml\",\n+  };\n+}\n+"
+    },
+    {
+      "path": "src/app/sitemap.ts",
+      "changeType": "create",
+      "reason": "Create an App Router sitemap.ts route for the audited URL.",
+      "sourceActionIds": [
+        "next_app_router.sitemap"
+      ],
+      "risk": "low",
+      "requiresHumanReview": false,
+      "reviewStatus": "auto_candidate",
+      "after": "import type { MetadataRoute } from \"next\";\n\nexport default function sitemap(): MetadataRoute.Sitemap {\n  return [\n    {\n      url: \"http://127.0.0.1:55783/\",\n      lastModified: new Date(),\n      changeFrequency: \"weekly\",\n      priority: 1,\n    },\n  ];\n}\n",
+      "diff": "--- /dev/null\n+++ src/app/sitemap.ts\n@@\n+import type { MetadataRoute } from \"next\";\n+\n+export default function sitemap(): MetadataRoute.Sitemap {\n+  return [\n+    {\n+      url: \"http://127.0.0.1:55783/\",\n+      lastModified: new Date(),\n+      changeFrequency: \"weekly\",\n+      priority: 1,\n+    },\n+  ];\n+}\n+"
+    }
+  ],
+  "skippedActions": [
+    {
+      "actionId": "next_app_router.json_ld_review",
+      "title": "Add JSON-LD with review",
+      "reasonKind": "requires_more_information",
+      "reason": "Next.js App Router JSON-LD preview requires a reviewed structured-data component and factual schema details.",
+      "sourceActionIds": [
+        "schema.jsonld.missing"
+      ],
+      "risk": "medium"
+    },
+    {
+      "actionId": "next_app_router.heading",
+      "title": "Review page heading structure",
+      "reasonKind": "requires_more_information",
+      "reason": "H1 review is a content change and requires human review.",
+      "sourceActionIds": [
+        "structure.h1.missing"
+      ],
+      "risk": "medium"
+    }
+  ],
+  "safetyNotes": [
+    "Dry-run only. No files were modified.",
+    "Next.js App Router previews are conservative and read-only; dynamic metadata and component changes are skipped.",
+    "Skipped Next.js metadata fields that require factual assets or copy: openGraph.images, twitter.images.",
+    "Review generated changes before applying."
+  ],
+  "recommendedNextStep": "review_patch_preview"
+}

@@ -1,0 +1,37 @@
+ShipReady write result
+URL: http://127.0.0.1:59494/
+Repo: /var/folders/tl/ldqht3rj4bbfy8xqbj59tfd40000gn/T/shipready-write-v1-UpCByb/static-human
+
+Mode: write
+Policy: creation-only robots/sitemap
+Files actually changed: 0
+
+Created files: 0
+- None
+
+Blocked changes:
+- None
+
+Skipped actions:
+- Add robots.txt: robots.txt already exists locally; verify deployment wiring before changing it.
+
+Safety:
+- No existing files overwritten.
+- No files outside repo root touched.
+- No Git operations performed.
+- No commits created.
+- No dependencies installed.
+- No package files or lockfiles changed.
+- No formatting run.
+- No deploys performed.
+- Passed: Write candidates are selected only from the regenerated dry-run result.
+- Passed: Write policy is limited to missing robots/sitemap file creations.
+- Passed: No eligible missing robots/sitemap creations were found.
+- Passed: No existing files will be overwritten.
+- Passed: No Git operations, commits, branches, or GitHub calls will be performed.
+- Passed: No dependencies, package files, lockfiles, or config files will be changed.
+- Passed: No formatting or deploy commands will be run.
+- Rollback not needed.
+
+Recommended next step:
+- Review blocked or skipped changes manually; write mode did not apply them.

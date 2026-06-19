@@ -1,0 +1,73 @@
+{
+  "url": "http://127.0.0.1:59494/",
+  "repoPath": "/var/folders/tl/ldqht3rj4bbfy8xqbj59tfd40000gn/T/shipready-write-v1-UpCByb/blocked-existing-file-json",
+  "generatedAt": "2026-06-15T14:27:39.194Z",
+  "mode": "write",
+  "wroteFiles": false,
+  "policy": "creation_only_robots_sitemap_v1",
+  "createdFiles": [],
+  "skippedActions": [
+    {
+      "actionId": "static_html.robots",
+      "title": "Add robots.txt",
+      "reasonKind": "requires_more_information",
+      "reason": "robots.txt already exists locally; verify deployment wiring before changing it.",
+      "sourceActionIds": [
+        "crawl.robots_txt.missing"
+      ],
+      "risk": "low"
+    }
+  ],
+  "blockedChanges": [
+    {
+      "path": "sitemap.xml",
+      "reason": "Existing robots/sitemap files are never overwritten in write mode.",
+      "dryRunChangeType": "update",
+      "risk": "low",
+      "reviewStatus": "auto_candidate"
+    }
+  ],
+  "safetyChecks": [
+    {
+      "id": "current_dry_run",
+      "status": "passed",
+      "message": "Write candidates are selected only from the regenerated dry-run result."
+    },
+    {
+      "id": "creation_only_policy",
+      "status": "passed",
+      "message": "Write policy is limited to missing robots/sitemap file creations."
+    },
+    {
+      "id": "eligible_candidates",
+      "status": "passed",
+      "message": "No eligible missing robots/sitemap creations were found."
+    },
+    {
+      "id": "blocked_non_writable_changes",
+      "status": "passed",
+      "message": "Non-writable dry-run changes were reported and left untouched."
+    },
+    {
+      "id": "no_overwrites",
+      "status": "passed",
+      "message": "No existing files will be overwritten."
+    },
+    {
+      "id": "no_git_operations",
+      "status": "passed",
+      "message": "No Git operations, commits, branches, or GitHub calls will be performed."
+    },
+    {
+      "id": "no_dependency_operations",
+      "status": "passed",
+      "message": "No dependencies, package files, lockfiles, or config files will be changed."
+    },
+    {
+      "id": "no_formatting_or_deploy",
+      "status": "passed",
+      "message": "No formatting or deploy commands will be run."
+    }
+  ],
+  "recommendedNextStep": "manual_review_required"
+}

@@ -1,0 +1,31 @@
+ShipReady dry-run fix preview
+URL: http://127.0.0.1:59494/
+Repo: /var/folders/tl/ldqht3rj4bbfy8xqbj59tfd40000gn/T/shipready-write-v1-UpCByb/next-human
+
+Summary
+- Mode: dry_run
+- Audit score: 90/100
+- Audit status: Good
+- Framework: Next.js App Router
+- Files that would be changed: 0
+- Files actually changed: 0
+
+Would create:
+- None
+
+Would update:
+- None
+
+Skipped:
+- Add robots.ts: src/app/robots.ts already exists locally; verify deployment wiring before changing it.
+- Add sitemap.ts: src/app/sitemap.ts already exists locally; existing sitemap routes require manual review.
+
+Diff preview
+- None
+
+Safety
+- Dry-run only. No files were modified.
+- Next.js App Router previews are conservative and read-only; dynamic metadata and component changes are skipped.
+
+Recommended next step
+- Manual review required

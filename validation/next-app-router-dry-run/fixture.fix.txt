@@ -1,0 +1,99 @@
+ShipReady dry-run fix preview
+URL: http://127.0.0.1:55783/
+Repo: tests/fixtures/repos/next-app-router-dry-run
+
+Summary
+- Mode: dry_run
+- Audit score: 10/100
+- Audit status: Critical
+- Framework: Next.js App Router
+- Files that would be changed: 3
+- Files actually changed: 0
+
+Would create:
+- src/app/robots.ts (Create an App Router robots.ts route that allows crawling and points to the sitemap.; risk: low; automation candidate)
+- src/app/sitemap.ts (Create an App Router sitemap.ts route for the audited URL.; risk: low; automation candidate)
+
+Would update:
+- src/app/layout.tsx (Add root App Router metadata export for missing fields: title, description, canonical, openGraph.title, openGraph.description, openGraph.url, openGraph.type, twitter.card, twitter.title, twitter.description.; risk: medium; review required)
+
+Skipped:
+- Add JSON-LD with review: Next.js App Router JSON-LD preview requires a reviewed structured-data component and factual schema details.
+- Review page heading structure: H1 review is a content change and requires human review.
+
+Diff preview
+--- src/app/layout.tsx
++++ src/app/layout.tsx
+@@ -1,3 +1,30 @@
++import type { Metadata } from "next";
++
++export const metadata: Metadata = {
++  // TODO(shipready): Replace with the factual page title before applying.
++  title: "TODO: Page title",
++  // TODO(shipready): Replace with the factual page description before applying.
++  description: "TODO: Page description",
++  alternates: {
++    canonical: "http://127.0.0.1:55783/",
++  },
++  openGraph: {
++    // TODO(shipready): Replace with the factual Open Graph title before applying.
++    title: "TODO: Page title",
++    // TODO(shipready): Replace with the factual Open Graph description before applying.
++    description: "TODO: Page description",
++    url: "http://127.0.0.1:55783/",
++    type: "website",
++  },
++  twitter: {
++    card: "summary_large_image",
++    // TODO(shipready): Replace with the factual Twitter/X title before applying.
++    title: "TODO: Page title",
++    // TODO(shipready): Replace with the factual Twitter/X description before applying.
++    description: "TODO: Page description",
++  },
++};
++
+ export default function RootLayout({ children }: { children: React.ReactNode }) {
+   return <html lang="en"><body>{children}</body></html>;
+ }
+
+--- /dev/null
++++ src/app/robots.ts
+@@
++import type { MetadataRoute } from "next";
++
++export default function robots(): MetadataRoute.Robots {
++  return {
++    rules: {
++      userAgent: "*",
++      allow: "/",
++    },
++    sitemap: "http://127.0.0.1:55783/sitemap.xml",
++  };
++}
++
+
+--- /dev/null
++++ src/app/sitemap.ts
+@@
++import type { MetadataRoute } from "next";
++
++export default function sitemap(): MetadataRoute.Sitemap {
++  return [
++    {
++      url: "http://127.0.0.1:55783/",
++      lastModified: new Date(),
++      changeFrequency: "weekly",
++      priority: 1,
++    },
++  ];
++}
++
+
+Safety
+- Dry-run only. No files were modified.
+- Next.js App Router previews are conservative and read-only; dynamic metadata and component changes are skipped.
+- Skipped Next.js metadata fields that require factual assets or copy: openGraph.images, twitter.images.
+- Review generated changes before applying.
+
+Recommended next step
+- Review patch preview

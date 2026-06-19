@@ -1,0 +1,89 @@
+{
+  "ok": false,
+  "error": "ShipReady write validation blocked one or more creation candidates. No files were written.",
+  "result": {
+    "url": "https://mon-guide-fodmap.com/",
+    "repoPath": "validation/write-v1-real-repos/tmp/mon-guide-fodmap-2",
+    "generatedAt": "2026-06-15T14:43:29.054Z",
+    "mode": "write",
+    "wroteFiles": false,
+    "policy": "creation_only_robots_sitemap_v1",
+    "createdFiles": [],
+    "skippedActions": [
+      {
+        "actionId": "vite_react.heading",
+        "title": "Review page heading structure",
+        "reasonKind": "requires_more_information",
+        "reason": "H1 review is a content change and requires human review.",
+        "sourceActionIds": [
+          "structure.h1.missing"
+        ],
+        "risk": "medium"
+      }
+    ],
+    "blockedChanges": [
+      {
+        "path": "index.html",
+        "reason": "HTML, metadata, and config updates are outside the V1 write policy.",
+        "dryRunChangeType": "update",
+        "risk": "medium",
+        "reviewStatus": "review_required"
+      },
+      {
+        "path": "public/sitemap.xml",
+        "reason": "Review status must be auto_candidate; dry-run status was review_required. Changes that require human review are not writable.",
+        "dryRunChangeType": "create",
+        "risk": "low",
+        "reviewStatus": "review_required"
+      }
+    ],
+    "safetyChecks": [
+      {
+        "id": "current_dry_run",
+        "status": "passed",
+        "message": "Write candidates are selected only from the regenerated dry-run result."
+      },
+      {
+        "id": "creation_only_policy",
+        "status": "passed",
+        "message": "Write policy is limited to missing robots/sitemap file creations."
+      },
+      {
+        "id": "candidate_validation",
+        "status": "blocked",
+        "message": "public/sitemap.xml failed write safety validation."
+      },
+      {
+        "id": "eligible_candidates",
+        "status": "passed",
+        "message": "No eligible missing robots/sitemap creations were found."
+      },
+      {
+        "id": "blocked_non_writable_changes",
+        "status": "passed",
+        "message": "Non-writable dry-run changes were reported and left untouched."
+      },
+      {
+        "id": "no_overwrites",
+        "status": "passed",
+        "message": "No existing files will be overwritten."
+      },
+      {
+        "id": "no_git_operations",
+        "status": "passed",
+        "message": "No Git operations, commits, branches, or GitHub calls will be performed."
+      },
+      {
+        "id": "no_dependency_operations",
+        "status": "passed",
+        "message": "No dependencies, package files, lockfiles, or config files will be changed."
+      },
+      {
+        "id": "no_formatting_or_deploy",
+        "status": "passed",
+        "message": "No formatting or deploy commands will be run."
+      }
+    ],
+    "recommendedNextStep": "manual_review_required"
+  }
+}

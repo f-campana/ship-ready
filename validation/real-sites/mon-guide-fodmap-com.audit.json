@@ -1,0 +1,489 @@
+{
+  "url": "https://mon-guide-fodmap.com/",
+  "finalUrl": "https://mon-guide-fodmap.com/",
+  "auditedAt": "2026-06-14T21:43:48.868Z",
+  "httpStatus": 200,
+  "score": 60,
+  "status": "needs_work",
+  "raw": {
+    "source": "raw",
+    "url": "https://mon-guide-fodmap.com/",
+    "metadata": {
+      "htmlLang": "fr",
+      "title": "MonGuide FODMAP - Votre guide alimentaire personnalisé",
+      "description": "Guide alimentaire personnalisé pour le régime FODMAP. Gérez vos intolérances spécifiques au syndrome de l'intestin irritable (SII).",
+      "viewport": "width=device-width, initial-scale=1.0",
+      "faviconLinks": [],
+      "openGraph": {
+        "title": "MonGuide FODMAP - Guide alimentaire personnalisé",
+        "description": "Guide alimentaire personnalisé pour le régime FODMAP. Gérez vos intolérances spécifiques au SII.",
+        "image": "https://mon-guide-fodmap.com/og-image.png",
+        "type": "website"
+      },
+      "twitter": {
+        "card": "summary_large_image",
+        "title": "MonGuide FODMAP",
+        "description": "Votre guide alimentaire personnalisé pour le régime FODMAP"
+      }
+    },
+    "headings": {
+      "h1": [],
+      "all": []
+    },
+    "images": {
+      "total": 0,
+      "missingAlt": 0,
+      "items": []
+    },
+    "links": {
+      "total": 0,
+      "missingAccessibleText": 0,
+      "items": []
+    },
+    "jsonLd": []
+  },
+  "rendered": {
+    "source": "rendered",
+    "url": "https://mon-guide-fodmap.com/",
+    "metadata": {
+      "htmlLang": "fr",
+      "title": "MonGuide FODMAP - Votre guide alimentaire personnalisé",
+      "description": "Guide alimentaire personnalisé pour le régime FODMAP. Gérez vos intolérances spécifiques au syndrome de l'intestin irritable (SII).",
+      "viewport": "width=device-width, initial-scale=1.0",
+      "faviconLinks": [],
+      "openGraph": {
+        "title": "MonGuide FODMAP - Guide alimentaire personnalisé",
+        "description": "Guide alimentaire personnalisé pour le régime FODMAP. Gérez vos intolérances spécifiques au SII.",
+        "image": "https://mon-guide-fodmap.com/og-image.png",
+        "type": "website"
+      },
+      "twitter": {
+        "card": "summary_large_image",
+        "title": "MonGuide FODMAP",
+        "description": "Votre guide alimentaire personnalisé pour le régime FODMAP"
+      }
+    },
+    "headings": {
+      "h1": [
+        "MonGuide FODMAP"
+      ],
+      "all": [
+        {
+          "level": 1,
+          "text": "MonGuide FODMAP"
+        },
+        {
+          "level": 2,
+          "text": "Qu'est-ce que les FODMAPs ?"
+        },
+        {
+          "level": 2,
+          "text": "Comment ça marche"
+        },
+        {
+          "level": 3,
+          "text": "Configurez votre profil"
+        },
+        {
+          "level": 3,
+          "text": "Recherchez et explorez"
+        },
+        {
+          "level": 3,
+          "text": "Mangez en confiance"
+        },
+        {
+          "level": 2,
+          "text": "Cette application est pour vous si..."
+        },
+        {
+          "level": 2,
+          "text": "Avertissement Important"
+        },
+        {
+          "level": 2,
+          "text": "Prêt à commencer ?"
+        },
+        {
+          "level": 3,
+          "text": "Informations Légales"
+        },
+        {
+          "level": 3,
+          "text": "Sources de Données"
+        },
+        {
+          "level": 3,
+          "text": "Contact"
+        }
+      ]
+    },
+    "images": {
+      "total": 0,
+      "missingAlt": 0,
+      "items": []
+    },
+    "links": {
+      "total": 5,
+      "missingAccessibleText": 0,
+      "items": [
+        {
+          "href": "/legal",
+          "text": "Mentions Légales & Avertissements"
+        },
+        {
+          "href": "/about",
+          "text": "À Propos"
+        },
+        {
+          "href": "https://www.monashfodmap.com/",
+          "text": "Monash University"
+        },
+        {
+          "href": "https://www.linkedin.com/in/hernandez-jade/",
+          "text": "LinkedIn"
+        },
+        {
+          "href": "https://github.com/jade-hernandez/guide-monf",
+          "text": "Voir sur GitHub"
+        }
+      ]
+    },
+    "jsonLd": []
+  },
+  "comparison": {
+    "fields": [
+      {
+        "field": "title",
+        "rawValue": "MonGuide FODMAP - Votre guide alimentaire personnalisé",
+        "renderedValue": "MonGuide FODMAP - Votre guide alimentaire personnalisé",
+        "status": "present_in_raw"
+      },
+      {
+        "field": "description",
+        "rawValue": "Guide alimentaire personnalisé pour le régime FODMAP. Gérez vos intolérances spécifiques au syndrome de l'intestin irritable (SII).",
+        "renderedValue": "Guide alimentaire personnalisé pour le régime FODMAP. Gérez vos intolérances spécifiques au syndrome de l'intestin irritable (SII).",
+        "status": "present_in_raw"
+      },
+      {
+        "field": "canonical",
+        "status": "missing_in_both"
+      },
+      {
+        "field": "robots",
+        "status": "missing_in_both"
+      },
+      {
+        "field": "html.lang",
+        "rawValue": "fr",
+        "renderedValue": "fr",
+        "status": "present_in_raw"
+      },
+      {
+        "field": "viewport",
+        "rawValue": "width=device-width, initial-scale=1.0",
+        "renderedValue": "width=device-width, initial-scale=1.0",
+        "status": "present_in_raw"
+      },
+      {
+        "field": "theme-color",
+        "status": "missing_in_both"
+      },
+      {
+        "field": "favicon",
+        "status": "missing_in_both"
+      },
+      {
+        "field": "og:title",
+        "rawValue": "MonGuide FODMAP - Guide alimentaire personnalisé",
+        "renderedValue": "MonGuide FODMAP - Guide alimentaire personnalisé",
+        "status": "present_in_raw"
+      },
+      {
+        "field": "og:description",
+        "rawValue": "Guide alimentaire personnalisé pour le régime FODMAP. Gérez vos intolérances spécifiques au SII.",
+        "renderedValue": "Guide alimentaire personnalisé pour le régime FODMAP. Gérez vos intolérances spécifiques au SII.",
+        "status": "present_in_raw"
+      },
+      {
+        "field": "og:image",
+        "rawValue": "https://mon-guide-fodmap.com/og-image.png",
+        "renderedValue": "https://mon-guide-fodmap.com/og-image.png",
+        "status": "present_in_raw"
+      },
+      {
+        "field": "og:url",
+        "status": "missing_in_both"
+      },
+      {
+        "field": "og:type",
+        "rawValue": "website",
+        "renderedValue": "website",
+        "status": "present_in_raw"
+      },
+      {
+        "field": "og:site_name",
+        "status": "missing_in_both"
+      },
+      {
+        "field": "twitter:card",
+        "rawValue": "summary_large_image",
+        "renderedValue": "summary_large_image",
+        "status": "present_in_raw"
+      },
+      {
+        "field": "twitter:title",
+        "rawValue": "MonGuide FODMAP",
+        "renderedValue": "MonGuide FODMAP",
+        "status": "present_in_raw"
+      },
+      {
+        "field": "twitter:description",
+        "rawValue": "Votre guide alimentaire personnalisé pour le régime FODMAP",
+        "renderedValue": "Votre guide alimentaire personnalisé pour le régime FODMAP",
+        "status": "present_in_raw"
+      },
+      {
+        "field": "twitter:image",
+        "status": "missing_in_both"
+      }
+    ]
+  },
+  "checks": [
+    {
+      "id": "crawl.status.ok",
+      "category": "crawlability",
+      "severity": "passed",
+      "title": "Page returns HTTP success",
+      "description": "The audited URL returned a 2xx HTTP status.",
+      "confidence": "high",
+      "fixability": "not_fixable"
+    },
+    {
+      "id": "metadata.title.present",
+      "category": "metadata",
+      "severity": "passed",
+      "title": "Title present",
+      "description": "Raw title: MonGuide FODMAP - Votre guide alimentaire personnalisé",
+      "confidence": "high",
+      "fixability": "not_fixable"
+    },
+    {
+      "id": "metadata.description.present",
+      "category": "metadata",
+      "severity": "passed",
+      "title": "Meta description present",
+      "description": "Raw meta description is present.",
+      "confidence": "high",
+      "fixability": "not_fixable"
+    },
+    {
+      "id": "metadata.canonical.missing",
+      "category": "metadata",
+      "severity": "critical",
+      "title": "Missing canonical URL",
+      "description": "The raw HTML does not include a canonical link.",
+      "recommendation": "Add a canonical link that points to the preferred public URL for this page.",
+      "confidence": "high",
+      "fixability": "auto_fixable",
+      "fixStrategy": "Add a canonical link in the page head or framework metadata config."
+    },
+    {
+      "id": "metadata.robots.indexable",
+      "category": "crawlability",
+      "severity": "passed",
+      "title": "Page is not marked noindex",
+      "description": "No noindex robots meta directive was detected.",
+      "confidence": "high",
+      "fixability": "not_fixable"
+    },
+    {
+      "id": "metadata.lang.present",
+      "category": "metadata",
+      "severity": "passed",
+      "title": "HTML lang attribute present",
+      "description": "fr",
+      "confidence": "high",
+      "fixability": "not_fixable"
+    },
+    {
+      "id": "metadata.viewport.present",
+      "category": "metadata",
+      "severity": "passed",
+      "title": "Viewport present",
+      "description": "width=device-width, initial-scale=1.0",
+      "confidence": "high",
+      "fixability": "not_fixable"
+    },
+    {
+      "id": "metadata.theme_color.missing",
+      "category": "metadata",
+      "severity": "info",
+      "title": "Theme color is not set",
+      "description": "Optional theme-color metadata was not found in the initial HTML.",
+      "recommendation": "Add a theme-color meta tag if you want branded browser UI on supported surfaces.",
+      "confidence": "high",
+      "fixability": "plan_only"
+    },
+    {
+      "id": "metadata.favicon.missing",
+      "category": "metadata",
+      "severity": "warning",
+      "title": "No favicon links found",
+      "description": "Favicons and app icons help the site look complete in tabs, bookmarks, and device surfaces.",
+      "confidence": "high",
+      "fixability": "plan_only"
+    },
+    {
+      "id": "social.og.title_present",
+      "category": "social",
+      "severity": "passed",
+      "title": "og:title present",
+      "description": "MonGuide FODMAP - Guide alimentaire personnalisé",
+      "confidence": "high",
+      "fixability": "not_fixable"
+    },
+    {
+      "id": "social.og.description_present",
+      "category": "social",
+      "severity": "passed",
+      "title": "og:description present",
+      "description": "Open Graph description is present.",
+      "confidence": "high",
+      "fixability": "not_fixable"
+    },
+    {
+      "id": "social.og.image_present",
+      "category": "social",
+      "severity": "passed",
+      "title": "og:image present",
+      "description": "https://mon-guide-fodmap.com/og-image.png",
+      "confidence": "high",
+      "fixability": "not_fixable"
+    },
+    {
+      "id": "social.og.url_missing",
+      "category": "social",
+      "severity": "warning",
+      "title": "Missing og:url",
+      "description": "Open Graph metadata should include the canonical page URL.",
+      "confidence": "high",
+      "fixability": "plan_only"
+    },
+    {
+      "id": "social.og.type_present",
+      "category": "social",
+      "severity": "passed",
+      "title": "og:type present",
+      "description": "website",
+      "confidence": "high",
+      "fixability": "not_fixable"
+    },
+    {
+      "id": "social.twitter.card_present",
+      "category": "social",
+      "severity": "passed",
+      "title": "twitter:card present",
+      "description": "summary_large_image",
+      "confidence": "high",
+      "fixability": "not_fixable"
+    },
+    {
+      "id": "social.twitter.title_present",
+      "category": "social",
+      "severity": "passed",
+      "title": "twitter:title present",
+      "description": "MonGuide FODMAP",
+      "confidence": "high",
+      "fixability": "not_fixable"
+    },
+    {
+      "id": "social.twitter.description_present",
+      "category": "social",
+      "severity": "passed",
+      "title": "twitter:description present",
+      "description": "Twitter/X description is present.",
+      "confidence": "high",
+      "fixability": "not_fixable"
+    },
+    {
+      "id": "social.twitter.image_missing",
+      "category": "social",
+      "severity": "warning",
+      "title": "Missing twitter:image",
+      "description": "Twitter/X cards should include an image when possible.",
+      "confidence": "high",
+      "fixability": "plan_only"
+    },
+    {
+      "id": "schema.jsonld.missing",
+      "category": "schema",
+      "severity": "critical",
+      "title": "No JSON-LD detected",
+      "description": "No structured data script tags were found in the raw HTML.",
+      "recommendation": "Add conservative, factual JSON-LD such as WebSite or Organization when appropriate.",
+      "confidence": "high",
+      "fixability": "plan_only"
+    },
+    {
+      "id": "structure.h1.missing",
+      "category": "structure",
+      "severity": "warning",
+      "title": "No H1 found",
+      "description": "The page should have one clear H1.",
+      "confidence": "high",
+      "fixability": "plan_only"
+    },
+    {
+      "id": "crawl.robots_txt.found",
+      "category": "crawlability",
+      "severity": "passed",
+      "title": "robots.txt found",
+      "description": "https://mon-guide-fodmap.com/robots.txt",
+      "confidence": "high",
+      "fixability": "not_fixable"
+    },
+    {
+      "id": "crawl.sitemap.invalid",
+      "category": "crawlability",
+      "severity": "warning",
+      "title": "sitemap.xml is not a valid sitemap",
+      "description": "The sitemap.xml URL returned a success response, but the body did not look like an XML sitemap.",
+      "evidence": {
+        "url": "https://mon-guide-fodmap.com/sitemap.xml",
+        "statusCode": 200,
+        "error": "Response did not look like an XML sitemap."
+      },
+      "confidence": "high",
+      "fixability": "plan_only"
+    },
+    {
+      "id": "crawl.raw_render.consistent",
+      "category": "crawlability",
+      "severity": "passed",
+      "title": "Key metadata present in raw HTML",
+      "description": "No render-only metadata fields were detected.",
+      "confidence": "high",
+      "fixability": "not_fixable"
+    }
+  ],
+  "resources": {
+    "robotsTxt": {
+      "url": "https://mon-guide-fodmap.com/robots.txt",
+      "finalUrl": "https://mon-guide-fodmap.com/robots.txt",
+      "exists": true,
+      "ok": true,
+      "statusCode": 200,
+      "blocksPage": false
+    },
+    "sitemapXml": {
+      "url": "https://mon-guide-fodmap.com/sitemap.xml",
+      "finalUrl": "https://mon-guide-fodmap.com/sitemap.xml",
+      "exists": false,
+      "ok": false,
+      "statusCode": 200,
+      "error": "Response did not look like an XML sitemap.",
+      "includesAuditedUrl": false
+    }
+  }
+}

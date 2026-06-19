@@ -1,0 +1,4617 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ShipReady report - https://fodmapp.fr/</title>
+<style>
+:root {
+  color-scheme: light;
+  --bg: #f5f6f8;
+  --paper: #ffffff;
+  --paper-soft: #fafbfc;
+  --text: #1f2328;
+  --muted: #69717d;
+  --muted-strong: #515963;
+  --line: #dfe4ea;
+  --line-strong: #c7d0da;
+  --positive-bg: #e8f6ed;
+  --positive-text: #155c35;
+  --caution-bg: #fff5dd;
+  --caution-text: #754c00;
+  --attention-bg: #fff0ed;
+  --attention-text: #963022;
+  --info-bg: #edf5ff;
+  --info-text: #27578f;
+  --code-bg: #161a1f;
+  --code-text: #edf1f5;
+  --shadow: 0 12px 30px rgba(31, 35, 40, 0.07);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.shell {
+  width: min(1180px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 34px 0 64px;
+}
+
+.hero {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  padding: 30px;
+}
+
+.positive-hero {
+  border-top: 5px solid #2d8a57;
+}
+
+.caution-hero {
+  border-top: 5px solid #c0841a;
+}
+
+.attention-hero {
+  border-top: 5px solid #c55246;
+}
+
+.hero-topline {
+  align-items: center;
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 370px);
+  gap: 26px;
+  align-items: start;
+}
+
+.hero-main {
+  min-width: 0;
+}
+
+.decision-panel {
+  background: var(--paper-soft);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 18px;
+}
+
+.decision-panel h2,
+.decision-card h3 {
+  font-size: 18px;
+  line-height: 1.25;
+  margin: 0 0 8px;
+}
+
+.decision-panel p:last-child,
+.decision-card p:last-child {
+  margin-bottom: 0;
+}
+
+.decision-label {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0;
+  margin: 0 0 8px;
+  text-transform: uppercase;
+}
+
+.decision-metrics {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-top: 24px;
+}
+
+.decision-metrics div {
+  background: var(--paper-soft);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  min-width: 0;
+  padding: 12px 14px;
+}
+
+.decision-metrics dd {
+  font-weight: 750;
+}
+
+.section {
+  margin-top: 38px;
+}
+
+.section-heading {
+  max-width: 820px;
+  margin-bottom: 18px;
+}
+
+.section-heading h2,
+.hero h1 {
+  margin: 0;
+  font-size: 29px;
+  line-height: 1.18;
+  letter-spacing: 0;
+}
+
+.hero h1 {
+  font-size: 40px;
+  max-width: 780px;
+}
+
+h3,
+h4,
+p {
+  margin-top: 0;
+}
+
+h3 {
+  font-size: 17px;
+  line-height: 1.3;
+  margin-bottom: 0;
+}
+
+h4 {
+  font-size: 15px;
+  line-height: 1.35;
+  margin-bottom: 8px;
+}
+
+p {
+  margin-bottom: 12px;
+}
+
+.lede {
+  color: var(--muted-strong);
+  font-size: 18px;
+  margin-bottom: 0;
+  max-width: 760px;
+}
+
+.audited-url {
+  color: var(--muted);
+  margin: 0 0 12px;
+}
+
+.eyebrow {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+
+.context-details {
+  background: transparent;
+  margin-top: 18px;
+  padding: 0;
+}
+
+.context-details summary {
+  color: var(--muted-strong);
+  font-size: 13px;
+  width: fit-content;
+}
+
+.meta-grid {
+  display: grid;
+  gap: 14px;
+  margin: 14px 0 0;
+}
+
+.meta-grid.has-repo {
+  grid-template-columns: minmax(150px, 1fr) minmax(300px, 2fr) minmax(180px, 1.2fr) minmax(120px, 0.8fr);
+}
+
+.meta-grid.url-only {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.meta-grid div {
+  background: var(--paper-soft);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  min-width: 0;
+  padding: 12px 14px;
+}
+
+dt,
+.field-label {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0;
+  margin: 0 0 4px;
+  text-transform: uppercase;
+}
+
+dd {
+  margin: 0;
+}
+
+.overview-layout {
+  display: grid;
+  gap: 18px;
+  grid-template-columns: minmax(0, 1fr) minmax(270px, 340px);
+  align-items: start;
+}
+
+.overview-main,
+.overview-side,
+.ready-overview,
+.passed-highlights {
+  display: grid;
+  gap: 14px;
+}
+
+.overview-side {
+  align-content: start;
+}
+
+.subsection-heading {
+  align-items: center;
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+}
+
+.issue-card-stack {
+  display: grid;
+  gap: 12px;
+}
+
+.highlight-grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.mini-issue-card {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  min-width: 0;
+  padding: 13px 14px;
+}
+
+.mini-issue-card strong {
+  display: block;
+  margin: 8px 0 4px;
+  overflow-wrap: anywhere;
+}
+
+.mini-issue-card p {
+  color: var(--muted);
+  font-size: 13px;
+  margin-bottom: 0;
+}
+
+.preview-grid {
+  display: grid;
+  gap: 18px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.crawler-card {
+  grid-column: 1 / -1;
+}
+
+.crawler-snapshot {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.crawler-snapshot div {
+  background: var(--paper-soft);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.action-groups,
+.patch-list,
+.skipped-actions,
+.blocked-files {
+  display: grid;
+  gap: 14px;
+}
+
+.action-group {
+  display: grid;
+  gap: 12px;
+}
+
+.quiet-group {
+  display: block;
+  padding: 0;
+}
+
+.quiet-group summary {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  padding: 14px 16px;
+}
+
+.quiet-group summary::-webkit-details-marker {
+  display: none;
+}
+
+.summary-count {
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.quiet-group-content {
+  border-top: 1px solid var(--line);
+  padding: 12px 16px 16px;
+}
+
+.card {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 18px;
+}
+
+.card-title-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.card-title-row h3,
+.card-title-row h4 {
+  min-width: 0;
+}
+
+.badge-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  border-radius: 999px;
+  padding: 4px 9px;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.positive {
+  background: var(--positive-bg);
+  color: var(--positive-text);
+}
+
+.caution {
+  background: var(--caution-bg);
+  color: var(--caution-text);
+}
+
+.attention {
+  background: var(--attention-bg);
+  color: var(--attention-text);
+}
+
+.muted,
+.subtle {
+  background: #f1f3f5;
+  color: #4b535c;
+}
+
+.source-badge {
+  font-size: 11px;
+  font-weight: 650;
+}
+
+.notice {
+  background: var(--info-bg);
+  border: 1px solid #d3e3fb;
+  border-radius: 8px;
+  color: var(--info-text);
+  margin-bottom: 16px;
+  padding: 14px 16px;
+}
+
+.notice.warning {
+  background: var(--attention-bg);
+  border-color: #f5c7c0;
+  color: var(--attention-text);
+}
+
+.notice.deploy {
+  background: var(--caution-bg);
+  border-color: #f1ddad;
+  color: var(--caution-text);
+}
+
+.notice p:last-child {
+  margin-bottom: 0;
+}
+
+.field {
+  border-top: 1px solid var(--line);
+  padding-top: 12px;
+  margin-top: 12px;
+}
+
+.field p:last-child,
+.key-value {
+  margin-bottom: 0;
+}
+
+.key-value span {
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.missing-fields {
+  border-top: 1px solid var(--line);
+  margin-top: 12px;
+  padding-top: 12px;
+}
+
+.missing-chip {
+  background: #f1f3f5;
+  border-radius: 999px;
+  color: #4b535c;
+  display: inline-flex;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 9px;
+}
+
+.project-summary {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.project-fact {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  min-width: 0;
+  padding: 16px;
+}
+
+.action-explanation {
+  color: var(--muted-strong);
+}
+
+.action-facts {
+  display: grid;
+  gap: 8px;
+}
+
+.fact {
+  background: var(--paper-soft);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  display: grid;
+  gap: 4px;
+  padding: 10px 12px;
+}
+
+.fact span {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 750;
+  text-transform: uppercase;
+}
+
+.fact strong {
+  font-size: 14px;
+  font-weight: 650;
+}
+
+.compact-list {
+  margin: 0;
+  padding-left: 18px;
+}
+
+.compact-list li {
+  margin: 4px 0;
+}
+
+.quiet-list {
+  display: grid;
+  gap: 10px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.quiet-list li {
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 10px;
+}
+
+.quiet-list li:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.quiet-list strong,
+.quiet-list span {
+  display: block;
+}
+
+.quiet-list span {
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+.quiet-card {
+  border-bottom: 1px solid var(--line);
+  padding: 0 0 12px;
+}
+
+.quiet-card:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.file-summary-list {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  display: grid;
+  gap: 0;
+  margin-bottom: 14px;
+}
+
+.file-summary-row {
+  align-items: center;
+  border-bottom: 1px solid var(--line);
+  display: grid;
+  gap: 12px;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  padding: 12px 14px;
+}
+
+.file-summary-row:last-child {
+  border-bottom: 0;
+}
+
+.file-summary-row strong {
+  font-weight: 750;
+}
+
+.file-summary-row > span:last-child {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.patch-meta-row {
+  color: var(--muted);
+  display: flex;
+  flex-wrap: wrap;
+  font-size: 13px;
+  gap: 8px 14px;
+  margin: 2px 0 12px;
+}
+
+.patch-meta-row span {
+  white-space: nowrap;
+}
+
+.file-chip-list,
+.trust-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  list-style: none;
+  margin: 0 0 16px;
+  padding: 0;
+}
+
+.file-chip-list li,
+.trust-row li {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--muted-strong);
+  font-size: 13px;
+  font-weight: 700;
+  padding: 7px 10px;
+}
+
+.trust-row li {
+  background: var(--positive-bg);
+  border-color: #cdebd8;
+  color: var(--positive-text);
+}
+
+.inline-details {
+  background: transparent;
+  border: 0;
+  margin-top: 8px;
+  padding: 0;
+}
+
+.inline-details summary {
+  color: var(--muted-strong);
+  font-size: 13px;
+}
+
+.empty,
+.missing,
+.muted-text,
+.more-count {
+  color: var(--muted);
+}
+
+.wrap-safe {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+pre {
+  max-height: 380px;
+  overflow: auto;
+  background: var(--code-bg);
+  color: var(--code-text);
+  border-radius: 8px;
+  padding: 14px;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  font-size: 12px;
+  line-height: 1.55;
+  white-space: pre;
+}
+
+pre.command {
+  max-height: none;
+  margin: 8px 0 0;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+details {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 14px 16px;
+}
+
+.context-details {
+  background: transparent;
+  border: 0;
+  padding: 0;
+}
+
+summary {
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.secondary-details {
+  margin-top: 14px;
+}
+
+.secondary-details summary {
+  align-items: center;
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+}
+
+.diff-details {
+  margin-top: 12px;
+}
+
+.diff-details pre {
+  margin-bottom: 0;
+}
+
+.developer-details h3,
+.secondary-details h3 {
+  margin-top: 18px;
+}
+
+@media (max-width: 980px) {
+  .preview-grid,
+  .project-summary,
+  .highlight-grid,
+  .decision-metrics {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .hero-grid,
+  .overview-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .meta-grid.has-repo,
+  .meta-grid.url-only {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .shell {
+    width: min(100% - 20px, 1180px);
+    padding-top: 16px;
+  }
+
+  .hero {
+    padding: 20px;
+  }
+
+  .hero-grid,
+  .decision-metrics,
+  .preview-grid,
+  .project-summary,
+  .highlight-grid,
+  .crawler-snapshot {
+    grid-template-columns: 1fr;
+  }
+
+  .meta-grid.has-repo,
+  .meta-grid.url-only {
+    grid-template-columns: 1fr;
+  }
+  .hero h1 {
+    font-size: 30px;
+  }
+
+  .section-heading h2 {
+    font-size: 24px;
+  }
+
+  .hero-topline,
+  .card-title-row,
+  .subsection-heading,
+  .secondary-details summary {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .file-summary-row {
+    align-items: flex-start;
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+</head>
+<body>
+<main class="shell">
+
+<header class="hero attention-hero">
+  <div class="hero-topline">
+    <span class="eyebrow">ShipReady report</span>
+    <span class="badge attention">Needs attention</span>
+  </div>
+  <div class="hero-grid">
+    <div class="hero-main">
+      <p class="audited-url wrap-safe">https://fodmapp.fr/</p>
+      <h1>Needs attention before launch</h1>
+      <p class="lede">8 issue(s) need review before this page should be considered launch-ready.</p>
+    </div>
+    <aside class="decision-panel">
+      <p class="decision-label">Next best action</p>
+      <h2>Apply the safe crawl-file fix</h2>
+      <p>Create app/robots.ts and app/sitemap.ts with safe apply, then review any remaining changes manually.</p>
+    </aside>
+  </div>
+  <dl class="decision-metrics">
+    <div>
+      <dt>Issue review</dt>
+      <dd>8 issues need review</dd>
+    </div>
+    <div>
+      <dt>Safe apply</dt>
+      <dd><span class="badge positive">Available</span></dd>
+    </div>
+    <div>
+      <dt>Mode</dt>
+      <dd>URL + repository</dd>
+    </div>
+    
+    <div>
+      <dt>Score</dt>
+      <dd>59 / 100</dd>
+    </div>
+  </dl>
+  <details class="context-details">
+    <summary>Audit context</summary>
+    <dl class="meta-grid has-repo">
+      <div>
+        <dt>Audited URL</dt>
+        <dd class="wrap-safe">https://fodmapp.fr/</dd>
+      </div>
+      
+      <div>
+        <dt>Repository</dt>
+        <dd class="wrap-safe">/Users/fabiencampana/Documents/fodmapp/apps/marketing</dd>
+      </div>
+      <div>
+        <dt>Generated</dt>
+        <dd><time datetime="2026-06-16T15:11:16.123Z">2026-06-16T15:11:16.123Z</time></dd>
+      </div>
+      <div>
+        <dt>Mode</dt>
+        <dd>URL + repository</dd>
+      </div>
+    </dl>
+  </details>
+</header>
+
+<section class="section">
+  <div class="section-heading">
+    <p class="eyebrow">Readiness overview</p>
+    <h2>What matters most</h2>
+    <p>8 issue(s) need review before this page should be considered launch-ready.</p>
+  </div>
+  
+  
+  <div class="overview-layout">
+    <section class="overview-main">
+      <div class="subsection-heading">
+        <h3>Top issues</h3>
+        <span class="summary-count">5 items</span>
+      </div>
+      
+  <div class="issue-card-stack">
+    
+<article class="card issue-card">
+  <div class="card-title-row">
+    <h4>Search engines do not have a clear preferred URL.</h4>
+    <span class="badge caution">Important</span>
+  </div>
+  <p>This page is missing a canonical URL, which helps search engines understand the main address for this content.</p>
+  <p class="muted-text">Without it, duplicate or alternate URLs can be harder to consolidate.</p>
+</article>
+<article class="card issue-card">
+  <div class="card-title-row">
+    <h4>Missing og:url</h4>
+    <span class="badge caution">Important</span>
+  </div>
+  <p>Open Graph metadata should include the canonical page URL.</p>
+  <p class="muted-text">This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.</p>
+</article>
+<article class="card issue-card">
+  <div class="card-title-row">
+    <h4>Missing og:type</h4>
+    <span class="badge caution">Important</span>
+  </div>
+  <p>Open Graph metadata should include a type such as website.</p>
+  <p class="muted-text">This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.</p>
+</article>
+<article class="card issue-card">
+  <div class="card-title-row">
+    <h4>Your site does not have a sitemap yet.</h4>
+    <span class="badge caution">Important</span>
+  </div>
+  <p>A sitemap lists the pages you want crawlers to discover.</p>
+  <p class="muted-text">For supported projects, ShipReady can safely create a simple sitemap file.</p>
+</article>
+<article class="card issue-card">
+  <div class="card-title-row">
+    <h4>Title is very short</h4>
+    <span class="badge muted">Recommended</span>
+  </div>
+  <p>A very short title may not explain the page clearly.</p>
+  <p class="muted-text">This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.</p>
+</article>
+  </div>
+  
+    </section>
+    <aside class="overview-side">
+      <article class="card decision-card">
+        <p class="decision-label">Safe apply</p>
+        <h3>Safe automatic fix available</h3>
+        <p>ShipReady can create app/robots.ts and app/sitemap.ts without overwriting existing files.</p>
+      </article>
+      <article class="card decision-card">
+        <p class="decision-label">Next best action</p>
+        <h3>Apply the safe crawl-file fix</h3>
+        <p>Create app/robots.ts and app/sitemap.ts with safe apply, then review any remaining changes manually.</p>
+      </article>
+    </aside>
+  </div>
+  
+  <section class="passed-highlights">
+    <div class="subsection-heading">
+      <h3>Passed highlights</h3>
+      <span class="summary-count">15 items</span>
+    </div>
+    
+      <div class="highlight-grid">
+        
+<article class="mini-issue-card">
+  <span class="badge positive">Passed</span>
+  <strong>Page returns HTTP success</strong>
+  <p>The audited URL returned a 2xx HTTP status.</p>
+</article>
+<article class="mini-issue-card">
+  <span class="badge positive">Passed</span>
+  <strong>Title present</strong>
+  <p>Raw title: FODMAPP</p>
+</article>
+<article class="mini-issue-card">
+  <span class="badge positive">Passed</span>
+  <strong>Meta description present</strong>
+  <p>Raw meta description is present.</p>
+</article>
+      </div>
+    
+      <details class="secondary-details issue-details">
+        <summary>
+          <span>View remaining passed checks</span>
+          <span class="summary-count">12 items</span>
+        </summary>
+        <div class="quiet-group-content">
+          
+<ul class="quiet-list">
+  
+    <li>
+      <strong>Page is not marked noindex</strong>
+      <span class="wrap-safe">No noindex robots meta directive was detected.</span>
+    </li>
+    <li>
+      <strong>HTML lang attribute present</strong>
+      <span class="wrap-safe">fr</span>
+    </li>
+    <li>
+      <strong>Viewport present</strong>
+      <span class="wrap-safe">width=device-width, initial-scale=1</span>
+    </li>
+    <li>
+      <strong>og:title present</strong>
+      <span class="wrap-safe">FODMAPP</span>
+    </li>
+    <li>
+      <strong>og:description present</strong>
+      <span class="wrap-safe">Open Graph description is present.</span>
+    </li>
+    <li>
+      <strong>og:image present</strong>
+      <span class="wrap-safe">https://fodmapp.fr/og.png</span>
+    </li>
+    <li>
+      <strong>twitter:card present</strong>
+      <span class="wrap-safe">summary_large_image</span>
+    </li>
+    <li>
+      <strong>twitter:title present</strong>
+      <span class="wrap-safe">FODMAPP</span>
+    </li>
+    <li>
+      <strong>twitter:description present</strong>
+      <span class="wrap-safe">Twitter/X description is present.</span>
+    </li>
+    <li>
+      <strong>twitter:image present</strong>
+      <span class="wrap-safe">https://fodmapp.fr/og.png</span>
+    </li>
+    <li>
+      <strong>Single H1 found</strong>
+      <span class="wrap-safe">Tu suis un régime pauvre en FODMAP et tu ne sais plus quoi cuisiner ?</span>
+    </li>
+    <li>
+      <strong>Key metadata present in raw HTML</strong>
+      <span class="wrap-safe">No render-only metadata fields were detected.</span>
+    </li>
+</ul>
+        </div>
+      </details>
+  </section>
+  
+  <details class="secondary-details issue-details">
+    <summary>
+      <span>Optional polish</span>
+      <span class="summary-count">1 item</span>
+    </summary>
+    <div class="quiet-group-content">
+      
+<ul class="quiet-list">
+  
+    <li>
+      <strong>Theme color is not set</strong>
+      <span class="wrap-safe">Optional theme-color metadata was not found in the initial HTML.</span>
+    </li>
+</ul>
+    </div>
+  </details>
+</section>
+
+<section class="section">
+  <div class="section-heading">
+    <p class="eyebrow">Preview cards</p>
+    <h2>How the page appears to crawlers and preview bots</h2>
+  </div>
+  
+  <div class="preview-grid">
+    
+<article class="card preview-card">
+  <div class="card-title-row">
+    <h3>Google preview</h3>
+    <span class="badge positive source-badge">Raw HTML</span>
+  </div>
+  
+<div class="field">
+  <p class="field-label">Title</p>
+  <p class="wrap-safe">FODMAPP</p>
+</div>
+<div class="field">
+  <p class="field-label">URL</p>
+  <p class="wrap-safe">https://fodmapp.fr/</p>
+</div>
+<div class="field">
+  <p class="field-label">Description</p>
+  <p class="wrap-safe">Un outil pour trouver des substitutions compatibles avec un régime pauvre en FODMAP.</p>
+</div>
+  
+</article>
+    
+<article class="card preview-card">
+  <div class="card-title-row">
+    <h3>Social preview</h3>
+    <span class="badge positive source-badge">Raw HTML</span>
+  </div>
+  
+<div class="field">
+  <p class="field-label">Title</p>
+  <p class="wrap-safe">FODMAPP</p>
+</div>
+<div class="field">
+  <p class="field-label">URL</p>
+  <p class="wrap-safe">https://fodmapp.fr/</p>
+</div>
+<div class="field">
+  <p class="field-label">Description</p>
+  <p class="wrap-safe">Un outil pour trouver des substitutions compatibles avec un régime pauvre en FODMAP.</p>
+</div>
+<div class="field">
+  <p class="field-label">Image URL</p>
+  <p class="wrap-safe">https://fodmapp.fr/og.png</p>
+</div>
+  
+</article>
+    
+<article class="card preview-card">
+  <div class="card-title-row">
+    <h3>X/Twitter preview</h3>
+    <span class="badge positive source-badge">Raw HTML</span>
+  </div>
+  
+<div class="field">
+  <p class="field-label">Card</p>
+  <p class="wrap-safe">summary_large_image</p>
+</div>
+<div class="field">
+  <p class="field-label">Title</p>
+  <p class="wrap-safe">FODMAPP</p>
+</div>
+<div class="field">
+  <p class="field-label">Description</p>
+  <p class="wrap-safe">Un outil pour trouver des substitutions compatibles avec un régime pauvre en FODMAP.</p>
+</div>
+<div class="field">
+  <p class="field-label">Image URL</p>
+  <p class="wrap-safe">https://fodmapp.fr/og.png</p>
+</div>
+  
+</article>
+    <article class="card preview-card crawler-card">
+      <div class="card-title-row">
+        <h3>Crawler view</h3>
+        <span class="badge subtle source-badge">Raw vs rendered</span>
+      </div>
+      <div class="crawler-snapshot">
+        <div>
+          <p class="field-label">Raw HTML</p>
+          <p>Raw HTML includes title, description, language, 3 Open Graph field(s), 4 Twitter/X field(s), and 0 JSON-LD block(s).</p>
+        </div>
+        <div>
+          <p class="field-label">Rendered HTML</p>
+          <p>Rendered HTML includes title, description, language, 3 Open Graph field(s), 4 Twitter/X field(s), and 0 JSON-LD block(s).</p>
+        </div>
+      </div>
+      
+    </article>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-heading">
+    <p class="eyebrow">Project understanding</p>
+    <h2>This looks like a Next.js App Router project.</h2>
+    <p>ShipReady can inspect this project and can safely create the eligible crawl files listed below.</p>
+  </div>
+  <div class="project-summary">
+    <div class="project-fact">
+      <p class="field-label">Confidence</p>
+      <span class="badge positive">Good match</span>
+    </div>
+    <div class="project-fact">
+      <p class="field-label">Useful project files</p>
+      
+
+<ul class="compact-list">
+  <li class="wrap-safe">package.json</li><li class="wrap-safe">next.config.ts</li><li class="wrap-safe">tsconfig.json</li><li class="wrap-safe">app/</li><li class="wrap-safe">src/</li><li class="wrap-safe">public/</li>
+</ul>
+
+<details class="inline-details">
+  <summary>View 3 items</summary>
+  
+<ul class="compact-list">
+  <li class="wrap-safe">app/layout.tsx</li><li class="wrap-safe">app/mentions-legales/page.tsx</li><li class="wrap-safe">app/page.tsx</li>
+</ul>
+</details>
+    </div>
+    <div class="project-fact">
+      <p class="field-label">What ShipReady recognizes</p>
+      
+
+<ul class="compact-list">
+  <li class="wrap-safe">Add/update static metadata export</li><li class="wrap-safe">Add route-level metadata</li><li class="wrap-safe">Add/update generateMetadata</li><li class="wrap-safe">Add JSON-LD component</li><li class="wrap-safe">Add robots.ts</li>
+</ul>
+
+<details class="inline-details">
+  <summary>View 2 items</summary>
+  
+<ul class="compact-list">
+  <li class="wrap-safe">Add sitemap.ts</li><li class="wrap-safe">Add Open Graph image route</li>
+</ul>
+</details>
+    </div>
+    <div class="project-fact">
+      <p class="field-label">Current limits</p>
+      
+
+<ul class="compact-list">
+  <li class="wrap-safe">File writing is disabled; use `shipready fix --dry-run` for supported patch previews.</li><li class="wrap-safe">This command is read-only and does not modify repository files.</li><li class="wrap-safe">Dynamic route metadata may require human review.</li><li class="wrap-safe">Existing complex metadata logic should not be overwritten blindly.</li>
+</ul>
+
+<details class="inline-details">
+  <summary>View 1 item</summary>
+  
+<ul class="compact-list">
+  <li class="wrap-safe">Package manager could not be inferred from a lockfile or packageManager field.</li>
+</ul>
+</details>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-heading">
+    <p class="eyebrow">Fix plan</p>
+    <h2>Grouped actions</h2>
+  </div>
+  <div class="action-groups">
+    
+<section class="action-group">
+  <div class="subsection-heading">
+    <h3>Safe to apply</h3>
+    <span class="summary-count">2 items</span>
+  </div>
+  
+<article class="card action-card">
+  <div class="card-title-row">
+    <h4>Create app/robots.ts</h4>
+    <span class="badge positive">Safe to apply</span>
+  </div>
+  <p class="action-explanation">Create an App Router robots.ts route that allows crawling and points to the sitemap.</p>
+  <div class="action-facts">
+    
+<div class="fact">
+  <span>Target file</span>
+  <strong class="wrap-safe">app/robots.ts</strong>
+</div>
+    
+<div class="fact">
+  <span>Can ShipReady apply it?</span>
+  <strong class="wrap-safe">Yes, with safe apply</strong>
+</div>
+    
+  </div>
+</article>
+<article class="card action-card">
+  <div class="card-title-row">
+    <h4>Create app/sitemap.ts</h4>
+    <span class="badge positive">Safe to apply</span>
+  </div>
+  <p class="action-explanation">Create an App Router sitemap.ts route for the audited URL.</p>
+  <div class="action-facts">
+    
+<div class="fact">
+  <span>Target file</span>
+  <strong class="wrap-safe">app/sitemap.ts</strong>
+</div>
+    
+<div class="fact">
+  <span>Can ShipReady apply it?</span>
+  <strong class="wrap-safe">Yes, with safe apply</strong>
+</div>
+    
+  </div>
+</article>
+</section>
+    
+<section class="action-group">
+  <div class="subsection-heading">
+    <h3>Needs review</h3>
+    <span class="summary-count">2 items</span>
+  </div>
+  
+<article class="card action-card">
+  <div class="card-title-row">
+    <h4>Review and improve weak metadata</h4>
+    <span class="badge caution">Needs review</span>
+  </div>
+  <p class="action-explanation">Review weak or risky metadata before changing production copy or crawler signals.</p>
+  <div class="action-facts">
+    
+<div class="fact">
+  <span>Target file</span>
+  <strong class="wrap-safe">app/layout.tsx</strong>
+</div>
+    
+<div class="fact">
+  <span>Can ShipReady apply it?</span>
+  <strong class="wrap-safe">Needs review first</strong>
+</div>
+    
+<div class="fact">
+  <span>Review note</span>
+  <strong class="wrap-safe">Existing metadata export found; merging metadata is skipped until a tested merge path exists.</strong>
+</div>
+  </div>
+</article>
+<article class="card action-card">
+  <div class="card-title-row">
+    <h4>Add JSON-LD with review</h4>
+    <span class="badge caution">Needs review</span>
+  </div>
+  <p class="action-explanation">Add or fix conservative structured data only after confirming schema type and business facts.</p>
+  <div class="action-facts">
+    
+<div class="fact">
+  <span>Target file</span>
+  <strong class="wrap-safe">app/layout.tsx</strong>
+</div>
+    
+<div class="fact">
+  <span>Can ShipReady apply it?</span>
+  <strong class="wrap-safe">Needs review first</strong>
+</div>
+    
+<div class="fact">
+  <span>Review note</span>
+  <strong class="wrap-safe">Next.js App Router JSON-LD preview requires a reviewed structured-data component and factual schema details.</strong>
+</div>
+  </div>
+</article>
+</section>
+    
+<section class="action-group">
+  <div class="subsection-heading">
+    <h3>Manual only</h3>
+    <span class="summary-count">0 items</span>
+  </div>
+  <p class="empty">No manual-only actions.</p>
+</section>
+    
+<details class="action-group quiet-group">
+  <summary>
+    <span>Already good</span>
+    <span class="summary-count">15 items</span>
+  </summary>
+  <div class="quiet-group-content">
+    
+<ul class="quiet-list">
+  
+    <li>
+      <strong>Page returns HTTP success</strong>
+      <span class="wrap-safe">The audited URL returned a 2xx HTTP status.</span>
+    </li>
+    <li>
+      <strong>Title present</strong>
+      <span class="wrap-safe">Raw title: FODMAPP</span>
+    </li>
+    <li>
+      <strong>Meta description present</strong>
+      <span class="wrap-safe">Raw meta description is present.</span>
+    </li>
+    <li>
+      <strong>Page is not marked noindex</strong>
+      <span class="wrap-safe">No noindex robots meta directive was detected.</span>
+    </li>
+    <li>
+      <strong>HTML lang attribute present</strong>
+      <span class="wrap-safe">fr</span>
+    </li>
+    <li>
+      <strong>Viewport present</strong>
+      <span class="wrap-safe">width=device-width, initial-scale=1</span>
+    </li>
+    <li>
+      <strong>og:title present</strong>
+      <span class="wrap-safe">FODMAPP</span>
+    </li>
+    <li>
+      <strong>og:description present</strong>
+      <span class="wrap-safe">Open Graph description is present.</span>
+    </li>
+    <li>
+      <strong>og:image present</strong>
+      <span class="wrap-safe">https://fodmapp.fr/og.png</span>
+    </li>
+    <li>
+      <strong>twitter:card present</strong>
+      <span class="wrap-safe">summary_large_image</span>
+    </li>
+    <li>
+      <strong>twitter:title present</strong>
+      <span class="wrap-safe">FODMAPP</span>
+    </li>
+    <li>
+      <strong>twitter:description present</strong>
+      <span class="wrap-safe">Twitter/X description is present.</span>
+    </li>
+    <li>
+      <strong>twitter:image present</strong>
+      <span class="wrap-safe">https://fodmapp.fr/og.png</span>
+    </li>
+    <li>
+      <strong>Single H1 found</strong>
+      <span class="wrap-safe">Tu suis un régime pauvre en FODMAP et tu ne sais plus quoi cuisiner ?</span>
+    </li>
+    <li>
+      <strong>Key metadata present in raw HTML</strong>
+      <span class="wrap-safe">No render-only metadata fields were detected.</span>
+    </li>
+</ul>
+  </div>
+</details>
+    
+<details class="action-group quiet-group">
+  <summary>
+    <span>Optional polish</span>
+    <span class="summary-count">1 item</span>
+  </summary>
+  <div class="quiet-group-content">
+    
+<ul class="quiet-list">
+  
+    <li>
+      <strong>Theme color is not set</strong>
+      <span class="wrap-safe">Optional theme-color metadata was not found in the initial HTML.</span>
+    </li>
+</ul>
+  </div>
+</details>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-heading">
+    <p class="eyebrow">Patch preview</p>
+    <h2>Files ShipReady would create or update</h2>
+    <p>Review the file list first. Diffs stay collapsed until a developer needs them.</p>
+  </div>
+  
+<div class="file-summary-list">
+  
+    <div class="file-summary-row">
+      <span class="badge positive">Would create</span>
+      <strong class="wrap-safe">app/robots.ts</strong>
+      <span>Can be applied safely</span>
+    </div>
+    <div class="file-summary-row">
+      <span class="badge positive">Would create</span>
+      <strong class="wrap-safe">app/sitemap.ts</strong>
+      <span>Can be applied safely</span>
+    </div>
+</div>
+  <div class="patch-list">
+    
+<article class="card patch-card">
+  <div class="card-title-row">
+    <h3 class="wrap-safe">app/robots.ts</h3>
+    <span class="badge positive">Would create</span>
+  </div>
+  <div class="patch-meta-row">
+    <span>Would create</span>
+    <span>Risk: low</span>
+    <span>Review: safe candidate</span>
+  </div>
+  
+<div class="fact">
+  <span>Path</span>
+  <strong class="wrap-safe">app/robots.ts</strong>
+</div>
+  
+  <details class="diff-details">
+    <summary>View diff</summary>
+    <pre>--- /dev/null
++++ app/robots.ts
+@@
++import type { MetadataRoute } from &quot;next&quot;;
++
++export default function robots(): MetadataRoute.Robots {
++  return {
++    rules: {
++      userAgent: &quot;*&quot;,
++      allow: &quot;/&quot;,
++    },
++    sitemap: &quot;https://fodmapp.fr/sitemap.xml&quot;,
++  };
++}
++</pre>
+  </details>
+</article>
+<article class="card patch-card">
+  <div class="card-title-row">
+    <h3 class="wrap-safe">app/sitemap.ts</h3>
+    <span class="badge positive">Would create</span>
+  </div>
+  <div class="patch-meta-row">
+    <span>Would create</span>
+    <span>Risk: low</span>
+    <span>Review: safe candidate</span>
+  </div>
+  
+<div class="fact">
+  <span>Path</span>
+  <strong class="wrap-safe">app/sitemap.ts</strong>
+</div>
+  
+  <details class="diff-details">
+    <summary>View diff</summary>
+    <pre>--- /dev/null
++++ app/sitemap.ts
+@@
++import type { MetadataRoute } from &quot;next&quot;;
++
++export default function sitemap(): MetadataRoute.Sitemap {
++  return [
++    {
++      url: &quot;https://fodmapp.fr/&quot;,
++      changeFrequency: &quot;weekly&quot;,
++      priority: 1,
++    },
++  ];
++}
++</pre>
+  </details>
+</article>
+  </div>
+  
+    <details class="secondary-details skipped-actions">
+      <summary>
+        <span>Actions without a file diff</span>
+        <span class="summary-count">2 items</span>
+      </summary>
+      <div class="quiet-group-content">
+        
+          <article class="quiet-card">
+            <h4>Review and improve weak metadata</h4>
+            <p>Existing metadata export found; merging metadata is skipped until a tested merge path exists.</p>
+          </article>
+          <article class="quiet-card">
+            <h4>Add JSON-LD with review</h4>
+            <p>Next.js App Router JSON-LD preview requires a reviewed structured-data component and factual schema details.</p>
+          </article>
+      </div>
+    </details>
+</section>
+
+<section class="section">
+  <div class="section-heading">
+    <p class="eyebrow">Safe apply</p>
+    <h2>Safe automatic fix available</h2>
+    <p>ShipReady can create these missing crawl files without overwriting existing files:</p>
+  </div>
+  
+<ul class="file-chip-list">
+  <li class="wrap-safe">app/robots.ts</li><li class="wrap-safe">app/sitemap.ts</li>
+</ul>
+  <div class="notice">
+    <p>Run this command when you are ready to apply only the safe file creations:</p>
+    <pre class="command">pnpm shipready fix /Users/fabiencampana/Documents/fodmapp/apps/marketing --url https://fodmapp.fr/ --write --allow-create</pre>
+  </div>
+  
+<ul class="trust-row">
+  <li>No overwrites</li><li>No metadata or content edits</li><li>No Git commits</li><li>No deploys</li>
+</ul>
+  
+  <details class="secondary-details">
+    <summary>Safe apply policy notes</summary>
+    
+<ul class="compact-list">
+  <li class="wrap-safe">This ui-report command never writes files.</li><li class="wrap-safe">V1 safe apply is limited to creation-only robots/sitemap files.</li><li class="wrap-safe">ShipReady will not overwrite existing files in V1 safe apply.</li><li class="wrap-safe">ShipReady will not edit metadata, JSON-LD, page content, package files, or configuration in V1 safe apply.</li><li class="wrap-safe">ShipReady will not run Git operations, create commits, push, or deploy.</li><li class="wrap-safe">Dry-run only. No files were modified.</li><li class="wrap-safe">Next.js App Router previews are conservative and read-only; dynamic metadata and component changes are skipped.</li>
+</ul>
+  </details>
+</section>
+
+<section class="section">
+  <div class="notice deploy">
+    <strong>Local changes do not affect the live website until you deploy.</strong>
+    <p>Local changes will not affect the live site until this repository is deployed and the URL is re-checked.</p>
+  </div>
+</section>
+
+<section class="section">
+  <details class="developer-details">
+    <summary>Developer details</summary>
+    <p><strong>Schema version:</strong> ui-report-v1</p>
+    <h3>Raw JSON report</h3>
+    <pre>{
+  &quot;schemaVersion&quot;: &quot;ui-report-v1&quot;,
+  &quot;generatedAt&quot;: &quot;2026-06-16T15:11:16.123Z&quot;,
+  &quot;input&quot;: {
+    &quot;url&quot;: &quot;https://fodmapp.fr/&quot;,
+    &quot;repoPath&quot;: &quot;/Users/fabiencampana/Documents/fodmapp/apps/marketing&quot;,
+    &quot;mode&quot;: &quot;url_and_repo&quot;
+  },
+  &quot;workflow&quot;: {
+    &quot;currentRecommendedStep&quot;: &quot;apply_safe_fixes&quot;,
+    &quot;completedStages&quot;: [
+      &quot;audit&quot;,
+      &quot;repo_inspection&quot;,
+      &quot;fix_plan&quot;,
+      &quot;dry_run&quot;
+    ],
+    &quot;availableNextActions&quot;: [
+      {
+        &quot;label&quot;: &quot;Create safe crawl files&quot;,
+        &quot;action&quot;: &quot;write_safe_fixes&quot;,
+        &quot;primary&quot;: true,
+        &quot;enabled&quot;: true,
+        &quot;explanation&quot;: &quot;Only V1-eligible robots/sitemap creations qualify.&quot;
+      },
+      {
+        &quot;label&quot;: &quot;Review remaining fixes&quot;,
+        &quot;action&quot;: &quot;review_manual&quot;,
+        &quot;primary&quot;: false,
+        &quot;enabled&quot;: true
+      }
+    ]
+  },
+  &quot;readiness&quot;: {
+    &quot;label&quot;: &quot;needs_attention&quot;,
+    &quot;title&quot;: &quot;Needs attention before launch&quot;,
+    &quot;summary&quot;: &quot;8 issue(s) need review before this page should be considered launch-ready.&quot;,
+    &quot;score&quot;: 59,
+    &quot;topIssues&quot;: [
+      {
+        &quot;id&quot;: &quot;metadata.canonical.missing&quot;,
+        &quot;title&quot;: &quot;Search engines do not have a clear preferred URL.&quot;,
+        &quot;explanation&quot;: &quot;This page is missing a canonical URL, which helps search engines understand the main address for this content.&quot;,
+        &quot;whyItMatters&quot;: &quot;Without it, duplicate or alternate URLs can be harder to consolidate.&quot;,
+        &quot;userSeverity&quot;: &quot;important&quot;,
+        &quot;technicalSeverity&quot;: &quot;critical&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;metadata.canonical.missing&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;Missing canonical URL&quot;,
+          &quot;rawDescription&quot;: &quot;The raw HTML does not include a canonical link.&quot;,
+          &quot;category&quot;: &quot;metadata&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;auto_fixable&quot;,
+          &quot;fixStrategy&quot;: &quot;Add a canonical link in the page head or framework metadata config.&quot;,
+          &quot;recommendation&quot;: &quot;Add a canonical link that points to the preferred public URL for this page.&quot;
+        }
+      },
+      {
+        &quot;id&quot;: &quot;social.og.url_missing&quot;,
+        &quot;title&quot;: &quot;Missing og:url&quot;,
+        &quot;explanation&quot;: &quot;Open Graph metadata should include the canonical page URL.&quot;,
+        &quot;whyItMatters&quot;: &quot;This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.&quot;,
+        &quot;userSeverity&quot;: &quot;important&quot;,
+        &quot;technicalSeverity&quot;: &quot;warning&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;social.og.url_missing&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;Missing og:url&quot;,
+          &quot;rawDescription&quot;: &quot;Open Graph metadata should include the canonical page URL.&quot;,
+          &quot;category&quot;: &quot;social&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;plan_only&quot;
+        }
+      },
+      {
+        &quot;id&quot;: &quot;social.og.type_missing&quot;,
+        &quot;title&quot;: &quot;Missing og:type&quot;,
+        &quot;explanation&quot;: &quot;Open Graph metadata should include a type such as website.&quot;,
+        &quot;whyItMatters&quot;: &quot;This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.&quot;,
+        &quot;userSeverity&quot;: &quot;important&quot;,
+        &quot;technicalSeverity&quot;: &quot;warning&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;social.og.type_missing&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;Missing og:type&quot;,
+          &quot;rawDescription&quot;: &quot;Open Graph metadata should include a type such as website.&quot;,
+          &quot;category&quot;: &quot;social&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;plan_only&quot;
+        }
+      },
+      {
+        &quot;id&quot;: &quot;crawl.sitemap.missing&quot;,
+        &quot;title&quot;: &quot;Your site does not have a sitemap yet.&quot;,
+        &quot;explanation&quot;: &quot;A sitemap lists the pages you want crawlers to discover.&quot;,
+        &quot;whyItMatters&quot;: &quot;For supported projects, ShipReady can safely create a simple sitemap file.&quot;,
+        &quot;userSeverity&quot;: &quot;important&quot;,
+        &quot;technicalSeverity&quot;: &quot;warning&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;crawl.sitemap.missing&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;sitemap.xml not found&quot;,
+          &quot;rawDescription&quot;: &quot;No sitemap.xml file was found at the origin root.&quot;,
+          &quot;category&quot;: &quot;crawlability&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;plan_only&quot;,
+          &quot;evidence&quot;: {
+            &quot;url&quot;: &quot;https://fodmapp.fr/sitemap.xml&quot;,
+            &quot;statusCode&quot;: 404
+          }
+        }
+      },
+      {
+        &quot;id&quot;: &quot;metadata.title.too_short&quot;,
+        &quot;title&quot;: &quot;Title is very short&quot;,
+        &quot;explanation&quot;: &quot;A very short title may not explain the page clearly.&quot;,
+        &quot;whyItMatters&quot;: &quot;This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.&quot;,
+        &quot;userSeverity&quot;: &quot;recommended&quot;,
+        &quot;technicalSeverity&quot;: &quot;warning&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;metadata.title.too_short&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;Title is very short&quot;,
+          &quot;rawDescription&quot;: &quot;A very short title may not explain the page clearly.&quot;,
+          &quot;category&quot;: &quot;metadata&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;plan_only&quot;,
+          &quot;evidence&quot;: {
+            &quot;title&quot;: &quot;FODMAPP&quot;
+          }
+        }
+      }
+    ],
+    &quot;passedHighlights&quot;: [
+      {
+        &quot;id&quot;: &quot;crawl.status.ok&quot;,
+        &quot;title&quot;: &quot;Page returns HTTP success&quot;,
+        &quot;explanation&quot;: &quot;The audited URL returned a 2xx HTTP status.&quot;,
+        &quot;whyItMatters&quot;: &quot;This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.&quot;,
+        &quot;userSeverity&quot;: &quot;ready&quot;,
+        &quot;technicalSeverity&quot;: &quot;passed&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;crawl.status.ok&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;Page returns HTTP success&quot;,
+          &quot;rawDescription&quot;: &quot;The audited URL returned a 2xx HTTP status.&quot;,
+          &quot;category&quot;: &quot;crawlability&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        }
+      },
+      {
+        &quot;id&quot;: &quot;metadata.title.present&quot;,
+        &quot;title&quot;: &quot;Title present&quot;,
+        &quot;explanation&quot;: &quot;Raw title: FODMAPP&quot;,
+        &quot;whyItMatters&quot;: &quot;This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.&quot;,
+        &quot;userSeverity&quot;: &quot;ready&quot;,
+        &quot;technicalSeverity&quot;: &quot;passed&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;metadata.title.present&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;Title present&quot;,
+          &quot;rawDescription&quot;: &quot;Raw title: FODMAPP&quot;,
+          &quot;category&quot;: &quot;metadata&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        }
+      },
+      {
+        &quot;id&quot;: &quot;metadata.description.present&quot;,
+        &quot;title&quot;: &quot;Meta description present&quot;,
+        &quot;explanation&quot;: &quot;Raw meta description is present.&quot;,
+        &quot;whyItMatters&quot;: &quot;This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.&quot;,
+        &quot;userSeverity&quot;: &quot;ready&quot;,
+        &quot;technicalSeverity&quot;: &quot;passed&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;metadata.description.present&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;Meta description present&quot;,
+          &quot;rawDescription&quot;: &quot;Raw meta description is present.&quot;,
+          &quot;category&quot;: &quot;metadata&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        }
+      },
+      {
+        &quot;id&quot;: &quot;metadata.robots.indexable&quot;,
+        &quot;title&quot;: &quot;Page is not marked noindex&quot;,
+        &quot;explanation&quot;: &quot;No noindex robots meta directive was detected.&quot;,
+        &quot;whyItMatters&quot;: &quot;This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.&quot;,
+        &quot;userSeverity&quot;: &quot;ready&quot;,
+        &quot;technicalSeverity&quot;: &quot;passed&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;metadata.robots.indexable&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;Page is not marked noindex&quot;,
+          &quot;rawDescription&quot;: &quot;No noindex robots meta directive was detected.&quot;,
+          &quot;category&quot;: &quot;crawlability&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        }
+      },
+      {
+        &quot;id&quot;: &quot;metadata.lang.present&quot;,
+        &quot;title&quot;: &quot;HTML lang attribute present&quot;,
+        &quot;explanation&quot;: &quot;fr&quot;,
+        &quot;whyItMatters&quot;: &quot;This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.&quot;,
+        &quot;userSeverity&quot;: &quot;ready&quot;,
+        &quot;technicalSeverity&quot;: &quot;passed&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;metadata.lang.present&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;HTML lang attribute present&quot;,
+          &quot;rawDescription&quot;: &quot;fr&quot;,
+          &quot;category&quot;: &quot;metadata&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        }
+      },
+      {
+        &quot;id&quot;: &quot;metadata.viewport.present&quot;,
+        &quot;title&quot;: &quot;Viewport present&quot;,
+        &quot;explanation&quot;: &quot;width=device-width, initial-scale=1&quot;,
+        &quot;whyItMatters&quot;: &quot;This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.&quot;,
+        &quot;userSeverity&quot;: &quot;ready&quot;,
+        &quot;technicalSeverity&quot;: &quot;passed&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;metadata.viewport.present&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;Viewport present&quot;,
+          &quot;rawDescription&quot;: &quot;width=device-width, initial-scale=1&quot;,
+          &quot;category&quot;: &quot;metadata&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        }
+      },
+      {
+        &quot;id&quot;: &quot;social.og.title_present&quot;,
+        &quot;title&quot;: &quot;og:title present&quot;,
+        &quot;explanation&quot;: &quot;FODMAPP&quot;,
+        &quot;whyItMatters&quot;: &quot;This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.&quot;,
+        &quot;userSeverity&quot;: &quot;ready&quot;,
+        &quot;technicalSeverity&quot;: &quot;passed&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;social.og.title_present&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;og:title present&quot;,
+          &quot;rawDescription&quot;: &quot;FODMAPP&quot;,
+          &quot;category&quot;: &quot;social&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        }
+      },
+      {
+        &quot;id&quot;: &quot;social.og.description_present&quot;,
+        &quot;title&quot;: &quot;og:description present&quot;,
+        &quot;explanation&quot;: &quot;Open Graph description is present.&quot;,
+        &quot;whyItMatters&quot;: &quot;This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.&quot;,
+        &quot;userSeverity&quot;: &quot;ready&quot;,
+        &quot;technicalSeverity&quot;: &quot;passed&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;social.og.description_present&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;og:description present&quot;,
+          &quot;rawDescription&quot;: &quot;Open Graph description is present.&quot;,
+          &quot;category&quot;: &quot;social&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        }
+      },
+      {
+        &quot;id&quot;: &quot;social.og.image_present&quot;,
+        &quot;title&quot;: &quot;og:image present&quot;,
+        &quot;explanation&quot;: &quot;https://fodmapp.fr/og.png&quot;,
+        &quot;whyItMatters&quot;: &quot;This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.&quot;,
+        &quot;userSeverity&quot;: &quot;ready&quot;,
+        &quot;technicalSeverity&quot;: &quot;passed&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;social.og.image_present&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;og:image present&quot;,
+          &quot;rawDescription&quot;: &quot;https://fodmapp.fr/og.png&quot;,
+          &quot;category&quot;: &quot;social&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        }
+      },
+      {
+        &quot;id&quot;: &quot;social.twitter.card_present&quot;,
+        &quot;title&quot;: &quot;twitter:card present&quot;,
+        &quot;explanation&quot;: &quot;summary_large_image&quot;,
+        &quot;whyItMatters&quot;: &quot;This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.&quot;,
+        &quot;userSeverity&quot;: &quot;ready&quot;,
+        &quot;technicalSeverity&quot;: &quot;passed&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;social.twitter.card_present&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;twitter:card present&quot;,
+          &quot;rawDescription&quot;: &quot;summary_large_image&quot;,
+          &quot;category&quot;: &quot;social&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        }
+      },
+      {
+        &quot;id&quot;: &quot;social.twitter.title_present&quot;,
+        &quot;title&quot;: &quot;twitter:title present&quot;,
+        &quot;explanation&quot;: &quot;FODMAPP&quot;,
+        &quot;whyItMatters&quot;: &quot;This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.&quot;,
+        &quot;userSeverity&quot;: &quot;ready&quot;,
+        &quot;technicalSeverity&quot;: &quot;passed&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;social.twitter.title_present&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;twitter:title present&quot;,
+          &quot;rawDescription&quot;: &quot;FODMAPP&quot;,
+          &quot;category&quot;: &quot;social&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        }
+      },
+      {
+        &quot;id&quot;: &quot;social.twitter.description_present&quot;,
+        &quot;title&quot;: &quot;twitter:description present&quot;,
+        &quot;explanation&quot;: &quot;Twitter/X description is present.&quot;,
+        &quot;whyItMatters&quot;: &quot;This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.&quot;,
+        &quot;userSeverity&quot;: &quot;ready&quot;,
+        &quot;technicalSeverity&quot;: &quot;passed&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;social.twitter.description_present&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;twitter:description present&quot;,
+          &quot;rawDescription&quot;: &quot;Twitter/X description is present.&quot;,
+          &quot;category&quot;: &quot;social&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        }
+      },
+      {
+        &quot;id&quot;: &quot;social.twitter.image_present&quot;,
+        &quot;title&quot;: &quot;twitter:image present&quot;,
+        &quot;explanation&quot;: &quot;https://fodmapp.fr/og.png&quot;,
+        &quot;whyItMatters&quot;: &quot;This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.&quot;,
+        &quot;userSeverity&quot;: &quot;ready&quot;,
+        &quot;technicalSeverity&quot;: &quot;passed&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;social.twitter.image_present&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;twitter:image present&quot;,
+          &quot;rawDescription&quot;: &quot;https://fodmapp.fr/og.png&quot;,
+          &quot;category&quot;: &quot;social&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        }
+      },
+      {
+        &quot;id&quot;: &quot;structure.h1.single&quot;,
+        &quot;title&quot;: &quot;Single H1 found&quot;,
+        &quot;explanation&quot;: &quot;Tu suis un régime pauvre en FODMAP et tu ne sais plus quoi cuisiner ?&quot;,
+        &quot;whyItMatters&quot;: &quot;This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.&quot;,
+        &quot;userSeverity&quot;: &quot;ready&quot;,
+        &quot;technicalSeverity&quot;: &quot;passed&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;structure.h1.single&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;Single H1 found&quot;,
+          &quot;rawDescription&quot;: &quot;Tu suis un régime pauvre en FODMAP et tu ne sais plus quoi cuisiner ?&quot;,
+          &quot;category&quot;: &quot;structure&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        }
+      },
+      {
+        &quot;id&quot;: &quot;crawl.raw_render.consistent&quot;,
+        &quot;title&quot;: &quot;Key metadata present in raw HTML&quot;,
+        &quot;explanation&quot;: &quot;No render-only metadata fields were detected.&quot;,
+        &quot;whyItMatters&quot;: &quot;This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.&quot;,
+        &quot;userSeverity&quot;: &quot;ready&quot;,
+        &quot;technicalSeverity&quot;: &quot;passed&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;crawl.raw_render.consistent&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;Key metadata present in raw HTML&quot;,
+          &quot;rawDescription&quot;: &quot;No render-only metadata fields were detected.&quot;,
+          &quot;category&quot;: &quot;crawlability&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        }
+      }
+    ],
+    &quot;optionalPolish&quot;: [
+      {
+        &quot;id&quot;: &quot;metadata.theme_color.missing&quot;,
+        &quot;title&quot;: &quot;Theme color is not set&quot;,
+        &quot;explanation&quot;: &quot;Optional theme-color metadata was not found in the initial HTML.&quot;,
+        &quot;whyItMatters&quot;: &quot;Add a theme-color meta tag if you want branded browser UI on supported surfaces.&quot;,
+        &quot;userSeverity&quot;: &quot;optional_polish&quot;,
+        &quot;technicalSeverity&quot;: &quot;info&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;metadata.theme_color.missing&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;Theme color is not set&quot;,
+          &quot;rawDescription&quot;: &quot;Optional theme-color metadata was not found in the initial HTML.&quot;,
+          &quot;category&quot;: &quot;metadata&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;plan_only&quot;,
+          &quot;recommendation&quot;: &quot;Add a theme-color meta tag if you want branded browser UI on supported surfaces.&quot;
+        }
+      }
+    ]
+  },
+  &quot;previews&quot;: {
+    &quot;google&quot;: {
+      &quot;title&quot;: &quot;FODMAPP&quot;,
+      &quot;url&quot;: &quot;https://fodmapp.fr/&quot;,
+      &quot;description&quot;: &quot;Un outil pour trouver des substitutions compatibles avec un régime pauvre en FODMAP.&quot;,
+      &quot;missingFields&quot;: [],
+      &quot;source&quot;: &quot;raw&quot;
+    },
+    &quot;social&quot;: {
+      &quot;title&quot;: &quot;FODMAPP&quot;,
+      &quot;url&quot;: &quot;https://fodmapp.fr/&quot;,
+      &quot;description&quot;: &quot;Un outil pour trouver des substitutions compatibles avec un régime pauvre en FODMAP.&quot;,
+      &quot;image&quot;: &quot;https://fodmapp.fr/og.png&quot;,
+      &quot;missingFields&quot;: [],
+      &quot;source&quot;: &quot;raw&quot;
+    },
+    &quot;twitter&quot;: {
+      &quot;title&quot;: &quot;FODMAPP&quot;,
+      &quot;description&quot;: &quot;Un outil pour trouver des substitutions compatibles avec un régime pauvre en FODMAP.&quot;,
+      &quot;image&quot;: &quot;https://fodmapp.fr/og.png&quot;,
+      &quot;card&quot;: &quot;summary_large_image&quot;,
+      &quot;missingFields&quot;: [],
+      &quot;source&quot;: &quot;raw&quot;
+    },
+    &quot;crawlerView&quot;: {
+      &quot;rawHtmlSummary&quot;: &quot;Raw HTML includes title, description, language, 3 Open Graph field(s), 4 Twitter/X field(s), and 0 JSON-LD block(s).&quot;,
+      &quot;renderedHtmlSummary&quot;: &quot;Rendered HTML includes title, description, language, 3 Open Graph field(s), 4 Twitter/X field(s), and 0 JSON-LD block(s).&quot;,
+      &quot;renderOnlyWarnings&quot;: []
+    }
+  },
+  &quot;project&quot;: {
+    &quot;detected&quot;: true,
+    &quot;frameworkLabel&quot;: &quot;Next.js App Router&quot;,
+    &quot;confidenceLabel&quot;: &quot;good_match&quot;,
+    &quot;explanation&quot;: &quot;ShipReady detected Next.js App Router from local project files.&quot;,
+    &quot;importantFiles&quot;: [
+      &quot;package.json&quot;,
+      &quot;next.config.ts&quot;,
+      &quot;tsconfig.json&quot;,
+      &quot;app/&quot;,
+      &quot;src/&quot;,
+      &quot;public/&quot;,
+      &quot;app/layout.tsx&quot;,
+      &quot;app/mentions-legales/page.tsx&quot;,
+      &quot;app/page.tsx&quot;
+    ],
+    &quot;supportedFixes&quot;: [
+      &quot;Add/update static metadata export&quot;,
+      &quot;Add route-level metadata&quot;,
+      &quot;Add/update generateMetadata&quot;,
+      &quot;Add JSON-LD component&quot;,
+      &quot;Add robots.ts&quot;,
+      &quot;Add sitemap.ts&quot;,
+      &quot;Add Open Graph image route&quot;
+    ],
+    &quot;limitations&quot;: [
+      &quot;File writing is disabled; use `shipready fix --dry-run` for supported patch previews.&quot;,
+      &quot;This command is read-only and does not modify repository files.&quot;,
+      &quot;Dynamic route metadata may require human review.&quot;,
+      &quot;Existing complex metadata logic should not be overwritten blindly.&quot;,
+      &quot;Package manager could not be inferred from a lockfile or packageManager field.&quot;
+    ]
+  },
+  &quot;actionGroups&quot;: {
+    &quot;safeToApply&quot;: [
+      {
+        &quot;id&quot;: &quot;file.app/robots.ts&quot;,
+        &quot;title&quot;: &quot;Create app/robots.ts&quot;,
+        &quot;explanation&quot;: &quot;Create an App Router robots.ts route that allows crawling and points to the sitemap.&quot;,
+        &quot;targetLabel&quot;: &quot;app/robots.ts&quot;,
+        &quot;affectsLiveSiteAfterDeploy&quot;: true,
+        &quot;safety&quot;: &quot;safe_to_apply&quot;,
+        &quot;canApplyInV1&quot;: true,
+        &quot;sourceActionIds&quot;: [
+          &quot;next_app_router.robots&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;changeType&quot;: &quot;create&quot;,
+          &quot;risk&quot;: &quot;low&quot;,
+          &quot;reviewStatus&quot;: &quot;auto_candidate&quot;,
+          &quot;requiresHumanReview&quot;: false
+        }
+      },
+      {
+        &quot;id&quot;: &quot;file.app/sitemap.ts&quot;,
+        &quot;title&quot;: &quot;Create app/sitemap.ts&quot;,
+        &quot;explanation&quot;: &quot;Create an App Router sitemap.ts route for the audited URL.&quot;,
+        &quot;targetLabel&quot;: &quot;app/sitemap.ts&quot;,
+        &quot;affectsLiveSiteAfterDeploy&quot;: true,
+        &quot;safety&quot;: &quot;safe_to_apply&quot;,
+        &quot;canApplyInV1&quot;: true,
+        &quot;sourceActionIds&quot;: [
+          &quot;next_app_router.sitemap&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;changeType&quot;: &quot;create&quot;,
+          &quot;risk&quot;: &quot;low&quot;,
+          &quot;reviewStatus&quot;: &quot;auto_candidate&quot;,
+          &quot;requiresHumanReview&quot;: false
+        }
+      }
+    ],
+    &quot;needsReview&quot;: [
+      {
+        &quot;id&quot;: &quot;skipped.next_app_router.metadata_review&quot;,
+        &quot;title&quot;: &quot;Review and improve weak metadata&quot;,
+        &quot;explanation&quot;: &quot;Review weak or risky metadata before changing production copy or crawler signals.&quot;,
+        &quot;targetLabel&quot;: &quot;app/layout.tsx&quot;,
+        &quot;affectsLiveSiteAfterDeploy&quot;: true,
+        &quot;safety&quot;: &quot;needs_review&quot;,
+        &quot;canApplyInV1&quot;: false,
+        &quot;reviewReason&quot;: &quot;Existing metadata export found; merging metadata is skipped until a tested merge path exists.&quot;,
+        &quot;sourceActionIds&quot;: [
+          &quot;metadata.canonical.missing&quot;,
+          &quot;metadata.favicon.missing&quot;,
+          &quot;metadata.title.too_short&quot;,
+          &quot;social.og.type_missing&quot;,
+          &quot;social.og.url_missing&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;reasonKind&quot;: &quot;requires_more_information&quot;,
+          &quot;risk&quot;: &quot;medium&quot;,
+          &quot;planAction&quot;: {
+            &quot;id&quot;: &quot;next_app_router.metadata_review&quot;,
+            &quot;title&quot;: &quot;Review and improve weak metadata&quot;,
+            &quot;description&quot;: &quot;Review weak or risky metadata before changing production copy or crawler signals.&quot;,
+            &quot;sourceCheckIds&quot;: [
+              &quot;metadata.canonical.missing&quot;,
+              &quot;metadata.favicon.missing&quot;,
+              &quot;metadata.title.too_short&quot;,
+              &quot;social.og.type_missing&quot;,
+              &quot;social.og.url_missing&quot;
+            ],
+            &quot;category&quot;: &quot;automated_with_review&quot;,
+            &quot;priority&quot;: &quot;critical&quot;,
+            &quot;risk&quot;: &quot;medium&quot;,
+            &quot;confidence&quot;: &quot;high&quot;,
+            &quot;frameworkStrategy&quot;: &quot;Use App Router metadata exports, route-level metadata, or generateMetadata in server-rendered files.&quot;,
+            &quot;targetFiles&quot;: [
+              &quot;app/layout.tsx&quot;
+            ],
+            &quot;targetLocations&quot;: [
+              &quot;app/layout.tsx&quot;,
+              &quot;app/**/page.tsx&quot;,
+              &quot;app/**/layout.tsx&quot;,
+              &quot;app/sitemap.ts&quot;,
+              &quot;app/robots.ts&quot;,
+              &quot;app/opengraph-image.tsx&quot;
+            ],
+            &quot;futureAutomation&quot;: {
+              &quot;canAutomate&quot;: true,
+              &quot;requiresHumanReview&quot;: true,
+              &quot;reason&quot;: &quot;Metadata changes affect production copy and crawler/share-preview signals, so generated changes should be reviewed.&quot;
+            }
+          }
+        }
+      },
+      {
+        &quot;id&quot;: &quot;skipped.next_app_router.json_ld_review&quot;,
+        &quot;title&quot;: &quot;Add JSON-LD with review&quot;,
+        &quot;explanation&quot;: &quot;Add or fix conservative structured data only after confirming schema type and business facts.&quot;,
+        &quot;targetLabel&quot;: &quot;app/layout.tsx&quot;,
+        &quot;affectsLiveSiteAfterDeploy&quot;: true,
+        &quot;safety&quot;: &quot;needs_review&quot;,
+        &quot;canApplyInV1&quot;: false,
+        &quot;reviewReason&quot;: &quot;Next.js App Router JSON-LD preview requires a reviewed structured-data component and factual schema details.&quot;,
+        &quot;sourceActionIds&quot;: [
+          &quot;schema.jsonld.missing&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;reasonKind&quot;: &quot;requires_more_information&quot;,
+          &quot;risk&quot;: &quot;medium&quot;,
+          &quot;planAction&quot;: {
+            &quot;id&quot;: &quot;next_app_router.json_ld_review&quot;,
+            &quot;title&quot;: &quot;Add JSON-LD with review&quot;,
+            &quot;description&quot;: &quot;Add or fix conservative structured data only after confirming schema type and business facts.&quot;,
+            &quot;sourceCheckIds&quot;: [
+              &quot;schema.jsonld.missing&quot;
+            ],
+            &quot;category&quot;: &quot;automated_with_review&quot;,
+            &quot;priority&quot;: &quot;critical&quot;,
+            &quot;risk&quot;: &quot;medium&quot;,
+            &quot;confidence&quot;: &quot;high&quot;,
+            &quot;frameworkStrategy&quot;: &quot;Add a reviewed JSON-LD script or component in an App Router layout/page.&quot;,
+            &quot;targetFiles&quot;: [
+              &quot;app/layout.tsx&quot;
+            ],
+            &quot;targetLocations&quot;: [
+              &quot;app/layout.tsx&quot;,
+              &quot;app/**/page.tsx&quot;,
+              &quot;app/**/layout.tsx&quot;,
+              &quot;app/sitemap.ts&quot;,
+              &quot;app/robots.ts&quot;,
+              &quot;app/opengraph-image.tsx&quot;
+            ],
+            &quot;futureAutomation&quot;: {
+              &quot;canAutomate&quot;: true,
+              &quot;requiresHumanReview&quot;: true,
+              &quot;reason&quot;: &quot;Structured data must be factually accurate; ShipReady should not invent schema facts without review.&quot;
+            }
+          }
+        }
+      }
+    ],
+    &quot;manualOnly&quot;: [],
+    &quot;alreadyGood&quot;: [
+      {
+        &quot;id&quot;: &quot;crawl.status.ok&quot;,
+        &quot;title&quot;: &quot;Page returns HTTP success&quot;,
+        &quot;explanation&quot;: &quot;The audited URL returned a 2xx HTTP status.&quot;,
+        &quot;whyItMatters&quot;: &quot;This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.&quot;,
+        &quot;userSeverity&quot;: &quot;ready&quot;,
+        &quot;technicalSeverity&quot;: &quot;passed&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;crawl.status.ok&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;Page returns HTTP success&quot;,
+          &quot;rawDescription&quot;: &quot;The audited URL returned a 2xx HTTP status.&quot;,
+          &quot;category&quot;: &quot;crawlability&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        }
+      },
+      {
+        &quot;id&quot;: &quot;metadata.title.present&quot;,
+        &quot;title&quot;: &quot;Title present&quot;,
+        &quot;explanation&quot;: &quot;Raw title: FODMAPP&quot;,
+        &quot;whyItMatters&quot;: &quot;This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.&quot;,
+        &quot;userSeverity&quot;: &quot;ready&quot;,
+        &quot;technicalSeverity&quot;: &quot;passed&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;metadata.title.present&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;Title present&quot;,
+          &quot;rawDescription&quot;: &quot;Raw title: FODMAPP&quot;,
+          &quot;category&quot;: &quot;metadata&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        }
+      },
+      {
+        &quot;id&quot;: &quot;metadata.description.present&quot;,
+        &quot;title&quot;: &quot;Meta description present&quot;,
+        &quot;explanation&quot;: &quot;Raw meta description is present.&quot;,
+        &quot;whyItMatters&quot;: &quot;This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.&quot;,
+        &quot;userSeverity&quot;: &quot;ready&quot;,
+        &quot;technicalSeverity&quot;: &quot;passed&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;metadata.description.present&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;Meta description present&quot;,
+          &quot;rawDescription&quot;: &quot;Raw meta description is present.&quot;,
+          &quot;category&quot;: &quot;metadata&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        }
+      },
+      {
+        &quot;id&quot;: &quot;metadata.robots.indexable&quot;,
+        &quot;title&quot;: &quot;Page is not marked noindex&quot;,
+        &quot;explanation&quot;: &quot;No noindex robots meta directive was detected.&quot;,
+        &quot;whyItMatters&quot;: &quot;This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.&quot;,
+        &quot;userSeverity&quot;: &quot;ready&quot;,
+        &quot;technicalSeverity&quot;: &quot;passed&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;metadata.robots.indexable&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;Page is not marked noindex&quot;,
+          &quot;rawDescription&quot;: &quot;No noindex robots meta directive was detected.&quot;,
+          &quot;category&quot;: &quot;crawlability&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        }
+      },
+      {
+        &quot;id&quot;: &quot;metadata.lang.present&quot;,
+        &quot;title&quot;: &quot;HTML lang attribute present&quot;,
+        &quot;explanation&quot;: &quot;fr&quot;,
+        &quot;whyItMatters&quot;: &quot;This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.&quot;,
+        &quot;userSeverity&quot;: &quot;ready&quot;,
+        &quot;technicalSeverity&quot;: &quot;passed&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;metadata.lang.present&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;HTML lang attribute present&quot;,
+          &quot;rawDescription&quot;: &quot;fr&quot;,
+          &quot;category&quot;: &quot;metadata&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        }
+      },
+      {
+        &quot;id&quot;: &quot;metadata.viewport.present&quot;,
+        &quot;title&quot;: &quot;Viewport present&quot;,
+        &quot;explanation&quot;: &quot;width=device-width, initial-scale=1&quot;,
+        &quot;whyItMatters&quot;: &quot;This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.&quot;,
+        &quot;userSeverity&quot;: &quot;ready&quot;,
+        &quot;technicalSeverity&quot;: &quot;passed&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;metadata.viewport.present&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;Viewport present&quot;,
+          &quot;rawDescription&quot;: &quot;width=device-width, initial-scale=1&quot;,
+          &quot;category&quot;: &quot;metadata&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        }
+      },
+      {
+        &quot;id&quot;: &quot;social.og.title_present&quot;,
+        &quot;title&quot;: &quot;og:title present&quot;,
+        &quot;explanation&quot;: &quot;FODMAPP&quot;,
+        &quot;whyItMatters&quot;: &quot;This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.&quot;,
+        &quot;userSeverity&quot;: &quot;ready&quot;,
+        &quot;technicalSeverity&quot;: &quot;passed&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;social.og.title_present&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;og:title present&quot;,
+          &quot;rawDescription&quot;: &quot;FODMAPP&quot;,
+          &quot;category&quot;: &quot;social&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        }
+      },
+      {
+        &quot;id&quot;: &quot;social.og.description_present&quot;,
+        &quot;title&quot;: &quot;og:description present&quot;,
+        &quot;explanation&quot;: &quot;Open Graph description is present.&quot;,
+        &quot;whyItMatters&quot;: &quot;This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.&quot;,
+        &quot;userSeverity&quot;: &quot;ready&quot;,
+        &quot;technicalSeverity&quot;: &quot;passed&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;social.og.description_present&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;og:description present&quot;,
+          &quot;rawDescription&quot;: &quot;Open Graph description is present.&quot;,
+          &quot;category&quot;: &quot;social&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        }
+      },
+      {
+        &quot;id&quot;: &quot;social.og.image_present&quot;,
+        &quot;title&quot;: &quot;og:image present&quot;,
+        &quot;explanation&quot;: &quot;https://fodmapp.fr/og.png&quot;,
+        &quot;whyItMatters&quot;: &quot;This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.&quot;,
+        &quot;userSeverity&quot;: &quot;ready&quot;,
+        &quot;technicalSeverity&quot;: &quot;passed&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;social.og.image_present&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;og:image present&quot;,
+          &quot;rawDescription&quot;: &quot;https://fodmapp.fr/og.png&quot;,
+          &quot;category&quot;: &quot;social&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        }
+      },
+      {
+        &quot;id&quot;: &quot;social.twitter.card_present&quot;,
+        &quot;title&quot;: &quot;twitter:card present&quot;,
+        &quot;explanation&quot;: &quot;summary_large_image&quot;,
+        &quot;whyItMatters&quot;: &quot;This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.&quot;,
+        &quot;userSeverity&quot;: &quot;ready&quot;,
+        &quot;technicalSeverity&quot;: &quot;passed&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;social.twitter.card_present&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;twitter:card present&quot;,
+          &quot;rawDescription&quot;: &quot;summary_large_image&quot;,
+          &quot;category&quot;: &quot;social&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        }
+      },
+      {
+        &quot;id&quot;: &quot;social.twitter.title_present&quot;,
+        &quot;title&quot;: &quot;twitter:title present&quot;,
+        &quot;explanation&quot;: &quot;FODMAPP&quot;,
+        &quot;whyItMatters&quot;: &quot;This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.&quot;,
+        &quot;userSeverity&quot;: &quot;ready&quot;,
+        &quot;technicalSeverity&quot;: &quot;passed&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;social.twitter.title_present&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;twitter:title present&quot;,
+          &quot;rawDescription&quot;: &quot;FODMAPP&quot;,
+          &quot;category&quot;: &quot;social&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        }
+      },
+      {
+        &quot;id&quot;: &quot;social.twitter.description_present&quot;,
+        &quot;title&quot;: &quot;twitter:description present&quot;,
+        &quot;explanation&quot;: &quot;Twitter/X description is present.&quot;,
+        &quot;whyItMatters&quot;: &quot;This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.&quot;,
+        &quot;userSeverity&quot;: &quot;ready&quot;,
+        &quot;technicalSeverity&quot;: &quot;passed&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;social.twitter.description_present&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;twitter:description present&quot;,
+          &quot;rawDescription&quot;: &quot;Twitter/X description is present.&quot;,
+          &quot;category&quot;: &quot;social&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        }
+      },
+      {
+        &quot;id&quot;: &quot;social.twitter.image_present&quot;,
+        &quot;title&quot;: &quot;twitter:image present&quot;,
+        &quot;explanation&quot;: &quot;https://fodmapp.fr/og.png&quot;,
+        &quot;whyItMatters&quot;: &quot;This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.&quot;,
+        &quot;userSeverity&quot;: &quot;ready&quot;,
+        &quot;technicalSeverity&quot;: &quot;passed&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;social.twitter.image_present&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;twitter:image present&quot;,
+          &quot;rawDescription&quot;: &quot;https://fodmapp.fr/og.png&quot;,
+          &quot;category&quot;: &quot;social&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        }
+      },
+      {
+        &quot;id&quot;: &quot;structure.h1.single&quot;,
+        &quot;title&quot;: &quot;Single H1 found&quot;,
+        &quot;explanation&quot;: &quot;Tu suis un régime pauvre en FODMAP et tu ne sais plus quoi cuisiner ?&quot;,
+        &quot;whyItMatters&quot;: &quot;This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.&quot;,
+        &quot;userSeverity&quot;: &quot;ready&quot;,
+        &quot;technicalSeverity&quot;: &quot;passed&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;structure.h1.single&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;Single H1 found&quot;,
+          &quot;rawDescription&quot;: &quot;Tu suis un régime pauvre en FODMAP et tu ne sais plus quoi cuisiner ?&quot;,
+          &quot;category&quot;: &quot;structure&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        }
+      },
+      {
+        &quot;id&quot;: &quot;crawl.raw_render.consistent&quot;,
+        &quot;title&quot;: &quot;Key metadata present in raw HTML&quot;,
+        &quot;explanation&quot;: &quot;No render-only metadata fields were detected.&quot;,
+        &quot;whyItMatters&quot;: &quot;This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.&quot;,
+        &quot;userSeverity&quot;: &quot;ready&quot;,
+        &quot;technicalSeverity&quot;: &quot;passed&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;crawl.raw_render.consistent&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;Key metadata present in raw HTML&quot;,
+          &quot;rawDescription&quot;: &quot;No render-only metadata fields were detected.&quot;,
+          &quot;category&quot;: &quot;crawlability&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        }
+      }
+    ],
+    &quot;optionalPolish&quot;: [
+      {
+        &quot;id&quot;: &quot;metadata.theme_color.missing&quot;,
+        &quot;title&quot;: &quot;Theme color is not set&quot;,
+        &quot;explanation&quot;: &quot;Optional theme-color metadata was not found in the initial HTML.&quot;,
+        &quot;whyItMatters&quot;: &quot;Add a theme-color meta tag if you want branded browser UI on supported surfaces.&quot;,
+        &quot;userSeverity&quot;: &quot;optional_polish&quot;,
+        &quot;technicalSeverity&quot;: &quot;info&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;metadata.theme_color.missing&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;Theme color is not set&quot;,
+          &quot;rawDescription&quot;: &quot;Optional theme-color metadata was not found in the initial HTML.&quot;,
+          &quot;category&quot;: &quot;metadata&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;plan_only&quot;,
+          &quot;recommendation&quot;: &quot;Add a theme-color meta tag if you want branded browser UI on supported surfaces.&quot;
+        }
+      }
+    ]
+  },
+  &quot;patchPreview&quot;: {
+    &quot;hasPreview&quot;: true,
+    &quot;fileChanges&quot;: [
+      {
+        &quot;path&quot;: &quot;app/robots.ts&quot;,
+        &quot;changeType&quot;: &quot;create&quot;,
+        &quot;title&quot;: &quot;Create app/robots.ts&quot;,
+        &quot;risk&quot;: &quot;low&quot;,
+        &quot;reviewStatus&quot;: &quot;auto_candidate&quot;,
+        &quot;eligibleForWrite&quot;: true,
+        &quot;writePolicy&quot;: &quot;creation_only_robots_sitemap_v1&quot;,
+        &quot;sourceActionIds&quot;: [
+          &quot;next_app_router.robots&quot;
+        ],
+        &quot;diff&quot;: &quot;--- /dev/null\n+++ app/robots.ts\n@@\n+import type { MetadataRoute } from \&quot;next\&quot;;\n+\n+export default function robots(): MetadataRoute.Robots {\n+  return {\n+    rules: {\n+      userAgent: \&quot;*\&quot;,\n+      allow: \&quot;/\&quot;,\n+    },\n+    sitemap: \&quot;https://fodmapp.fr/sitemap.xml\&quot;,\n+  };\n+}\n+&quot;
+      },
+      {
+        &quot;path&quot;: &quot;app/sitemap.ts&quot;,
+        &quot;changeType&quot;: &quot;create&quot;,
+        &quot;title&quot;: &quot;Create app/sitemap.ts&quot;,
+        &quot;risk&quot;: &quot;low&quot;,
+        &quot;reviewStatus&quot;: &quot;auto_candidate&quot;,
+        &quot;eligibleForWrite&quot;: true,
+        &quot;writePolicy&quot;: &quot;creation_only_robots_sitemap_v1&quot;,
+        &quot;sourceActionIds&quot;: [
+          &quot;next_app_router.sitemap&quot;
+        ],
+        &quot;diff&quot;: &quot;--- /dev/null\n+++ app/sitemap.ts\n@@\n+import type { MetadataRoute } from \&quot;next\&quot;;\n+\n+export default function sitemap(): MetadataRoute.Sitemap {\n+  return [\n+    {\n+      url: \&quot;https://fodmapp.fr/\&quot;,\n+      changeFrequency: \&quot;weekly\&quot;,\n+      priority: 1,\n+    },\n+  ];\n+}\n+&quot;
+      }
+    ],
+    &quot;skippedActions&quot;: [
+      {
+        &quot;title&quot;: &quot;Review and improve weak metadata&quot;,
+        &quot;reason&quot;: &quot;Existing metadata export found; merging metadata is skipped until a tested merge path exists.&quot;
+      },
+      {
+        &quot;title&quot;: &quot;Add JSON-LD with review&quot;,
+        &quot;reason&quot;: &quot;Next.js App Router JSON-LD preview requires a reviewed structured-data component and factual schema details.&quot;
+      }
+    ]
+  },
+  &quot;safeApply&quot;: {
+    &quot;available&quot;: true,
+    &quot;buttonLabel&quot;: &quot;Create safe crawl files&quot;,
+    &quot;explanation&quot;: &quot;ShipReady can create the listed missing robots/sitemap files, but this report does not apply them automatically.&quot;,
+    &quot;eligibleFiles&quot;: [
+      &quot;app/robots.ts&quot;,
+      &quot;app/sitemap.ts&quot;
+    ],
+    &quot;blockedFiles&quot;: [],
+    &quot;policy&quot;: &quot;creation_only_robots_sitemap_v1&quot;,
+    &quot;safetyNotes&quot;: [
+      &quot;This ui-report command never writes files.&quot;,
+      &quot;V1 safe apply is limited to creation-only robots/sitemap files.&quot;,
+      &quot;ShipReady will not overwrite existing files in V1 safe apply.&quot;,
+      &quot;ShipReady will not edit metadata, JSON-LD, page content, package files, or configuration in V1 safe apply.&quot;,
+      &quot;ShipReady will not run Git operations, create commits, push, or deploy.&quot;,
+      &quot;Dry-run only. No files were modified.&quot;,
+      &quot;Next.js App Router previews are conservative and read-only; dynamic metadata and component changes are skipped.&quot;
+    ]
+  },
+  &quot;liveVsLocal&quot;: {
+    &quot;localChangesAffectLiveSite&quot;: false,
+    &quot;deploymentRequired&quot;: true,
+    &quot;message&quot;: &quot;Local changes will not affect the live site until this repository is deployed and the URL is re-checked.&quot;
+  },
+  &quot;errors&quot;: [],
+  &quot;developerDetails&quot;: {
+    &quot;rawAudit&quot;: {
+      &quot;url&quot;: &quot;https://fodmapp.fr/&quot;,
+      &quot;finalUrl&quot;: &quot;https://fodmapp.fr/&quot;,
+      &quot;auditedAt&quot;: &quot;2026-06-16T15:11:18.905Z&quot;,
+      &quot;httpStatus&quot;: 200,
+      &quot;score&quot;: 59,
+      &quot;status&quot;: &quot;needs_work&quot;,
+      &quot;raw&quot;: {
+        &quot;source&quot;: &quot;raw&quot;,
+        &quot;url&quot;: &quot;https://fodmapp.fr/&quot;,
+        &quot;metadata&quot;: {
+          &quot;htmlLang&quot;: &quot;fr&quot;,
+          &quot;title&quot;: &quot;FODMAPP&quot;,
+          &quot;description&quot;: &quot;Un outil pour trouver des substitutions compatibles avec un régime pauvre en FODMAP.&quot;,
+          &quot;viewport&quot;: &quot;width=device-width, initial-scale=1&quot;,
+          &quot;faviconLinks&quot;: [],
+          &quot;openGraph&quot;: {
+            &quot;title&quot;: &quot;FODMAPP&quot;,
+            &quot;description&quot;: &quot;Un outil pour trouver des substitutions compatibles avec un régime pauvre en FODMAP.&quot;,
+            &quot;image&quot;: &quot;https://fodmapp.fr/og.png&quot;
+          },
+          &quot;twitter&quot;: {
+            &quot;card&quot;: &quot;summary_large_image&quot;,
+            &quot;title&quot;: &quot;FODMAPP&quot;,
+            &quot;description&quot;: &quot;Un outil pour trouver des substitutions compatibles avec un régime pauvre en FODMAP.&quot;,
+            &quot;image&quot;: &quot;https://fodmapp.fr/og.png&quot;
+          }
+        },
+        &quot;headings&quot;: {
+          &quot;h1&quot;: [
+            &quot;Tu suis un régime pauvre en FODMAP et tu ne sais plus quoi cuisiner ?&quot;
+          ],
+          &quot;all&quot;: [
+            {
+              &quot;level&quot;: 1,
+              &quot;text&quot;: &quot;Tu suis un régime pauvre en FODMAP et tu ne sais plus quoi cuisiner ?&quot;
+            },
+            {
+              &quot;level&quot;: 2,
+              &quot;text&quot;: &quot;Reste en lien&quot;
+            },
+            {
+              &quot;level&quot;: 2,
+              &quot;text&quot;: &quot;Questions fréquentes&quot;
+            },
+            {
+              &quot;level&quot;: 3,
+              &quot;text&quot;: &quot;C&#39;est un avis médical ?&quot;
+            },
+            {
+              &quot;level&quot;: 3,
+              &quot;text&quot;: &quot;J&#39;ai besoin d&#39;un diagnostic ?&quot;
+            },
+            {
+              &quot;level&quot;: 3,
+              &quot;text&quot;: &quot;Combien ça coûte ?&quot;
+            },
+            {
+              &quot;level&quot;: 3,
+              &quot;text&quot;: &quot;C&#39;est quoi CIQUAL ?&quot;
+            }
+          ]
+        },
+        &quot;images&quot;: {
+          &quot;total&quot;: 0,
+          &quot;missingAlt&quot;: 0,
+          &quot;items&quot;: []
+        },
+        &quot;links&quot;: {
+          &quot;total&quot;: 3,
+          &quot;missingAccessibleText&quot;: 0,
+          &quot;items&quot;: [
+            {
+              &quot;href&quot;: &quot;#waitlist&quot;,
+              &quot;text&quot;: &quot;Rejoins la liste d&#39;attente&quot;
+            },
+            {
+              &quot;href&quot;: &quot;https://github.com/f-campana/fodmapp&quot;,
+              &quot;text&quot;: &quot;GitHub&quot;
+            },
+            {
+              &quot;href&quot;: &quot;/mentions-legales&quot;,
+              &quot;text&quot;: &quot;Mentions légales&quot;
+            }
+          ]
+        },
+        &quot;jsonLd&quot;: []
+      },
+      &quot;rendered&quot;: {
+        &quot;source&quot;: &quot;rendered&quot;,
+        &quot;url&quot;: &quot;https://fodmapp.fr/&quot;,
+        &quot;metadata&quot;: {
+          &quot;htmlLang&quot;: &quot;fr&quot;,
+          &quot;title&quot;: &quot;FODMAPP&quot;,
+          &quot;description&quot;: &quot;Un outil pour trouver des substitutions compatibles avec un régime pauvre en FODMAP.&quot;,
+          &quot;viewport&quot;: &quot;width=device-width, initial-scale=1&quot;,
+          &quot;faviconLinks&quot;: [],
+          &quot;openGraph&quot;: {
+            &quot;title&quot;: &quot;FODMAPP&quot;,
+            &quot;description&quot;: &quot;Un outil pour trouver des substitutions compatibles avec un régime pauvre en FODMAP.&quot;,
+            &quot;image&quot;: &quot;https://fodmapp.fr/og.png&quot;
+          },
+          &quot;twitter&quot;: {
+            &quot;card&quot;: &quot;summary_large_image&quot;,
+            &quot;title&quot;: &quot;FODMAPP&quot;,
+            &quot;description&quot;: &quot;Un outil pour trouver des substitutions compatibles avec un régime pauvre en FODMAP.&quot;,
+            &quot;image&quot;: &quot;https://fodmapp.fr/og.png&quot;
+          }
+        },
+        &quot;headings&quot;: {
+          &quot;h1&quot;: [
+            &quot;Tu suis un régime pauvre en FODMAP et tu ne sais plus quoi cuisiner ?&quot;
+          ],
+          &quot;all&quot;: [
+            {
+              &quot;level&quot;: 1,
+              &quot;text&quot;: &quot;Tu suis un régime pauvre en FODMAP et tu ne sais plus quoi cuisiner ?&quot;
+            },
+            {
+              &quot;level&quot;: 2,
+              &quot;text&quot;: &quot;Reste en lien&quot;
+            },
+            {
+              &quot;level&quot;: 2,
+              &quot;text&quot;: &quot;Questions fréquentes&quot;
+            },
+            {
+              &quot;level&quot;: 3,
+              &quot;text&quot;: &quot;C&#39;est un avis médical ?&quot;
+            },
+            {
+              &quot;level&quot;: 3,
+              &quot;text&quot;: &quot;J&#39;ai besoin d&#39;un diagnostic ?&quot;
+            },
+            {
+              &quot;level&quot;: 3,
+              &quot;text&quot;: &quot;Combien ça coûte ?&quot;
+            },
+            {
+              &quot;level&quot;: 3,
+              &quot;text&quot;: &quot;C&#39;est quoi CIQUAL ?&quot;
+            }
+          ]
+        },
+        &quot;images&quot;: {
+          &quot;total&quot;: 0,
+          &quot;missingAlt&quot;: 0,
+          &quot;items&quot;: []
+        },
+        &quot;links&quot;: {
+          &quot;total&quot;: 3,
+          &quot;missingAccessibleText&quot;: 0,
+          &quot;items&quot;: [
+            {
+              &quot;href&quot;: &quot;#waitlist&quot;,
+              &quot;text&quot;: &quot;Rejoins la liste d&#39;attente&quot;
+            },
+            {
+              &quot;href&quot;: &quot;https://github.com/f-campana/fodmapp&quot;,
+              &quot;text&quot;: &quot;GitHub&quot;
+            },
+            {
+              &quot;href&quot;: &quot;/mentions-legales&quot;,
+              &quot;text&quot;: &quot;Mentions légales&quot;
+            }
+          ]
+        },
+        &quot;jsonLd&quot;: []
+      },
+      &quot;comparison&quot;: {
+        &quot;fields&quot;: [
+          {
+            &quot;field&quot;: &quot;title&quot;,
+            &quot;rawValue&quot;: &quot;FODMAPP&quot;,
+            &quot;renderedValue&quot;: &quot;FODMAPP&quot;,
+            &quot;status&quot;: &quot;present_in_raw&quot;
+          },
+          {
+            &quot;field&quot;: &quot;description&quot;,
+            &quot;rawValue&quot;: &quot;Un outil pour trouver des substitutions compatibles avec un régime pauvre en FODMAP.&quot;,
+            &quot;renderedValue&quot;: &quot;Un outil pour trouver des substitutions compatibles avec un régime pauvre en FODMAP.&quot;,
+            &quot;status&quot;: &quot;present_in_raw&quot;
+          },
+          {
+            &quot;field&quot;: &quot;canonical&quot;,
+            &quot;status&quot;: &quot;missing_in_both&quot;
+          },
+          {
+            &quot;field&quot;: &quot;robots&quot;,
+            &quot;status&quot;: &quot;missing_in_both&quot;
+          },
+          {
+            &quot;field&quot;: &quot;html.lang&quot;,
+            &quot;rawValue&quot;: &quot;fr&quot;,
+            &quot;renderedValue&quot;: &quot;fr&quot;,
+            &quot;status&quot;: &quot;present_in_raw&quot;
+          },
+          {
+            &quot;field&quot;: &quot;viewport&quot;,
+            &quot;rawValue&quot;: &quot;width=device-width, initial-scale=1&quot;,
+            &quot;renderedValue&quot;: &quot;width=device-width, initial-scale=1&quot;,
+            &quot;status&quot;: &quot;present_in_raw&quot;
+          },
+          {
+            &quot;field&quot;: &quot;theme-color&quot;,
+            &quot;status&quot;: &quot;missing_in_both&quot;
+          },
+          {
+            &quot;field&quot;: &quot;favicon&quot;,
+            &quot;status&quot;: &quot;missing_in_both&quot;
+          },
+          {
+            &quot;field&quot;: &quot;og:title&quot;,
+            &quot;rawValue&quot;: &quot;FODMAPP&quot;,
+            &quot;renderedValue&quot;: &quot;FODMAPP&quot;,
+            &quot;status&quot;: &quot;present_in_raw&quot;
+          },
+          {
+            &quot;field&quot;: &quot;og:description&quot;,
+            &quot;rawValue&quot;: &quot;Un outil pour trouver des substitutions compatibles avec un régime pauvre en FODMAP.&quot;,
+            &quot;renderedValue&quot;: &quot;Un outil pour trouver des substitutions compatibles avec un régime pauvre en FODMAP.&quot;,
+            &quot;status&quot;: &quot;present_in_raw&quot;
+          },
+          {
+            &quot;field&quot;: &quot;og:image&quot;,
+            &quot;rawValue&quot;: &quot;https://fodmapp.fr/og.png&quot;,
+            &quot;renderedValue&quot;: &quot;https://fodmapp.fr/og.png&quot;,
+            &quot;status&quot;: &quot;present_in_raw&quot;
+          },
+          {
+            &quot;field&quot;: &quot;og:url&quot;,
+            &quot;status&quot;: &quot;missing_in_both&quot;
+          },
+          {
+            &quot;field&quot;: &quot;og:type&quot;,
+            &quot;status&quot;: &quot;missing_in_both&quot;
+          },
+          {
+            &quot;field&quot;: &quot;og:site_name&quot;,
+            &quot;status&quot;: &quot;missing_in_both&quot;
+          },
+          {
+            &quot;field&quot;: &quot;twitter:card&quot;,
+            &quot;rawValue&quot;: &quot;summary_large_image&quot;,
+            &quot;renderedValue&quot;: &quot;summary_large_image&quot;,
+            &quot;status&quot;: &quot;present_in_raw&quot;
+          },
+          {
+            &quot;field&quot;: &quot;twitter:title&quot;,
+            &quot;rawValue&quot;: &quot;FODMAPP&quot;,
+            &quot;renderedValue&quot;: &quot;FODMAPP&quot;,
+            &quot;status&quot;: &quot;present_in_raw&quot;
+          },
+          {
+            &quot;field&quot;: &quot;twitter:description&quot;,
+            &quot;rawValue&quot;: &quot;Un outil pour trouver des substitutions compatibles avec un régime pauvre en FODMAP.&quot;,
+            &quot;renderedValue&quot;: &quot;Un outil pour trouver des substitutions compatibles avec un régime pauvre en FODMAP.&quot;,
+            &quot;status&quot;: &quot;present_in_raw&quot;
+          },
+          {
+            &quot;field&quot;: &quot;twitter:image&quot;,
+            &quot;rawValue&quot;: &quot;https://fodmapp.fr/og.png&quot;,
+            &quot;renderedValue&quot;: &quot;https://fodmapp.fr/og.png&quot;,
+            &quot;status&quot;: &quot;present_in_raw&quot;
+          }
+        ]
+      },
+      &quot;checks&quot;: [
+        {
+          &quot;id&quot;: &quot;crawl.status.ok&quot;,
+          &quot;category&quot;: &quot;crawlability&quot;,
+          &quot;severity&quot;: &quot;passed&quot;,
+          &quot;title&quot;: &quot;Page returns HTTP success&quot;,
+          &quot;description&quot;: &quot;The audited URL returned a 2xx HTTP status.&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        },
+        {
+          &quot;id&quot;: &quot;metadata.title.present&quot;,
+          &quot;category&quot;: &quot;metadata&quot;,
+          &quot;severity&quot;: &quot;passed&quot;,
+          &quot;title&quot;: &quot;Title present&quot;,
+          &quot;description&quot;: &quot;Raw title: FODMAPP&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        },
+        {
+          &quot;id&quot;: &quot;metadata.title.too_short&quot;,
+          &quot;category&quot;: &quot;metadata&quot;,
+          &quot;severity&quot;: &quot;warning&quot;,
+          &quot;title&quot;: &quot;Title is very short&quot;,
+          &quot;description&quot;: &quot;A very short title may not explain the page clearly.&quot;,
+          &quot;evidence&quot;: {
+            &quot;title&quot;: &quot;FODMAPP&quot;
+          },
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;plan_only&quot;
+        },
+        {
+          &quot;id&quot;: &quot;metadata.description.present&quot;,
+          &quot;category&quot;: &quot;metadata&quot;,
+          &quot;severity&quot;: &quot;passed&quot;,
+          &quot;title&quot;: &quot;Meta description present&quot;,
+          &quot;description&quot;: &quot;Raw meta description is present.&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        },
+        {
+          &quot;id&quot;: &quot;metadata.canonical.missing&quot;,
+          &quot;category&quot;: &quot;metadata&quot;,
+          &quot;severity&quot;: &quot;critical&quot;,
+          &quot;title&quot;: &quot;Missing canonical URL&quot;,
+          &quot;description&quot;: &quot;The raw HTML does not include a canonical link.&quot;,
+          &quot;recommendation&quot;: &quot;Add a canonical link that points to the preferred public URL for this page.&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;auto_fixable&quot;,
+          &quot;fixStrategy&quot;: &quot;Add a canonical link in the page head or framework metadata config.&quot;
+        },
+        {
+          &quot;id&quot;: &quot;metadata.robots.indexable&quot;,
+          &quot;category&quot;: &quot;crawlability&quot;,
+          &quot;severity&quot;: &quot;passed&quot;,
+          &quot;title&quot;: &quot;Page is not marked noindex&quot;,
+          &quot;description&quot;: &quot;No noindex robots meta directive was detected.&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        },
+        {
+          &quot;id&quot;: &quot;metadata.lang.present&quot;,
+          &quot;category&quot;: &quot;metadata&quot;,
+          &quot;severity&quot;: &quot;passed&quot;,
+          &quot;title&quot;: &quot;HTML lang attribute present&quot;,
+          &quot;description&quot;: &quot;fr&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        },
+        {
+          &quot;id&quot;: &quot;metadata.viewport.present&quot;,
+          &quot;category&quot;: &quot;metadata&quot;,
+          &quot;severity&quot;: &quot;passed&quot;,
+          &quot;title&quot;: &quot;Viewport present&quot;,
+          &quot;description&quot;: &quot;width=device-width, initial-scale=1&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        },
+        {
+          &quot;id&quot;: &quot;metadata.theme_color.missing&quot;,
+          &quot;category&quot;: &quot;metadata&quot;,
+          &quot;severity&quot;: &quot;info&quot;,
+          &quot;title&quot;: &quot;Theme color is not set&quot;,
+          &quot;description&quot;: &quot;Optional theme-color metadata was not found in the initial HTML.&quot;,
+          &quot;recommendation&quot;: &quot;Add a theme-color meta tag if you want branded browser UI on supported surfaces.&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;plan_only&quot;
+        },
+        {
+          &quot;id&quot;: &quot;metadata.favicon.missing&quot;,
+          &quot;category&quot;: &quot;metadata&quot;,
+          &quot;severity&quot;: &quot;warning&quot;,
+          &quot;title&quot;: &quot;No favicon links found&quot;,
+          &quot;description&quot;: &quot;Favicons and app icons help the site look complete in tabs, bookmarks, and device surfaces.&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;plan_only&quot;
+        },
+        {
+          &quot;id&quot;: &quot;social.og.title_present&quot;,
+          &quot;category&quot;: &quot;social&quot;,
+          &quot;severity&quot;: &quot;passed&quot;,
+          &quot;title&quot;: &quot;og:title present&quot;,
+          &quot;description&quot;: &quot;FODMAPP&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        },
+        {
+          &quot;id&quot;: &quot;social.og.description_present&quot;,
+          &quot;category&quot;: &quot;social&quot;,
+          &quot;severity&quot;: &quot;passed&quot;,
+          &quot;title&quot;: &quot;og:description present&quot;,
+          &quot;description&quot;: &quot;Open Graph description is present.&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        },
+        {
+          &quot;id&quot;: &quot;social.og.image_present&quot;,
+          &quot;category&quot;: &quot;social&quot;,
+          &quot;severity&quot;: &quot;passed&quot;,
+          &quot;title&quot;: &quot;og:image present&quot;,
+          &quot;description&quot;: &quot;https://fodmapp.fr/og.png&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        },
+        {
+          &quot;id&quot;: &quot;social.og.url_missing&quot;,
+          &quot;category&quot;: &quot;social&quot;,
+          &quot;severity&quot;: &quot;warning&quot;,
+          &quot;title&quot;: &quot;Missing og:url&quot;,
+          &quot;description&quot;: &quot;Open Graph metadata should include the canonical page URL.&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;plan_only&quot;
+        },
+        {
+          &quot;id&quot;: &quot;social.og.type_missing&quot;,
+          &quot;category&quot;: &quot;social&quot;,
+          &quot;severity&quot;: &quot;warning&quot;,
+          &quot;title&quot;: &quot;Missing og:type&quot;,
+          &quot;description&quot;: &quot;Open Graph metadata should include a type such as website.&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;plan_only&quot;
+        },
+        {
+          &quot;id&quot;: &quot;social.twitter.card_present&quot;,
+          &quot;category&quot;: &quot;social&quot;,
+          &quot;severity&quot;: &quot;passed&quot;,
+          &quot;title&quot;: &quot;twitter:card present&quot;,
+          &quot;description&quot;: &quot;summary_large_image&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        },
+        {
+          &quot;id&quot;: &quot;social.twitter.title_present&quot;,
+          &quot;category&quot;: &quot;social&quot;,
+          &quot;severity&quot;: &quot;passed&quot;,
+          &quot;title&quot;: &quot;twitter:title present&quot;,
+          &quot;description&quot;: &quot;FODMAPP&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        },
+        {
+          &quot;id&quot;: &quot;social.twitter.description_present&quot;,
+          &quot;category&quot;: &quot;social&quot;,
+          &quot;severity&quot;: &quot;passed&quot;,
+          &quot;title&quot;: &quot;twitter:description present&quot;,
+          &quot;description&quot;: &quot;Twitter/X description is present.&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        },
+        {
+          &quot;id&quot;: &quot;social.twitter.image_present&quot;,
+          &quot;category&quot;: &quot;social&quot;,
+          &quot;severity&quot;: &quot;passed&quot;,
+          &quot;title&quot;: &quot;twitter:image present&quot;,
+          &quot;description&quot;: &quot;https://fodmapp.fr/og.png&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        },
+        {
+          &quot;id&quot;: &quot;schema.jsonld.missing&quot;,
+          &quot;category&quot;: &quot;schema&quot;,
+          &quot;severity&quot;: &quot;critical&quot;,
+          &quot;title&quot;: &quot;No JSON-LD detected&quot;,
+          &quot;description&quot;: &quot;No structured data script tags were found in the raw HTML.&quot;,
+          &quot;recommendation&quot;: &quot;Add conservative, factual JSON-LD such as WebSite or Organization when appropriate.&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;plan_only&quot;
+        },
+        {
+          &quot;id&quot;: &quot;structure.h1.single&quot;,
+          &quot;category&quot;: &quot;structure&quot;,
+          &quot;severity&quot;: &quot;passed&quot;,
+          &quot;title&quot;: &quot;Single H1 found&quot;,
+          &quot;description&quot;: &quot;Tu suis un régime pauvre en FODMAP et tu ne sais plus quoi cuisiner ?&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        },
+        {
+          &quot;id&quot;: &quot;crawl.robots_txt.missing&quot;,
+          &quot;category&quot;: &quot;crawlability&quot;,
+          &quot;severity&quot;: &quot;warning&quot;,
+          &quot;title&quot;: &quot;robots.txt not found&quot;,
+          &quot;description&quot;: &quot;No robots.txt file was found at the origin root.&quot;,
+          &quot;evidence&quot;: {
+            &quot;url&quot;: &quot;https://fodmapp.fr/robots.txt&quot;,
+            &quot;statusCode&quot;: 404
+          },
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;plan_only&quot;
+        },
+        {
+          &quot;id&quot;: &quot;crawl.sitemap.missing&quot;,
+          &quot;category&quot;: &quot;crawlability&quot;,
+          &quot;severity&quot;: &quot;warning&quot;,
+          &quot;title&quot;: &quot;sitemap.xml not found&quot;,
+          &quot;description&quot;: &quot;No sitemap.xml file was found at the origin root.&quot;,
+          &quot;evidence&quot;: {
+            &quot;url&quot;: &quot;https://fodmapp.fr/sitemap.xml&quot;,
+            &quot;statusCode&quot;: 404
+          },
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;plan_only&quot;
+        },
+        {
+          &quot;id&quot;: &quot;crawl.raw_render.consistent&quot;,
+          &quot;category&quot;: &quot;crawlability&quot;,
+          &quot;severity&quot;: &quot;passed&quot;,
+          &quot;title&quot;: &quot;Key metadata present in raw HTML&quot;,
+          &quot;description&quot;: &quot;No render-only metadata fields were detected.&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        }
+      ],
+      &quot;resources&quot;: {
+        &quot;robotsTxt&quot;: {
+          &quot;url&quot;: &quot;https://fodmapp.fr/robots.txt&quot;,
+          &quot;finalUrl&quot;: &quot;https://fodmapp.fr/robots.txt&quot;,
+          &quot;exists&quot;: false,
+          &quot;ok&quot;: false,
+          &quot;statusCode&quot;: 404,
+          &quot;blocksPage&quot;: false
+        },
+        &quot;sitemapXml&quot;: {
+          &quot;url&quot;: &quot;https://fodmapp.fr/sitemap.xml&quot;,
+          &quot;finalUrl&quot;: &quot;https://fodmapp.fr/sitemap.xml&quot;,
+          &quot;exists&quot;: false,
+          &quot;ok&quot;: false,
+          &quot;statusCode&quot;: 404,
+          &quot;includesAuditedUrl&quot;: false
+        }
+      }
+    },
+    &quot;rawRepoInspection&quot;: {
+      &quot;path&quot;: &quot;/Users/fabiencampana/Documents/fodmapp/apps/marketing&quot;,
+      &quot;inspectedAt&quot;: &quot;2026-06-16T15:11:16.129Z&quot;,
+      &quot;packageManager&quot;: &quot;unknown&quot;,
+      &quot;framework&quot;: {
+        &quot;id&quot;: &quot;next_app_router&quot;,
+        &quot;name&quot;: &quot;Next.js App Router&quot;,
+        &quot;confidence&quot;: &quot;high&quot;,
+        &quot;evidence&quot;: [
+          {
+            &quot;kind&quot;: &quot;package_dependency&quot;,
+            &quot;path&quot;: &quot;package.json&quot;,
+            &quot;value&quot;: &quot;package.json includes dependency \&quot;next\&quot;&quot;,
+            &quot;weight&quot;: &quot;strong&quot;
+          },
+          {
+            &quot;kind&quot;: &quot;file&quot;,
+            &quot;path&quot;: &quot;next.config.ts&quot;,
+            &quot;value&quot;: &quot;Next.js config found&quot;,
+            &quot;weight&quot;: &quot;medium&quot;
+          },
+          {
+            &quot;kind&quot;: &quot;directory&quot;,
+            &quot;path&quot;: &quot;app&quot;,
+            &quot;value&quot;: &quot;App Router directory found&quot;,
+            &quot;weight&quot;: &quot;strong&quot;
+          },
+          {
+            &quot;kind&quot;: &quot;file&quot;,
+            &quot;path&quot;: &quot;app/layout.tsx&quot;,
+            &quot;value&quot;: &quot;App Router root layout found&quot;,
+            &quot;weight&quot;: &quot;strong&quot;
+          },
+          {
+            &quot;kind&quot;: &quot;file&quot;,
+            &quot;path&quot;: &quot;app/mentions-legales/page.tsx&quot;,
+            &quot;value&quot;: &quot;app/mentions-legales/page.tsx found&quot;,
+            &quot;weight&quot;: &quot;medium&quot;
+          },
+          {
+            &quot;kind&quot;: &quot;file&quot;,
+            &quot;path&quot;: &quot;app/page.tsx&quot;,
+            &quot;value&quot;: &quot;app/page.tsx found&quot;,
+            &quot;weight&quot;: &quot;medium&quot;
+          },
+          {
+            &quot;kind&quot;: &quot;source_pattern&quot;,
+            &quot;path&quot;: &quot;app/layout.tsx&quot;,
+            &quot;value&quot;: &quot;app/layout.tsx exports metadata or generateMetadata&quot;,
+            &quot;weight&quot;: &quot;medium&quot;
+          }
+        ]
+      },
+      &quot;importantFiles&quot;: [
+        {
+          &quot;path&quot;: &quot;package.json&quot;,
+          &quot;kind&quot;: &quot;package_file&quot;,
+          &quot;reason&quot;: &quot;Project package manifest&quot;
+        },
+        {
+          &quot;path&quot;: &quot;next.config.ts&quot;,
+          &quot;kind&quot;: &quot;config_file&quot;,
+          &quot;reason&quot;: &quot;Framework or TypeScript config&quot;
+        },
+        {
+          &quot;path&quot;: &quot;tsconfig.json&quot;,
+          &quot;kind&quot;: &quot;config_file&quot;,
+          &quot;reason&quot;: &quot;Framework or TypeScript config&quot;
+        },
+        {
+          &quot;path&quot;: &quot;app/&quot;,
+          &quot;kind&quot;: &quot;directory&quot;,
+          &quot;reason&quot;: &quot;Important project directory&quot;
+        },
+        {
+          &quot;path&quot;: &quot;src/&quot;,
+          &quot;kind&quot;: &quot;directory&quot;,
+          &quot;reason&quot;: &quot;Important project directory&quot;
+        },
+        {
+          &quot;path&quot;: &quot;public/&quot;,
+          &quot;kind&quot;: &quot;directory&quot;,
+          &quot;reason&quot;: &quot;Important project directory&quot;
+        },
+        {
+          &quot;path&quot;: &quot;app/layout.tsx&quot;,
+          &quot;kind&quot;: &quot;metadata_file&quot;,
+          &quot;reason&quot;: &quot;Next.js App Router file&quot;
+        },
+        {
+          &quot;path&quot;: &quot;app/mentions-legales/page.tsx&quot;,
+          &quot;kind&quot;: &quot;route_file&quot;,
+          &quot;reason&quot;: &quot;Next.js App Router file&quot;
+        },
+        {
+          &quot;path&quot;: &quot;app/page.tsx&quot;,
+          &quot;kind&quot;: &quot;route_file&quot;,
+          &quot;reason&quot;: &quot;Next.js App Router file&quot;
+        }
+      ],
+      &quot;routes&quot;: [
+        {
+          &quot;path&quot;: &quot;app/mentions-legales/page.tsx&quot;,
+          &quot;route&quot;: &quot;/mentions-legales&quot;,
+          &quot;kind&quot;: &quot;page&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;reason&quot;: &quot;App Router page file&quot;
+        },
+        {
+          &quot;path&quot;: &quot;app/page.tsx&quot;,
+          &quot;route&quot;: &quot;/&quot;,
+          &quot;kind&quot;: &quot;page&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;reason&quot;: &quot;App Router page file&quot;
+        }
+      ],
+      &quot;metadataLocations&quot;: [
+        {
+          &quot;path&quot;: &quot;app/layout.tsx&quot;,
+          &quot;kind&quot;: &quot;file&quot;,
+          &quot;exists&quot;: true,
+          &quot;reason&quot;: &quot;App Router layout can define shared metadata&quot;
+        },
+        {
+          &quot;path&quot;: &quot;app/**/page.tsx&quot;,
+          &quot;kind&quot;: &quot;pattern&quot;,
+          &quot;exists&quot;: false,
+          &quot;reason&quot;: &quot;Route-level pages can define metadata&quot;
+        },
+        {
+          &quot;path&quot;: &quot;app/**/layout.tsx&quot;,
+          &quot;kind&quot;: &quot;pattern&quot;,
+          &quot;exists&quot;: false,
+          &quot;reason&quot;: &quot;Nested layouts can define section metadata&quot;
+        },
+        {
+          &quot;path&quot;: &quot;app/sitemap.ts&quot;,
+          &quot;kind&quot;: &quot;file&quot;,
+          &quot;exists&quot;: false,
+          &quot;reason&quot;: &quot;App Router sitemap route&quot;
+        },
+        {
+          &quot;path&quot;: &quot;app/robots.ts&quot;,
+          &quot;kind&quot;: &quot;file&quot;,
+          &quot;exists&quot;: false,
+          &quot;reason&quot;: &quot;App Router robots route&quot;
+        },
+        {
+          &quot;path&quot;: &quot;app/opengraph-image.tsx&quot;,
+          &quot;kind&quot;: &quot;file&quot;,
+          &quot;exists&quot;: false,
+          &quot;reason&quot;: &quot;Open Graph image route&quot;
+        }
+      ],
+      &quot;supportedFixes&quot;: [
+        {
+          &quot;id&quot;: &quot;next_app.metadata_export&quot;,
+          &quot;title&quot;: &quot;Add/update static metadata export&quot;,
+          &quot;description&quot;: &quot;Add or update App Router metadata exports where simple and local.&quot;,
+          &quot;safety&quot;: &quot;review_required&quot;
+        },
+        {
+          &quot;id&quot;: &quot;next_app.route_metadata&quot;,
+          &quot;title&quot;: &quot;Add route-level metadata&quot;,
+          &quot;description&quot;: &quot;Add metadata to route page or layout files.&quot;,
+          &quot;safety&quot;: &quot;review_required&quot;
+        },
+        {
+          &quot;id&quot;: &quot;next_app.generate_metadata&quot;,
+          &quot;title&quot;: &quot;Add/update generateMetadata&quot;,
+          &quot;description&quot;: &quot;Plan generateMetadata changes when route metadata is dynamic.&quot;,
+          &quot;safety&quot;: &quot;review_required&quot;
+        },
+        {
+          &quot;id&quot;: &quot;next_app.json_ld&quot;,
+          &quot;title&quot;: &quot;Add JSON-LD component&quot;,
+          &quot;description&quot;: &quot;Add conservative structured data in a layout or page.&quot;,
+          &quot;safety&quot;: &quot;review_required&quot;
+        },
+        {
+          &quot;id&quot;: &quot;next_app.robots&quot;,
+          &quot;title&quot;: &quot;Add robots.ts&quot;,
+          &quot;description&quot;: &quot;Add an App Router robots route.&quot;,
+          &quot;safety&quot;: &quot;review_required&quot;
+        },
+        {
+          &quot;id&quot;: &quot;next_app.sitemap&quot;,
+          &quot;title&quot;: &quot;Add sitemap.ts&quot;,
+          &quot;description&quot;: &quot;Add an App Router sitemap route.&quot;,
+          &quot;safety&quot;: &quot;review_required&quot;
+        },
+        {
+          &quot;id&quot;: &quot;next_app.og_image&quot;,
+          &quot;title&quot;: &quot;Add Open Graph image route&quot;,
+          &quot;description&quot;: &quot;Add an opengraph-image route where appropriate.&quot;,
+          &quot;safety&quot;: &quot;review_required&quot;
+        }
+      ],
+      &quot;limitations&quot;: [
+        &quot;File writing is disabled; use `shipready fix --dry-run` for supported patch previews.&quot;,
+        &quot;This command is read-only and does not modify repository files.&quot;,
+        &quot;Dynamic route metadata may require human review.&quot;,
+        &quot;Existing complex metadata logic should not be overwritten blindly.&quot;
+      ],
+      &quot;warnings&quot;: [
+        &quot;Package manager could not be inferred from a lockfile or packageManager field.&quot;
+      ]
+    },
+    &quot;rawFixPlan&quot;: {
+      &quot;url&quot;: &quot;https://fodmapp.fr/&quot;,
+      &quot;repoPath&quot;: &quot;/Users/fabiencampana/Documents/fodmapp/apps/marketing&quot;,
+      &quot;plannedAt&quot;: &quot;2026-06-16T15:11:18.909Z&quot;,
+      &quot;auditSummary&quot;: {
+        &quot;score&quot;: 59,
+        &quot;status&quot;: &quot;needs_work&quot;,
+        &quot;criticalCount&quot;: 2,
+        &quot;warningCount&quot;: 6,
+        &quot;noteCount&quot;: 1
+      },
+      &quot;repoSummary&quot;: {
+        &quot;frameworkId&quot;: &quot;next_app_router&quot;,
+        &quot;frameworkName&quot;: &quot;Next.js App Router&quot;,
+        &quot;confidence&quot;: &quot;high&quot;,
+        &quot;packageManager&quot;: &quot;unknown&quot;
+      },
+      &quot;actions&quot;: [
+        {
+          &quot;id&quot;: &quot;next_app_router.metadata_review&quot;,
+          &quot;title&quot;: &quot;Review and improve weak metadata&quot;,
+          &quot;description&quot;: &quot;Review weak or risky metadata before changing production copy or crawler signals.&quot;,
+          &quot;sourceCheckIds&quot;: [
+            &quot;metadata.canonical.missing&quot;,
+            &quot;metadata.favicon.missing&quot;,
+            &quot;metadata.title.too_short&quot;,
+            &quot;social.og.type_missing&quot;,
+            &quot;social.og.url_missing&quot;
+          ],
+          &quot;category&quot;: &quot;automated_with_review&quot;,
+          &quot;priority&quot;: &quot;critical&quot;,
+          &quot;risk&quot;: &quot;medium&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;frameworkStrategy&quot;: &quot;Use App Router metadata exports, route-level metadata, or generateMetadata in server-rendered files.&quot;,
+          &quot;targetFiles&quot;: [
+            &quot;app/layout.tsx&quot;
+          ],
+          &quot;targetLocations&quot;: [
+            &quot;app/layout.tsx&quot;,
+            &quot;app/**/page.tsx&quot;,
+            &quot;app/**/layout.tsx&quot;,
+            &quot;app/sitemap.ts&quot;,
+            &quot;app/robots.ts&quot;,
+            &quot;app/opengraph-image.tsx&quot;
+          ],
+          &quot;futureAutomation&quot;: {
+            &quot;canAutomate&quot;: true,
+            &quot;requiresHumanReview&quot;: true,
+            &quot;reason&quot;: &quot;Metadata changes affect production copy and crawler/share-preview signals, so generated changes should be reviewed.&quot;
+          }
+        },
+        {
+          &quot;id&quot;: &quot;next_app_router.json_ld_review&quot;,
+          &quot;title&quot;: &quot;Add JSON-LD with review&quot;,
+          &quot;description&quot;: &quot;Add or fix conservative structured data only after confirming schema type and business facts.&quot;,
+          &quot;sourceCheckIds&quot;: [
+            &quot;schema.jsonld.missing&quot;
+          ],
+          &quot;category&quot;: &quot;automated_with_review&quot;,
+          &quot;priority&quot;: &quot;critical&quot;,
+          &quot;risk&quot;: &quot;medium&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;frameworkStrategy&quot;: &quot;Add a reviewed JSON-LD script or component in an App Router layout/page.&quot;,
+          &quot;targetFiles&quot;: [
+            &quot;app/layout.tsx&quot;
+          ],
+          &quot;targetLocations&quot;: [
+            &quot;app/layout.tsx&quot;,
+            &quot;app/**/page.tsx&quot;,
+            &quot;app/**/layout.tsx&quot;,
+            &quot;app/sitemap.ts&quot;,
+            &quot;app/robots.ts&quot;,
+            &quot;app/opengraph-image.tsx&quot;
+          ],
+          &quot;futureAutomation&quot;: {
+            &quot;canAutomate&quot;: true,
+            &quot;requiresHumanReview&quot;: true,
+            &quot;reason&quot;: &quot;Structured data must be factually accurate; ShipReady should not invent schema facts without review.&quot;
+          }
+        },
+        {
+          &quot;id&quot;: &quot;next_app_router.robots&quot;,
+          &quot;title&quot;: &quot;Add robots.ts&quot;,
+          &quot;description&quot;: &quot;Add a robots file or framework route so crawlers can discover the intended crawl policy.&quot;,
+          &quot;sourceCheckIds&quot;: [
+            &quot;crawl.robots_txt.missing&quot;
+          ],
+          &quot;category&quot;: &quot;safe_automated_later&quot;,
+          &quot;priority&quot;: &quot;medium&quot;,
+          &quot;risk&quot;: &quot;low&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;frameworkStrategy&quot;: &quot;Add an App Router robots.ts route.&quot;,
+          &quot;targetFiles&quot;: [
+            &quot;app/robots.ts&quot;
+          ],
+          &quot;targetLocations&quot;: [
+            &quot;app/robots.ts&quot;
+          ],
+          &quot;futureAutomation&quot;: {
+            &quot;canAutomate&quot;: true,
+            &quot;requiresHumanReview&quot;: false,
+            &quot;reason&quot;: &quot;The framework and likely robots target are clear.&quot;
+          }
+        },
+        {
+          &quot;id&quot;: &quot;next_app_router.sitemap&quot;,
+          &quot;title&quot;: &quot;Add sitemap.ts&quot;,
+          &quot;description&quot;: &quot;Add a sitemap so crawlers can discover the public URL set.&quot;,
+          &quot;sourceCheckIds&quot;: [
+            &quot;crawl.sitemap.missing&quot;
+          ],
+          &quot;category&quot;: &quot;safe_automated_later&quot;,
+          &quot;priority&quot;: &quot;high&quot;,
+          &quot;risk&quot;: &quot;low&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;frameworkStrategy&quot;: &quot;Add an App Router sitemap.ts route. Use audited URL https://fodmapp.fr/.&quot;,
+          &quot;targetFiles&quot;: [
+            &quot;app/sitemap.ts&quot;
+          ],
+          &quot;targetLocations&quot;: [
+            &quot;app/sitemap.ts&quot;
+          ],
+          &quot;futureAutomation&quot;: {
+            &quot;canAutomate&quot;: true,
+            &quot;requiresHumanReview&quot;: false,
+            &quot;reason&quot;: &quot;The framework and likely sitemap target are clear.&quot;
+          }
+        }
+      ],
+      &quot;noActionChecks&quot;: [
+        {
+          &quot;checkId&quot;: &quot;crawl.status.ok&quot;,
+          &quot;title&quot;: &quot;Page returns HTTP success&quot;,
+          &quot;reason&quot;: &quot;This audit check passed, so ShipReady is not proposing a change.&quot;
+        },
+        {
+          &quot;checkId&quot;: &quot;metadata.title.present&quot;,
+          &quot;title&quot;: &quot;Title present&quot;,
+          &quot;reason&quot;: &quot;This audit check passed, so ShipReady is not proposing a change.&quot;
+        },
+        {
+          &quot;checkId&quot;: &quot;metadata.description.present&quot;,
+          &quot;title&quot;: &quot;Meta description present&quot;,
+          &quot;reason&quot;: &quot;This audit check passed, so ShipReady is not proposing a change.&quot;
+        },
+        {
+          &quot;checkId&quot;: &quot;metadata.robots.indexable&quot;,
+          &quot;title&quot;: &quot;Page is not marked noindex&quot;,
+          &quot;reason&quot;: &quot;This audit check passed, so ShipReady is not proposing a change.&quot;
+        },
+        {
+          &quot;checkId&quot;: &quot;metadata.lang.present&quot;,
+          &quot;title&quot;: &quot;HTML lang attribute present&quot;,
+          &quot;reason&quot;: &quot;This audit check passed, so ShipReady is not proposing a change.&quot;
+        },
+        {
+          &quot;checkId&quot;: &quot;metadata.viewport.present&quot;,
+          &quot;title&quot;: &quot;Viewport present&quot;,
+          &quot;reason&quot;: &quot;This audit check passed, so ShipReady is not proposing a change.&quot;
+        },
+        {
+          &quot;checkId&quot;: &quot;social.og.title_present&quot;,
+          &quot;title&quot;: &quot;og:title present&quot;,
+          &quot;reason&quot;: &quot;This audit check passed, so ShipReady is not proposing a change.&quot;
+        },
+        {
+          &quot;checkId&quot;: &quot;social.og.description_present&quot;,
+          &quot;title&quot;: &quot;og:description present&quot;,
+          &quot;reason&quot;: &quot;This audit check passed, so ShipReady is not proposing a change.&quot;
+        },
+        {
+          &quot;checkId&quot;: &quot;social.og.image_present&quot;,
+          &quot;title&quot;: &quot;og:image present&quot;,
+          &quot;reason&quot;: &quot;This audit check passed, so ShipReady is not proposing a change.&quot;
+        },
+        {
+          &quot;checkId&quot;: &quot;social.twitter.card_present&quot;,
+          &quot;title&quot;: &quot;twitter:card present&quot;,
+          &quot;reason&quot;: &quot;This audit check passed, so ShipReady is not proposing a change.&quot;
+        },
+        {
+          &quot;checkId&quot;: &quot;social.twitter.title_present&quot;,
+          &quot;title&quot;: &quot;twitter:title present&quot;,
+          &quot;reason&quot;: &quot;This audit check passed, so ShipReady is not proposing a change.&quot;
+        },
+        {
+          &quot;checkId&quot;: &quot;social.twitter.description_present&quot;,
+          &quot;title&quot;: &quot;twitter:description present&quot;,
+          &quot;reason&quot;: &quot;This audit check passed, so ShipReady is not proposing a change.&quot;
+        },
+        {
+          &quot;checkId&quot;: &quot;social.twitter.image_present&quot;,
+          &quot;title&quot;: &quot;twitter:image present&quot;,
+          &quot;reason&quot;: &quot;This audit check passed, so ShipReady is not proposing a change.&quot;
+        },
+        {
+          &quot;checkId&quot;: &quot;structure.h1.single&quot;,
+          &quot;title&quot;: &quot;Single H1 found&quot;,
+          &quot;reason&quot;: &quot;This audit check passed, so ShipReady is not proposing a change.&quot;
+        },
+        {
+          &quot;checkId&quot;: &quot;crawl.raw_render.consistent&quot;,
+          &quot;title&quot;: &quot;Key metadata present in raw HTML&quot;,
+          &quot;reason&quot;: &quot;This audit check passed, so ShipReady is not proposing a change.&quot;
+        }
+      ],
+      &quot;optionalNotes&quot;: [
+        &quot;Theme color is not set: Optional theme-color metadata was not found in the initial HTML.&quot;
+      ],
+      &quot;limitations&quot;: [
+        &quot;This is a read-only plan. No files were modified and no patches were generated.&quot;,
+        &quot;Future automation must re-check the repo before writing changes.&quot;,
+        &quot;File writing is disabled; use `shipready fix --dry-run` for supported patch previews.&quot;,
+        &quot;This command is read-only and does not modify repository files.&quot;,
+        &quot;Dynamic route metadata may require human review.&quot;,
+        &quot;Existing complex metadata logic should not be overwritten blindly.&quot;
+      ],
+      &quot;recommendedNextStep&quot;: &quot;review_plan&quot;
+    },
+    &quot;rawDryRun&quot;: {
+      &quot;url&quot;: &quot;https://fodmapp.fr/&quot;,
+      &quot;repoPath&quot;: &quot;/Users/fabiencampana/Documents/fodmapp/apps/marketing&quot;,
+      &quot;generatedAt&quot;: &quot;2026-06-16T15:11:18.911Z&quot;,
+      &quot;mode&quot;: &quot;dry_run&quot;,
+      &quot;wroteFiles&quot;: false,
+      &quot;planSummary&quot;: {
+        &quot;auditScore&quot;: 59,
+        &quot;auditStatus&quot;: &quot;needs_work&quot;,
+        &quot;frameworkId&quot;: &quot;next_app_router&quot;,
+        &quot;frameworkName&quot;: &quot;Next.js App Router&quot;,
+        &quot;recommendedNextStep&quot;: &quot;review_plan&quot;
+      },
+      &quot;fileChanges&quot;: [
+        {
+          &quot;path&quot;: &quot;app/robots.ts&quot;,
+          &quot;changeType&quot;: &quot;create&quot;,
+          &quot;reason&quot;: &quot;Create an App Router robots.ts route that allows crawling and points to the sitemap.&quot;,
+          &quot;sourceActionIds&quot;: [
+            &quot;next_app_router.robots&quot;
+          ],
+          &quot;risk&quot;: &quot;low&quot;,
+          &quot;requiresHumanReview&quot;: false,
+          &quot;reviewStatus&quot;: &quot;auto_candidate&quot;,
+          &quot;after&quot;: &quot;import type { MetadataRoute } from \&quot;next\&quot;;\n\nexport default function robots(): MetadataRoute.Robots {\n  return {\n    rules: {\n      userAgent: \&quot;*\&quot;,\n      allow: \&quot;/\&quot;,\n    },\n    sitemap: \&quot;https://fodmapp.fr/sitemap.xml\&quot;,\n  };\n}\n&quot;,
+          &quot;diff&quot;: &quot;--- /dev/null\n+++ app/robots.ts\n@@\n+import type { MetadataRoute } from \&quot;next\&quot;;\n+\n+export default function robots(): MetadataRoute.Robots {\n+  return {\n+    rules: {\n+      userAgent: \&quot;*\&quot;,\n+      allow: \&quot;/\&quot;,\n+    },\n+    sitemap: \&quot;https://fodmapp.fr/sitemap.xml\&quot;,\n+  };\n+}\n+&quot;
+        },
+        {
+          &quot;path&quot;: &quot;app/sitemap.ts&quot;,
+          &quot;changeType&quot;: &quot;create&quot;,
+          &quot;reason&quot;: &quot;Create an App Router sitemap.ts route for the audited URL.&quot;,
+          &quot;sourceActionIds&quot;: [
+            &quot;next_app_router.sitemap&quot;
+          ],
+          &quot;risk&quot;: &quot;low&quot;,
+          &quot;requiresHumanReview&quot;: false,
+          &quot;reviewStatus&quot;: &quot;auto_candidate&quot;,
+          &quot;after&quot;: &quot;import type { MetadataRoute } from \&quot;next\&quot;;\n\nexport default function sitemap(): MetadataRoute.Sitemap {\n  return [\n    {\n      url: \&quot;https://fodmapp.fr/\&quot;,\n      changeFrequency: \&quot;weekly\&quot;,\n      priority: 1,\n    },\n  ];\n}\n&quot;,
+          &quot;diff&quot;: &quot;--- /dev/null\n+++ app/sitemap.ts\n@@\n+import type { MetadataRoute } from \&quot;next\&quot;;\n+\n+export default function sitemap(): MetadataRoute.Sitemap {\n+  return [\n+    {\n+      url: \&quot;https://fodmapp.fr/\&quot;,\n+      changeFrequency: \&quot;weekly\&quot;,\n+      priority: 1,\n+    },\n+  ];\n+}\n+&quot;
+        }
+      ],
+      &quot;skippedActions&quot;: [
+        {
+          &quot;actionId&quot;: &quot;next_app_router.metadata_review&quot;,
+          &quot;title&quot;: &quot;Review and improve weak metadata&quot;,
+          &quot;reasonKind&quot;: &quot;requires_more_information&quot;,
+          &quot;reason&quot;: &quot;Existing metadata export found; merging metadata is skipped until a tested merge path exists.&quot;,
+          &quot;sourceActionIds&quot;: [
+            &quot;metadata.canonical.missing&quot;,
+            &quot;metadata.favicon.missing&quot;,
+            &quot;metadata.title.too_short&quot;,
+            &quot;social.og.type_missing&quot;,
+            &quot;social.og.url_missing&quot;
+          ],
+          &quot;risk&quot;: &quot;medium&quot;
+        },
+        {
+          &quot;actionId&quot;: &quot;next_app_router.json_ld_review&quot;,
+          &quot;title&quot;: &quot;Add JSON-LD with review&quot;,
+          &quot;reasonKind&quot;: &quot;requires_more_information&quot;,
+          &quot;reason&quot;: &quot;Next.js App Router JSON-LD preview requires a reviewed structured-data component and factual schema details.&quot;,
+          &quot;sourceActionIds&quot;: [
+            &quot;schema.jsonld.missing&quot;
+          ],
+          &quot;risk&quot;: &quot;medium&quot;
+        }
+      ],
+      &quot;safetyNotes&quot;: [
+        &quot;Dry-run only. No files were modified.&quot;,
+        &quot;Next.js App Router previews are conservative and read-only; dynamic metadata and component changes are skipped.&quot;
+      ],
+      &quot;recommendedNextStep&quot;: &quot;review_patch_preview&quot;
+    }
+  }
+}</pre>
+    <h3>Raw developer details</h3>
+    <pre>{
+  &quot;rawAudit&quot;: {
+    &quot;url&quot;: &quot;https://fodmapp.fr/&quot;,
+    &quot;finalUrl&quot;: &quot;https://fodmapp.fr/&quot;,
+    &quot;auditedAt&quot;: &quot;2026-06-16T15:11:18.905Z&quot;,
+    &quot;httpStatus&quot;: 200,
+    &quot;score&quot;: 59,
+    &quot;status&quot;: &quot;needs_work&quot;,
+    &quot;raw&quot;: {
+      &quot;source&quot;: &quot;raw&quot;,
+      &quot;url&quot;: &quot;https://fodmapp.fr/&quot;,
+      &quot;metadata&quot;: {
+        &quot;htmlLang&quot;: &quot;fr&quot;,
+        &quot;title&quot;: &quot;FODMAPP&quot;,
+        &quot;description&quot;: &quot;Un outil pour trouver des substitutions compatibles avec un régime pauvre en FODMAP.&quot;,
+        &quot;viewport&quot;: &quot;width=device-width, initial-scale=1&quot;,
+        &quot;faviconLinks&quot;: [],
+        &quot;openGraph&quot;: {
+          &quot;title&quot;: &quot;FODMAPP&quot;,
+          &quot;description&quot;: &quot;Un outil pour trouver des substitutions compatibles avec un régime pauvre en FODMAP.&quot;,
+          &quot;image&quot;: &quot;https://fodmapp.fr/og.png&quot;
+        },
+        &quot;twitter&quot;: {
+          &quot;card&quot;: &quot;summary_large_image&quot;,
+          &quot;title&quot;: &quot;FODMAPP&quot;,
+          &quot;description&quot;: &quot;Un outil pour trouver des substitutions compatibles avec un régime pauvre en FODMAP.&quot;,
+          &quot;image&quot;: &quot;https://fodmapp.fr/og.png&quot;
+        }
+      },
+      &quot;headings&quot;: {
+        &quot;h1&quot;: [
+          &quot;Tu suis un régime pauvre en FODMAP et tu ne sais plus quoi cuisiner ?&quot;
+        ],
+        &quot;all&quot;: [
+          {
+            &quot;level&quot;: 1,
+            &quot;text&quot;: &quot;Tu suis un régime pauvre en FODMAP et tu ne sais plus quoi cuisiner ?&quot;
+          },
+          {
+            &quot;level&quot;: 2,
+            &quot;text&quot;: &quot;Reste en lien&quot;
+          },
+          {
+            &quot;level&quot;: 2,
+            &quot;text&quot;: &quot;Questions fréquentes&quot;
+          },
+          {
+            &quot;level&quot;: 3,
+            &quot;text&quot;: &quot;C&#39;est un avis médical ?&quot;
+          },
+          {
+            &quot;level&quot;: 3,
+            &quot;text&quot;: &quot;J&#39;ai besoin d&#39;un diagnostic ?&quot;
+          },
+          {
+            &quot;level&quot;: 3,
+            &quot;text&quot;: &quot;Combien ça coûte ?&quot;
+          },
+          {
+            &quot;level&quot;: 3,
+            &quot;text&quot;: &quot;C&#39;est quoi CIQUAL ?&quot;
+          }
+        ]
+      },
+      &quot;images&quot;: {
+        &quot;total&quot;: 0,
+        &quot;missingAlt&quot;: 0,
+        &quot;items&quot;: []
+      },
+      &quot;links&quot;: {
+        &quot;total&quot;: 3,
+        &quot;missingAccessibleText&quot;: 0,
+        &quot;items&quot;: [
+          {
+            &quot;href&quot;: &quot;#waitlist&quot;,
+            &quot;text&quot;: &quot;Rejoins la liste d&#39;attente&quot;
+          },
+          {
+            &quot;href&quot;: &quot;https://github.com/f-campana/fodmapp&quot;,
+            &quot;text&quot;: &quot;GitHub&quot;
+          },
+          {
+            &quot;href&quot;: &quot;/mentions-legales&quot;,
+            &quot;text&quot;: &quot;Mentions légales&quot;
+          }
+        ]
+      },
+      &quot;jsonLd&quot;: []
+    },
+    &quot;rendered&quot;: {
+      &quot;source&quot;: &quot;rendered&quot;,
+      &quot;url&quot;: &quot;https://fodmapp.fr/&quot;,
+      &quot;metadata&quot;: {
+        &quot;htmlLang&quot;: &quot;fr&quot;,
+        &quot;title&quot;: &quot;FODMAPP&quot;,
+        &quot;description&quot;: &quot;Un outil pour trouver des substitutions compatibles avec un régime pauvre en FODMAP.&quot;,
+        &quot;viewport&quot;: &quot;width=device-width, initial-scale=1&quot;,
+        &quot;faviconLinks&quot;: [],
+        &quot;openGraph&quot;: {
+          &quot;title&quot;: &quot;FODMAPP&quot;,
+          &quot;description&quot;: &quot;Un outil pour trouver des substitutions compatibles avec un régime pauvre en FODMAP.&quot;,
+          &quot;image&quot;: &quot;https://fodmapp.fr/og.png&quot;
+        },
+        &quot;twitter&quot;: {
+          &quot;card&quot;: &quot;summary_large_image&quot;,
+          &quot;title&quot;: &quot;FODMAPP&quot;,
+          &quot;description&quot;: &quot;Un outil pour trouver des substitutions compatibles avec un régime pauvre en FODMAP.&quot;,
+          &quot;image&quot;: &quot;https://fodmapp.fr/og.png&quot;
+        }
+      },
+      &quot;headings&quot;: {
+        &quot;h1&quot;: [
+          &quot;Tu suis un régime pauvre en FODMAP et tu ne sais plus quoi cuisiner ?&quot;
+        ],
+        &quot;all&quot;: [
+          {
+            &quot;level&quot;: 1,
+            &quot;text&quot;: &quot;Tu suis un régime pauvre en FODMAP et tu ne sais plus quoi cuisiner ?&quot;
+          },
+          {
+            &quot;level&quot;: 2,
+            &quot;text&quot;: &quot;Reste en lien&quot;
+          },
+          {
+            &quot;level&quot;: 2,
+            &quot;text&quot;: &quot;Questions fréquentes&quot;
+          },
+          {
+            &quot;level&quot;: 3,
+            &quot;text&quot;: &quot;C&#39;est un avis médical ?&quot;
+          },
+          {
+            &quot;level&quot;: 3,
+            &quot;text&quot;: &quot;J&#39;ai besoin d&#39;un diagnostic ?&quot;
+          },
+          {
+            &quot;level&quot;: 3,
+            &quot;text&quot;: &quot;Combien ça coûte ?&quot;
+          },
+          {
+            &quot;level&quot;: 3,
+            &quot;text&quot;: &quot;C&#39;est quoi CIQUAL ?&quot;
+          }
+        ]
+      },
+      &quot;images&quot;: {
+        &quot;total&quot;: 0,
+        &quot;missingAlt&quot;: 0,
+        &quot;items&quot;: []
+      },
+      &quot;links&quot;: {
+        &quot;total&quot;: 3,
+        &quot;missingAccessibleText&quot;: 0,
+        &quot;items&quot;: [
+          {
+            &quot;href&quot;: &quot;#waitlist&quot;,
+            &quot;text&quot;: &quot;Rejoins la liste d&#39;attente&quot;
+          },
+          {
+            &quot;href&quot;: &quot;https://github.com/f-campana/fodmapp&quot;,
+            &quot;text&quot;: &quot;GitHub&quot;
+          },
+          {
+            &quot;href&quot;: &quot;/mentions-legales&quot;,
+            &quot;text&quot;: &quot;Mentions légales&quot;
+          }
+        ]
+      },
+      &quot;jsonLd&quot;: []
+    },
+    &quot;comparison&quot;: {
+      &quot;fields&quot;: [
+        {
+          &quot;field&quot;: &quot;title&quot;,
+          &quot;rawValue&quot;: &quot;FODMAPP&quot;,
+          &quot;renderedValue&quot;: &quot;FODMAPP&quot;,
+          &quot;status&quot;: &quot;present_in_raw&quot;
+        },
+        {
+          &quot;field&quot;: &quot;description&quot;,
+          &quot;rawValue&quot;: &quot;Un outil pour trouver des substitutions compatibles avec un régime pauvre en FODMAP.&quot;,
+          &quot;renderedValue&quot;: &quot;Un outil pour trouver des substitutions compatibles avec un régime pauvre en FODMAP.&quot;,
+          &quot;status&quot;: &quot;present_in_raw&quot;
+        },
+        {
+          &quot;field&quot;: &quot;canonical&quot;,
+          &quot;status&quot;: &quot;missing_in_both&quot;
+        },
+        {
+          &quot;field&quot;: &quot;robots&quot;,
+          &quot;status&quot;: &quot;missing_in_both&quot;
+        },
+        {
+          &quot;field&quot;: &quot;html.lang&quot;,
+          &quot;rawValue&quot;: &quot;fr&quot;,
+          &quot;renderedValue&quot;: &quot;fr&quot;,
+          &quot;status&quot;: &quot;present_in_raw&quot;
+        },
+        {
+          &quot;field&quot;: &quot;viewport&quot;,
+          &quot;rawValue&quot;: &quot;width=device-width, initial-scale=1&quot;,
+          &quot;renderedValue&quot;: &quot;width=device-width, initial-scale=1&quot;,
+          &quot;status&quot;: &quot;present_in_raw&quot;
+        },
+        {
+          &quot;field&quot;: &quot;theme-color&quot;,
+          &quot;status&quot;: &quot;missing_in_both&quot;
+        },
+        {
+          &quot;field&quot;: &quot;favicon&quot;,
+          &quot;status&quot;: &quot;missing_in_both&quot;
+        },
+        {
+          &quot;field&quot;: &quot;og:title&quot;,
+          &quot;rawValue&quot;: &quot;FODMAPP&quot;,
+          &quot;renderedValue&quot;: &quot;FODMAPP&quot;,
+          &quot;status&quot;: &quot;present_in_raw&quot;
+        },
+        {
+          &quot;field&quot;: &quot;og:description&quot;,
+          &quot;rawValue&quot;: &quot;Un outil pour trouver des substitutions compatibles avec un régime pauvre en FODMAP.&quot;,
+          &quot;renderedValue&quot;: &quot;Un outil pour trouver des substitutions compatibles avec un régime pauvre en FODMAP.&quot;,
+          &quot;status&quot;: &quot;present_in_raw&quot;
+        },
+        {
+          &quot;field&quot;: &quot;og:image&quot;,
+          &quot;rawValue&quot;: &quot;https://fodmapp.fr/og.png&quot;,
+          &quot;renderedValue&quot;: &quot;https://fodmapp.fr/og.png&quot;,
+          &quot;status&quot;: &quot;present_in_raw&quot;
+        },
+        {
+          &quot;field&quot;: &quot;og:url&quot;,
+          &quot;status&quot;: &quot;missing_in_both&quot;
+        },
+        {
+          &quot;field&quot;: &quot;og:type&quot;,
+          &quot;status&quot;: &quot;missing_in_both&quot;
+        },
+        {
+          &quot;field&quot;: &quot;og:site_name&quot;,
+          &quot;status&quot;: &quot;missing_in_both&quot;
+        },
+        {
+          &quot;field&quot;: &quot;twitter:card&quot;,
+          &quot;rawValue&quot;: &quot;summary_large_image&quot;,
+          &quot;renderedValue&quot;: &quot;summary_large_image&quot;,
+          &quot;status&quot;: &quot;present_in_raw&quot;
+        },
+        {
+          &quot;field&quot;: &quot;twitter:title&quot;,
+          &quot;rawValue&quot;: &quot;FODMAPP&quot;,
+          &quot;renderedValue&quot;: &quot;FODMAPP&quot;,
+          &quot;status&quot;: &quot;present_in_raw&quot;
+        },
+        {
+          &quot;field&quot;: &quot;twitter:description&quot;,
+          &quot;rawValue&quot;: &quot;Un outil pour trouver des substitutions compatibles avec un régime pauvre en FODMAP.&quot;,
+          &quot;renderedValue&quot;: &quot;Un outil pour trouver des substitutions compatibles avec un régime pauvre en FODMAP.&quot;,
+          &quot;status&quot;: &quot;present_in_raw&quot;
+        },
+        {
+          &quot;field&quot;: &quot;twitter:image&quot;,
+          &quot;rawValue&quot;: &quot;https://fodmapp.fr/og.png&quot;,
+          &quot;renderedValue&quot;: &quot;https://fodmapp.fr/og.png&quot;,
+          &quot;status&quot;: &quot;present_in_raw&quot;
+        }
+      ]
+    },
+    &quot;checks&quot;: [
+      {
+        &quot;id&quot;: &quot;crawl.status.ok&quot;,
+        &quot;category&quot;: &quot;crawlability&quot;,
+        &quot;severity&quot;: &quot;passed&quot;,
+        &quot;title&quot;: &quot;Page returns HTTP success&quot;,
+        &quot;description&quot;: &quot;The audited URL returned a 2xx HTTP status.&quot;,
+        &quot;confidence&quot;: &quot;high&quot;,
+        &quot;fixability&quot;: &quot;not_fixable&quot;
+      },
+      {
+        &quot;id&quot;: &quot;metadata.title.present&quot;,
+        &quot;category&quot;: &quot;metadata&quot;,
+        &quot;severity&quot;: &quot;passed&quot;,
+        &quot;title&quot;: &quot;Title present&quot;,
+        &quot;description&quot;: &quot;Raw title: FODMAPP&quot;,
+        &quot;confidence&quot;: &quot;high&quot;,
+        &quot;fixability&quot;: &quot;not_fixable&quot;
+      },
+      {
+        &quot;id&quot;: &quot;metadata.title.too_short&quot;,
+        &quot;category&quot;: &quot;metadata&quot;,
+        &quot;severity&quot;: &quot;warning&quot;,
+        &quot;title&quot;: &quot;Title is very short&quot;,
+        &quot;description&quot;: &quot;A very short title may not explain the page clearly.&quot;,
+        &quot;evidence&quot;: {
+          &quot;title&quot;: &quot;FODMAPP&quot;
+        },
+        &quot;confidence&quot;: &quot;high&quot;,
+        &quot;fixability&quot;: &quot;plan_only&quot;
+      },
+      {
+        &quot;id&quot;: &quot;metadata.description.present&quot;,
+        &quot;category&quot;: &quot;metadata&quot;,
+        &quot;severity&quot;: &quot;passed&quot;,
+        &quot;title&quot;: &quot;Meta description present&quot;,
+        &quot;description&quot;: &quot;Raw meta description is present.&quot;,
+        &quot;confidence&quot;: &quot;high&quot;,
+        &quot;fixability&quot;: &quot;not_fixable&quot;
+      },
+      {
+        &quot;id&quot;: &quot;metadata.canonical.missing&quot;,
+        &quot;category&quot;: &quot;metadata&quot;,
+        &quot;severity&quot;: &quot;critical&quot;,
+        &quot;title&quot;: &quot;Missing canonical URL&quot;,
+        &quot;description&quot;: &quot;The raw HTML does not include a canonical link.&quot;,
+        &quot;recommendation&quot;: &quot;Add a canonical link that points to the preferred public URL for this page.&quot;,
+        &quot;confidence&quot;: &quot;high&quot;,
+        &quot;fixability&quot;: &quot;auto_fixable&quot;,
+        &quot;fixStrategy&quot;: &quot;Add a canonical link in the page head or framework metadata config.&quot;
+      },
+      {
+        &quot;id&quot;: &quot;metadata.robots.indexable&quot;,
+        &quot;category&quot;: &quot;crawlability&quot;,
+        &quot;severity&quot;: &quot;passed&quot;,
+        &quot;title&quot;: &quot;Page is not marked noindex&quot;,
+        &quot;description&quot;: &quot;No noindex robots meta directive was detected.&quot;,
+        &quot;confidence&quot;: &quot;high&quot;,
+        &quot;fixability&quot;: &quot;not_fixable&quot;
+      },
+      {
+        &quot;id&quot;: &quot;metadata.lang.present&quot;,
+        &quot;category&quot;: &quot;metadata&quot;,
+        &quot;severity&quot;: &quot;passed&quot;,
+        &quot;title&quot;: &quot;HTML lang attribute present&quot;,
+        &quot;description&quot;: &quot;fr&quot;,
+        &quot;confidence&quot;: &quot;high&quot;,
+        &quot;fixability&quot;: &quot;not_fixable&quot;
+      },
+      {
+        &quot;id&quot;: &quot;metadata.viewport.present&quot;,
+        &quot;category&quot;: &quot;metadata&quot;,
+        &quot;severity&quot;: &quot;passed&quot;,
+        &quot;title&quot;: &quot;Viewport present&quot;,
+        &quot;description&quot;: &quot;width=device-width, initial-scale=1&quot;,
+        &quot;confidence&quot;: &quot;high&quot;,
+        &quot;fixability&quot;: &quot;not_fixable&quot;
+      },
+      {
+        &quot;id&quot;: &quot;metadata.theme_color.missing&quot;,
+        &quot;category&quot;: &quot;metadata&quot;,
+        &quot;severity&quot;: &quot;info&quot;,
+        &quot;title&quot;: &quot;Theme color is not set&quot;,
+        &quot;description&quot;: &quot;Optional theme-color metadata was not found in the initial HTML.&quot;,
+        &quot;recommendation&quot;: &quot;Add a theme-color meta tag if you want branded browser UI on supported surfaces.&quot;,
+        &quot;confidence&quot;: &quot;high&quot;,
+        &quot;fixability&quot;: &quot;plan_only&quot;
+      },
+      {
+        &quot;id&quot;: &quot;metadata.favicon.missing&quot;,
+        &quot;category&quot;: &quot;metadata&quot;,
+        &quot;severity&quot;: &quot;warning&quot;,
+        &quot;title&quot;: &quot;No favicon links found&quot;,
+        &quot;description&quot;: &quot;Favicons and app icons help the site look complete in tabs, bookmarks, and device surfaces.&quot;,
+        &quot;confidence&quot;: &quot;high&quot;,
+        &quot;fixability&quot;: &quot;plan_only&quot;
+      },
+      {
+        &quot;id&quot;: &quot;social.og.title_present&quot;,
+        &quot;category&quot;: &quot;social&quot;,
+        &quot;severity&quot;: &quot;passed&quot;,
+        &quot;title&quot;: &quot;og:title present&quot;,
+        &quot;description&quot;: &quot;FODMAPP&quot;,
+        &quot;confidence&quot;: &quot;high&quot;,
+        &quot;fixability&quot;: &quot;not_fixable&quot;
+      },
+      {
+        &quot;id&quot;: &quot;social.og.description_present&quot;,
+        &quot;category&quot;: &quot;social&quot;,
+        &quot;severity&quot;: &quot;passed&quot;,
+        &quot;title&quot;: &quot;og:description present&quot;,
+        &quot;description&quot;: &quot;Open Graph description is present.&quot;,
+        &quot;confidence&quot;: &quot;high&quot;,
+        &quot;fixability&quot;: &quot;not_fixable&quot;
+      },
+      {
+        &quot;id&quot;: &quot;social.og.image_present&quot;,
+        &quot;category&quot;: &quot;social&quot;,
+        &quot;severity&quot;: &quot;passed&quot;,
+        &quot;title&quot;: &quot;og:image present&quot;,
+        &quot;description&quot;: &quot;https://fodmapp.fr/og.png&quot;,
+        &quot;confidence&quot;: &quot;high&quot;,
+        &quot;fixability&quot;: &quot;not_fixable&quot;
+      },
+      {
+        &quot;id&quot;: &quot;social.og.url_missing&quot;,
+        &quot;category&quot;: &quot;social&quot;,
+        &quot;severity&quot;: &quot;warning&quot;,
+        &quot;title&quot;: &quot;Missing og:url&quot;,
+        &quot;description&quot;: &quot;Open Graph metadata should include the canonical page URL.&quot;,
+        &quot;confidence&quot;: &quot;high&quot;,
+        &quot;fixability&quot;: &quot;plan_only&quot;
+      },
+      {
+        &quot;id&quot;: &quot;social.og.type_missing&quot;,
+        &quot;category&quot;: &quot;social&quot;,
+        &quot;severity&quot;: &quot;warning&quot;,
+        &quot;title&quot;: &quot;Missing og:type&quot;,
+        &quot;description&quot;: &quot;Open Graph metadata should include a type such as website.&quot;,
+        &quot;confidence&quot;: &quot;high&quot;,
+        &quot;fixability&quot;: &quot;plan_only&quot;
+      },
+      {
+        &quot;id&quot;: &quot;social.twitter.card_present&quot;,
+        &quot;category&quot;: &quot;social&quot;,
+        &quot;severity&quot;: &quot;passed&quot;,
+        &quot;title&quot;: &quot;twitter:card present&quot;,
+        &quot;description&quot;: &quot;summary_large_image&quot;,
+        &quot;confidence&quot;: &quot;high&quot;,
+        &quot;fixability&quot;: &quot;not_fixable&quot;
+      },
+      {
+        &quot;id&quot;: &quot;social.twitter.title_present&quot;,
+        &quot;category&quot;: &quot;social&quot;,
+        &quot;severity&quot;: &quot;passed&quot;,
+        &quot;title&quot;: &quot;twitter:title present&quot;,
+        &quot;description&quot;: &quot;FODMAPP&quot;,
+        &quot;confidence&quot;: &quot;high&quot;,
+        &quot;fixability&quot;: &quot;not_fixable&quot;
+      },
+      {
+        &quot;id&quot;: &quot;social.twitter.description_present&quot;,
+        &quot;category&quot;: &quot;social&quot;,
+        &quot;severity&quot;: &quot;passed&quot;,
+        &quot;title&quot;: &quot;twitter:description present&quot;,
+        &quot;description&quot;: &quot;Twitter/X description is present.&quot;,
+        &quot;confidence&quot;: &quot;high&quot;,
+        &quot;fixability&quot;: &quot;not_fixable&quot;
+      },
+      {
+        &quot;id&quot;: &quot;social.twitter.image_present&quot;,
+        &quot;category&quot;: &quot;social&quot;,
+        &quot;severity&quot;: &quot;passed&quot;,
+        &quot;title&quot;: &quot;twitter:image present&quot;,
+        &quot;description&quot;: &quot;https://fodmapp.fr/og.png&quot;,
+        &quot;confidence&quot;: &quot;high&quot;,
+        &quot;fixability&quot;: &quot;not_fixable&quot;
+      },
+      {
+        &quot;id&quot;: &quot;schema.jsonld.missing&quot;,
+        &quot;category&quot;: &quot;schema&quot;,
+        &quot;severity&quot;: &quot;critical&quot;,
+        &quot;title&quot;: &quot;No JSON-LD detected&quot;,
+        &quot;description&quot;: &quot;No structured data script tags were found in the raw HTML.&quot;,
+        &quot;recommendation&quot;: &quot;Add conservative, factual JSON-LD such as WebSite or Organization when appropriate.&quot;,
+        &quot;confidence&quot;: &quot;high&quot;,
+        &quot;fixability&quot;: &quot;plan_only&quot;
+      },
+      {
+        &quot;id&quot;: &quot;structure.h1.single&quot;,
+        &quot;category&quot;: &quot;structure&quot;,
+        &quot;severity&quot;: &quot;passed&quot;,
+        &quot;title&quot;: &quot;Single H1 found&quot;,
+        &quot;description&quot;: &quot;Tu suis un régime pauvre en FODMAP et tu ne sais plus quoi cuisiner ?&quot;,
+        &quot;confidence&quot;: &quot;high&quot;,
+        &quot;fixability&quot;: &quot;not_fixable&quot;
+      },
+      {
+        &quot;id&quot;: &quot;crawl.robots_txt.missing&quot;,
+        &quot;category&quot;: &quot;crawlability&quot;,
+        &quot;severity&quot;: &quot;warning&quot;,
+        &quot;title&quot;: &quot;robots.txt not found&quot;,
+        &quot;description&quot;: &quot;No robots.txt file was found at the origin root.&quot;,
+        &quot;evidence&quot;: {
+          &quot;url&quot;: &quot;https://fodmapp.fr/robots.txt&quot;,
+          &quot;statusCode&quot;: 404
+        },
+        &quot;confidence&quot;: &quot;high&quot;,
+        &quot;fixability&quot;: &quot;plan_only&quot;
+      },
+      {
+        &quot;id&quot;: &quot;crawl.sitemap.missing&quot;,
+        &quot;category&quot;: &quot;crawlability&quot;,
+        &quot;severity&quot;: &quot;warning&quot;,
+        &quot;title&quot;: &quot;sitemap.xml not found&quot;,
+        &quot;description&quot;: &quot;No sitemap.xml file was found at the origin root.&quot;,
+        &quot;evidence&quot;: {
+          &quot;url&quot;: &quot;https://fodmapp.fr/sitemap.xml&quot;,
+          &quot;statusCode&quot;: 404
+        },
+        &quot;confidence&quot;: &quot;high&quot;,
+        &quot;fixability&quot;: &quot;plan_only&quot;
+      },
+      {
+        &quot;id&quot;: &quot;crawl.raw_render.consistent&quot;,
+        &quot;category&quot;: &quot;crawlability&quot;,
+        &quot;severity&quot;: &quot;passed&quot;,
+        &quot;title&quot;: &quot;Key metadata present in raw HTML&quot;,
+        &quot;description&quot;: &quot;No render-only metadata fields were detected.&quot;,
+        &quot;confidence&quot;: &quot;high&quot;,
+        &quot;fixability&quot;: &quot;not_fixable&quot;
+      }
+    ],
+    &quot;resources&quot;: {
+      &quot;robotsTxt&quot;: {
+        &quot;url&quot;: &quot;https://fodmapp.fr/robots.txt&quot;,
+        &quot;finalUrl&quot;: &quot;https://fodmapp.fr/robots.txt&quot;,
+        &quot;exists&quot;: false,
+        &quot;ok&quot;: false,
+        &quot;statusCode&quot;: 404,
+        &quot;blocksPage&quot;: false
+      },
+      &quot;sitemapXml&quot;: {
+        &quot;url&quot;: &quot;https://fodmapp.fr/sitemap.xml&quot;,
+        &quot;finalUrl&quot;: &quot;https://fodmapp.fr/sitemap.xml&quot;,
+        &quot;exists&quot;: false,
+        &quot;ok&quot;: false,
+        &quot;statusCode&quot;: 404,
+        &quot;includesAuditedUrl&quot;: false
+      }
+    }
+  },
+  &quot;rawRepoInspection&quot;: {
+    &quot;path&quot;: &quot;/Users/fabiencampana/Documents/fodmapp/apps/marketing&quot;,
+    &quot;inspectedAt&quot;: &quot;2026-06-16T15:11:16.129Z&quot;,
+    &quot;packageManager&quot;: &quot;unknown&quot;,
+    &quot;framework&quot;: {
+      &quot;id&quot;: &quot;next_app_router&quot;,
+      &quot;name&quot;: &quot;Next.js App Router&quot;,
+      &quot;confidence&quot;: &quot;high&quot;,
+      &quot;evidence&quot;: [
+        {
+          &quot;kind&quot;: &quot;package_dependency&quot;,
+          &quot;path&quot;: &quot;package.json&quot;,
+          &quot;value&quot;: &quot;package.json includes dependency \&quot;next\&quot;&quot;,
+          &quot;weight&quot;: &quot;strong&quot;
+        },
+        {
+          &quot;kind&quot;: &quot;file&quot;,
+          &quot;path&quot;: &quot;next.config.ts&quot;,
+          &quot;value&quot;: &quot;Next.js config found&quot;,
+          &quot;weight&quot;: &quot;medium&quot;
+        },
+        {
+          &quot;kind&quot;: &quot;directory&quot;,
+          &quot;path&quot;: &quot;app&quot;,
+          &quot;value&quot;: &quot;App Router directory found&quot;,
+          &quot;weight&quot;: &quot;strong&quot;
+        },
+        {
+          &quot;kind&quot;: &quot;file&quot;,
+          &quot;path&quot;: &quot;app/layout.tsx&quot;,
+          &quot;value&quot;: &quot;App Router root layout found&quot;,
+          &quot;weight&quot;: &quot;strong&quot;
+        },
+        {
+          &quot;kind&quot;: &quot;file&quot;,
+          &quot;path&quot;: &quot;app/mentions-legales/page.tsx&quot;,
+          &quot;value&quot;: &quot;app/mentions-legales/page.tsx found&quot;,
+          &quot;weight&quot;: &quot;medium&quot;
+        },
+        {
+          &quot;kind&quot;: &quot;file&quot;,
+          &quot;path&quot;: &quot;app/page.tsx&quot;,
+          &quot;value&quot;: &quot;app/page.tsx found&quot;,
+          &quot;weight&quot;: &quot;medium&quot;
+        },
+        {
+          &quot;kind&quot;: &quot;source_pattern&quot;,
+          &quot;path&quot;: &quot;app/layout.tsx&quot;,
+          &quot;value&quot;: &quot;app/layout.tsx exports metadata or generateMetadata&quot;,
+          &quot;weight&quot;: &quot;medium&quot;
+        }
+      ]
+    },
+    &quot;importantFiles&quot;: [
+      {
+        &quot;path&quot;: &quot;package.json&quot;,
+        &quot;kind&quot;: &quot;package_file&quot;,
+        &quot;reason&quot;: &quot;Project package manifest&quot;
+      },
+      {
+        &quot;path&quot;: &quot;next.config.ts&quot;,
+        &quot;kind&quot;: &quot;config_file&quot;,
+        &quot;reason&quot;: &quot;Framework or TypeScript config&quot;
+      },
+      {
+        &quot;path&quot;: &quot;tsconfig.json&quot;,
+        &quot;kind&quot;: &quot;config_file&quot;,
+        &quot;reason&quot;: &quot;Framework or TypeScript config&quot;
+      },
+      {
+        &quot;path&quot;: &quot;app/&quot;,
+        &quot;kind&quot;: &quot;directory&quot;,
+        &quot;reason&quot;: &quot;Important project directory&quot;
+      },
+      {
+        &quot;path&quot;: &quot;src/&quot;,
+        &quot;kind&quot;: &quot;directory&quot;,
+        &quot;reason&quot;: &quot;Important project directory&quot;
+      },
+      {
+        &quot;path&quot;: &quot;public/&quot;,
+        &quot;kind&quot;: &quot;directory&quot;,
+        &quot;reason&quot;: &quot;Important project directory&quot;
+      },
+      {
+        &quot;path&quot;: &quot;app/layout.tsx&quot;,
+        &quot;kind&quot;: &quot;metadata_file&quot;,
+        &quot;reason&quot;: &quot;Next.js App Router file&quot;
+      },
+      {
+        &quot;path&quot;: &quot;app/mentions-legales/page.tsx&quot;,
+        &quot;kind&quot;: &quot;route_file&quot;,
+        &quot;reason&quot;: &quot;Next.js App Router file&quot;
+      },
+      {
+        &quot;path&quot;: &quot;app/page.tsx&quot;,
+        &quot;kind&quot;: &quot;route_file&quot;,
+        &quot;reason&quot;: &quot;Next.js App Router file&quot;
+      }
+    ],
+    &quot;routes&quot;: [
+      {
+        &quot;path&quot;: &quot;app/mentions-legales/page.tsx&quot;,
+        &quot;route&quot;: &quot;/mentions-legales&quot;,
+        &quot;kind&quot;: &quot;page&quot;,
+        &quot;confidence&quot;: &quot;high&quot;,
+        &quot;reason&quot;: &quot;App Router page file&quot;
+      },
+      {
+        &quot;path&quot;: &quot;app/page.tsx&quot;,
+        &quot;route&quot;: &quot;/&quot;,
+        &quot;kind&quot;: &quot;page&quot;,
+        &quot;confidence&quot;: &quot;high&quot;,
+        &quot;reason&quot;: &quot;App Router page file&quot;
+      }
+    ],
+    &quot;metadataLocations&quot;: [
+      {
+        &quot;path&quot;: &quot;app/layout.tsx&quot;,
+        &quot;kind&quot;: &quot;file&quot;,
+        &quot;exists&quot;: true,
+        &quot;reason&quot;: &quot;App Router layout can define shared metadata&quot;
+      },
+      {
+        &quot;path&quot;: &quot;app/**/page.tsx&quot;,
+        &quot;kind&quot;: &quot;pattern&quot;,
+        &quot;exists&quot;: false,
+        &quot;reason&quot;: &quot;Route-level pages can define metadata&quot;
+      },
+      {
+        &quot;path&quot;: &quot;app/**/layout.tsx&quot;,
+        &quot;kind&quot;: &quot;pattern&quot;,
+        &quot;exists&quot;: false,
+        &quot;reason&quot;: &quot;Nested layouts can define section metadata&quot;
+      },
+      {
+        &quot;path&quot;: &quot;app/sitemap.ts&quot;,
+        &quot;kind&quot;: &quot;file&quot;,
+        &quot;exists&quot;: false,
+        &quot;reason&quot;: &quot;App Router sitemap route&quot;
+      },
+      {
+        &quot;path&quot;: &quot;app/robots.ts&quot;,
+        &quot;kind&quot;: &quot;file&quot;,
+        &quot;exists&quot;: false,
+        &quot;reason&quot;: &quot;App Router robots route&quot;
+      },
+      {
+        &quot;path&quot;: &quot;app/opengraph-image.tsx&quot;,
+        &quot;kind&quot;: &quot;file&quot;,
+        &quot;exists&quot;: false,
+        &quot;reason&quot;: &quot;Open Graph image route&quot;
+      }
+    ],
+    &quot;supportedFixes&quot;: [
+      {
+        &quot;id&quot;: &quot;next_app.metadata_export&quot;,
+        &quot;title&quot;: &quot;Add/update static metadata export&quot;,
+        &quot;description&quot;: &quot;Add or update App Router metadata exports where simple and local.&quot;,
+        &quot;safety&quot;: &quot;review_required&quot;
+      },
+      {
+        &quot;id&quot;: &quot;next_app.route_metadata&quot;,
+        &quot;title&quot;: &quot;Add route-level metadata&quot;,
+        &quot;description&quot;: &quot;Add metadata to route page or layout files.&quot;,
+        &quot;safety&quot;: &quot;review_required&quot;
+      },
+      {
+        &quot;id&quot;: &quot;next_app.generate_metadata&quot;,
+        &quot;title&quot;: &quot;Add/update generateMetadata&quot;,
+        &quot;description&quot;: &quot;Plan generateMetadata changes when route metadata is dynamic.&quot;,
+        &quot;safety&quot;: &quot;review_required&quot;
+      },
+      {
+        &quot;id&quot;: &quot;next_app.json_ld&quot;,
+        &quot;title&quot;: &quot;Add JSON-LD component&quot;,
+        &quot;description&quot;: &quot;Add conservative structured data in a layout or page.&quot;,
+        &quot;safety&quot;: &quot;review_required&quot;
+      },
+      {
+        &quot;id&quot;: &quot;next_app.robots&quot;,
+        &quot;title&quot;: &quot;Add robots.ts&quot;,
+        &quot;description&quot;: &quot;Add an App Router robots route.&quot;,
+        &quot;safety&quot;: &quot;review_required&quot;
+      },
+      {
+        &quot;id&quot;: &quot;next_app.sitemap&quot;,
+        &quot;title&quot;: &quot;Add sitemap.ts&quot;,
+        &quot;description&quot;: &quot;Add an App Router sitemap route.&quot;,
+        &quot;safety&quot;: &quot;review_required&quot;
+      },
+      {
+        &quot;id&quot;: &quot;next_app.og_image&quot;,
+        &quot;title&quot;: &quot;Add Open Graph image route&quot;,
+        &quot;description&quot;: &quot;Add an opengraph-image route where appropriate.&quot;,
+        &quot;safety&quot;: &quot;review_required&quot;
+      }
+    ],
+    &quot;limitations&quot;: [
+      &quot;File writing is disabled; use `shipready fix --dry-run` for supported patch previews.&quot;,
+      &quot;This command is read-only and does not modify repository files.&quot;,
+      &quot;Dynamic route metadata may require human review.&quot;,
+      &quot;Existing complex metadata logic should not be overwritten blindly.&quot;
+    ],
+    &quot;warnings&quot;: [
+      &quot;Package manager could not be inferred from a lockfile or packageManager field.&quot;
+    ]
+  },
+  &quot;rawFixPlan&quot;: {
+    &quot;url&quot;: &quot;https://fodmapp.fr/&quot;,
+    &quot;repoPath&quot;: &quot;/Users/fabiencampana/Documents/fodmapp/apps/marketing&quot;,
+    &quot;plannedAt&quot;: &quot;2026-06-16T15:11:18.909Z&quot;,
+    &quot;auditSummary&quot;: {
+      &quot;score&quot;: 59,
+      &quot;status&quot;: &quot;needs_work&quot;,
+      &quot;criticalCount&quot;: 2,
+      &quot;warningCount&quot;: 6,
+      &quot;noteCount&quot;: 1
+    },
+    &quot;repoSummary&quot;: {
+      &quot;frameworkId&quot;: &quot;next_app_router&quot;,
+      &quot;frameworkName&quot;: &quot;Next.js App Router&quot;,
+      &quot;confidence&quot;: &quot;high&quot;,
+      &quot;packageManager&quot;: &quot;unknown&quot;
+    },
+    &quot;actions&quot;: [
+      {
+        &quot;id&quot;: &quot;next_app_router.metadata_review&quot;,
+        &quot;title&quot;: &quot;Review and improve weak metadata&quot;,
+        &quot;description&quot;: &quot;Review weak or risky metadata before changing production copy or crawler signals.&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;metadata.canonical.missing&quot;,
+          &quot;metadata.favicon.missing&quot;,
+          &quot;metadata.title.too_short&quot;,
+          &quot;social.og.type_missing&quot;,
+          &quot;social.og.url_missing&quot;
+        ],
+        &quot;category&quot;: &quot;automated_with_review&quot;,
+        &quot;priority&quot;: &quot;critical&quot;,
+        &quot;risk&quot;: &quot;medium&quot;,
+        &quot;confidence&quot;: &quot;high&quot;,
+        &quot;frameworkStrategy&quot;: &quot;Use App Router metadata exports, route-level metadata, or generateMetadata in server-rendered files.&quot;,
+        &quot;targetFiles&quot;: [
+          &quot;app/layout.tsx&quot;
+        ],
+        &quot;targetLocations&quot;: [
+          &quot;app/layout.tsx&quot;,
+          &quot;app/**/page.tsx&quot;,
+          &quot;app/**/layout.tsx&quot;,
+          &quot;app/sitemap.ts&quot;,
+          &quot;app/robots.ts&quot;,
+          &quot;app/opengraph-image.tsx&quot;
+        ],
+        &quot;futureAutomation&quot;: {
+          &quot;canAutomate&quot;: true,
+          &quot;requiresHumanReview&quot;: true,
+          &quot;reason&quot;: &quot;Metadata changes affect production copy and crawler/share-preview signals, so generated changes should be reviewed.&quot;
+        }
+      },
+      {
+        &quot;id&quot;: &quot;next_app_router.json_ld_review&quot;,
+        &quot;title&quot;: &quot;Add JSON-LD with review&quot;,
+        &quot;description&quot;: &quot;Add or fix conservative structured data only after confirming schema type and business facts.&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;schema.jsonld.missing&quot;
+        ],
+        &quot;category&quot;: &quot;automated_with_review&quot;,
+        &quot;priority&quot;: &quot;critical&quot;,
+        &quot;risk&quot;: &quot;medium&quot;,
+        &quot;confidence&quot;: &quot;high&quot;,
+        &quot;frameworkStrategy&quot;: &quot;Add a reviewed JSON-LD script or component in an App Router layout/page.&quot;,
+        &quot;targetFiles&quot;: [
+          &quot;app/layout.tsx&quot;
+        ],
+        &quot;targetLocations&quot;: [
+          &quot;app/layout.tsx&quot;,
+          &quot;app/**/page.tsx&quot;,
+          &quot;app/**/layout.tsx&quot;,
+          &quot;app/sitemap.ts&quot;,
+          &quot;app/robots.ts&quot;,
+          &quot;app/opengraph-image.tsx&quot;
+        ],
+        &quot;futureAutomation&quot;: {
+          &quot;canAutomate&quot;: true,
+          &quot;requiresHumanReview&quot;: true,
+          &quot;reason&quot;: &quot;Structured data must be factually accurate; ShipReady should not invent schema facts without review.&quot;
+        }
+      },
+      {
+        &quot;id&quot;: &quot;next_app_router.robots&quot;,
+        &quot;title&quot;: &quot;Add robots.ts&quot;,
+        &quot;description&quot;: &quot;Add a robots file or framework route so crawlers can discover the intended crawl policy.&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;crawl.robots_txt.missing&quot;
+        ],
+        &quot;category&quot;: &quot;safe_automated_later&quot;,
+        &quot;priority&quot;: &quot;medium&quot;,
+        &quot;risk&quot;: &quot;low&quot;,
+        &quot;confidence&quot;: &quot;high&quot;,
+        &quot;frameworkStrategy&quot;: &quot;Add an App Router robots.ts route.&quot;,
+        &quot;targetFiles&quot;: [
+          &quot;app/robots.ts&quot;
+        ],
+        &quot;targetLocations&quot;: [
+          &quot;app/robots.ts&quot;
+        ],
+        &quot;futureAutomation&quot;: {
+          &quot;canAutomate&quot;: true,
+          &quot;requiresHumanReview&quot;: false,
+          &quot;reason&quot;: &quot;The framework and likely robots target are clear.&quot;
+        }
+      },
+      {
+        &quot;id&quot;: &quot;next_app_router.sitemap&quot;,
+        &quot;title&quot;: &quot;Add sitemap.ts&quot;,
+        &quot;description&quot;: &quot;Add a sitemap so crawlers can discover the public URL set.&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;crawl.sitemap.missing&quot;
+        ],
+        &quot;category&quot;: &quot;safe_automated_later&quot;,
+        &quot;priority&quot;: &quot;high&quot;,
+        &quot;risk&quot;: &quot;low&quot;,
+        &quot;confidence&quot;: &quot;high&quot;,
+        &quot;frameworkStrategy&quot;: &quot;Add an App Router sitemap.ts route. Use audited URL https://fodmapp.fr/.&quot;,
+        &quot;targetFiles&quot;: [
+          &quot;app/sitemap.ts&quot;
+        ],
+        &quot;targetLocations&quot;: [
+          &quot;app/sitemap.ts&quot;
+        ],
+        &quot;futureAutomation&quot;: {
+          &quot;canAutomate&quot;: true,
+          &quot;requiresHumanReview&quot;: false,
+          &quot;reason&quot;: &quot;The framework and likely sitemap target are clear.&quot;
+        }
+      }
+    ],
+    &quot;noActionChecks&quot;: [
+      {
+        &quot;checkId&quot;: &quot;crawl.status.ok&quot;,
+        &quot;title&quot;: &quot;Page returns HTTP success&quot;,
+        &quot;reason&quot;: &quot;This audit check passed, so ShipReady is not proposing a change.&quot;
+      },
+      {
+        &quot;checkId&quot;: &quot;metadata.title.present&quot;,
+        &quot;title&quot;: &quot;Title present&quot;,
+        &quot;reason&quot;: &quot;This audit check passed, so ShipReady is not proposing a change.&quot;
+      },
+      {
+        &quot;checkId&quot;: &quot;metadata.description.present&quot;,
+        &quot;title&quot;: &quot;Meta description present&quot;,
+        &quot;reason&quot;: &quot;This audit check passed, so ShipReady is not proposing a change.&quot;
+      },
+      {
+        &quot;checkId&quot;: &quot;metadata.robots.indexable&quot;,
+        &quot;title&quot;: &quot;Page is not marked noindex&quot;,
+        &quot;reason&quot;: &quot;This audit check passed, so ShipReady is not proposing a change.&quot;
+      },
+      {
+        &quot;checkId&quot;: &quot;metadata.lang.present&quot;,
+        &quot;title&quot;: &quot;HTML lang attribute present&quot;,
+        &quot;reason&quot;: &quot;This audit check passed, so ShipReady is not proposing a change.&quot;
+      },
+      {
+        &quot;checkId&quot;: &quot;metadata.viewport.present&quot;,
+        &quot;title&quot;: &quot;Viewport present&quot;,
+        &quot;reason&quot;: &quot;This audit check passed, so ShipReady is not proposing a change.&quot;
+      },
+      {
+        &quot;checkId&quot;: &quot;social.og.title_present&quot;,
+        &quot;title&quot;: &quot;og:title present&quot;,
+        &quot;reason&quot;: &quot;This audit check passed, so ShipReady is not proposing a change.&quot;
+      },
+      {
+        &quot;checkId&quot;: &quot;social.og.description_present&quot;,
+        &quot;title&quot;: &quot;og:description present&quot;,
+        &quot;reason&quot;: &quot;This audit check passed, so ShipReady is not proposing a change.&quot;
+      },
+      {
+        &quot;checkId&quot;: &quot;social.og.image_present&quot;,
+        &quot;title&quot;: &quot;og:image present&quot;,
+        &quot;reason&quot;: &quot;This audit check passed, so ShipReady is not proposing a change.&quot;
+      },
+      {
+        &quot;checkId&quot;: &quot;social.twitter.card_present&quot;,
+        &quot;title&quot;: &quot;twitter:card present&quot;,
+        &quot;reason&quot;: &quot;This audit check passed, so ShipReady is not proposing a change.&quot;
+      },
+      {
+        &quot;checkId&quot;: &quot;social.twitter.title_present&quot;,
+        &quot;title&quot;: &quot;twitter:title present&quot;,
+        &quot;reason&quot;: &quot;This audit check passed, so ShipReady is not proposing a change.&quot;
+      },
+      {
+        &quot;checkId&quot;: &quot;social.twitter.description_present&quot;,
+        &quot;title&quot;: &quot;twitter:description present&quot;,
+        &quot;reason&quot;: &quot;This audit check passed, so ShipReady is not proposing a change.&quot;
+      },
+      {
+        &quot;checkId&quot;: &quot;social.twitter.image_present&quot;,
+        &quot;title&quot;: &quot;twitter:image present&quot;,
+        &quot;reason&quot;: &quot;This audit check passed, so ShipReady is not proposing a change.&quot;
+      },
+      {
+        &quot;checkId&quot;: &quot;structure.h1.single&quot;,
+        &quot;title&quot;: &quot;Single H1 found&quot;,
+        &quot;reason&quot;: &quot;This audit check passed, so ShipReady is not proposing a change.&quot;
+      },
+      {
+        &quot;checkId&quot;: &quot;crawl.raw_render.consistent&quot;,
+        &quot;title&quot;: &quot;Key metadata present in raw HTML&quot;,
+        &quot;reason&quot;: &quot;This audit check passed, so ShipReady is not proposing a change.&quot;
+      }
+    ],
+    &quot;optionalNotes&quot;: [
+      &quot;Theme color is not set: Optional theme-color metadata was not found in the initial HTML.&quot;
+    ],
+    &quot;limitations&quot;: [
+      &quot;This is a read-only plan. No files were modified and no patches were generated.&quot;,
+      &quot;Future automation must re-check the repo before writing changes.&quot;,
+      &quot;File writing is disabled; use `shipready fix --dry-run` for supported patch previews.&quot;,
+      &quot;This command is read-only and does not modify repository files.&quot;,
+      &quot;Dynamic route metadata may require human review.&quot;,
+      &quot;Existing complex metadata logic should not be overwritten blindly.&quot;
+    ],
+    &quot;recommendedNextStep&quot;: &quot;review_plan&quot;
+  },
+  &quot;rawDryRun&quot;: {
+    &quot;url&quot;: &quot;https://fodmapp.fr/&quot;,
+    &quot;repoPath&quot;: &quot;/Users/fabiencampana/Documents/fodmapp/apps/marketing&quot;,
+    &quot;generatedAt&quot;: &quot;2026-06-16T15:11:18.911Z&quot;,
+    &quot;mode&quot;: &quot;dry_run&quot;,
+    &quot;wroteFiles&quot;: false,
+    &quot;planSummary&quot;: {
+      &quot;auditScore&quot;: 59,
+      &quot;auditStatus&quot;: &quot;needs_work&quot;,
+      &quot;frameworkId&quot;: &quot;next_app_router&quot;,
+      &quot;frameworkName&quot;: &quot;Next.js App Router&quot;,
+      &quot;recommendedNextStep&quot;: &quot;review_plan&quot;
+    },
+    &quot;fileChanges&quot;: [
+      {
+        &quot;path&quot;: &quot;app/robots.ts&quot;,
+        &quot;changeType&quot;: &quot;create&quot;,
+        &quot;reason&quot;: &quot;Create an App Router robots.ts route that allows crawling and points to the sitemap.&quot;,
+        &quot;sourceActionIds&quot;: [
+          &quot;next_app_router.robots&quot;
+        ],
+        &quot;risk&quot;: &quot;low&quot;,
+        &quot;requiresHumanReview&quot;: false,
+        &quot;reviewStatus&quot;: &quot;auto_candidate&quot;,
+        &quot;after&quot;: &quot;import type { MetadataRoute } from \&quot;next\&quot;;\n\nexport default function robots(): MetadataRoute.Robots {\n  return {\n    rules: {\n      userAgent: \&quot;*\&quot;,\n      allow: \&quot;/\&quot;,\n    },\n    sitemap: \&quot;https://fodmapp.fr/sitemap.xml\&quot;,\n  };\n}\n&quot;,
+        &quot;diff&quot;: &quot;--- /dev/null\n+++ app/robots.ts\n@@\n+import type { MetadataRoute } from \&quot;next\&quot;;\n+\n+export default function robots(): MetadataRoute.Robots {\n+  return {\n+    rules: {\n+      userAgent: \&quot;*\&quot;,\n+      allow: \&quot;/\&quot;,\n+    },\n+    sitemap: \&quot;https://fodmapp.fr/sitemap.xml\&quot;,\n+  };\n+}\n+&quot;
+      },
+      {
+        &quot;path&quot;: &quot;app/sitemap.ts&quot;,
+        &quot;changeType&quot;: &quot;create&quot;,
+        &quot;reason&quot;: &quot;Create an App Router sitemap.ts route for the audited URL.&quot;,
+        &quot;sourceActionIds&quot;: [
+          &quot;next_app_router.sitemap&quot;
+        ],
+        &quot;risk&quot;: &quot;low&quot;,
+        &quot;requiresHumanReview&quot;: false,
+        &quot;reviewStatus&quot;: &quot;auto_candidate&quot;,
+        &quot;after&quot;: &quot;import type { MetadataRoute } from \&quot;next\&quot;;\n\nexport default function sitemap(): MetadataRoute.Sitemap {\n  return [\n    {\n      url: \&quot;https://fodmapp.fr/\&quot;,\n      changeFrequency: \&quot;weekly\&quot;,\n      priority: 1,\n    },\n  ];\n}\n&quot;,
+        &quot;diff&quot;: &quot;--- /dev/null\n+++ app/sitemap.ts\n@@\n+import type { MetadataRoute } from \&quot;next\&quot;;\n+\n+export default function sitemap(): MetadataRoute.Sitemap {\n+  return [\n+    {\n+      url: \&quot;https://fodmapp.fr/\&quot;,\n+      changeFrequency: \&quot;weekly\&quot;,\n+      priority: 1,\n+    },\n+  ];\n+}\n+&quot;
+      }
+    ],
+    &quot;skippedActions&quot;: [
+      {
+        &quot;actionId&quot;: &quot;next_app_router.metadata_review&quot;,
+        &quot;title&quot;: &quot;Review and improve weak metadata&quot;,
+        &quot;reasonKind&quot;: &quot;requires_more_information&quot;,
+        &quot;reason&quot;: &quot;Existing metadata export found; merging metadata is skipped until a tested merge path exists.&quot;,
+        &quot;sourceActionIds&quot;: [
+          &quot;metadata.canonical.missing&quot;,
+          &quot;metadata.favicon.missing&quot;,
+          &quot;metadata.title.too_short&quot;,
+          &quot;social.og.type_missing&quot;,
+          &quot;social.og.url_missing&quot;
+        ],
+        &quot;risk&quot;: &quot;medium&quot;
+      },
+      {
+        &quot;actionId&quot;: &quot;next_app_router.json_ld_review&quot;,
+        &quot;title&quot;: &quot;Add JSON-LD with review&quot;,
+        &quot;reasonKind&quot;: &quot;requires_more_information&quot;,
+        &quot;reason&quot;: &quot;Next.js App Router JSON-LD preview requires a reviewed structured-data component and factual schema details.&quot;,
+        &quot;sourceActionIds&quot;: [
+          &quot;schema.jsonld.missing&quot;
+        ],
+        &quot;risk&quot;: &quot;medium&quot;
+      }
+    ],
+    &quot;safetyNotes&quot;: [
+      &quot;Dry-run only. No files were modified.&quot;,
+      &quot;Next.js App Router previews are conservative and read-only; dynamic metadata and component changes are skipped.&quot;
+    ],
+    &quot;recommendedNextStep&quot;: &quot;review_patch_preview&quot;
+  }
+}</pre>
+  </details>
+</section>
+</main>
+</body>
+</html>

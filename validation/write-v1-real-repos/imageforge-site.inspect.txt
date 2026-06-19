@@ -1,0 +1,74 @@
+ShipReady repo inspection: validation/write-v1-real-repos/tmp/imageforge-site
+
+Framework
+- Detected: Next.js App Router
+- Confidence: high
+
+Evidence
+- package.json: package.json includes dependency "next"
+- next.config.ts: Next.js config found
+- app: App Router directory found
+- app/layout.tsx: App Router root layout found
+- app/benchmarks/latest/page.tsx: app/benchmarks/latest/page.tsx found
+- app/contact/page.tsx: app/contact/page.tsx found
+- app/docs/page.tsx: app/docs/page.tsx found
+- app/benchmarks/latest/page.tsx: app/benchmarks/latest/page.tsx exports metadata or generateMetadata
+- app/contact/page.tsx: app/contact/page.tsx exports metadata or generateMetadata
+- app/docs/page.tsx: app/docs/page.tsx exports metadata or generateMetadata
+
+Package manager
+- pnpm
+
+Important files
+- package.json (Project package manifest)
+- pnpm-lock.yaml (Package manager lockfile)
+- next.config.ts (Framework or TypeScript config)
+- tsconfig.json (Framework or TypeScript config)
+- app/ (Important project directory)
+- public/ (Important project directory)
+- app/layout.tsx (Next.js App Router file)
+- app/benchmarks/latest/page.tsx (Next.js App Router file)
+- app/contact/page.tsx (Next.js App Router file)
+- app/docs/page.tsx (Next.js App Router file)
+- app/page.tsx (Next.js App Router file)
+- app/robots.ts (App Router metadata or asset route)
+- app/sitemap.ts (App Router metadata or asset route)
+- app/opengraph-image.tsx (App Router metadata or asset route)
+
+Likely route/page structure
+- /benchmarks/latest -> app/benchmarks/latest/page.tsx (App Router page file)
+- /contact -> app/contact/page.tsx (App Router page file)
+- /docs -> app/docs/page.tsx (App Router page file)
+- / -> app/page.tsx (App Router page file)
+
+Likely metadata locations
+- app/layout.tsx (found; App Router layout can define shared metadata)
+- app/benchmarks/latest/page.tsx (found; Exports metadata or generateMetadata)
+- app/contact/page.tsx (found; Exports metadata or generateMetadata)
+- app/docs/page.tsx (found; Exports metadata or generateMetadata)
+- app/**/page.tsx (not found yet; Route-level pages can define metadata)
+- app/**/layout.tsx (not found yet; Nested layouts can define section metadata)
+- app/sitemap.ts (found; App Router sitemap route)
+- app/robots.ts (found; App Router robots route)
+- app/opengraph-image.tsx (found; Open Graph image route)
+
+Supported future fixes
+- Add/update static metadata export
+- Add route-level metadata
+- Add/update generateMetadata
+- Add JSON-LD component
+- Add robots.ts
+- Add sitemap.ts
+- Add Open Graph image route
+
+Limitations
+- File writing is disabled; use `shipready fix --dry-run` for supported patch previews.
+- This command is read-only and does not modify repository files.
+- Dynamic route metadata may require human review.
+- Existing complex metadata logic should not be overwritten blindly.
+
+Warnings
+- None
+
+Recommended next action
+Use this inspection result with a URL audit to produce a read-only fix plan.

@@ -1,0 +1,64 @@
+{
+  "url": "https://mon-guide-fodmap.com/",
+  "repoPath": "validation/write-v1-real-repos/tmp/mon-guide-fodmap-2",
+  "generatedAt": "2026-06-15T14:43:37.585Z",
+  "mode": "dry_run",
+  "wroteFiles": false,
+  "planSummary": {
+    "auditScore": 60,
+    "auditStatus": "needs_work",
+    "frameworkId": "vite_react",
+    "frameworkName": "Vite React",
+    "recommendedNextStep": "review_plan"
+  },
+  "fileChanges": [
+    {
+      "path": "index.html",
+      "changeType": "update",
+      "reason": "Add or update Vite app-shell fallback metadata. Add conservative WebSite JSON-LD for human review.",
+      "sourceActionIds": [
+        "vite_react.json_ld_review",
+        "vite_react.metadata_review"
+      ],
+      "risk": "medium",
+      "requiresHumanReview": true,
+      "reviewStatus": "review_required",
+      "before": "<!doctype html>\n<html lang=\"fr\">\n  <head>\n    <meta charset=\"UTF-8\" />\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />\n    <title>MonGuide FODMAP - Votre guide alimentaire personnalisé</title>\n    <meta name=\"description\" content=\"Guide alimentaire personnalisé pour le régime FODMAP. Gérez vos intolérances spécifiques au syndrome de l'intestin irritable (SII).\" />\n    <meta name=\"author\" content=\"MonGuide FODMAP\" />\n\n    <meta property=\"og:title\" content=\"MonGuide FODMAP - Guide alimentaire personnalisé\" />\n    <meta property=\"og:description\" content=\"Guide alimentaire personnalisé pour le régime FODMAP. Gérez vos intolérances spécifiques au SII.\" />\n    <meta property=\"og:type\" content=\"website\" />\n    <meta property=\"og:image\" content=\"/og-image.png\" />\n\n    <meta name=\"twitter:card\" content=\"summary_large_image\" />\n    <meta name=\"twitter:title\" content=\"MonGuide FODMAP\" />\n    <meta name=\"twitter:description\" content=\"Votre guide alimentaire personnalisé pour le régime FODMAP\" />\n  </head>\n\n  <body>\n    <div id=\"root\"></div>\n    <script type=\"module\" src=\"/src/main.tsx\"></script>\n  </body>\n</html>\n",
+      "after": "<!doctype html>\n<html lang=\"fr\">\n  <head>\n    <meta charset=\"UTF-8\" />\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />\n    <title>MonGuide FODMAP - Votre guide alimentaire personnalisé</title>\n    <meta name=\"description\" content=\"Guide alimentaire personnalisé pour le régime FODMAP. Gérez vos intolérances spécifiques au syndrome de l'intestin irritable (SII).\" />\n    <meta name=\"author\" content=\"MonGuide FODMAP\" />\n\n    <meta property=\"og:title\" content=\"MonGuide FODMAP - Guide alimentaire personnalisé\" />\n    <meta property=\"og:description\" content=\"Guide alimentaire personnalisé pour le régime FODMAP. Gérez vos intolérances spécifiques au SII.\" />\n    <meta property=\"og:type\" content=\"website\" />\n    <meta property=\"og:image\" content=\"/og-image.png\" />\n\n    <meta name=\"twitter:card\" content=\"summary_large_image\" />\n    <meta name=\"twitter:title\" content=\"MonGuide FODMAP\" />\n    <meta name=\"twitter:description\" content=\"Votre guide alimentaire personnalisé pour le régime FODMAP\" />\n    <link rel=\"canonical\" href=\"https://mon-guide-fodmap.com/\" />\n    <meta property=\"og:url\" content=\"https://mon-guide-fodmap.com/\" />\n    <!-- TODO(shipready): Replace with an absolute public Twitter/X image URL. -->\n    <meta name=\"twitter:image\" content=\"TODO: Absolute image URL\" />\n    <!-- TODO(shipready): Confirm this structured data before applying. -->\n    <script type=\"application/ld+json\">\n      {\n        \"@context\": \"https://schema.org\",\n        \"@type\": \"WebSite\",\n        \"name\": \"MonGuide FODMAP - Votre guide alimentaire personnalisé\",\n        \"url\": \"https://mon-guide-fodmap.com/\"\n      }\n    </script>\n  </head>\n\n  <body>\n    <div id=\"root\"></div>\n    <script type=\"module\" src=\"/src/main.tsx\"></script>\n  </body>\n</html>\n",
+      "diff": "--- index.html\n+++ index.html\n@@ -15,6 +15,19 @@\n     <meta name=\"twitter:card\" content=\"summary_large_image\" />\n     <meta name=\"twitter:title\" content=\"MonGuide FODMAP\" />\n     <meta name=\"twitter:description\" content=\"Votre guide alimentaire personnalisé pour le régime FODMAP\" />\n+    <link rel=\"canonical\" href=\"https://mon-guide-fodmap.com/\" />\n+    <meta property=\"og:url\" content=\"https://mon-guide-fodmap.com/\" />\n+    <!-- TODO(shipready): Replace with an absolute public Twitter/X image URL. -->\n+    <meta name=\"twitter:image\" content=\"TODO: Absolute image URL\" />\n+    <!-- TODO(shipready): Confirm this structured data before applying. -->\n+    <script type=\"application/ld+json\">\n+      {\n+        \"@context\": \"https://schema.org\",\n+        \"@type\": \"WebSite\",\n+        \"name\": \"MonGuide FODMAP - Votre guide alimentaire personnalisé\",\n+        \"url\": \"https://mon-guide-fodmap.com/\"\n+      }\n+    </script>\n   </head>\n \n   <body>"
+    },
+    {
+      "path": "public/sitemap.xml",
+      "changeType": "create",
+      "reason": "Create a valid single-URL sitemap.xml preview.",
+      "sourceActionIds": [
+        "vite_react.sitemap"
+      ],
+      "risk": "low",
+      "requiresHumanReview": true,
+      "reviewStatus": "review_required",
+      "after": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n  <url>\n    <loc>https://mon-guide-fodmap.com/</loc>\n  </url>\n</urlset>\n",
+      "diff": "--- /dev/null\n+++ public/sitemap.xml\n@@\n+<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n+<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n+  <url>\n+    <loc>https://mon-guide-fodmap.com/</loc>\n+  </url>\n+</urlset>\n+"
+    }
+  ],
+  "skippedActions": [
+    {
+      "actionId": "vite_react.heading",
+      "title": "Review page heading structure",
+      "reasonKind": "requires_more_information",
+      "reason": "H1 review is a content change and requires human review.",
+      "sourceActionIds": [
+        "structure.h1.missing"
+      ],
+      "risk": "medium"
+    }
+  ],
+  "safetyNotes": [
+    "Dry-run only. No files were modified.",
+    "This is fallback metadata for the app shell. Route-specific metadata may require prerendering, SSR, or a later framework-specific strategy.",
+    "Review generated changes before applying.",
+    "TODO placeholder metadata is for preview only and must be replaced before any future write.",
+    "JSON-LD previews use only conservative WebSite schema and require human confirmation."
+  ],
+  "recommendedNextStep": "review_patch_preview"
+}

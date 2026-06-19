@@ -1,0 +1,21 @@
+{
+  "url": "https://imageforge.dev/",
+  "repoPath": ".",
+  "generatedAt": "2026-06-15T13:40:56.894Z",
+  "mode": "dry_run",
+  "wroteFiles": false,
+  "planSummary": {
+    "auditScore": 100,
+    "auditStatus": "good",
+    "frameworkId": "unknown",
+    "frameworkName": "Unknown",
+    "recommendedNextStep": "no_changes_needed"
+  },
+  "fileChanges": [],
+  "skippedActions": [],
+  "safetyNotes": [
+    "Dry-run only. No files were modified.",
+    "No file changes were generated because the fix plan has no required actions."
+  ],
+  "recommendedNextStep": "no_changes_needed"
+}

@@ -1,0 +1,50 @@
+ShipReady audit: https://fodmapp.fr/
+
+Score: 59/100
+Status: Needs work
+
+Critical
+- Missing canonical URL
+- No JSON-LD detected
+
+Warnings
+- Title is very short
+- No favicon links found
+- Missing og:url
+- Missing og:type
+- robots.txt not found
+- sitemap.xml not found
+
+Notes
+- Theme color is not set
+
+Passed
+- Page returns HTTP success
+- Title present
+- Meta description present
+- Page is not marked noindex
+- HTML lang attribute present
+- Viewport present
+- og:title present
+- og:description present
+- og:image present
+- twitter:card present
+- twitter:title present
+- twitter:description present
+- twitter:image present
+- Single H1 found
+- Key metadata present in raw HTML
+
+Raw vs rendered
+- title: raw=FODMAPP; rendered=FODMAPP
+- description: raw=Un outil pour trouver des substitutions compatibles avec un régime pauvre en FODMAP.; rendered=Un outil pour trouver des substitutions compatibles avec un régime pauvre en FODMAP.
+- canonical: not set in raw or rendered HTML
+- robots meta: not set in raw or rendered HTML
+- viewport: raw=width=device-width, initial-scale=1; rendered=width=device-width, initial-scale=1
+- theme-color: not set in raw or rendered HTML
+- favicon: not set in raw or rendered HTML
+- og:image: raw=https://fodmapp.fr/og.png; rendered=https://fodmapp.fr/og.png
+- twitter:image: raw=https://fodmapp.fr/og.png; rendered=https://fodmapp.fr/og.png
+
+Recommended next action
+Fix the critical production-readiness issues first, then rerun the audit.

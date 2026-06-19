@@ -1,0 +1,29 @@
+ShipReady dry-run fix preview
+URL: http://127.0.0.1:59494/
+Repo: /var/folders/tl/ldqht3rj4bbfy8xqbj59tfd40000gn/T/shipready-write-v1-UpCByb/static-human
+
+Summary
+- Mode: dry_run
+- Audit score: 90/100
+- Audit status: Good
+- Framework: Plain static HTML
+- Files that would be changed: 0
+- Files actually changed: 0
+
+Would create:
+- None
+
+Would update:
+- None
+
+Skipped:
+- Add robots.txt: robots.txt already exists locally; verify deployment wiring before changing it.
+
+Diff preview
+- None
+
+Safety
+- Dry-run only. No files were modified.
+
+Recommended next step
+- Manual review required

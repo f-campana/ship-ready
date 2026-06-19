@@ -1,0 +1,39 @@
+ShipReady write result
+URL: http://127.0.0.1:59494/
+Repo: /var/folders/tl/ldqht3rj4bbfy8xqbj59tfd40000gn/T/shipready-write-v1-UpCByb/vite-human
+
+Mode: write
+Policy: creation-only robots/sitemap
+Files actually changed: 2
+
+Created files: 2
+- public/robots.txt (68 bytes, sha256 14c87fefc467f00e7ec8d5ba5fd24dfdc534103986e682b64da923b2d3119122)
+- public/sitemap.xml (166 bytes, sha256 58cb29c63cee13a28d145820ac022512a5c6522fd1f0cee23a9df9c289289d60)
+
+Blocked changes:
+- None
+
+Skipped actions:
+- None
+
+Safety:
+- No existing files overwritten.
+- No files outside repo root touched.
+- No Git operations performed.
+- No commits created.
+- No dependencies installed.
+- No package files or lockfiles changed.
+- No formatting run.
+- No deploys performed.
+- Passed: Write candidates are selected only from the regenerated dry-run result.
+- Passed: Write policy is limited to missing robots/sitemap file creations.
+- Passed: 2 eligible creation candidate(s) passed validation.
+- Passed: No existing files will be overwritten.
+- Passed: No Git operations, commits, branches, or GitHub calls will be performed.
+- Passed: No dependencies, package files, lockfiles, or config files will be changed.
+- Passed: No formatting or deploy commands will be run.
+- Passed: 2 file(s) were created with exclusive create semantics.
+- Rollback not needed.
+
+Recommended next step:
+- Review created files, run your tests, then run: pnpm shipready audit http://127.0.0.1:59494/

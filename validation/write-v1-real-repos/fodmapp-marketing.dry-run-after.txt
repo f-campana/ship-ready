@@ -1,0 +1,33 @@
+ShipReady dry-run fix preview
+URL: https://fodmapp.fr/
+Repo: validation/write-v1-real-repos/tmp/fodmapp-marketing
+
+Summary
+- Mode: dry_run
+- Audit score: 59/100
+- Audit status: Needs work
+- Framework: Next.js App Router
+- Files that would be changed: 0
+- Files actually changed: 0
+
+Would create:
+- None
+
+Would update:
+- None
+
+Skipped:
+- Review and improve weak metadata: Existing metadata export found; merging metadata is skipped until a tested merge path exists.
+- Add JSON-LD with review: Next.js App Router JSON-LD preview requires a reviewed structured-data component and factual schema details.
+- Add robots.ts: app/robots.ts already exists locally; verify deployment wiring before changing it.
+- Add sitemap.ts: app/sitemap.ts already exists locally; existing sitemap routes require manual review.
+
+Diff preview
+- None
+
+Safety
+- Dry-run only. No files were modified.
+- Next.js App Router previews are conservative and read-only; dynamic metadata and component changes are skipped.
+
+Recommended next step
+- Manual review required

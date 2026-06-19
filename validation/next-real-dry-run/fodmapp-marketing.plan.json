@@ -1,0 +1,219 @@
+{
+  "url": "https://fodmapp.fr/",
+  "repoPath": "/Users/fabiencampana/Documents/fodmapp/apps/marketing",
+  "plannedAt": "2026-06-15T13:40:28.655Z",
+  "auditSummary": {
+    "score": 59,
+    "status": "needs_work",
+    "criticalCount": 2,
+    "warningCount": 6,
+    "noteCount": 1
+  },
+  "repoSummary": {
+    "frameworkId": "next_app_router",
+    "frameworkName": "Next.js App Router",
+    "confidence": "high",
+    "packageManager": "unknown"
+  },
+  "actions": [
+    {
+      "id": "next_app_router.metadata_review",
+      "title": "Review and improve weak metadata",
+      "description": "Review weak or risky metadata before changing production copy or crawler signals.",
+      "sourceCheckIds": [
+        "metadata.canonical.missing",
+        "metadata.favicon.missing",
+        "metadata.title.too_short",
+        "social.og.type_missing",
+        "social.og.url_missing"
+      ],
+      "category": "automated_with_review",
+      "priority": "critical",
+      "risk": "medium",
+      "confidence": "high",
+      "frameworkStrategy": "Use App Router metadata exports, route-level metadata, or generateMetadata in server-rendered files.",
+      "targetFiles": [
+        "app/layout.tsx"
+      ],
+      "targetLocations": [
+        "app/layout.tsx",
+        "app/**/page.tsx",
+        "app/**/layout.tsx",
+        "app/sitemap.ts",
+        "app/robots.ts",
+        "app/opengraph-image.tsx"
+      ],
+      "futureAutomation": {
+        "canAutomate": true,
+        "requiresHumanReview": true,
+        "reason": "Metadata changes affect production copy and crawler/share-preview signals, so generated changes should be reviewed."
+      }
+    },
+    {
+      "id": "next_app_router.json_ld_review",
+      "title": "Add JSON-LD with review",
+      "description": "Add or fix conservative structured data only after confirming schema type and business facts.",
+      "sourceCheckIds": [
+        "schema.jsonld.missing"
+      ],
+      "category": "automated_with_review",
+      "priority": "critical",
+      "risk": "medium",
+      "confidence": "high",
+      "frameworkStrategy": "Add a reviewed JSON-LD script or component in an App Router layout/page.",
+      "targetFiles": [
+        "app/layout.tsx"
+      ],
+      "targetLocations": [
+        "app/layout.tsx",
+        "app/**/page.tsx",
+        "app/**/layout.tsx",
+        "app/sitemap.ts",
+        "app/robots.ts",
+        "app/opengraph-image.tsx"
+      ],
+      "futureAutomation": {
+        "canAutomate": true,
+        "requiresHumanReview": true,
+        "reason": "Structured data must be factually accurate; ShipReady should not invent schema facts without review."
+      }
+    },
+    {
+      "id": "next_app_router.robots",
+      "title": "Add robots.ts",
+      "description": "Add a robots file or framework route so crawlers can discover the intended crawl policy.",
+      "sourceCheckIds": [
+        "crawl.robots_txt.missing"
+      ],
+      "category": "safe_automated_later",
+      "priority": "medium",
+      "risk": "low",
+      "confidence": "high",
+      "frameworkStrategy": "Add an App Router robots.ts route.",
+      "targetFiles": [
+        "app/robots.ts"
+      ],
+      "targetLocations": [
+        "app/robots.ts"
+      ],
+      "futureAutomation": {
+        "canAutomate": true,
+        "requiresHumanReview": false,
+        "reason": "The framework and likely robots target are clear."
+      }
+    },
+    {
+      "id": "next_app_router.sitemap",
+      "title": "Add sitemap.ts",
+      "description": "Add a sitemap so crawlers can discover the public URL set.",
+      "sourceCheckIds": [
+        "crawl.sitemap.missing"
+      ],
+      "category": "safe_automated_later",
+      "priority": "high",
+      "risk": "low",
+      "confidence": "high",
+      "frameworkStrategy": "Add an App Router sitemap.ts route. Use audited URL https://fodmapp.fr/.",
+      "targetFiles": [
+        "app/sitemap.ts"
+      ],
+      "targetLocations": [
+        "app/sitemap.ts"
+      ],
+      "futureAutomation": {
+        "canAutomate": true,
+        "requiresHumanReview": false,
+        "reason": "The framework and likely sitemap target are clear."
+      }
+    }
+  ],
+  "noActionChecks": [
+    {
+      "checkId": "crawl.status.ok",
+      "title": "Page returns HTTP success",
+      "reason": "This audit check passed, so ShipReady is not proposing a change."
+    },
+    {
+      "checkId": "metadata.title.present",
+      "title": "Title present",
+      "reason": "This audit check passed, so ShipReady is not proposing a change."
+    },
+    {
+      "checkId": "metadata.description.present",
+      "title": "Meta description present",
+      "reason": "This audit check passed, so ShipReady is not proposing a change."
+    },
+    {
+      "checkId": "metadata.robots.indexable",
+      "title": "Page is not marked noindex",
+      "reason": "This audit check passed, so ShipReady is not proposing a change."
+    },
+    {
+      "checkId": "metadata.lang.present",
+      "title": "HTML lang attribute present",
+      "reason": "This audit check passed, so ShipReady is not proposing a change."
+    },
+    {
+      "checkId": "metadata.viewport.present",
+      "title": "Viewport present",
+      "reason": "This audit check passed, so ShipReady is not proposing a change."
+    },
+    {
+      "checkId": "social.og.title_present",
+      "title": "og:title present",
+      "reason": "This audit check passed, so ShipReady is not proposing a change."
+    },
+    {
+      "checkId": "social.og.description_present",
+      "title": "og:description present",
+      "reason": "This audit check passed, so ShipReady is not proposing a change."
+    },
+    {
+      "checkId": "social.og.image_present",
+      "title": "og:image present",
+      "reason": "This audit check passed, so ShipReady is not proposing a change."
+    },
+    {
+      "checkId": "social.twitter.card_present",
+      "title": "twitter:card present",
+      "reason": "This audit check passed, so ShipReady is not proposing a change."
+    },
+    {
+      "checkId": "social.twitter.title_present",
+      "title": "twitter:title present",
+      "reason": "This audit check passed, so ShipReady is not proposing a change."
+    },
+    {
+      "checkId": "social.twitter.description_present",
+      "title": "twitter:description present",
+      "reason": "This audit check passed, so ShipReady is not proposing a change."
+    },
+    {
+      "checkId": "social.twitter.image_present",
+      "title": "twitter:image present",
+      "reason": "This audit check passed, so ShipReady is not proposing a change."
+    },
+    {
+      "checkId": "structure.h1.single",
+      "title": "Single H1 found",
+      "reason": "This audit check passed, so ShipReady is not proposing a change."
+    },
+    {
+      "checkId": "crawl.raw_render.consistent",
+      "title": "Key metadata present in raw HTML",
+      "reason": "This audit check passed, so ShipReady is not proposing a change."
+    }
+  ],
+  "optionalNotes": [
+    "Theme color is not set: Optional theme-color metadata was not found in the initial HTML."
+  ],
+  "limitations": [
+    "This is a read-only plan. No files were modified and no patches were generated.",
+    "Future automation must re-check the repo before writing changes.",
+    "File writing is disabled; use `shipready fix --dry-run` for supported patch previews.",
+    "This command is read-only and does not modify repository files.",
+    "Dynamic route metadata may require human review.",
+    "Existing complex metadata logic should not be overwritten blindly."
+  ],
+  "recommendedNextStep": "review_plan"
+}

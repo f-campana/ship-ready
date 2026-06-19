@@ -1,0 +1,505 @@
+[
+  {
+    "caseName": "case1-url-only-ready",
+    "url": "http://127.0.0.1:4317/",
+    "title": "ShipReady local UI",
+    "outcome": {
+      "errorVisible": false,
+      "reportVisible": true,
+      "statusVisible": false,
+      "text": "ShipReady local UI Check if your generated website is ready to be shared and indexed. Add a local project folder to preview safe fixes. Website URL Local repo path optional Check site URL-only check Decision panel Readiness Preview cards Project understanding Fix plan Patch preview Safe apply Developer details Decision panelReady to shipCore launch checks look good. 1 optional polish item(s) remain.ModeURL onlyReadinessReadyScore100 / 100Next best actionNo changes neededAdd a project folder to preview file-level fixes.URL-only checkReadinessReady to shipCore launch checks look good. 1 optional polish item(s) remain.Top issues (0)No top issues found.Passed highlights (23)Page returns HTTP successPassedThe audited URL returned a 2xx HTTP status.This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.Title presentPassedRaw title: ImageForge CLI | Build-Time Image Optimization, Zero Monthly CostThis signal helps ShipReady decide whethe"
+    },
+    "summary": {
+      "bodyTextSample": "ShipReady local UI Check if your generated website is ready to be shared and indexed. Add a local project folder to preview safe fixes. Website URL Local repo path optional Check site URL-only check Decision panel Readiness Preview cards Project understanding Fix plan Patch preview Safe apply Developer details Decision panelReady to shipCore launch checks look good. 1 optional polish item(s) remain.ModeURL onlyReadinessReadyScore100 / 100Next best actionNo changes neededAdd a project folder to preview file-level fixes.URL-only checkReadinessReady to shipCore launch checks look good. 1 optional polish item(s) remain.Top issues (0)No top issues found.Passed highlights (23)Page returns HTTP successPassedThe audited URL returned a 2xx HTTP status.This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.Title presentPassedRaw title: ImageForge CLI | Build-Time Image Optimization, Zero Monthly CostThis signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.Meta description presentPassedRaw meta description is present.This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.Canonical URL presentPassedhttps://imageforge.dev/This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.Page is not marked noindexPassedNo noindex robots meta directive was detected.This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.HTML lang attribute presentPassedenThis signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.Viewport presentPassedwidth=device-width, initial-scale=1This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.Favicon link foundPassedhttps://imageforge.dev/favicon.icoThis signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.og:title presentPassedImageForge CLIThis signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.og:description presentPassedOpen Graph description is present.This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.og:image presentPassedhttps://imageforge.dev/opengraph-image?5be7b9e6a095abcdThis signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.og:url presentPassedhttps://imageforge.dev/This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.og:type presentPassedwebsiteThis signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.og:site_name presentPassedImageForge CLIThis signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.twitter:card presentPassedsummary_large_imageThis signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.twitter:title presentPassedImageForge CLIThis signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.twitter:description presentPassedTwitter/X description is present.This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.twitter:image presentPassedhttps://imageforge.dev/twitter-image?1aedab77cefc7bb1This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.Valid JSON-LD detectedPassedValid blocks: 2This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.Single H1 foundPassedOptimize once, deploy everywhere, pay nothing monthly.This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.robots.txt foundPassedhttps://imageforge.dev/robots.txtThis signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.sitemap.xml foundPassedhttps://imageforge.dev/sitemap.xmlThis signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.Key metadata present in raw HTMLPassedNo render-only metadata fields were detected.This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.Optional polish (1)Theme color is not setOptionalOptional theme-color metadata was not found in the initial HTML.Add a theme-color meta tag if you want branded browser UI on supported surfaces.Preview cardsHow the page appears to crawlers and preview botsGoogleRaw HTMLTitleImageForge CLI | Build-Time Image Optimization, Zero Monthly CostURLhttps://imageforge.dev/DescriptionImageForge CLI pre-generates WebP/AVIF assets, write",
+      "buttons": [
+        {
+          "disabled": false,
+          "text": "Check site"
+        },
+        {
+          "disabled": false,
+          "text": "URL-only check"
+        }
+      ],
+      "clientWidth": 1280,
+      "decision": "Decision panelReady to shipCore launch checks look good. 1 optional polish item(s) remain.ModeURL onlyReadinessReadyScore100 / 100Next best actionNo changes neededAdd a project folder to preview file-level fixes.URL-only check",
+      "details": [
+        {
+          "className": "group-details",
+          "open": true,
+          "summary": "Top issues (0)"
+        },
+        {
+          "className": "group-details",
+          "open": false,
+          "summary": "Passed highlights (23)"
+        },
+        {
+          "className": "group-details",
+          "open": false,
+          "summary": "Optional polish (1)"
+        },
+        {
+          "className": "developer-details",
+          "open": false,
+          "summary": "Developer details"
+        }
+      ],
+      "error": "",
+      "errorVisible": false,
+      "hasHorizontalOverflow": false,
+      "inputs": [
+        {
+          "disabled": false,
+          "name": "url",
+          "value": "https://imageforge.dev"
+        },
+        {
+          "disabled": false,
+          "name": "repoPath",
+          "value": ""
+        }
+      ],
+      "reportVisible": true,
+      "safeApply": "",
+      "scrollWidth": 1280,
+      "statusVisible": false
+    },
+    "screenshot": "/Users/fabiencampana/Documents/ship-ready/validation/gui-v1-review/screenshots/case1-url-only-ready.png",
+    "logs": []
+  },
+  {
+    "caseName": "case2-imageforge-repo-ready",
+    "url": "http://127.0.0.1:4317/",
+    "title": "ShipReady local UI",
+    "outcome": {
+      "errorVisible": false,
+      "reportVisible": true,
+      "statusVisible": false,
+      "text": "ShipReady local UI Check if your generated website is ready to be shared and indexed. Add a local project folder to preview safe fixes. Website URL Local repo path optional Check site URL-only check Decision panel Readiness Preview cards Project understanding Fix plan Patch preview Safe apply Developer details Decision panelReady to shipCore launch checks look good. 1 optional polish item(s) remain.ModeURL + repositoryReadinessReadyScore100 / 100Next best actionNo changes neededReview the generated guidance before changing local files.No safe automatic fixReadinessReady to shipCore launch checks look good. 1 optional polish item(s) remain.Top issues (0)No top issues found.Passed highlights (23)Page returns HTTP successPassedThe audited URL returned a 2xx HTTP status.This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.Title presentPassedRaw title: ImageForge CLI | Build-Time Image Optimization, Zero Monthly CostThis signal helps"
+    },
+    "summary": {
+      "bodyTextSample": "ShipReady local UI Check if your generated website is ready to be shared and indexed. Add a local project folder to preview safe fixes. Website URL Local repo path optional Check site URL-only check Decision panel Readiness Preview cards Project understanding Fix plan Patch preview Safe apply Developer details Decision panelReady to shipCore launch checks look good. 1 optional polish item(s) remain.ModeURL + repositoryReadinessReadyScore100 / 100Next best actionNo changes neededReview the generated guidance before changing local files.No safe automatic fixReadinessReady to shipCore launch checks look good. 1 optional polish item(s) remain.Top issues (0)No top issues found.Passed highlights (23)Page returns HTTP successPassedThe audited URL returned a 2xx HTTP status.This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.Title presentPassedRaw title: ImageForge CLI | Build-Time Image Optimization, Zero Monthly CostThis signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.Meta description presentPassedRaw meta description is present.This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.Canonical URL presentPassedhttps://imageforge.dev/This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.Page is not marked noindexPassedNo noindex robots meta directive was detected.This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.HTML lang attribute presentPassedenThis signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.Viewport presentPassedwidth=device-width, initial-scale=1This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.Favicon link foundPassedhttps://imageforge.dev/favicon.icoThis signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.og:title presentPassedImageForge CLIThis signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.og:description presentPassedOpen Graph description is present.This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.og:image presentPassedhttps://imageforge.dev/opengraph-image?5be7b9e6a095abcdThis signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.og:url presentPassedhttps://imageforge.dev/This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.og:type presentPassedwebsiteThis signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.og:site_name presentPassedImageForge CLIThis signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.twitter:card presentPassedsummary_large_imageThis signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.twitter:title presentPassedImageForge CLIThis signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.twitter:description presentPassedTwitter/X description is present.This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.twitter:image presentPassedhttps://imageforge.dev/twitter-image?1aedab77cefc7bb1This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.Valid JSON-LD detectedPassedValid blocks: 2This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.Single H1 foundPassedOptimize once, deploy everywhere, pay nothing monthly.This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.robots.txt foundPassedhttps://imageforge.dev/robots.txtThis signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.sitemap.xml foundPassedhttps://imageforge.dev/sitemap.xmlThis signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.Key metadata present in raw HTMLPassedNo render-only metadata fields were detected.This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.Optional polish (1)Theme color is not setOptionalOptional theme-color metadata was not found in the initial HTML.Add a theme-color meta tag if you want branded browser UI on supported surfaces.Preview cardsHow the page appears to crawlers and preview botsGoogleRaw HTMLTitleImageForge CLI | Build-Time Image Optimization, Zero Monthly CostURLhttps://imageforge.dev/DescriptionImageForge CLI pre-generates",
+      "buttons": [
+        {
+          "disabled": false,
+          "text": "Check site"
+        },
+        {
+          "disabled": false,
+          "text": "URL-only check"
+        }
+      ],
+      "clientWidth": 1280,
+      "decision": "Decision panelReady to shipCore launch checks look good. 1 optional polish item(s) remain.ModeURL + repositoryReadinessReadyScore100 / 100Next best actionNo changes neededReview the generated guidance before changing local files.No safe automatic fix",
+      "details": [
+        {
+          "className": "group-details",
+          "open": true,
+          "summary": "Top issues (0)"
+        },
+        {
+          "className": "group-details",
+          "open": false,
+          "summary": "Passed highlights (23)"
+        },
+        {
+          "className": "group-details",
+          "open": false,
+          "summary": "Optional polish (1)"
+        },
+        {
+          "className": "group-details",
+          "open": false,
+          "summary": "Safe to apply (0)"
+        },
+        {
+          "className": "group-details",
+          "open": false,
+          "summary": "Needs review (0)"
+        },
+        {
+          "className": "group-details",
+          "open": false,
+          "summary": "Manual only (0)"
+        },
+        {
+          "className": "group-details",
+          "open": false,
+          "summary": "Already good (23)"
+        },
+        {
+          "className": "group-details",
+          "open": false,
+          "summary": "Optional polish (1)"
+        },
+        {
+          "className": "developer-details",
+          "open": false,
+          "summary": "Developer details"
+        }
+      ],
+      "error": "",
+      "errorVisible": false,
+      "hasHorizontalOverflow": false,
+      "inputs": [
+        {
+          "disabled": false,
+          "name": "url",
+          "value": "https://imageforge.dev"
+        },
+        {
+          "disabled": false,
+          "name": "repoPath",
+          "value": "/Users/fabiencampana/Documents/imageforge-site"
+        }
+      ],
+      "reportVisible": true,
+      "safeApply": "Safe applyNo safe automatic fix availableNo dry-run file change currently qualifies for V1 safe apply.No overwritesNo metadata or content editsNo Git commitsNo deploys",
+      "scrollWidth": 1280,
+      "statusVisible": false
+    },
+    "screenshot": "/Users/fabiencampana/Documents/ship-ready/validation/gui-v1-review/screenshots/case2-imageforge-repo-ready.png",
+    "logs": []
+  },
+  {
+    "caseName": "case3-fodmapp-safe-apply",
+    "url": "http://127.0.0.1:4317/",
+    "title": "ShipReady local UI",
+    "outcome": {
+      "errorVisible": false,
+      "reportVisible": true,
+      "statusVisible": false,
+      "text": "ShipReady local UI Check if your generated website is ready to be shared and indexed. Add a local project folder to preview safe fixes. Website URL Local repo path optional Check site URL-only check Decision panel Readiness Preview cards Project understanding Fix plan Patch preview Safe apply Developer details Decision panelNeeds attention before launch8 issue(s) need review before this page should be considered launch-ready.ModeURL + repositoryReadinessNeeds attentionScore59 / 100Next best actionCreate safe crawl filesOnly V1-eligible robots/sitemap creations qualify.Safe apply availableReadinessNeeds attention before launch8 issue(s) need review before this page should be considered launch-ready.Top issues (5)Search engines do not have a clear preferred URL.ImportantThis page is missing a canonical URL, which helps search engines understand the main address for this content.Without it, duplicate or alternate URLs can be harder to consolidate.Missing og:urlImportantOpen Graph metadata"
+    },
+    "summary": {
+      "bodyTextSample": "ShipReady local UI Check if your generated website is ready to be shared and indexed. Add a local project folder to preview safe fixes. Website URL Local repo path optional Check site URL-only check Decision panel Readiness Preview cards Project understanding Fix plan Patch preview Safe apply Developer details Decision panelNeeds attention before launch8 issue(s) need review before this page should be considered launch-ready.ModeURL + repositoryReadinessNeeds attentionScore59 / 100Next best actionCreate safe crawl filesOnly V1-eligible robots/sitemap creations qualify.Safe apply availableReadinessNeeds attention before launch8 issue(s) need review before this page should be considered launch-ready.Top issues (5)Search engines do not have a clear preferred URL.ImportantThis page is missing a canonical URL, which helps search engines understand the main address for this content.Without it, duplicate or alternate URLs can be harder to consolidate.Missing og:urlImportantOpen Graph metadata should include the canonical page URL.This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.Missing og:typeImportantOpen Graph metadata should include a type such as website.This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.Your site does not have a sitemap yet.ImportantA sitemap lists the pages you want crawlers to discover.For supported projects, ShipReady can safely create a simple sitemap file.Title is very shortRecommendedA very short title may not explain the page clearly.This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.Passed highlights (15)Page returns HTTP successPassedThe audited URL returned a 2xx HTTP status.This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.Title presentPassedRaw title: FODMAPPThis signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.Meta description presentPassedRaw meta description is present.This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.Page is not marked noindexPassedNo noindex robots meta directive was detected.This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.HTML lang attribute presentPassedfrThis signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.Viewport presentPassedwidth=device-width, initial-scale=1This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.og:title presentPassedFODMAPPThis signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.og:description presentPassedOpen Graph description is present.This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.og:image presentPassedhttps://fodmapp.fr/og.pngThis signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.twitter:card presentPassedsummary_large_imageThis signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.twitter:title presentPassedFODMAPPThis signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.twitter:description presentPassedTwitter/X description is present.This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.twitter:image presentPassedhttps://fodmapp.fr/og.pngThis signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.Single H1 foundPassedTu suis un régime pauvre en FODMAP et tu ne sais plus quoi cuisiner ?This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.Key metadata present in raw HTMLPassedNo render-only metadata fields were detected.This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.Optional polish (1)Theme color is not setOptionalOptional theme-color metadata was not found in the initial HTML.Add a theme-color meta tag if you want branded browser UI on supported surfaces.Preview cardsHow the page appears to crawlers and preview botsGoogleRaw HTMLTitleFODMAPPURLhttps://fodmapp.fr/DescriptionUn outil pour trouver des substitutions compatibles avec un régime pauvre en FODMAP.SocialRaw HTMLTitleFODMAPPURLhttps://fodmapp.fr/DescriptionUn outil pour trouver des substitutions compatibles avec un régime pauvre en FODMAP.Image URLhttps://fodmapp.fr/og.pngX/TwitterRaw HTMLCardsummary_large_imageTitleFODMAPPDescriptionUn outil pour trouver des substitutions compatibles avec un régime pauvre en FODMAP.Image URLhttps://fodmapp.fr",
+      "buttons": [
+        {
+          "disabled": false,
+          "text": "Check site"
+        },
+        {
+          "disabled": false,
+          "text": "URL-only check"
+        },
+        {
+          "disabled": false,
+          "text": "Copy command"
+        }
+      ],
+      "clientWidth": 1280,
+      "decision": "Decision panelNeeds attention before launch8 issue(s) need review before this page should be considered launch-ready.ModeURL + repositoryReadinessNeeds attentionScore59 / 100Next best actionCreate safe crawl filesOnly V1-eligible robots/sitemap creations qualify.Safe apply available",
+      "details": [
+        {
+          "className": "group-details",
+          "open": true,
+          "summary": "Top issues (5)"
+        },
+        {
+          "className": "group-details",
+          "open": false,
+          "summary": "Passed highlights (15)"
+        },
+        {
+          "className": "group-details",
+          "open": false,
+          "summary": "Optional polish (1)"
+        },
+        {
+          "className": "group-details",
+          "open": true,
+          "summary": "Safe to apply (2)"
+        },
+        {
+          "className": "group-details",
+          "open": true,
+          "summary": "Needs review (2)"
+        },
+        {
+          "className": "group-details",
+          "open": false,
+          "summary": "Manual only (0)"
+        },
+        {
+          "className": "group-details",
+          "open": false,
+          "summary": "Already good (15)"
+        },
+        {
+          "className": "group-details",
+          "open": false,
+          "summary": "Optional polish (1)"
+        },
+        {
+          "className": "diff-details",
+          "open": false,
+          "summary": "View diff"
+        },
+        {
+          "className": "diff-details",
+          "open": false,
+          "summary": "View diff"
+        },
+        {
+          "className": "group-details",
+          "open": false,
+          "summary": "Actions without a file diff (2)"
+        },
+        {
+          "className": "group-details",
+          "open": false,
+          "summary": "Safe apply policy notes"
+        },
+        {
+          "className": "developer-details",
+          "open": false,
+          "summary": "Developer details"
+        }
+      ],
+      "error": "",
+      "errorVisible": false,
+      "hasHorizontalOverflow": false,
+      "inputs": [
+        {
+          "disabled": false,
+          "name": "url",
+          "value": "https://fodmapp.fr"
+        },
+        {
+          "disabled": false,
+          "name": "repoPath",
+          "value": "/Users/fabiencampana/Documents/fodmapp/apps/marketing"
+        }
+      ],
+      "reportVisible": true,
+      "safeApply": "Safe applySafe automatic fix availableShipReady can create these missing crawl files without overwriting existing files:app/robots.tsapp/sitemap.tspnpm shipready fix /Users/fabiencampana/Documents/fodmapp/apps/marketing --url https://fodmapp.fr/ --write --allow-createCopy commandNo overwritesNo metadata or content editsNo Git commitsNo deploysSafe apply policy notesThis ui-report command never writes files.V1 safe apply is limited to creation-only robots/sitemap files.ShipReady will not overwrite existing files in V1 safe apply.ShipReady will not edit metadata, JSON-LD, page content, package files, or configuration in V1 safe apply.ShipReady will not run Git operations, create commits, push, or deploy.Dry-run only. No files were modified.Next.js App Router previews are conservative and read-only; dynamic metadata and component changes are skipped.",
+      "scrollWidth": 1280,
+      "statusVisible": false
+    },
+    "screenshot": "/Users/fabiencampana/Documents/ship-ready/validation/gui-v1-review/screenshots/case3-fodmapp-safe-apply.png",
+    "logs": []
+  },
+  {
+    "caseName": "case4-mon-guide-review-required",
+    "url": "http://127.0.0.1:4317/",
+    "title": "ShipReady local UI",
+    "outcome": {
+      "errorVisible": false,
+      "reportVisible": true,
+      "statusVisible": false,
+      "text": "ShipReady local UI Check if your generated website is ready to be shared and indexed. Add a local project folder to preview safe fixes. Website URL Local repo path optional Check site URL-only check Decision panel Readiness Preview cards Project understanding Fix plan Patch preview Safe apply Developer details Decision panelNeeds attention before launch7 issue(s) need review before this page should be considered launch-ready.ModeURL + repositoryReadinessNeeds attentionScore60 / 100Next best actionReview patch previewGenerated previews require human review before any future write path.No safe automatic fixReadinessNeeds attention before launch7 issue(s) need review before this page should be considered launch-ready.Top issues (5)Search engines do not have a clear preferred URL.ImportantThis page is missing a canonical URL, which helps search engines understand the main address for this content.Without it, duplicate or alternate URLs can be harder to consolidate.Missing og:urlImportantOp"
+    },
+    "summary": {
+      "bodyTextSample": "ShipReady local UI Check if your generated website is ready to be shared and indexed. Add a local project folder to preview safe fixes. Website URL Local repo path optional Check site URL-only check Decision panel Readiness Preview cards Project understanding Fix plan Patch preview Safe apply Developer details Decision panelNeeds attention before launch7 issue(s) need review before this page should be considered launch-ready.ModeURL + repositoryReadinessNeeds attentionScore60 / 100Next best actionReview patch previewGenerated previews require human review before any future write path.No safe automatic fixReadinessNeeds attention before launch7 issue(s) need review before this page should be considered launch-ready.Top issues (5)Search engines do not have a clear preferred URL.ImportantThis page is missing a canonical URL, which helps search engines understand the main address for this content.Without it, duplicate or alternate URLs can be harder to consolidate.Missing og:urlImportantOpen Graph metadata should include the canonical page URL.This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.The page does not have a clear main heading.ImportantShipReady did not find an H1 in the page content.A clear H1 helps visitors, assistive technology, and search engines understand the page topic.Your sitemap address does not return a real sitemap.ImportantThe sitemap URL exists, but it appears to return a normal app page instead of sitemap XML.A valid sitemap helps crawlers discover the pages you want indexed.No favicon links foundRecommendedFavicons and app icons help the site look complete in tabs, bookmarks, and device surfaces.This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.Passed highlights (15)Page returns HTTP successPassedThe audited URL returned a 2xx HTTP status.This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.Title presentPassedRaw title: MonGuide FODMAP - Votre guide alimentaire personnaliséThis signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.Meta description presentPassedRaw meta description is present.This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.Page is not marked noindexPassedNo noindex robots meta directive was detected.This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.HTML lang attribute presentPassedfrThis signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.Viewport presentPassedwidth=device-width, initial-scale=1.0This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.og:title presentPassedMonGuide FODMAP - Guide alimentaire personnaliséThis signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.og:description presentPassedOpen Graph description is present.This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.og:image presentPassedhttps://mon-guide-fodmap.com/og-image.pngThis signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.og:type presentPassedwebsiteThis signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.twitter:card presentPassedsummary_large_imageThis signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.twitter:title presentPassedMonGuide FODMAPThis signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.twitter:description presentPassedTwitter/X description is present.This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.robots.txt foundPassedhttps://mon-guide-fodmap.com/robots.txtThis signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.Key metadata present in raw HTMLPassedNo render-only metadata fields were detected.This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.Optional polish (1)Theme color is not setOptionalOptional theme-color metadata was not found in the initial HTML.Add a theme-color meta tag if you want branded browser UI on supported surfaces.Preview cardsHow the page appears to crawlers and preview botsGoogleRaw HTMLTitleMonGuide FODMAP - Votre guide alimentaire personnaliséURLhttps://mon-guide-fodmap.com/DescriptionGuide alimentaire personnalisé pour le régime FODMAP. Gérez vos intolérances spécifiques au syndrome de l'intestin irritable (SII).SocialRaw HTMLTitleMonGuide FODMAP - Guide alimentaire personnaliséURLhttps://mon-g",
+      "buttons": [
+        {
+          "disabled": false,
+          "text": "Check site"
+        },
+        {
+          "disabled": false,
+          "text": "URL-only check"
+        }
+      ],
+      "clientWidth": 1280,
+      "decision": "Decision panelNeeds attention before launch7 issue(s) need review before this page should be considered launch-ready.ModeURL + repositoryReadinessNeeds attentionScore60 / 100Next best actionReview patch previewGenerated previews require human review before any future write path.No safe automatic fix",
+      "details": [
+        {
+          "className": "group-details",
+          "open": true,
+          "summary": "Top issues (5)"
+        },
+        {
+          "className": "group-details",
+          "open": false,
+          "summary": "Passed highlights (15)"
+        },
+        {
+          "className": "group-details",
+          "open": false,
+          "summary": "Optional polish (1)"
+        },
+        {
+          "className": "group-details",
+          "open": false,
+          "summary": "Safe to apply (0)"
+        },
+        {
+          "className": "group-details",
+          "open": true,
+          "summary": "Needs review (3)"
+        },
+        {
+          "className": "group-details",
+          "open": false,
+          "summary": "Manual only (0)"
+        },
+        {
+          "className": "group-details",
+          "open": false,
+          "summary": "Already good (15)"
+        },
+        {
+          "className": "group-details",
+          "open": false,
+          "summary": "Optional polish (1)"
+        },
+        {
+          "className": "diff-details",
+          "open": false,
+          "summary": "View diff"
+        },
+        {
+          "className": "diff-details",
+          "open": false,
+          "summary": "View diff"
+        },
+        {
+          "className": "group-details",
+          "open": false,
+          "summary": "Actions without a file diff (1)"
+        },
+        {
+          "className": "developer-details",
+          "open": false,
+          "summary": "Developer details"
+        }
+      ],
+      "error": "",
+      "errorVisible": false,
+      "hasHorizontalOverflow": false,
+      "inputs": [
+        {
+          "disabled": false,
+          "name": "url",
+          "value": "https://mon-guide-fodmap.com"
+        },
+        {
+          "disabled": false,
+          "name": "repoPath",
+          "value": "/Users/fabiencampana/Documents/jade/mon-guide-fodmap-2"
+        }
+      ],
+      "reportVisible": true,
+      "safeApply": "Safe applyNo safe automatic fix availableNo dry-run file change currently qualifies for V1 safe apply.No overwritesNo metadata or content editsNo Git commitsNo deploysBlocked from safe applyindex.htmlHTML, metadata, and config updates are outside the V1 write policy.public/sitemap.xmlReview status must be auto_candidate; dry-run status was review_required. Changes that require human review are not writable.",
+      "scrollWidth": 1280,
+      "statusVisible": false
+    },
+    "screenshot": "/Users/fabiencampana/Documents/ship-ready/validation/gui-v1-review/screenshots/case4-mon-guide-review-required.png",
+    "logs": []
+  },
+  {
+    "caseName": "case5-invalid-url",
+    "url": "http://127.0.0.1:4317/",
+    "title": "ShipReady local UI",
+    "outcome": {
+      "errorVisible": true,
+      "reportVisible": false,
+      "statusVisible": false,
+      "text": "ShipReady local UI Check if your generated website is ready to be shared and indexed. Add a local project folder to preview safe fixes. Website URL Local repo path optional Check site URL-only check auditInvalid URL. Provide a full website URL that starts with http or https. Decision panel Readiness Preview cards Project understanding Fix plan Patch preview Safe apply Developer details Decision panel Readiness Preview cards Project understanding Fix plan Patch preview Safe apply Developer details"
+    },
+    "summary": {
+      "bodyTextSample": "ShipReady local UI Check if your generated website is ready to be shared and indexed. Add a local project folder to preview safe fixes. Website URL Local repo path optional Check site URL-only check auditInvalid URL. Provide a full website URL that starts with http or https. Decision panel Readiness Preview cards Project understanding Fix plan Patch preview Safe apply Developer details Decision panel Readiness Preview cards Project understanding Fix plan Patch preview Safe apply Developer details",
+      "buttons": [
+        {
+          "disabled": false,
+          "text": "Check site"
+        },
+        {
+          "disabled": false,
+          "text": "URL-only check"
+        }
+      ],
+      "clientWidth": 1280,
+      "decision": "",
+      "details": [
+        {
+          "className": "developer-details",
+          "open": false,
+          "summary": "Developer details"
+        }
+      ],
+      "error": "auditInvalid URL. Provide a full website URL that starts with http or https.",
+      "errorVisible": true,
+      "hasHorizontalOverflow": false,
+      "inputs": [
+        {
+          "disabled": false,
+          "name": "url",
+          "value": "not-a-url"
+        },
+        {
+          "disabled": false,
+          "name": "repoPath",
+          "value": ""
+        }
+      ],
+      "reportVisible": false,
+      "safeApply": "Safe apply",
+      "scrollWidth": 1280,
+      "statusVisible": false
+    },
+    "screenshot": "/Users/fabiencampana/Documents/ship-ready/validation/gui-v1-review/screenshots/case5-invalid-url.png",
+    "logs": []
+  },
+  {
+    "caseName": "case6-invalid-repo-path",
+    "url": "http://127.0.0.1:4317/",
+    "title": "ShipReady local UI",
+    "outcome": {
+      "errorVisible": true,
+      "reportVisible": false,
+      "statusVisible": false,
+      "text": "ShipReady local UI Check if your generated website is ready to be shared and indexed. Add a local project folder to preview safe fixes. Website URL Local repo path optional Check site URL-only check repo_inspectionRepository path does not exist: /path/that/does/not/existDeveloper details{ \"name\": \"Error\", \"message\": \"Repository path does not exist: /path/that/does/not/exist\", \"stack\": \"Error: Repository path does not exist: /path/that/does/not/exist\\n at createRepoSnapshot (/Users/fabiencampana/Documents/ship-ready/src/repo/repoSnapshot.ts:51:11)\\n at inspectRepo (/Users/fabiencampana/Documents/ship-ready/src/repo/inspectRepo.ts:17:20)\\n at createUiReport (/Users/fabiencampana/Documents/ship-ready/src/report/createUiReport.ts:224:24)\\n at createUiReportApiResult (/Users/fabiencampana/Documents/ship-ready/src/gui/guiApi.ts:48:51)\\n at handleGuiRequest (/Users/fabiencampana/Documents/ship-ready/src/gui/startGuiServer.ts:105:15)\\n at process.processTicksAndRejections (node:internal/proces"
+    },
+    "summary": {
+      "bodyTextSample": "ShipReady local UI Check if your generated website is ready to be shared and indexed. Add a local project folder to preview safe fixes. Website URL Local repo path optional Check site URL-only check repo_inspectionRepository path does not exist: /path/that/does/not/existDeveloper details{ \"name\": \"Error\", \"message\": \"Repository path does not exist: /path/that/does/not/exist\", \"stack\": \"Error: Repository path does not exist: /path/that/does/not/exist\\n at createRepoSnapshot (/Users/fabiencampana/Documents/ship-ready/src/repo/repoSnapshot.ts:51:11)\\n at inspectRepo (/Users/fabiencampana/Documents/ship-ready/src/repo/inspectRepo.ts:17:20)\\n at createUiReport (/Users/fabiencampana/Documents/ship-ready/src/report/createUiReport.ts:224:24)\\n at createUiReportApiResult (/Users/fabiencampana/Documents/ship-ready/src/gui/guiApi.ts:48:51)\\n at handleGuiRequest (/Users/fabiencampana/Documents/ship-ready/src/gui/startGuiServer.ts:105:15)\\n at process.processTicksAndRejections (node:internal/process/task_queues:103:5)\" } Decision panel Readiness Preview cards Project understanding Fix plan Patch preview Safe apply Developer details Decision panel Readiness Preview cards Project understanding Fix plan Patch preview Safe apply Developer details",
+      "buttons": [
+        {
+          "disabled": false,
+          "text": "Check site"
+        },
+        {
+          "disabled": false,
+          "text": "URL-only check"
+        }
+      ],
+      "clientWidth": 1280,
+      "decision": "",
+      "details": [
+        {
+          "className": "group-details",
+          "open": false,
+          "summary": "Developer details"
+        },
+        {
+          "className": "developer-details",
+          "open": false,
+          "summary": "Developer details"
+        }
+      ],
+      "error": "repo_inspectionRepository path does not exist: /path/that/does/not/existDeveloper details{ \"name\": \"Error\", \"message\": \"Repository path does not exist: /path/that/does/not/exist\", \"stack\": \"Error: Repository path does not exist: /path/that/does/not/exist\\n at createRepoSnapshot (/Users/fabiencampana/Documents/ship-ready/src/repo/repoSnapshot.ts:51:11)\\n at inspectRepo (/Users/fabiencampana/Documents/ship-ready/src/repo/inspectRepo.ts:17:20)\\n at createUiReport (/Users/fabiencampana/Documents/ship-ready/src/report/createUiReport.ts:224:24)\\n at createUiReportApiResult (/Users/fabiencampana/Documents/ship-ready/src/gui/guiApi.ts:48:51)\\n at handleGuiRequest (/Users/fabiencampana/Documents/ship-ready/src/gui/startGuiServer.ts:105:15)\\n at process.processTicksAndRejections (node:internal/process/task_queues:103:5)\" }",
+      "errorVisible": true,
+      "hasHorizontalOverflow": false,
+      "inputs": [
+        {
+          "disabled": false,
+          "name": "url",
+          "value": "https://imageforge.dev"
+        },
+        {
+          "disabled": false,
+          "name": "repoPath",
+          "value": "/path/that/does/not/exist"
+        }
+      ],
+      "reportVisible": false,
+      "safeApply": "Safe apply",
+      "scrollWidth": 1280,
+      "statusVisible": false
+    },
+    "screenshot": "/Users/fabiencampana/Documents/ship-ready/validation/gui-v1-review/screenshots/case6-invalid-repo-path.png",
+    "logs": []
+  }
+]

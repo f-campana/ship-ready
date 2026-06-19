@@ -1,0 +1,208 @@
+{
+  "path": "validation/write-v1-real-repos/tmp/fodmapp-marketing",
+  "inspectedAt": "2026-06-15T14:42:24.040Z",
+  "packageManager": "unknown",
+  "framework": {
+    "id": "next_app_router",
+    "name": "Next.js App Router",
+    "confidence": "high",
+    "evidence": [
+      {
+        "kind": "package_dependency",
+        "path": "package.json",
+        "value": "package.json includes dependency \"next\"",
+        "weight": "strong"
+      },
+      {
+        "kind": "file",
+        "path": "next.config.ts",
+        "value": "Next.js config found",
+        "weight": "medium"
+      },
+      {
+        "kind": "directory",
+        "path": "app",
+        "value": "App Router directory found",
+        "weight": "strong"
+      },
+      {
+        "kind": "file",
+        "path": "app/layout.tsx",
+        "value": "App Router root layout found",
+        "weight": "strong"
+      },
+      {
+        "kind": "file",
+        "path": "app/mentions-legales/page.tsx",
+        "value": "app/mentions-legales/page.tsx found",
+        "weight": "medium"
+      },
+      {
+        "kind": "file",
+        "path": "app/page.tsx",
+        "value": "app/page.tsx found",
+        "weight": "medium"
+      },
+      {
+        "kind": "source_pattern",
+        "path": "app/layout.tsx",
+        "value": "app/layout.tsx exports metadata or generateMetadata",
+        "weight": "medium"
+      }
+    ]
+  },
+  "importantFiles": [
+    {
+      "path": "package.json",
+      "kind": "package_file",
+      "reason": "Project package manifest"
+    },
+    {
+      "path": "next.config.ts",
+      "kind": "config_file",
+      "reason": "Framework or TypeScript config"
+    },
+    {
+      "path": "tsconfig.json",
+      "kind": "config_file",
+      "reason": "Framework or TypeScript config"
+    },
+    {
+      "path": "app/",
+      "kind": "directory",
+      "reason": "Important project directory"
+    },
+    {
+      "path": "src/",
+      "kind": "directory",
+      "reason": "Important project directory"
+    },
+    {
+      "path": "public/",
+      "kind": "directory",
+      "reason": "Important project directory"
+    },
+    {
+      "path": "app/layout.tsx",
+      "kind": "metadata_file",
+      "reason": "Next.js App Router file"
+    },
+    {
+      "path": "app/mentions-legales/page.tsx",
+      "kind": "route_file",
+      "reason": "Next.js App Router file"
+    },
+    {
+      "path": "app/page.tsx",
+      "kind": "route_file",
+      "reason": "Next.js App Router file"
+    }
+  ],
+  "routes": [
+    {
+      "path": "app/mentions-legales/page.tsx",
+      "route": "/mentions-legales",
+      "kind": "page",
+      "confidence": "high",
+      "reason": "App Router page file"
+    },
+    {
+      "path": "app/page.tsx",
+      "route": "/",
+      "kind": "page",
+      "confidence": "high",
+      "reason": "App Router page file"
+    }
+  ],
+  "metadataLocations": [
+    {
+      "path": "app/layout.tsx",
+      "kind": "file",
+      "exists": true,
+      "reason": "App Router layout can define shared metadata"
+    },
+    {
+      "path": "app/**/page.tsx",
+      "kind": "pattern",
+      "exists": false,
+      "reason": "Route-level pages can define metadata"
+    },
+    {
+      "path": "app/**/layout.tsx",
+      "kind": "pattern",
+      "exists": false,
+      "reason": "Nested layouts can define section metadata"
+    },
+    {
+      "path": "app/sitemap.ts",
+      "kind": "file",
+      "exists": false,
+      "reason": "App Router sitemap route"
+    },
+    {
+      "path": "app/robots.ts",
+      "kind": "file",
+      "exists": false,
+      "reason": "App Router robots route"
+    },
+    {
+      "path": "app/opengraph-image.tsx",
+      "kind": "file",
+      "exists": false,
+      "reason": "Open Graph image route"
+    }
+  ],
+  "supportedFixes": [
+    {
+      "id": "next_app.metadata_export",
+      "title": "Add/update static metadata export",
+      "description": "Add or update App Router metadata exports where simple and local.",
+      "safety": "review_required"
+    },
+    {
+      "id": "next_app.route_metadata",
+      "title": "Add route-level metadata",
+      "description": "Add metadata to route page or layout files.",
+      "safety": "review_required"
+    },
+    {
+      "id": "next_app.generate_metadata",
+      "title": "Add/update generateMetadata",
+      "description": "Plan generateMetadata changes when route metadata is dynamic.",
+      "safety": "review_required"
+    },
+    {
+      "id": "next_app.json_ld",
+      "title": "Add JSON-LD component",
+      "description": "Add conservative structured data in a layout or page.",
+      "safety": "review_required"
+    },
+    {
+      "id": "next_app.robots",
+      "title": "Add robots.ts",
+      "description": "Add an App Router robots route.",
+      "safety": "review_required"
+    },
+    {
+      "id": "next_app.sitemap",
+      "title": "Add sitemap.ts",
+      "description": "Add an App Router sitemap route.",
+      "safety": "review_required"
+    },
+    {
+      "id": "next_app.og_image",
+      "title": "Add Open Graph image route",
+      "description": "Add an opengraph-image route where appropriate.",
+      "safety": "review_required"
+    }
+  ],
+  "limitations": [
+    "File writing is disabled; use `shipready fix --dry-run` for supported patch previews.",
+    "This command is read-only and does not modify repository files.",
+    "Dynamic route metadata may require human review.",
+    "Existing complex metadata logic should not be overwritten blindly."
+  ],
+  "warnings": [
+    "Package manager could not be inferred from a lockfile or packageManager field."
+  ]
+}

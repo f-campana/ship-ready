@@ -1,0 +1,94 @@
+{
+  "url": "https://fodmapp.fr/",
+  "repoPath": "validation/write-v1-real-repos/tmp/fodmapp-marketing",
+  "generatedAt": "2026-06-15T14:42:41.986Z",
+  "mode": "write",
+  "wroteFiles": false,
+  "policy": "creation_only_robots_sitemap_v1",
+  "createdFiles": [],
+  "skippedActions": [
+    {
+      "actionId": "next_app_router.metadata_review",
+      "title": "Review and improve weak metadata",
+      "reasonKind": "requires_more_information",
+      "reason": "Existing metadata export found; merging metadata is skipped until a tested merge path exists.",
+      "sourceActionIds": [
+        "metadata.canonical.missing",
+        "metadata.favicon.missing",
+        "metadata.title.too_short",
+        "social.og.type_missing",
+        "social.og.url_missing"
+      ],
+      "risk": "medium"
+    },
+    {
+      "actionId": "next_app_router.json_ld_review",
+      "title": "Add JSON-LD with review",
+      "reasonKind": "requires_more_information",
+      "reason": "Next.js App Router JSON-LD preview requires a reviewed structured-data component and factual schema details.",
+      "sourceActionIds": [
+        "schema.jsonld.missing"
+      ],
+      "risk": "medium"
+    },
+    {
+      "actionId": "next_app_router.robots",
+      "title": "Add robots.ts",
+      "reasonKind": "requires_more_information",
+      "reason": "app/robots.ts already exists locally; verify deployment wiring before changing it.",
+      "sourceActionIds": [
+        "crawl.robots_txt.missing"
+      ],
+      "risk": "low"
+    },
+    {
+      "actionId": "next_app_router.sitemap",
+      "title": "Add sitemap.ts",
+      "reasonKind": "requires_more_information",
+      "reason": "app/sitemap.ts already exists locally; existing sitemap routes require manual review.",
+      "sourceActionIds": [
+        "crawl.sitemap.missing"
+      ],
+      "risk": "low"
+    }
+  ],
+  "blockedChanges": [],
+  "safetyChecks": [
+    {
+      "id": "current_dry_run",
+      "status": "passed",
+      "message": "Write candidates are selected only from the regenerated dry-run result."
+    },
+    {
+      "id": "creation_only_policy",
+      "status": "passed",
+      "message": "Write policy is limited to missing robots/sitemap file creations."
+    },
+    {
+      "id": "eligible_candidates",
+      "status": "passed",
+      "message": "No eligible missing robots/sitemap creations were found."
+    },
+    {
+      "id": "no_overwrites",
+      "status": "passed",
+      "message": "No existing files will be overwritten."
+    },
+    {
+      "id": "no_git_operations",
+      "status": "passed",
+      "message": "No Git operations, commits, branches, or GitHub calls will be performed."
+    },
+    {
+      "id": "no_dependency_operations",
+      "status": "passed",
+      "message": "No dependencies, package files, lockfiles, or config files will be changed."
+    },
+    {
+      "id": "no_formatting_or_deploy",
+      "status": "passed",
+      "message": "No formatting or deploy commands will be run."
+    }
+  ],
+  "recommendedNextStep": "manual_review_required"
+}

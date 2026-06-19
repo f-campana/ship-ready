@@ -1,0 +1,261 @@
+{
+  "url": "https://mon-guide-fodmap.com/",
+  "repoPath": ".",
+  "plannedAt": "2026-06-14T21:45:54.861Z",
+  "auditSummary": {
+    "score": 60,
+    "status": "needs_work",
+    "criticalCount": 2,
+    "warningCount": 5,
+    "noteCount": 1
+  },
+  "repoSummary": {
+    "frameworkId": "unknown",
+    "frameworkName": "Unknown",
+    "confidence": "low",
+    "packageManager": "pnpm"
+  },
+  "actions": [
+    {
+      "id": "manual.metadata.canonical.missing",
+      "title": "Manual review: Missing canonical URL",
+      "description": "The raw HTML does not include a canonical link.",
+      "sourceCheckIds": [
+        "metadata.canonical.missing"
+      ],
+      "category": "manual_recommendation",
+      "priority": "critical",
+      "risk": "high",
+      "confidence": "low",
+      "frameworkStrategy": "Inspect the project manually before planning automated changes.",
+      "targetFiles": [],
+      "targetLocations": [
+        "manual inspection required"
+      ],
+      "futureAutomation": {
+        "canAutomate": false,
+        "requiresHumanReview": true,
+        "reason": "The project framework or target files are not clear enough for automation."
+      }
+    },
+    {
+      "id": "manual.metadata.favicon.missing",
+      "title": "Manual review: No favicon links found",
+      "description": "Favicons and app icons help the site look complete in tabs, bookmarks, and device surfaces.",
+      "sourceCheckIds": [
+        "metadata.favicon.missing"
+      ],
+      "category": "manual_recommendation",
+      "priority": "medium",
+      "risk": "high",
+      "confidence": "low",
+      "frameworkStrategy": "Inspect the project manually before planning automated changes.",
+      "targetFiles": [],
+      "targetLocations": [
+        "manual inspection required"
+      ],
+      "futureAutomation": {
+        "canAutomate": false,
+        "requiresHumanReview": true,
+        "reason": "The project framework or target files are not clear enough for automation."
+      }
+    },
+    {
+      "id": "manual.social.og.url_missing",
+      "title": "Manual review: Missing og:url",
+      "description": "Open Graph metadata should include the canonical page URL.",
+      "sourceCheckIds": [
+        "social.og.url_missing"
+      ],
+      "category": "manual_recommendation",
+      "priority": "medium",
+      "risk": "high",
+      "confidence": "low",
+      "frameworkStrategy": "Inspect the project manually before planning automated changes.",
+      "targetFiles": [],
+      "targetLocations": [
+        "manual inspection required"
+      ],
+      "futureAutomation": {
+        "canAutomate": false,
+        "requiresHumanReview": true,
+        "reason": "The project framework or target files are not clear enough for automation."
+      }
+    },
+    {
+      "id": "manual.social.twitter.image_missing",
+      "title": "Manual review: Missing twitter:image",
+      "description": "Twitter/X cards should include an image when possible.",
+      "sourceCheckIds": [
+        "social.twitter.image_missing"
+      ],
+      "category": "manual_recommendation",
+      "priority": "medium",
+      "risk": "high",
+      "confidence": "low",
+      "frameworkStrategy": "Inspect the project manually before planning automated changes.",
+      "targetFiles": [],
+      "targetLocations": [
+        "manual inspection required"
+      ],
+      "futureAutomation": {
+        "canAutomate": false,
+        "requiresHumanReview": true,
+        "reason": "The project framework or target files are not clear enough for automation."
+      }
+    },
+    {
+      "id": "manual.schema.jsonld.missing",
+      "title": "Manual review: No JSON-LD detected",
+      "description": "No structured data script tags were found in the raw HTML.",
+      "sourceCheckIds": [
+        "schema.jsonld.missing"
+      ],
+      "category": "manual_recommendation",
+      "priority": "critical",
+      "risk": "high",
+      "confidence": "low",
+      "frameworkStrategy": "Inspect the project manually before planning automated changes.",
+      "targetFiles": [],
+      "targetLocations": [
+        "manual inspection required"
+      ],
+      "futureAutomation": {
+        "canAutomate": false,
+        "requiresHumanReview": true,
+        "reason": "The project framework or target files are not clear enough for automation."
+      }
+    },
+    {
+      "id": "unknown.heading",
+      "title": "Review page heading structure",
+      "description": "The page should have one clear H1.",
+      "sourceCheckIds": [
+        "structure.h1.missing"
+      ],
+      "category": "manual_recommendation",
+      "priority": "medium",
+      "risk": "medium",
+      "confidence": "low",
+      "frameworkStrategy": "Locate the relevant page or component and make semantic/content changes with review.",
+      "targetFiles": [],
+      "targetLocations": [],
+      "futureAutomation": {
+        "canAutomate": false,
+        "requiresHumanReview": true,
+        "reason": "Content and accessibility text changes require human review for accuracy."
+      }
+    },
+    {
+      "id": "manual.crawl.sitemap.invalid",
+      "title": "Manual review: sitemap.xml is not a valid sitemap",
+      "description": "The sitemap.xml URL returned a success response, but the body did not look like an XML sitemap.",
+      "sourceCheckIds": [
+        "crawl.sitemap.invalid"
+      ],
+      "category": "manual_recommendation",
+      "priority": "medium",
+      "risk": "high",
+      "confidence": "low",
+      "frameworkStrategy": "Inspect the project manually before planning automated changes.",
+      "targetFiles": [],
+      "targetLocations": [
+        "manual inspection required"
+      ],
+      "futureAutomation": {
+        "canAutomate": false,
+        "requiresHumanReview": true,
+        "reason": "The project framework or target files are not clear enough for automation."
+      }
+    }
+  ],
+  "noActionChecks": [
+    {
+      "checkId": "crawl.status.ok",
+      "title": "Page returns HTTP success",
+      "reason": "This audit check passed, so ShipReady is not proposing a change."
+    },
+    {
+      "checkId": "metadata.title.present",
+      "title": "Title present",
+      "reason": "This audit check passed, so ShipReady is not proposing a change."
+    },
+    {
+      "checkId": "metadata.description.present",
+      "title": "Meta description present",
+      "reason": "This audit check passed, so ShipReady is not proposing a change."
+    },
+    {
+      "checkId": "metadata.robots.indexable",
+      "title": "Page is not marked noindex",
+      "reason": "This audit check passed, so ShipReady is not proposing a change."
+    },
+    {
+      "checkId": "metadata.lang.present",
+      "title": "HTML lang attribute present",
+      "reason": "This audit check passed, so ShipReady is not proposing a change."
+    },
+    {
+      "checkId": "metadata.viewport.present",
+      "title": "Viewport present",
+      "reason": "This audit check passed, so ShipReady is not proposing a change."
+    },
+    {
+      "checkId": "social.og.title_present",
+      "title": "og:title present",
+      "reason": "This audit check passed, so ShipReady is not proposing a change."
+    },
+    {
+      "checkId": "social.og.description_present",
+      "title": "og:description present",
+      "reason": "This audit check passed, so ShipReady is not proposing a change."
+    },
+    {
+      "checkId": "social.og.image_present",
+      "title": "og:image present",
+      "reason": "This audit check passed, so ShipReady is not proposing a change."
+    },
+    {
+      "checkId": "social.og.type_present",
+      "title": "og:type present",
+      "reason": "This audit check passed, so ShipReady is not proposing a change."
+    },
+    {
+      "checkId": "social.twitter.card_present",
+      "title": "twitter:card present",
+      "reason": "This audit check passed, so ShipReady is not proposing a change."
+    },
+    {
+      "checkId": "social.twitter.title_present",
+      "title": "twitter:title present",
+      "reason": "This audit check passed, so ShipReady is not proposing a change."
+    },
+    {
+      "checkId": "social.twitter.description_present",
+      "title": "twitter:description present",
+      "reason": "This audit check passed, so ShipReady is not proposing a change."
+    },
+    {
+      "checkId": "crawl.robots_txt.found",
+      "title": "robots.txt found",
+      "reason": "This audit check passed, so ShipReady is not proposing a change."
+    },
+    {
+      "checkId": "crawl.raw_render.consistent",
+      "title": "Key metadata present in raw HTML",
+      "reason": "This audit check passed, so ShipReady is not proposing a change."
+    }
+  ],
+  "optionalNotes": [
+    "Theme color is not set: Optional theme-color metadata was not found in the initial HTML."
+  ],
+  "limitations": [
+    "This is a read-only plan. No files were modified and no patches were generated.",
+    "Future automation must re-check the repo before writing changes.",
+    "No fix generation implemented yet.",
+    "This command is read-only and does not modify repository files.",
+    "Unsupported project type.",
+    "Manual inspection is recommended before planning automated fixes."
+  ],
+  "recommendedNextStep": "unsupported_project"
+}

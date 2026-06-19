@@ -1,0 +1,69 @@
+ShipReady dry-run fix preview
+URL: http://127.0.0.1:4173/
+Repo: tests/fixtures/repos/static-html
+
+Summary
+- Mode: dry_run
+- Audit score: 38/100
+- Audit status: Critical
+- Framework: Plain static HTML
+- Files that would be changed: 2
+- Files actually changed: 0
+
+Would create:
+- None
+
+Would update:
+- index.html (Add missing static metadata.; risk: medium; review required)
+- sitemap.xml (Replace or update sitemap.xml with a valid single-URL sitemap preview.; risk: low; review required)
+
+Skipped:
+- Review and improve weak metadata: Weak or risky metadata changes require human-authored copy review; dry-run only previews deterministic missing-tag inserts.
+- Add JSON-LD with review: JSON-LD preview needs an existing page title and description; ShipReady will not invent schema facts.
+- Review page heading structure: H1 review is a content change and requires human review.
+
+Diff preview
+--- index.html
++++ index.html
+@@ -1,3 +1,20 @@
+ <!doctype html>
+-<html lang="en"><head><title>Static Home</title></head><body><h1>Home</h1></body></html>
++<html lang="en"><head><title>Static Home</title>
++  <!-- TODO(shipready): Review and replace with a concise page description. -->
++  <meta name="description" content="TODO: Page description" />
++  <link rel="canonical" href="http://127.0.0.1:4173/" />
++  <meta property="og:title" content="Static Home" />
++  <!-- TODO(shipready): Replace placeholder Open Graph description before applying. -->
++  <meta property="og:description" content="TODO: Page description" />
++  <meta property="og:url" content="http://127.0.0.1:4173/" />
++  <meta property="og:type" content="website" />
++  <!-- TODO(shipready): Replace with an absolute public share image URL. -->
++  <meta property="og:image" content="TODO: Absolute image URL" />
++  <meta name="twitter:card" content="summary_large_image" />
++  <meta name="twitter:title" content="Static Home" />
++  <!-- TODO(shipready): Replace placeholder Twitter/X description before applying. -->
++  <meta name="twitter:description" content="TODO: Page description" />
++  <!-- TODO(shipready): Replace with an absolute public Twitter/X image URL. -->
++  <meta name="twitter:image" content="TODO: Absolute image URL" />
++</head><body><h1>Home</h1></body></html>
+ 
+
+--- sitemap.xml
++++ sitemap.xml
+@@ -1,2 +1,7 @@
+-<urlset><url><loc>https://example.com/</loc></url></urlset>
++<?xml version="1.0" encoding="UTF-8"?>
++<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
++  <url>
++    <loc>http://127.0.0.1:4173/</loc>
++  </url>
++</urlset>
+ 
+
+Safety
+- Dry-run only. No files were modified.
+- Review generated changes before applying.
+- TODO placeholder metadata is for preview only and must be replaced before any future write.
+
+Recommended next step
+- Review patch preview

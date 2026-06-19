@@ -1,0 +1,66 @@
+{
+  "url": "https://fodmapp.fr/",
+  "repoPath": "validation/write-v1-real-repos/tmp/fodmapp-marketing",
+  "generatedAt": "2026-06-15T14:42:49.656Z",
+  "mode": "dry_run",
+  "wroteFiles": false,
+  "planSummary": {
+    "auditScore": 59,
+    "auditStatus": "needs_work",
+    "frameworkId": "next_app_router",
+    "frameworkName": "Next.js App Router",
+    "recommendedNextStep": "review_plan"
+  },
+  "fileChanges": [],
+  "skippedActions": [
+    {
+      "actionId": "next_app_router.metadata_review",
+      "title": "Review and improve weak metadata",
+      "reasonKind": "requires_more_information",
+      "reason": "Existing metadata export found; merging metadata is skipped until a tested merge path exists.",
+      "sourceActionIds": [
+        "metadata.canonical.missing",
+        "metadata.favicon.missing",
+        "metadata.title.too_short",
+        "social.og.type_missing",
+        "social.og.url_missing"
+      ],
+      "risk": "medium"
+    },
+    {
+      "actionId": "next_app_router.json_ld_review",
+      "title": "Add JSON-LD with review",
+      "reasonKind": "requires_more_information",
+      "reason": "Next.js App Router JSON-LD preview requires a reviewed structured-data component and factual schema details.",
+      "sourceActionIds": [
+        "schema.jsonld.missing"
+      ],
+      "risk": "medium"
+    },
+    {
+      "actionId": "next_app_router.robots",
+      "title": "Add robots.ts",
+      "reasonKind": "requires_more_information",
+      "reason": "app/robots.ts already exists locally; verify deployment wiring before changing it.",
+      "sourceActionIds": [
+        "crawl.robots_txt.missing"
+      ],
+      "risk": "low"
+    },
+    {
+      "actionId": "next_app_router.sitemap",
+      "title": "Add sitemap.ts",
+      "reasonKind": "requires_more_information",
+      "reason": "app/sitemap.ts already exists locally; existing sitemap routes require manual review.",
+      "sourceActionIds": [
+        "crawl.sitemap.missing"
+      ],
+      "risk": "low"
+    }
+  ],
+  "safetyNotes": [
+    "Dry-run only. No files were modified.",
+    "Next.js App Router previews are conservative and read-only; dynamic metadata and component changes are skipped."
+  ],
+  "recommendedNextStep": "manual_review_required"
+}

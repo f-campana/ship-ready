@@ -1,0 +1,118 @@
+{
+  "caseName": "mobile-case3-fodmapp-safe-apply-390",
+  "url": "http://127.0.0.1:4317/",
+  "title": "ShipReady local UI",
+  "outcome": {
+    "errorVisible": false,
+    "reportVisible": true,
+    "statusVisible": false,
+    "text": "ShipReady local UI Check if your generated website is ready to be shared and indexed. Add a local project folder to preview safe fixes. Website URL Local repo path optional Check site URL-only check Decision panel Readiness Preview cards Project understanding Fix plan Patch preview Safe apply Developer details Decision panelNeeds attention before launch8 issue(s) need review before this page should be considered launch-ready.ModeURL + repositoryReadinessNeeds attentionScore59 / 100Next best actionCreate safe crawl filesOnly V1-eligible robots/sitemap creations qualify.Safe apply availableReadinessNeeds attention before launch8 issue(s) need review before this page should be considered launch-ready.Top issues (5)Search engines do not have a clear preferred URL.ImportantThis page is missing a canonical URL, which helps search engines understand the main address for this content.Without it, duplicate or alternate URLs can be harder to consolidate.Missing og:urlImportantOpen Graph metadata"
+  },
+  "summary": {
+    "bodyTextSample": "ShipReady local UI Check if your generated website is ready to be shared and indexed. Add a local project folder to preview safe fixes. Website URL Local repo path optional Check site URL-only check Decision panel Readiness Preview cards Project understanding Fix plan Patch preview Safe apply Developer details Decision panelNeeds attention before launch8 issue(s) need review before this page should be considered launch-ready.ModeURL + repositoryReadinessNeeds attentionScore59 / 100Next best actionCreate safe crawl filesOnly V1-eligible robots/sitemap creations qualify.Safe apply availableReadinessNeeds attention before launch8 issue(s) need review before this page should be considered launch-ready.Top issues (5)Search engines do not have a clear preferred URL.ImportantThis page is missing a canonical URL, which helps search engines understand the main address for this content.Without it, duplicate or alternate URLs can be harder to consolidate.Missing og:urlImportantOpen Graph metadata should include the canonical page URL.This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.Missing og:typeImportantOpen Graph metadata should include a type such as website.This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.Your site does not have a sitemap yet.ImportantA sitemap lists the pages you want crawlers to discover.For supported projects, ShipReady can safely create a simple sitemap file.Title is very shortRecommendedA very short title may not explain the page clearly.This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.Passed highlights (15)Page returns HTTP successPassedThe audited URL returned a 2xx HTTP status.This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.Title presentPassedRaw title: FODMAPPThis signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.Meta description presentPassedRaw meta description is present.This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.Page is not marked noindexPassedNo noindex robots meta directive was detected.This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.HTML lang attribute presentPassedfrThis signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.Viewport presentPassedwidth=device-width, initial-scale=1This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.og:title presentPassedFODMAPPThis signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.og:description presentPassedOpen Graph description is present.This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.og:image presentPassedhttps://fodmapp.fr/og.pngThis signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.twitter:card presentPassedsummary_large_imageThis signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.twitter:title presentPassedFODMAPPThis signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.twitter:description presentPassedTwitter/X description is present.This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.twitter:image presentPassedhttps://fodmapp.fr/og.pngThis signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.Single H1 foundPassedTu suis un régime pauvre en FODMAP et tu ne sais plus quoi cuisiner ?This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.Key metadata present in raw HTMLPassedNo render-only metadata fields were detected.This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.Optional polish (1)Theme color is not setOptionalOptional theme-color metadata was not found in the initial HTML.Add a theme-color meta tag if you want branded browser UI on supported surfaces.Preview cardsHow the page appears to crawlers and preview botsGoogleRaw HTMLTitleFODMAPPURLhttps://fodmapp.fr/DescriptionUn outil pour trouver des substitutions compatibles avec un régime pauvre en FODMAP.SocialRaw HTMLTitleFODMAPPURLhttps://fodmapp.fr/DescriptionUn outil pour trouver des substitutions compatibles avec un régime pauvre en FODMAP.Image URLhttps://fodmapp.fr/og.pngX/TwitterRaw HTMLCardsummary_large_imageTitleFODMAPPDescriptionUn outil pour trouver des substitutions compatibles avec un régime pauvre en FODMAP.Image URLhttps://fodmapp.fr",
+    "buttons": [
+      {
+        "disabled": false,
+        "text": "Check site"
+      },
+      {
+        "disabled": false,
+        "text": "URL-only check"
+      },
+      {
+        "disabled": false,
+        "text": "Copy command"
+      }
+    ],
+    "clientWidth": 390,
+    "decision": "Decision panelNeeds attention before launch8 issue(s) need review before this page should be considered launch-ready.ModeURL + repositoryReadinessNeeds attentionScore59 / 100Next best actionCreate safe crawl filesOnly V1-eligible robots/sitemap creations qualify.Safe apply available",
+    "details": [
+      {
+        "className": "group-details",
+        "open": true,
+        "summary": "Top issues (5)"
+      },
+      {
+        "className": "group-details",
+        "open": false,
+        "summary": "Passed highlights (15)"
+      },
+      {
+        "className": "group-details",
+        "open": false,
+        "summary": "Optional polish (1)"
+      },
+      {
+        "className": "group-details",
+        "open": true,
+        "summary": "Safe to apply (2)"
+      },
+      {
+        "className": "group-details",
+        "open": true,
+        "summary": "Needs review (2)"
+      },
+      {
+        "className": "group-details",
+        "open": false,
+        "summary": "Manual only (0)"
+      },
+      {
+        "className": "group-details",
+        "open": false,
+        "summary": "Already good (15)"
+      },
+      {
+        "className": "group-details",
+        "open": false,
+        "summary": "Optional polish (1)"
+      },
+      {
+        "className": "diff-details",
+        "open": false,
+        "summary": "View diff"
+      },
+      {
+        "className": "diff-details",
+        "open": false,
+        "summary": "View diff"
+      },
+      {
+        "className": "group-details",
+        "open": false,
+        "summary": "Actions without a file diff (2)"
+      },
+      {
+        "className": "group-details",
+        "open": false,
+        "summary": "Safe apply policy notes"
+      },
+      {
+        "className": "developer-details",
+        "open": false,
+        "summary": "Developer details"
+      }
+    ],
+    "error": "",
+    "errorVisible": false,
+    "hasHorizontalOverflow": false,
+    "inputs": [
+      {
+        "disabled": false,
+        "name": "url",
+        "value": "https://fodmapp.fr"
+      },
+      {
+        "disabled": false,
+        "name": "repoPath",
+        "value": "/Users/fabiencampana/Documents/fodmapp/apps/marketing"
+      }
+    ],
+    "reportVisible": true,
+    "safeApply": "Safe applySafe automatic fix availableShipReady can create these missing crawl files without overwriting existing files:app/robots.tsapp/sitemap.tspnpm shipready fix /Users/fabiencampana/Documents/fodmapp/apps/marketing --url https://fodmapp.fr/ --write --allow-createCopy commandNo overwritesNo metadata or content editsNo Git commitsNo deploysSafe apply policy notesThis ui-report command never writes files.V1 safe apply is limited to creation-only robots/sitemap files.ShipReady will not overwrite existing files in V1 safe apply.ShipReady will not edit metadata, JSON-LD, page content, package files, or configuration in V1 safe apply.ShipReady will not run Git operations, create commits, push, or deploy.Dry-run only. No files were modified.Next.js App Router previews are conservative and read-only; dynamic metadata and component changes are skipped.",
+    "scrollWidth": 390,
+    "statusVisible": false
+  },
+  "screenshot": "/Users/fabiencampana/Documents/ship-ready/validation/gui-v1-review/screenshots/mobile-case3-fodmapp-safe-apply-390.png",
+  "logs": []
+}

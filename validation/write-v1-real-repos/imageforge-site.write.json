@@ -1,0 +1,49 @@
+{
+  "url": "https://imageforge.dev/",
+  "repoPath": "validation/write-v1-real-repos/tmp/imageforge-site",
+  "generatedAt": "2026-06-15T14:42:03.822Z",
+  "mode": "write",
+  "wroteFiles": false,
+  "policy": "creation_only_robots_sitemap_v1",
+  "createdFiles": [],
+  "skippedActions": [],
+  "blockedChanges": [],
+  "safetyChecks": [
+    {
+      "id": "current_dry_run",
+      "status": "passed",
+      "message": "Write candidates are selected only from the regenerated dry-run result."
+    },
+    {
+      "id": "creation_only_policy",
+      "status": "passed",
+      "message": "Write policy is limited to missing robots/sitemap file creations."
+    },
+    {
+      "id": "eligible_candidates",
+      "status": "passed",
+      "message": "No eligible missing robots/sitemap creations were found."
+    },
+    {
+      "id": "no_overwrites",
+      "status": "passed",
+      "message": "No existing files will be overwritten."
+    },
+    {
+      "id": "no_git_operations",
+      "status": "passed",
+      "message": "No Git operations, commits, branches, or GitHub calls will be performed."
+    },
+    {
+      "id": "no_dependency_operations",
+      "status": "passed",
+      "message": "No dependencies, package files, lockfiles, or config files will be changed."
+    },
+    {
+      "id": "no_formatting_or_deploy",
+      "status": "passed",
+      "message": "No formatting or deploy commands will be run."
+    }
+  ],
+  "recommendedNextStep": "no_changes_needed"
+}

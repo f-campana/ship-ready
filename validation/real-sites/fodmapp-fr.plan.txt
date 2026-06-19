@@ -1,0 +1,118 @@
+ShipReady fix plan
+URL: https://fodmapp.fr/
+Repo: .
+
+Audit summary
+- Score: 59/100
+- Status: Needs work
+- Critical issues: 2
+- Warnings: 6
+- Notes: 1
+
+Repo summary
+- Framework: Unknown
+- Confidence: low
+- Package manager: pnpm
+
+Recommended next step
+- Unsupported project; inspect manually before attempting automated fixes
+
+Safe automated later
+- None
+
+Automated with review
+- None
+
+Manual recommendations
+1. Manual review: Title is very short
+   Priority: medium
+   Risk: high
+   Confidence: low
+   Target: manual inspection required
+   Reason: A very short title may not explain the page clearly.
+   Strategy: Inspect the project manually before planning automated changes.
+   Future automation: manual only; The project framework or target files are not clear enough for automation.
+2. Manual review: Missing canonical URL
+   Priority: critical
+   Risk: high
+   Confidence: low
+   Target: manual inspection required
+   Reason: The raw HTML does not include a canonical link.
+   Strategy: Inspect the project manually before planning automated changes.
+   Future automation: manual only; The project framework or target files are not clear enough for automation.
+3. Manual review: No favicon links found
+   Priority: medium
+   Risk: high
+   Confidence: low
+   Target: manual inspection required
+   Reason: Favicons and app icons help the site look complete in tabs, bookmarks, and device surfaces.
+   Strategy: Inspect the project manually before planning automated changes.
+   Future automation: manual only; The project framework or target files are not clear enough for automation.
+4. Manual review: Missing og:url
+   Priority: medium
+   Risk: high
+   Confidence: low
+   Target: manual inspection required
+   Reason: Open Graph metadata should include the canonical page URL.
+   Strategy: Inspect the project manually before planning automated changes.
+   Future automation: manual only; The project framework or target files are not clear enough for automation.
+5. Manual review: Missing og:type
+   Priority: medium
+   Risk: high
+   Confidence: low
+   Target: manual inspection required
+   Reason: Open Graph metadata should include a type such as website.
+   Strategy: Inspect the project manually before planning automated changes.
+   Future automation: manual only; The project framework or target files are not clear enough for automation.
+6. Manual review: No JSON-LD detected
+   Priority: critical
+   Risk: high
+   Confidence: low
+   Target: manual inspection required
+   Reason: No structured data script tags were found in the raw HTML.
+   Strategy: Inspect the project manually before planning automated changes.
+   Future automation: manual only; The project framework or target files are not clear enough for automation.
+7. Manual review: robots.txt not found
+   Priority: medium
+   Risk: high
+   Confidence: low
+   Target: manual inspection required
+   Reason: No robots.txt file was found at the origin root.
+   Strategy: Inspect the project manually before planning automated changes.
+   Future automation: manual only; The project framework or target files are not clear enough for automation.
+8. Manual review: sitemap.xml not found
+   Priority: medium
+   Risk: high
+   Confidence: low
+   Target: manual inspection required
+   Reason: No sitemap.xml file was found at the origin root.
+   Strategy: Inspect the project manually before planning automated changes.
+   Future automation: manual only; The project framework or target files are not clear enough for automation.
+
+No action
+- Page returns HTTP success
+- Title present
+- Meta description present
+- Page is not marked noindex
+- HTML lang attribute present
+- Viewport present
+- og:title present
+- og:description present
+- og:image present
+- twitter:card present
+- twitter:title present
+- twitter:description present
+- twitter:image present
+- Single H1 found
+- Key metadata present in raw HTML
+
+Optional polish
+- Theme color is not set: Optional theme-color metadata was not found in the initial HTML.
+
+Limitations
+- This is a read-only plan. No files were modified and no patches were generated.
+- Future automation must re-check the repo before writing changes.
+- No fix generation implemented yet.
+- This command is read-only and does not modify repository files.
+- Unsupported project type.
+- Manual inspection is recommended before planning automated fixes.

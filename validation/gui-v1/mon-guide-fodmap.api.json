@@ -1,0 +1,1927 @@
+{
+  "ok": true,
+  "report": {
+    "schemaVersion": "ui-report-v1",
+    "generatedAt": "2026-06-16T21:31:03.703Z",
+    "input": {
+      "url": "https://mon-guide-fodmap.com/",
+      "repoPath": "/Users/fabiencampana/Documents/jade/mon-guide-fodmap-2",
+      "mode": "url_and_repo"
+    },
+    "workflow": {
+      "currentRecommendedStep": "review_patch_preview",
+      "completedStages": [
+        "audit",
+        "repo_inspection",
+        "fix_plan",
+        "dry_run"
+      ],
+      "availableNextActions": [
+        {
+          "label": "Review patch preview",
+          "action": "review_patch_preview",
+          "primary": true,
+          "enabled": true,
+          "explanation": "Generated previews require human review before any future write path."
+        }
+      ]
+    },
+    "readiness": {
+      "label": "needs_attention",
+      "title": "Needs attention before launch",
+      "summary": "7 issue(s) need review before this page should be considered launch-ready.",
+      "score": 60,
+      "topIssues": [
+        {
+          "id": "metadata.canonical.missing",
+          "title": "Search engines do not have a clear preferred URL.",
+          "explanation": "This page is missing a canonical URL, which helps search engines understand the main address for this content.",
+          "whyItMatters": "Without it, duplicate or alternate URLs can be harder to consolidate.",
+          "userSeverity": "important",
+          "technicalSeverity": "critical",
+          "sourceCheckIds": [
+            "metadata.canonical.missing"
+          ],
+          "developerDetails": {
+            "rawTitle": "Missing canonical URL",
+            "rawDescription": "The raw HTML does not include a canonical link.",
+            "category": "metadata",
+            "confidence": "high",
+            "fixability": "auto_fixable",
+            "fixStrategy": "Add a canonical link in the page head or framework metadata config.",
+            "recommendation": "Add a canonical link that points to the preferred public URL for this page."
+          }
+        },
+        {
+          "id": "social.og.url_missing",
+          "title": "Missing og:url",
+          "explanation": "Open Graph metadata should include the canonical page URL.",
+          "whyItMatters": "This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.",
+          "userSeverity": "important",
+          "technicalSeverity": "warning",
+          "sourceCheckIds": [
+            "social.og.url_missing"
+          ],
+          "developerDetails": {
+            "rawTitle": "Missing og:url",
+            "rawDescription": "Open Graph metadata should include the canonical page URL.",
+            "category": "social",
+            "confidence": "high",
+            "fixability": "plan_only"
+          }
+        },
+        {
+          "id": "structure.h1.missing",
+          "title": "The page does not have a clear main heading.",
+          "explanation": "ShipReady did not find an H1 in the page content.",
+          "whyItMatters": "A clear H1 helps visitors, assistive technology, and search engines understand the page topic.",
+          "userSeverity": "important",
+          "technicalSeverity": "warning",
+          "sourceCheckIds": [
+            "structure.h1.missing"
+          ],
+          "developerDetails": {
+            "rawTitle": "No H1 found",
+            "rawDescription": "The page should have one clear H1.",
+            "category": "structure",
+            "confidence": "high",
+            "fixability": "plan_only"
+          }
+        },
+        {
+          "id": "crawl.sitemap.invalid",
+          "title": "Your sitemap address does not return a real sitemap.",
+          "explanation": "The sitemap URL exists, but it appears to return a normal app page instead of sitemap XML.",
+          "whyItMatters": "A valid sitemap helps crawlers discover the pages you want indexed.",
+          "userSeverity": "important",
+          "technicalSeverity": "warning",
+          "sourceCheckIds": [
+            "crawl.sitemap.invalid"
+          ],
+          "developerDetails": {
+            "rawTitle": "sitemap.xml is not a valid sitemap",
+            "rawDescription": "The sitemap.xml URL returned a success response, but the body did not look like an XML sitemap.",
+            "category": "crawlability",
+            "confidence": "high",
+            "fixability": "plan_only",
+            "evidence": {
+              "url": "https://mon-guide-fodmap.com/sitemap.xml",
+              "statusCode": 200,
+              "error": "Response did not look like an XML sitemap."
+            }
+          }
+        },
+        {
+          "id": "metadata.favicon.missing",
+          "title": "No favicon links found",
+          "explanation": "Favicons and app icons help the site look complete in tabs, bookmarks, and device surfaces.",
+          "whyItMatters": "This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.",
+          "userSeverity": "recommended",
+          "technicalSeverity": "warning",
+          "sourceCheckIds": [
+            "metadata.favicon.missing"
+          ],
+          "developerDetails": {
+            "rawTitle": "No favicon links found",
+            "rawDescription": "Favicons and app icons help the site look complete in tabs, bookmarks, and device surfaces.",
+            "category": "metadata",
+            "confidence": "high",
+            "fixability": "plan_only"
+          }
+        }
+      ],
+      "passedHighlights": [
+        {
+          "id": "crawl.status.ok",
+          "title": "Page returns HTTP success",
+          "explanation": "The audited URL returned a 2xx HTTP status.",
+          "whyItMatters": "This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.",
+          "userSeverity": "ready",
+          "technicalSeverity": "passed",
+          "sourceCheckIds": [
+            "crawl.status.ok"
+          ],
+          "developerDetails": {
+            "rawTitle": "Page returns HTTP success",
+            "rawDescription": "The audited URL returned a 2xx HTTP status.",
+            "category": "crawlability",
+            "confidence": "high",
+            "fixability": "not_fixable"
+          }
+        },
+        {
+          "id": "metadata.title.present",
+          "title": "Title present",
+          "explanation": "Raw title: MonGuide FODMAP - Votre guide alimentaire personnalisé",
+          "whyItMatters": "This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.",
+          "userSeverity": "ready",
+          "technicalSeverity": "passed",
+          "sourceCheckIds": [
+            "metadata.title.present"
+          ],
+          "developerDetails": {
+            "rawTitle": "Title present",
+            "rawDescription": "Raw title: MonGuide FODMAP - Votre guide alimentaire personnalisé",
+            "category": "metadata",
+            "confidence": "high",
+            "fixability": "not_fixable"
+          }
+        },
+        {
+          "id": "metadata.description.present",
+          "title": "Meta description present",
+          "explanation": "Raw meta description is present.",
+          "whyItMatters": "This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.",
+          "userSeverity": "ready",
+          "technicalSeverity": "passed",
+          "sourceCheckIds": [
+            "metadata.description.present"
+          ],
+          "developerDetails": {
+            "rawTitle": "Meta description present",
+            "rawDescription": "Raw meta description is present.",
+            "category": "metadata",
+            "confidence": "high",
+            "fixability": "not_fixable"
+          }
+        },
+        {
+          "id": "metadata.robots.indexable",
+          "title": "Page is not marked noindex",
+          "explanation": "No noindex robots meta directive was detected.",
+          "whyItMatters": "This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.",
+          "userSeverity": "ready",
+          "technicalSeverity": "passed",
+          "sourceCheckIds": [
+            "metadata.robots.indexable"
+          ],
+          "developerDetails": {
+            "rawTitle": "Page is not marked noindex",
+            "rawDescription": "No noindex robots meta directive was detected.",
+            "category": "crawlability",
+            "confidence": "high",
+            "fixability": "not_fixable"
+          }
+        },
+        {
+          "id": "metadata.lang.present",
+          "title": "HTML lang attribute present",
+          "explanation": "fr",
+          "whyItMatters": "This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.",
+          "userSeverity": "ready",
+          "technicalSeverity": "passed",
+          "sourceCheckIds": [
+            "metadata.lang.present"
+          ],
+          "developerDetails": {
+            "rawTitle": "HTML lang attribute present",
+            "rawDescription": "fr",
+            "category": "metadata",
+            "confidence": "high",
+            "fixability": "not_fixable"
+          }
+        },
+        {
+          "id": "metadata.viewport.present",
+          "title": "Viewport present",
+          "explanation": "width=device-width, initial-scale=1.0",
+          "whyItMatters": "This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.",
+          "userSeverity": "ready",
+          "technicalSeverity": "passed",
+          "sourceCheckIds": [
+            "metadata.viewport.present"
+          ],
+          "developerDetails": {
+            "rawTitle": "Viewport present",
+            "rawDescription": "width=device-width, initial-scale=1.0",
+            "category": "metadata",
+            "confidence": "high",
+            "fixability": "not_fixable"
+          }
+        },
+        {
+          "id": "social.og.title_present",
+          "title": "og:title present",
+          "explanation": "MonGuide FODMAP - Guide alimentaire personnalisé",
+          "whyItMatters": "This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.",
+          "userSeverity": "ready",
+          "technicalSeverity": "passed",
+          "sourceCheckIds": [
+            "social.og.title_present"
+          ],
+          "developerDetails": {
+            "rawTitle": "og:title present",
+            "rawDescription": "MonGuide FODMAP - Guide alimentaire personnalisé",
+            "category": "social",
+            "confidence": "high",
+            "fixability": "not_fixable"
+          }
+        },
+        {
+          "id": "social.og.description_present",
+          "title": "og:description present",
+          "explanation": "Open Graph description is present.",
+          "whyItMatters": "This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.",
+          "userSeverity": "ready",
+          "technicalSeverity": "passed",
+          "sourceCheckIds": [
+            "social.og.description_present"
+          ],
+          "developerDetails": {
+            "rawTitle": "og:description present",
+            "rawDescription": "Open Graph description is present.",
+            "category": "social",
+            "confidence": "high",
+            "fixability": "not_fixable"
+          }
+        },
+        {
+          "id": "social.og.image_present",
+          "title": "og:image present",
+          "explanation": "https://mon-guide-fodmap.com/og-image.png",
+          "whyItMatters": "This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.",
+          "userSeverity": "ready",
+          "technicalSeverity": "passed",
+          "sourceCheckIds": [
+            "social.og.image_present"
+          ],
+          "developerDetails": {
+            "rawTitle": "og:image present",
+            "rawDescription": "https://mon-guide-fodmap.com/og-image.png",
+            "category": "social",
+            "confidence": "high",
+            "fixability": "not_fixable"
+          }
+        },
+        {
+          "id": "social.og.type_present",
+          "title": "og:type present",
+          "explanation": "website",
+          "whyItMatters": "This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.",
+          "userSeverity": "ready",
+          "technicalSeverity": "passed",
+          "sourceCheckIds": [
+            "social.og.type_present"
+          ],
+          "developerDetails": {
+            "rawTitle": "og:type present",
+            "rawDescription": "website",
+            "category": "social",
+            "confidence": "high",
+            "fixability": "not_fixable"
+          }
+        },
+        {
+          "id": "social.twitter.card_present",
+          "title": "twitter:card present",
+          "explanation": "summary_large_image",
+          "whyItMatters": "This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.",
+          "userSeverity": "ready",
+          "technicalSeverity": "passed",
+          "sourceCheckIds": [
+            "social.twitter.card_present"
+          ],
+          "developerDetails": {
+            "rawTitle": "twitter:card present",
+            "rawDescription": "summary_large_image",
+            "category": "social",
+            "confidence": "high",
+            "fixability": "not_fixable"
+          }
+        },
+        {
+          "id": "social.twitter.title_present",
+          "title": "twitter:title present",
+          "explanation": "MonGuide FODMAP",
+          "whyItMatters": "This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.",
+          "userSeverity": "ready",
+          "technicalSeverity": "passed",
+          "sourceCheckIds": [
+            "social.twitter.title_present"
+          ],
+          "developerDetails": {
+            "rawTitle": "twitter:title present",
+            "rawDescription": "MonGuide FODMAP",
+            "category": "social",
+            "confidence": "high",
+            "fixability": "not_fixable"
+          }
+        },
+        {
+          "id": "social.twitter.description_present",
+          "title": "twitter:description present",
+          "explanation": "Twitter/X description is present.",
+          "whyItMatters": "This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.",
+          "userSeverity": "ready",
+          "technicalSeverity": "passed",
+          "sourceCheckIds": [
+            "social.twitter.description_present"
+          ],
+          "developerDetails": {
+            "rawTitle": "twitter:description present",
+            "rawDescription": "Twitter/X description is present.",
+            "category": "social",
+            "confidence": "high",
+            "fixability": "not_fixable"
+          }
+        },
+        {
+          "id": "crawl.robots_txt.found",
+          "title": "robots.txt found",
+          "explanation": "https://mon-guide-fodmap.com/robots.txt",
+          "whyItMatters": "This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.",
+          "userSeverity": "ready",
+          "technicalSeverity": "passed",
+          "sourceCheckIds": [
+            "crawl.robots_txt.found"
+          ],
+          "developerDetails": {
+            "rawTitle": "robots.txt found",
+            "rawDescription": "https://mon-guide-fodmap.com/robots.txt",
+            "category": "crawlability",
+            "confidence": "high",
+            "fixability": "not_fixable"
+          }
+        },
+        {
+          "id": "crawl.raw_render.consistent",
+          "title": "Key metadata present in raw HTML",
+          "explanation": "No render-only metadata fields were detected.",
+          "whyItMatters": "This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.",
+          "userSeverity": "ready",
+          "technicalSeverity": "passed",
+          "sourceCheckIds": [
+            "crawl.raw_render.consistent"
+          ],
+          "developerDetails": {
+            "rawTitle": "Key metadata present in raw HTML",
+            "rawDescription": "No render-only metadata fields were detected.",
+            "category": "crawlability",
+            "confidence": "high",
+            "fixability": "not_fixable"
+          }
+        }
+      ],
+      "optionalPolish": [
+        {
+          "id": "metadata.theme_color.missing",
+          "title": "Theme color is not set",
+          "explanation": "Optional theme-color metadata was not found in the initial HTML.",
+          "whyItMatters": "Add a theme-color meta tag if you want branded browser UI on supported surfaces.",
+          "userSeverity": "optional_polish",
+          "technicalSeverity": "info",
+          "sourceCheckIds": [
+            "metadata.theme_color.missing"
+          ],
+          "developerDetails": {
+            "rawTitle": "Theme color is not set",
+            "rawDescription": "Optional theme-color metadata was not found in the initial HTML.",
+            "category": "metadata",
+            "confidence": "high",
+            "fixability": "plan_only",
+            "recommendation": "Add a theme-color meta tag if you want branded browser UI on supported surfaces."
+          }
+        }
+      ]
+    },
+    "previews": {
+      "google": {
+        "title": "MonGuide FODMAP - Votre guide alimentaire personnalisé",
+        "url": "https://mon-guide-fodmap.com/",
+        "description": "Guide alimentaire personnalisé pour le régime FODMAP. Gérez vos intolérances spécifiques au syndrome de l'intestin irritable (SII).",
+        "missingFields": [],
+        "source": "raw"
+      },
+      "social": {
+        "title": "MonGuide FODMAP - Guide alimentaire personnalisé",
+        "description": "Guide alimentaire personnalisé pour le régime FODMAP. Gérez vos intolérances spécifiques au SII.",
+        "image": "https://mon-guide-fodmap.com/og-image.png",
+        "url": "https://mon-guide-fodmap.com/",
+        "missingFields": [],
+        "source": "raw"
+      },
+      "twitter": {
+        "card": "summary_large_image",
+        "title": "MonGuide FODMAP",
+        "description": "Votre guide alimentaire personnalisé pour le régime FODMAP",
+        "image": "https://mon-guide-fodmap.com/og-image.png",
+        "missingFields": [],
+        "source": "raw"
+      },
+      "crawlerView": {
+        "rawHtmlSummary": "Raw HTML includes title, description, language, 4 Open Graph field(s), 3 Twitter/X field(s), and 0 JSON-LD block(s).",
+        "renderedHtmlSummary": "Rendered HTML includes title, description, language, 4 Open Graph field(s), 3 Twitter/X field(s), and 0 JSON-LD block(s).",
+        "renderOnlyWarnings": []
+      }
+    },
+    "project": {
+      "detected": true,
+      "frameworkLabel": "Vite React",
+      "confidenceLabel": "good_match",
+      "explanation": "ShipReady detected Vite React from local project files.",
+      "importantFiles": [
+        "package.json",
+        "package-lock.json",
+        "bun.lockb",
+        "vite.config.ts",
+        "tsconfig.json",
+        "src/pages/",
+        "src/",
+        "public/",
+        "index.html",
+        "src/main.tsx",
+        "src/App.tsx",
+        "public/robots.txt"
+      ],
+      "supportedFixes": [
+        "Update static index.html metadata",
+        "Add static robots.txt",
+        "Add static sitemap.xml",
+        "Add JSON-LD fallback",
+        "Recommend React Helmet integration"
+      ],
+      "limitations": [
+        "File writing is disabled; use `shipready fix --dry-run` for supported patch previews.",
+        "This command is read-only and does not modify repository files.",
+        "Route-specific metadata in a Vite SPA may only appear after JavaScript rendering.",
+        "Future fixes may need to recommend prerendering or SSG instead of relying on JS-injected metadata for crawler visibility."
+      ]
+    },
+    "actionGroups": {
+      "safeToApply": [],
+      "needsReview": [
+        {
+          "id": "file.index.html",
+          "title": "Update index.html",
+          "explanation": "Add or update Vite app-shell fallback metadata. Add conservative WebSite JSON-LD for human review.",
+          "targetLabel": "index.html",
+          "affectsLiveSiteAfterDeploy": true,
+          "safety": "needs_review",
+          "canApplyInV1": false,
+          "reviewReason": "HTML, metadata, and config updates are outside the V1 write policy.",
+          "sourceActionIds": [
+            "vite_react.json_ld_review",
+            "vite_react.metadata_review"
+          ],
+          "developerDetails": {
+            "changeType": "update",
+            "risk": "medium",
+            "reviewStatus": "review_required",
+            "requiresHumanReview": true
+          }
+        },
+        {
+          "id": "file.public/sitemap.xml",
+          "title": "Create public/sitemap.xml",
+          "explanation": "Create a valid single-URL sitemap.xml preview.",
+          "targetLabel": "public/sitemap.xml",
+          "affectsLiveSiteAfterDeploy": true,
+          "safety": "needs_review",
+          "canApplyInV1": false,
+          "reviewReason": "Review status must be auto_candidate; dry-run status was review_required. Changes that require human review are not writable.",
+          "sourceActionIds": [
+            "vite_react.sitemap"
+          ],
+          "developerDetails": {
+            "changeType": "create",
+            "risk": "low",
+            "reviewStatus": "review_required",
+            "requiresHumanReview": true
+          }
+        },
+        {
+          "id": "skipped.vite_react.heading",
+          "title": "Review page heading structure",
+          "explanation": "The page should have one clear H1.",
+          "targetLabel": "src/main.tsx, src/App.tsx",
+          "affectsLiveSiteAfterDeploy": true,
+          "safety": "needs_review",
+          "canApplyInV1": false,
+          "reviewReason": "H1 review is a content change and requires human review.",
+          "sourceActionIds": [
+            "structure.h1.missing"
+          ],
+          "developerDetails": {
+            "reasonKind": "requires_more_information",
+            "risk": "medium",
+            "planAction": {
+              "id": "vite_react.heading",
+              "title": "Review page heading structure",
+              "description": "The page should have one clear H1.",
+              "sourceCheckIds": [
+                "structure.h1.missing"
+              ],
+              "category": "automated_with_review",
+              "priority": "medium",
+              "risk": "medium",
+              "confidence": "high",
+              "frameworkStrategy": "Locate the relevant page or component and make semantic/content changes with review.",
+              "targetFiles": [
+                "src/main.tsx",
+                "src/App.tsx"
+              ],
+              "targetLocations": [
+                "src/main.tsx",
+                "src/App.tsx"
+              ],
+              "futureAutomation": {
+                "canAutomate": true,
+                "requiresHumanReview": true,
+                "reason": "Content and accessibility text changes require human review for accuracy."
+              }
+            }
+          }
+        }
+      ],
+      "manualOnly": [],
+      "alreadyGood": [
+        {
+          "id": "crawl.status.ok",
+          "title": "Page returns HTTP success",
+          "explanation": "The audited URL returned a 2xx HTTP status.",
+          "whyItMatters": "This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.",
+          "userSeverity": "ready",
+          "technicalSeverity": "passed",
+          "sourceCheckIds": [
+            "crawl.status.ok"
+          ],
+          "developerDetails": {
+            "rawTitle": "Page returns HTTP success",
+            "rawDescription": "The audited URL returned a 2xx HTTP status.",
+            "category": "crawlability",
+            "confidence": "high",
+            "fixability": "not_fixable"
+          }
+        },
+        {
+          "id": "metadata.title.present",
+          "title": "Title present",
+          "explanation": "Raw title: MonGuide FODMAP - Votre guide alimentaire personnalisé",
+          "whyItMatters": "This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.",
+          "userSeverity": "ready",
+          "technicalSeverity": "passed",
+          "sourceCheckIds": [
+            "metadata.title.present"
+          ],
+          "developerDetails": {
+            "rawTitle": "Title present",
+            "rawDescription": "Raw title: MonGuide FODMAP - Votre guide alimentaire personnalisé",
+            "category": "metadata",
+            "confidence": "high",
+            "fixability": "not_fixable"
+          }
+        },
+        {
+          "id": "metadata.description.present",
+          "title": "Meta description present",
+          "explanation": "Raw meta description is present.",
+          "whyItMatters": "This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.",
+          "userSeverity": "ready",
+          "technicalSeverity": "passed",
+          "sourceCheckIds": [
+            "metadata.description.present"
+          ],
+          "developerDetails": {
+            "rawTitle": "Meta description present",
+            "rawDescription": "Raw meta description is present.",
+            "category": "metadata",
+            "confidence": "high",
+            "fixability": "not_fixable"
+          }
+        },
+        {
+          "id": "metadata.robots.indexable",
+          "title": "Page is not marked noindex",
+          "explanation": "No noindex robots meta directive was detected.",
+          "whyItMatters": "This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.",
+          "userSeverity": "ready",
+          "technicalSeverity": "passed",
+          "sourceCheckIds": [
+            "metadata.robots.indexable"
+          ],
+          "developerDetails": {
+            "rawTitle": "Page is not marked noindex",
+            "rawDescription": "No noindex robots meta directive was detected.",
+            "category": "crawlability",
+            "confidence": "high",
+            "fixability": "not_fixable"
+          }
+        },
+        {
+          "id": "metadata.lang.present",
+          "title": "HTML lang attribute present",
+          "explanation": "fr",
+          "whyItMatters": "This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.",
+          "userSeverity": "ready",
+          "technicalSeverity": "passed",
+          "sourceCheckIds": [
+            "metadata.lang.present"
+          ],
+          "developerDetails": {
+            "rawTitle": "HTML lang attribute present",
+            "rawDescription": "fr",
+            "category": "metadata",
+            "confidence": "high",
+            "fixability": "not_fixable"
+          }
+        },
+        {
+          "id": "metadata.viewport.present",
+          "title": "Viewport present",
+          "explanation": "width=device-width, initial-scale=1.0",
+          "whyItMatters": "This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.",
+          "userSeverity": "ready",
+          "technicalSeverity": "passed",
+          "sourceCheckIds": [
+            "metadata.viewport.present"
+          ],
+          "developerDetails": {
+            "rawTitle": "Viewport present",
+            "rawDescription": "width=device-width, initial-scale=1.0",
+            "category": "metadata",
+            "confidence": "high",
+            "fixability": "not_fixable"
+          }
+        },
+        {
+          "id": "social.og.title_present",
+          "title": "og:title present",
+          "explanation": "MonGuide FODMAP - Guide alimentaire personnalisé",
+          "whyItMatters": "This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.",
+          "userSeverity": "ready",
+          "technicalSeverity": "passed",
+          "sourceCheckIds": [
+            "social.og.title_present"
+          ],
+          "developerDetails": {
+            "rawTitle": "og:title present",
+            "rawDescription": "MonGuide FODMAP - Guide alimentaire personnalisé",
+            "category": "social",
+            "confidence": "high",
+            "fixability": "not_fixable"
+          }
+        },
+        {
+          "id": "social.og.description_present",
+          "title": "og:description present",
+          "explanation": "Open Graph description is present.",
+          "whyItMatters": "This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.",
+          "userSeverity": "ready",
+          "technicalSeverity": "passed",
+          "sourceCheckIds": [
+            "social.og.description_present"
+          ],
+          "developerDetails": {
+            "rawTitle": "og:description present",
+            "rawDescription": "Open Graph description is present.",
+            "category": "social",
+            "confidence": "high",
+            "fixability": "not_fixable"
+          }
+        },
+        {
+          "id": "social.og.image_present",
+          "title": "og:image present",
+          "explanation": "https://mon-guide-fodmap.com/og-image.png",
+          "whyItMatters": "This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.",
+          "userSeverity": "ready",
+          "technicalSeverity": "passed",
+          "sourceCheckIds": [
+            "social.og.image_present"
+          ],
+          "developerDetails": {
+            "rawTitle": "og:image present",
+            "rawDescription": "https://mon-guide-fodmap.com/og-image.png",
+            "category": "social",
+            "confidence": "high",
+            "fixability": "not_fixable"
+          }
+        },
+        {
+          "id": "social.og.type_present",
+          "title": "og:type present",
+          "explanation": "website",
+          "whyItMatters": "This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.",
+          "userSeverity": "ready",
+          "technicalSeverity": "passed",
+          "sourceCheckIds": [
+            "social.og.type_present"
+          ],
+          "developerDetails": {
+            "rawTitle": "og:type present",
+            "rawDescription": "website",
+            "category": "social",
+            "confidence": "high",
+            "fixability": "not_fixable"
+          }
+        },
+        {
+          "id": "social.twitter.card_present",
+          "title": "twitter:card present",
+          "explanation": "summary_large_image",
+          "whyItMatters": "This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.",
+          "userSeverity": "ready",
+          "technicalSeverity": "passed",
+          "sourceCheckIds": [
+            "social.twitter.card_present"
+          ],
+          "developerDetails": {
+            "rawTitle": "twitter:card present",
+            "rawDescription": "summary_large_image",
+            "category": "social",
+            "confidence": "high",
+            "fixability": "not_fixable"
+          }
+        },
+        {
+          "id": "social.twitter.title_present",
+          "title": "twitter:title present",
+          "explanation": "MonGuide FODMAP",
+          "whyItMatters": "This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.",
+          "userSeverity": "ready",
+          "technicalSeverity": "passed",
+          "sourceCheckIds": [
+            "social.twitter.title_present"
+          ],
+          "developerDetails": {
+            "rawTitle": "twitter:title present",
+            "rawDescription": "MonGuide FODMAP",
+            "category": "social",
+            "confidence": "high",
+            "fixability": "not_fixable"
+          }
+        },
+        {
+          "id": "social.twitter.description_present",
+          "title": "twitter:description present",
+          "explanation": "Twitter/X description is present.",
+          "whyItMatters": "This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.",
+          "userSeverity": "ready",
+          "technicalSeverity": "passed",
+          "sourceCheckIds": [
+            "social.twitter.description_present"
+          ],
+          "developerDetails": {
+            "rawTitle": "twitter:description present",
+            "rawDescription": "Twitter/X description is present.",
+            "category": "social",
+            "confidence": "high",
+            "fixability": "not_fixable"
+          }
+        },
+        {
+          "id": "crawl.robots_txt.found",
+          "title": "robots.txt found",
+          "explanation": "https://mon-guide-fodmap.com/robots.txt",
+          "whyItMatters": "This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.",
+          "userSeverity": "ready",
+          "technicalSeverity": "passed",
+          "sourceCheckIds": [
+            "crawl.robots_txt.found"
+          ],
+          "developerDetails": {
+            "rawTitle": "robots.txt found",
+            "rawDescription": "https://mon-guide-fodmap.com/robots.txt",
+            "category": "crawlability",
+            "confidence": "high",
+            "fixability": "not_fixable"
+          }
+        },
+        {
+          "id": "crawl.raw_render.consistent",
+          "title": "Key metadata present in raw HTML",
+          "explanation": "No render-only metadata fields were detected.",
+          "whyItMatters": "This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.",
+          "userSeverity": "ready",
+          "technicalSeverity": "passed",
+          "sourceCheckIds": [
+            "crawl.raw_render.consistent"
+          ],
+          "developerDetails": {
+            "rawTitle": "Key metadata present in raw HTML",
+            "rawDescription": "No render-only metadata fields were detected.",
+            "category": "crawlability",
+            "confidence": "high",
+            "fixability": "not_fixable"
+          }
+        }
+      ],
+      "optionalPolish": [
+        {
+          "id": "metadata.theme_color.missing",
+          "title": "Theme color is not set",
+          "explanation": "Optional theme-color metadata was not found in the initial HTML.",
+          "whyItMatters": "Add a theme-color meta tag if you want branded browser UI on supported surfaces.",
+          "userSeverity": "optional_polish",
+          "technicalSeverity": "info",
+          "sourceCheckIds": [
+            "metadata.theme_color.missing"
+          ],
+          "developerDetails": {
+            "rawTitle": "Theme color is not set",
+            "rawDescription": "Optional theme-color metadata was not found in the initial HTML.",
+            "category": "metadata",
+            "confidence": "high",
+            "fixability": "plan_only",
+            "recommendation": "Add a theme-color meta tag if you want branded browser UI on supported surfaces."
+          }
+        }
+      ]
+    },
+    "patchPreview": {
+      "hasPreview": true,
+      "fileChanges": [
+        {
+          "path": "index.html",
+          "changeType": "update",
+          "title": "Update index.html",
+          "risk": "medium",
+          "reviewStatus": "review_required",
+          "eligibleForWrite": false,
+          "writePolicy": "creation_only_robots_sitemap_v1",
+          "writeBlockReason": "HTML, metadata, and config updates are outside the V1 write policy.",
+          "sourceActionIds": [
+            "vite_react.json_ld_review",
+            "vite_react.metadata_review"
+          ],
+          "diff": "--- index.html\n+++ index.html\n@@ -15,6 +15,19 @@\n     <meta name=\"twitter:card\" content=\"summary_large_image\" />\n     <meta name=\"twitter:title\" content=\"MonGuide FODMAP\" />\n     <meta name=\"twitter:description\" content=\"Votre guide alimentaire personnalisé pour le régime FODMAP\" />\n+    <link rel=\"canonical\" href=\"https://mon-guide-fodmap.com/\" />\n+    <meta property=\"og:url\" content=\"https://mon-guide-fodmap.com/\" />\n+    <!-- TODO(shipready): Replace with an absolute public Twitter/X image URL. -->\n+    <meta name=\"twitter:image\" content=\"TODO: Absolute image URL\" />\n+    <!-- TODO(shipready): Confirm this structured data before applying. -->\n+    <script type=\"application/ld+json\">\n+      {\n+        \"@context\": \"https://schema.org\",\n+        \"@type\": \"WebSite\",\n+        \"name\": \"MonGuide FODMAP - Votre guide alimentaire personnalisé\",\n+        \"url\": \"https://mon-guide-fodmap.com/\"\n+      }\n+    </script>\n   </head>\n \n   <body>"
+        },
+        {
+          "path": "public/sitemap.xml",
+          "changeType": "create",
+          "title": "Create public/sitemap.xml",
+          "risk": "low",
+          "reviewStatus": "review_required",
+          "eligibleForWrite": false,
+          "writePolicy": "creation_only_robots_sitemap_v1",
+          "writeBlockReason": "Review status must be auto_candidate; dry-run status was review_required. Changes that require human review are not writable.",
+          "sourceActionIds": [
+            "vite_react.sitemap"
+          ],
+          "diff": "--- /dev/null\n+++ public/sitemap.xml\n@@\n+<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n+<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n+  <url>\n+    <loc>https://mon-guide-fodmap.com/</loc>\n+  </url>\n+</urlset>\n+"
+        }
+      ],
+      "skippedActions": [
+        {
+          "title": "Review page heading structure",
+          "reason": "H1 review is a content change and requires human review."
+        }
+      ]
+    },
+    "safeApply": {
+      "available": false,
+      "buttonLabel": "No safe automatic fixes",
+      "explanation": "No dry-run file change currently qualifies for V1 safe apply.",
+      "eligibleFiles": [],
+      "blockedFiles": [
+        {
+          "path": "index.html",
+          "reason": "HTML, metadata, and config updates are outside the V1 write policy."
+        },
+        {
+          "path": "public/sitemap.xml",
+          "reason": "Review status must be auto_candidate; dry-run status was review_required. Changes that require human review are not writable."
+        }
+      ],
+      "policy": "creation_only_robots_sitemap_v1",
+      "safetyNotes": [
+        "This ui-report command never writes files.",
+        "V1 safe apply is limited to creation-only robots/sitemap files.",
+        "ShipReady will not overwrite existing files in V1 safe apply.",
+        "ShipReady will not edit metadata, JSON-LD, page content, package files, or configuration in V1 safe apply.",
+        "ShipReady will not run Git operations, create commits, push, or deploy.",
+        "Dry-run only. No files were modified.",
+        "This is fallback metadata for the app shell. Route-specific metadata may require prerendering, SSR, or a later framework-specific strategy.",
+        "Review generated changes before applying.",
+        "TODO placeholder metadata is for preview only and must be replaced before any future write.",
+        "JSON-LD previews use only conservative WebSite schema and require human confirmation."
+      ]
+    },
+    "liveVsLocal": {
+      "localChangesAffectLiveSite": false,
+      "deploymentRequired": true,
+      "message": "Local changes will not affect the live site until this repository is deployed and the URL is re-checked."
+    },
+    "errors": [],
+    "developerDetails": {
+      "rawAudit": {
+        "url": "https://mon-guide-fodmap.com/",
+        "finalUrl": "https://mon-guide-fodmap.com/",
+        "auditedAt": "2026-06-16T21:31:04.634Z",
+        "httpStatus": 200,
+        "score": 60,
+        "status": "needs_work",
+        "raw": {
+          "source": "raw",
+          "url": "https://mon-guide-fodmap.com/",
+          "metadata": {
+            "htmlLang": "fr",
+            "title": "MonGuide FODMAP - Votre guide alimentaire personnalisé",
+            "description": "Guide alimentaire personnalisé pour le régime FODMAP. Gérez vos intolérances spécifiques au syndrome de l'intestin irritable (SII).",
+            "viewport": "width=device-width, initial-scale=1.0",
+            "faviconLinks": [],
+            "openGraph": {
+              "title": "MonGuide FODMAP - Guide alimentaire personnalisé",
+              "description": "Guide alimentaire personnalisé pour le régime FODMAP. Gérez vos intolérances spécifiques au SII.",
+              "image": "https://mon-guide-fodmap.com/og-image.png",
+              "type": "website"
+            },
+            "twitter": {
+              "card": "summary_large_image",
+              "title": "MonGuide FODMAP",
+              "description": "Votre guide alimentaire personnalisé pour le régime FODMAP"
+            }
+          },
+          "headings": {
+            "h1": [],
+            "all": []
+          },
+          "images": {
+            "total": 0,
+            "missingAlt": 0,
+            "items": []
+          },
+          "links": {
+            "total": 0,
+            "missingAccessibleText": 0,
+            "items": []
+          },
+          "jsonLd": []
+        },
+        "rendered": {
+          "source": "rendered",
+          "url": "https://mon-guide-fodmap.com/",
+          "metadata": {
+            "htmlLang": "fr",
+            "title": "MonGuide FODMAP - Votre guide alimentaire personnalisé",
+            "description": "Guide alimentaire personnalisé pour le régime FODMAP. Gérez vos intolérances spécifiques au syndrome de l'intestin irritable (SII).",
+            "viewport": "width=device-width, initial-scale=1.0",
+            "faviconLinks": [],
+            "openGraph": {
+              "title": "MonGuide FODMAP - Guide alimentaire personnalisé",
+              "description": "Guide alimentaire personnalisé pour le régime FODMAP. Gérez vos intolérances spécifiques au SII.",
+              "image": "https://mon-guide-fodmap.com/og-image.png",
+              "type": "website"
+            },
+            "twitter": {
+              "card": "summary_large_image",
+              "title": "MonGuide FODMAP",
+              "description": "Votre guide alimentaire personnalisé pour le régime FODMAP"
+            }
+          },
+          "headings": {
+            "h1": [
+              "MonGuide FODMAP"
+            ],
+            "all": [
+              {
+                "level": 1,
+                "text": "MonGuide FODMAP"
+              },
+              {
+                "level": 2,
+                "text": "Qu'est-ce que les FODMAPs ?"
+              },
+              {
+                "level": 2,
+                "text": "Comment ça marche"
+              },
+              {
+                "level": 3,
+                "text": "Configurez votre profil"
+              },
+              {
+                "level": 3,
+                "text": "Recherchez et explorez"
+              },
+              {
+                "level": 3,
+                "text": "Mangez en confiance"
+              },
+              {
+                "level": 2,
+                "text": "Cette application est pour vous si..."
+              },
+              {
+                "level": 2,
+                "text": "Avertissement Important"
+              },
+              {
+                "level": 2,
+                "text": "Prêt à commencer ?"
+              },
+              {
+                "level": 3,
+                "text": "Informations Légales"
+              },
+              {
+                "level": 3,
+                "text": "Sources de Données"
+              },
+              {
+                "level": 3,
+                "text": "Contact"
+              }
+            ]
+          },
+          "images": {
+            "total": 0,
+            "missingAlt": 0,
+            "items": []
+          },
+          "links": {
+            "total": 5,
+            "missingAccessibleText": 0,
+            "items": [
+              {
+                "href": "/legal",
+                "text": "Mentions Légales & Avertissements"
+              },
+              {
+                "href": "/about",
+                "text": "À Propos"
+              },
+              {
+                "href": "https://www.monashfodmap.com/",
+                "text": "Monash University"
+              },
+              {
+                "href": "https://www.linkedin.com/in/hernandez-jade/",
+                "text": "LinkedIn"
+              },
+              {
+                "href": "https://github.com/jade-hernandez/guide-monf",
+                "text": "Voir sur GitHub"
+              }
+            ]
+          },
+          "jsonLd": []
+        },
+        "comparison": {
+          "fields": [
+            {
+              "field": "title",
+              "rawValue": "MonGuide FODMAP - Votre guide alimentaire personnalisé",
+              "renderedValue": "MonGuide FODMAP - Votre guide alimentaire personnalisé",
+              "status": "present_in_raw"
+            },
+            {
+              "field": "description",
+              "rawValue": "Guide alimentaire personnalisé pour le régime FODMAP. Gérez vos intolérances spécifiques au syndrome de l'intestin irritable (SII).",
+              "renderedValue": "Guide alimentaire personnalisé pour le régime FODMAP. Gérez vos intolérances spécifiques au syndrome de l'intestin irritable (SII).",
+              "status": "present_in_raw"
+            },
+            {
+              "field": "canonical",
+              "status": "missing_in_both"
+            },
+            {
+              "field": "robots",
+              "status": "missing_in_both"
+            },
+            {
+              "field": "html.lang",
+              "rawValue": "fr",
+              "renderedValue": "fr",
+              "status": "present_in_raw"
+            },
+            {
+              "field": "viewport",
+              "rawValue": "width=device-width, initial-scale=1.0",
+              "renderedValue": "width=device-width, initial-scale=1.0",
+              "status": "present_in_raw"
+            },
+            {
+              "field": "theme-color",
+              "status": "missing_in_both"
+            },
+            {
+              "field": "favicon",
+              "status": "missing_in_both"
+            },
+            {
+              "field": "og:title",
+              "rawValue": "MonGuide FODMAP - Guide alimentaire personnalisé",
+              "renderedValue": "MonGuide FODMAP - Guide alimentaire personnalisé",
+              "status": "present_in_raw"
+            },
+            {
+              "field": "og:description",
+              "rawValue": "Guide alimentaire personnalisé pour le régime FODMAP. Gérez vos intolérances spécifiques au SII.",
+              "renderedValue": "Guide alimentaire personnalisé pour le régime FODMAP. Gérez vos intolérances spécifiques au SII.",
+              "status": "present_in_raw"
+            },
+            {
+              "field": "og:image",
+              "rawValue": "https://mon-guide-fodmap.com/og-image.png",
+              "renderedValue": "https://mon-guide-fodmap.com/og-image.png",
+              "status": "present_in_raw"
+            },
+            {
+              "field": "og:url",
+              "status": "missing_in_both"
+            },
+            {
+              "field": "og:type",
+              "rawValue": "website",
+              "renderedValue": "website",
+              "status": "present_in_raw"
+            },
+            {
+              "field": "og:site_name",
+              "status": "missing_in_both"
+            },
+            {
+              "field": "twitter:card",
+              "rawValue": "summary_large_image",
+              "renderedValue": "summary_large_image",
+              "status": "present_in_raw"
+            },
+            {
+              "field": "twitter:title",
+              "rawValue": "MonGuide FODMAP",
+              "renderedValue": "MonGuide FODMAP",
+              "status": "present_in_raw"
+            },
+            {
+              "field": "twitter:description",
+              "rawValue": "Votre guide alimentaire personnalisé pour le régime FODMAP",
+              "renderedValue": "Votre guide alimentaire personnalisé pour le régime FODMAP",
+              "status": "present_in_raw"
+            },
+            {
+              "field": "twitter:image",
+              "status": "missing_in_both"
+            }
+          ]
+        },
+        "checks": [
+          {
+            "id": "crawl.status.ok",
+            "category": "crawlability",
+            "severity": "passed",
+            "title": "Page returns HTTP success",
+            "description": "The audited URL returned a 2xx HTTP status.",
+            "confidence": "high",
+            "fixability": "not_fixable"
+          },
+          {
+            "id": "metadata.title.present",
+            "category": "metadata",
+            "severity": "passed",
+            "title": "Title present",
+            "description": "Raw title: MonGuide FODMAP - Votre guide alimentaire personnalisé",
+            "confidence": "high",
+            "fixability": "not_fixable"
+          },
+          {
+            "id": "metadata.description.present",
+            "category": "metadata",
+            "severity": "passed",
+            "title": "Meta description present",
+            "description": "Raw meta description is present.",
+            "confidence": "high",
+            "fixability": "not_fixable"
+          },
+          {
+            "id": "metadata.canonical.missing",
+            "category": "metadata",
+            "severity": "critical",
+            "title": "Missing canonical URL",
+            "description": "The raw HTML does not include a canonical link.",
+            "recommendation": "Add a canonical link that points to the preferred public URL for this page.",
+            "confidence": "high",
+            "fixability": "auto_fixable",
+            "fixStrategy": "Add a canonical link in the page head or framework metadata config."
+          },
+          {
+            "id": "metadata.robots.indexable",
+            "category": "crawlability",
+            "severity": "passed",
+            "title": "Page is not marked noindex",
+            "description": "No noindex robots meta directive was detected.",
+            "confidence": "high",
+            "fixability": "not_fixable"
+          },
+          {
+            "id": "metadata.lang.present",
+            "category": "metadata",
+            "severity": "passed",
+            "title": "HTML lang attribute present",
+            "description": "fr",
+            "confidence": "high",
+            "fixability": "not_fixable"
+          },
+          {
+            "id": "metadata.viewport.present",
+            "category": "metadata",
+            "severity": "passed",
+            "title": "Viewport present",
+            "description": "width=device-width, initial-scale=1.0",
+            "confidence": "high",
+            "fixability": "not_fixable"
+          },
+          {
+            "id": "metadata.theme_color.missing",
+            "category": "metadata",
+            "severity": "info",
+            "title": "Theme color is not set",
+            "description": "Optional theme-color metadata was not found in the initial HTML.",
+            "recommendation": "Add a theme-color meta tag if you want branded browser UI on supported surfaces.",
+            "confidence": "high",
+            "fixability": "plan_only"
+          },
+          {
+            "id": "metadata.favicon.missing",
+            "category": "metadata",
+            "severity": "warning",
+            "title": "No favicon links found",
+            "description": "Favicons and app icons help the site look complete in tabs, bookmarks, and device surfaces.",
+            "confidence": "high",
+            "fixability": "plan_only"
+          },
+          {
+            "id": "social.og.title_present",
+            "category": "social",
+            "severity": "passed",
+            "title": "og:title present",
+            "description": "MonGuide FODMAP - Guide alimentaire personnalisé",
+            "confidence": "high",
+            "fixability": "not_fixable"
+          },
+          {
+            "id": "social.og.description_present",
+            "category": "social",
+            "severity": "passed",
+            "title": "og:description present",
+            "description": "Open Graph description is present.",
+            "confidence": "high",
+            "fixability": "not_fixable"
+          },
+          {
+            "id": "social.og.image_present",
+            "category": "social",
+            "severity": "passed",
+            "title": "og:image present",
+            "description": "https://mon-guide-fodmap.com/og-image.png",
+            "confidence": "high",
+            "fixability": "not_fixable"
+          },
+          {
+            "id": "social.og.url_missing",
+            "category": "social",
+            "severity": "warning",
+            "title": "Missing og:url",
+            "description": "Open Graph metadata should include the canonical page URL.",
+            "confidence": "high",
+            "fixability": "plan_only"
+          },
+          {
+            "id": "social.og.type_present",
+            "category": "social",
+            "severity": "passed",
+            "title": "og:type present",
+            "description": "website",
+            "confidence": "high",
+            "fixability": "not_fixable"
+          },
+          {
+            "id": "social.twitter.card_present",
+            "category": "social",
+            "severity": "passed",
+            "title": "twitter:card present",
+            "description": "summary_large_image",
+            "confidence": "high",
+            "fixability": "not_fixable"
+          },
+          {
+            "id": "social.twitter.title_present",
+            "category": "social",
+            "severity": "passed",
+            "title": "twitter:title present",
+            "description": "MonGuide FODMAP",
+            "confidence": "high",
+            "fixability": "not_fixable"
+          },
+          {
+            "id": "social.twitter.description_present",
+            "category": "social",
+            "severity": "passed",
+            "title": "twitter:description present",
+            "description": "Twitter/X description is present.",
+            "confidence": "high",
+            "fixability": "not_fixable"
+          },
+          {
+            "id": "social.twitter.image_missing",
+            "category": "social",
+            "severity": "warning",
+            "title": "Missing twitter:image",
+            "description": "Twitter/X cards should include an image when possible.",
+            "confidence": "high",
+            "fixability": "plan_only"
+          },
+          {
+            "id": "schema.jsonld.missing",
+            "category": "schema",
+            "severity": "critical",
+            "title": "No JSON-LD detected",
+            "description": "No structured data script tags were found in the raw HTML.",
+            "recommendation": "Add conservative, factual JSON-LD such as WebSite or Organization when appropriate.",
+            "confidence": "high",
+            "fixability": "plan_only"
+          },
+          {
+            "id": "structure.h1.missing",
+            "category": "structure",
+            "severity": "warning",
+            "title": "No H1 found",
+            "description": "The page should have one clear H1.",
+            "confidence": "high",
+            "fixability": "plan_only"
+          },
+          {
+            "id": "crawl.robots_txt.found",
+            "category": "crawlability",
+            "severity": "passed",
+            "title": "robots.txt found",
+            "description": "https://mon-guide-fodmap.com/robots.txt",
+            "confidence": "high",
+            "fixability": "not_fixable"
+          },
+          {
+            "id": "crawl.sitemap.invalid",
+            "category": "crawlability",
+            "severity": "warning",
+            "title": "sitemap.xml is not a valid sitemap",
+            "description": "The sitemap.xml URL returned a success response, but the body did not look like an XML sitemap.",
+            "evidence": {
+              "url": "https://mon-guide-fodmap.com/sitemap.xml",
+              "statusCode": 200,
+              "error": "Response did not look like an XML sitemap."
+            },
+            "confidence": "high",
+            "fixability": "plan_only"
+          },
+          {
+            "id": "crawl.raw_render.consistent",
+            "category": "crawlability",
+            "severity": "passed",
+            "title": "Key metadata present in raw HTML",
+            "description": "No render-only metadata fields were detected.",
+            "confidence": "high",
+            "fixability": "not_fixable"
+          }
+        ],
+        "resources": {
+          "robotsTxt": {
+            "url": "https://mon-guide-fodmap.com/robots.txt",
+            "finalUrl": "https://mon-guide-fodmap.com/robots.txt",
+            "exists": true,
+            "ok": true,
+            "statusCode": 200,
+            "blocksPage": false
+          },
+          "sitemapXml": {
+            "url": "https://mon-guide-fodmap.com/sitemap.xml",
+            "finalUrl": "https://mon-guide-fodmap.com/sitemap.xml",
+            "exists": false,
+            "ok": false,
+            "statusCode": 200,
+            "error": "Response did not look like an XML sitemap.",
+            "includesAuditedUrl": false
+          }
+        }
+      },
+      "rawRepoInspection": {
+        "path": "/Users/fabiencampana/Documents/jade/mon-guide-fodmap-2",
+        "inspectedAt": "2026-06-16T21:31:03.712Z",
+        "packageManager": "npm",
+        "framework": {
+          "id": "vite_react",
+          "name": "Vite React",
+          "confidence": "high",
+          "evidence": [
+            {
+              "kind": "package_dependency",
+              "path": "package.json",
+              "value": "package.json includes dependency \"vite\"",
+              "weight": "strong"
+            },
+            {
+              "kind": "package_dependency",
+              "path": "package.json",
+              "value": "package.json includes dependency \"react\"",
+              "weight": "weak"
+            },
+            {
+              "kind": "package_dependency",
+              "path": "package.json",
+              "value": "package.json includes dependency \"react-router-dom\"",
+              "weight": "weak"
+            },
+            {
+              "kind": "file",
+              "path": "vite.config.ts",
+              "value": "Vite config found",
+              "weight": "medium"
+            },
+            {
+              "kind": "file",
+              "path": "index.html",
+              "value": "Vite root index.html found",
+              "weight": "medium"
+            },
+            {
+              "kind": "file",
+              "path": "src/main.tsx",
+              "value": "React entry file found",
+              "weight": "medium"
+            },
+            {
+              "kind": "file",
+              "path": "src/App.tsx",
+              "value": "React app component found",
+              "weight": "weak"
+            }
+          ]
+        },
+        "importantFiles": [
+          {
+            "path": "package.json",
+            "kind": "package_file",
+            "reason": "Project package manifest"
+          },
+          {
+            "path": "package-lock.json",
+            "kind": "lockfile",
+            "reason": "Package manager lockfile"
+          },
+          {
+            "path": "bun.lockb",
+            "kind": "lockfile",
+            "reason": "Package manager lockfile"
+          },
+          {
+            "path": "vite.config.ts",
+            "kind": "config_file",
+            "reason": "Framework or TypeScript config"
+          },
+          {
+            "path": "tsconfig.json",
+            "kind": "config_file",
+            "reason": "Framework or TypeScript config"
+          },
+          {
+            "path": "src/pages/",
+            "kind": "directory",
+            "reason": "Important project directory"
+          },
+          {
+            "path": "src/",
+            "kind": "directory",
+            "reason": "Important project directory"
+          },
+          {
+            "path": "public/",
+            "kind": "directory",
+            "reason": "Important project directory"
+          },
+          {
+            "path": "index.html",
+            "kind": "metadata_file",
+            "reason": "Vite React entry file"
+          },
+          {
+            "path": "src/main.tsx",
+            "kind": "source_file",
+            "reason": "Vite React entry file"
+          },
+          {
+            "path": "src/App.tsx",
+            "kind": "source_file",
+            "reason": "Vite React entry file"
+          },
+          {
+            "path": "public/robots.txt",
+            "kind": "public_asset",
+            "reason": "Crawlability asset"
+          }
+        ],
+        "routes": [
+          {
+            "path": "src/main.tsx",
+            "kind": "app_entry",
+            "confidence": "low",
+            "reason": "SPA entry or root component; route-to-URL mapping requires source review"
+          },
+          {
+            "path": "src/App.tsx",
+            "kind": "app_entry",
+            "confidence": "low",
+            "reason": "SPA entry or root component; route-to-URL mapping requires source review"
+          }
+        ],
+        "metadataLocations": [
+          {
+            "path": "index.html",
+            "kind": "file",
+            "exists": true,
+            "reason": "Static fallback metadata for the SPA shell"
+          },
+          {
+            "path": "src/App.tsx",
+            "kind": "file",
+            "exists": true,
+            "reason": "App-level component or entry point"
+          },
+          {
+            "path": "src/main.tsx",
+            "kind": "file",
+            "exists": true,
+            "reason": "App-level component or entry point"
+          },
+          {
+            "path": "public/robots.txt",
+            "kind": "file",
+            "exists": true,
+            "reason": "Static robots file"
+          },
+          {
+            "path": "public/sitemap.xml",
+            "kind": "file",
+            "exists": false,
+            "reason": "Static sitemap file"
+          }
+        ],
+        "supportedFixes": [
+          {
+            "id": "vite.index_html_metadata",
+            "title": "Update static index.html metadata",
+            "description": "Improve fallback metadata in index.html.",
+            "safety": "review_required"
+          },
+          {
+            "id": "vite.robots_txt",
+            "title": "Add static robots.txt",
+            "description": "Add public/robots.txt.",
+            "safety": "review_required"
+          },
+          {
+            "id": "vite.sitemap_xml",
+            "title": "Add static sitemap.xml",
+            "description": "Add public/sitemap.xml.",
+            "safety": "review_required"
+          },
+          {
+            "id": "vite.json_ld_fallback",
+            "title": "Add JSON-LD fallback",
+            "description": "Add static JSON-LD where it accurately describes the app shell.",
+            "safety": "review_required"
+          },
+          {
+            "id": "vite.helmet_future",
+            "title": "Recommend React Helmet integration",
+            "description": "Plan a route-aware metadata strategy when client-side routes need distinct metadata.",
+            "safety": "review_required"
+          }
+        ],
+        "limitations": [
+          "File writing is disabled; use `shipready fix --dry-run` for supported patch previews.",
+          "This command is read-only and does not modify repository files.",
+          "Route-specific metadata in a Vite SPA may only appear after JavaScript rendering.",
+          "Future fixes may need to recommend prerendering or SSG instead of relying on JS-injected metadata for crawler visibility."
+        ],
+        "warnings": []
+      },
+      "rawFixPlan": {
+        "url": "https://mon-guide-fodmap.com/",
+        "repoPath": "/Users/fabiencampana/Documents/jade/mon-guide-fodmap-2",
+        "plannedAt": "2026-06-16T21:31:04.634Z",
+        "auditSummary": {
+          "score": 60,
+          "status": "needs_work",
+          "criticalCount": 2,
+          "warningCount": 5,
+          "noteCount": 1
+        },
+        "repoSummary": {
+          "frameworkId": "vite_react",
+          "frameworkName": "Vite React",
+          "confidence": "high",
+          "packageManager": "npm"
+        },
+        "actions": [
+          {
+            "id": "vite_react.metadata_review",
+            "title": "Add fallback metadata to index.html",
+            "description": "Add missing metadata in the framework's server-visible metadata surface.",
+            "sourceCheckIds": [
+              "metadata.canonical.missing",
+              "metadata.favicon.missing",
+              "social.og.url_missing",
+              "social.twitter.image_missing"
+            ],
+            "category": "automated_with_review",
+            "priority": "critical",
+            "risk": "medium",
+            "confidence": "high",
+            "frameworkStrategy": "Update index.html for crawler-visible fallback metadata; route-specific metadata may need prerendering or SSR.",
+            "targetFiles": [
+              "index.html",
+              "src/App.tsx",
+              "src/main.tsx",
+              "public/robots.txt"
+            ],
+            "targetLocations": [
+              "index.html",
+              "src/App.tsx",
+              "src/main.tsx",
+              "public/robots.txt",
+              "public/sitemap.xml"
+            ],
+            "futureAutomation": {
+              "canAutomate": true,
+              "requiresHumanReview": true,
+              "reason": "Metadata changes affect production copy and crawler/share-preview signals, so generated changes should be reviewed."
+            }
+          },
+          {
+            "id": "vite_react.json_ld_review",
+            "title": "Add JSON-LD with review",
+            "description": "Add or fix conservative structured data only after confirming schema type and business facts.",
+            "sourceCheckIds": [
+              "schema.jsonld.missing"
+            ],
+            "category": "automated_with_review",
+            "priority": "critical",
+            "risk": "medium",
+            "confidence": "high",
+            "frameworkStrategy": "Add static JSON-LD only when it accurately describes the app shell.",
+            "targetFiles": [
+              "index.html",
+              "src/App.tsx",
+              "src/main.tsx",
+              "public/robots.txt"
+            ],
+            "targetLocations": [
+              "index.html",
+              "src/App.tsx",
+              "src/main.tsx",
+              "public/robots.txt",
+              "public/sitemap.xml"
+            ],
+            "futureAutomation": {
+              "canAutomate": true,
+              "requiresHumanReview": true,
+              "reason": "Structured data must be factually accurate; ShipReady should not invent schema facts without review."
+            }
+          },
+          {
+            "id": "vite_react.heading",
+            "title": "Review page heading structure",
+            "description": "The page should have one clear H1.",
+            "sourceCheckIds": [
+              "structure.h1.missing"
+            ],
+            "category": "automated_with_review",
+            "priority": "medium",
+            "risk": "medium",
+            "confidence": "high",
+            "frameworkStrategy": "Locate the relevant page or component and make semantic/content changes with review.",
+            "targetFiles": [
+              "src/main.tsx",
+              "src/App.tsx"
+            ],
+            "targetLocations": [
+              "src/main.tsx",
+              "src/App.tsx"
+            ],
+            "futureAutomation": {
+              "canAutomate": true,
+              "requiresHumanReview": true,
+              "reason": "Content and accessibility text changes require human review for accuracy."
+            }
+          },
+          {
+            "id": "vite_react.sitemap",
+            "title": "Update sitemap.xml",
+            "description": "Replace the invalid sitemap response with a valid sitemap.",
+            "sourceCheckIds": [
+              "crawl.sitemap.invalid"
+            ],
+            "category": "automated_with_review",
+            "priority": "high",
+            "risk": "low",
+            "confidence": "high",
+            "frameworkStrategy": "Add a public sitemap.xml file using the framework's static asset convention. Use audited URL https://mon-guide-fodmap.com/.",
+            "targetFiles": [
+              "public/sitemap.xml"
+            ],
+            "targetLocations": [
+              "public/sitemap.xml"
+            ],
+            "futureAutomation": {
+              "canAutomate": true,
+              "requiresHumanReview": true,
+              "reason": "The URL set or lower-confidence repo detection should be reviewed before generating sitemap changes."
+            }
+          }
+        ],
+        "noActionChecks": [
+          {
+            "checkId": "crawl.status.ok",
+            "title": "Page returns HTTP success",
+            "reason": "This audit check passed, so ShipReady is not proposing a change."
+          },
+          {
+            "checkId": "metadata.title.present",
+            "title": "Title present",
+            "reason": "This audit check passed, so ShipReady is not proposing a change."
+          },
+          {
+            "checkId": "metadata.description.present",
+            "title": "Meta description present",
+            "reason": "This audit check passed, so ShipReady is not proposing a change."
+          },
+          {
+            "checkId": "metadata.robots.indexable",
+            "title": "Page is not marked noindex",
+            "reason": "This audit check passed, so ShipReady is not proposing a change."
+          },
+          {
+            "checkId": "metadata.lang.present",
+            "title": "HTML lang attribute present",
+            "reason": "This audit check passed, so ShipReady is not proposing a change."
+          },
+          {
+            "checkId": "metadata.viewport.present",
+            "title": "Viewport present",
+            "reason": "This audit check passed, so ShipReady is not proposing a change."
+          },
+          {
+            "checkId": "social.og.title_present",
+            "title": "og:title present",
+            "reason": "This audit check passed, so ShipReady is not proposing a change."
+          },
+          {
+            "checkId": "social.og.description_present",
+            "title": "og:description present",
+            "reason": "This audit check passed, so ShipReady is not proposing a change."
+          },
+          {
+            "checkId": "social.og.image_present",
+            "title": "og:image present",
+            "reason": "This audit check passed, so ShipReady is not proposing a change."
+          },
+          {
+            "checkId": "social.og.type_present",
+            "title": "og:type present",
+            "reason": "This audit check passed, so ShipReady is not proposing a change."
+          },
+          {
+            "checkId": "social.twitter.card_present",
+            "title": "twitter:card present",
+            "reason": "This audit check passed, so ShipReady is not proposing a change."
+          },
+          {
+            "checkId": "social.twitter.title_present",
+            "title": "twitter:title present",
+            "reason": "This audit check passed, so ShipReady is not proposing a change."
+          },
+          {
+            "checkId": "social.twitter.description_present",
+            "title": "twitter:description present",
+            "reason": "This audit check passed, so ShipReady is not proposing a change."
+          },
+          {
+            "checkId": "crawl.robots_txt.found",
+            "title": "robots.txt found",
+            "reason": "This audit check passed, so ShipReady is not proposing a change."
+          },
+          {
+            "checkId": "crawl.raw_render.consistent",
+            "title": "Key metadata present in raw HTML",
+            "reason": "This audit check passed, so ShipReady is not proposing a change."
+          }
+        ],
+        "optionalNotes": [
+          "Theme color is not set: Optional theme-color metadata was not found in the initial HTML."
+        ],
+        "limitations": [
+          "This is a read-only plan. No files were modified and no patches were generated.",
+          "Future automation must re-check the repo before writing changes.",
+          "File writing is disabled; use `shipready fix --dry-run` for supported patch previews.",
+          "This command is read-only and does not modify repository files.",
+          "Route-specific metadata in a Vite SPA may only appear after JavaScript rendering.",
+          "Future fixes may need to recommend prerendering or SSG instead of relying on JS-injected metadata for crawler visibility."
+        ],
+        "recommendedNextStep": "review_plan"
+      },
+      "rawDryRun": {
+        "url": "https://mon-guide-fodmap.com/",
+        "repoPath": "/Users/fabiencampana/Documents/jade/mon-guide-fodmap-2",
+        "generatedAt": "2026-06-16T21:31:04.638Z",
+        "mode": "dry_run",
+        "wroteFiles": false,
+        "planSummary": {
+          "auditScore": 60,
+          "auditStatus": "needs_work",
+          "frameworkId": "vite_react",
+          "frameworkName": "Vite React",
+          "recommendedNextStep": "review_plan"
+        },
+        "fileChanges": [
+          {
+            "path": "index.html",
+            "changeType": "update",
+            "reason": "Add or update Vite app-shell fallback metadata. Add conservative WebSite JSON-LD for human review.",
+            "sourceActionIds": [
+              "vite_react.json_ld_review",
+              "vite_react.metadata_review"
+            ],
+            "risk": "medium",
+            "requiresHumanReview": true,
+            "reviewStatus": "review_required",
+            "before": "<!doctype html>\n<html lang=\"fr\">\n  <head>\n    <meta charset=\"UTF-8\" />\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />\n    <title>MonGuide FODMAP - Votre guide alimentaire personnalisé</title>\n    <meta name=\"description\" content=\"Guide alimentaire personnalisé pour le régime FODMAP. Gérez vos intolérances spécifiques au syndrome de l'intestin irritable (SII).\" />\n    <meta name=\"author\" content=\"MonGuide FODMAP\" />\n\n    <meta property=\"og:title\" content=\"MonGuide FODMAP - Guide alimentaire personnalisé\" />\n    <meta property=\"og:description\" content=\"Guide alimentaire personnalisé pour le régime FODMAP. Gérez vos intolérances spécifiques au SII.\" />\n    <meta property=\"og:type\" content=\"website\" />\n    <meta property=\"og:image\" content=\"/og-image.png\" />\n\n    <meta name=\"twitter:card\" content=\"summary_large_image\" />\n    <meta name=\"twitter:title\" content=\"MonGuide FODMAP\" />\n    <meta name=\"twitter:description\" content=\"Votre guide alimentaire personnalisé pour le régime FODMAP\" />\n  </head>\n\n  <body>\n    <div id=\"root\"></div>\n    <script type=\"module\" src=\"/src/main.tsx\"></script>\n  </body>\n</html>\n",
+            "after": "<!doctype html>\n<html lang=\"fr\">\n  <head>\n    <meta charset=\"UTF-8\" />\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />\n    <title>MonGuide FODMAP - Votre guide alimentaire personnalisé</title>\n    <meta name=\"description\" content=\"Guide alimentaire personnalisé pour le régime FODMAP. Gérez vos intolérances spécifiques au syndrome de l'intestin irritable (SII).\" />\n    <meta name=\"author\" content=\"MonGuide FODMAP\" />\n\n    <meta property=\"og:title\" content=\"MonGuide FODMAP - Guide alimentaire personnalisé\" />\n    <meta property=\"og:description\" content=\"Guide alimentaire personnalisé pour le régime FODMAP. Gérez vos intolérances spécifiques au SII.\" />\n    <meta property=\"og:type\" content=\"website\" />\n    <meta property=\"og:image\" content=\"/og-image.png\" />\n\n    <meta name=\"twitter:card\" content=\"summary_large_image\" />\n    <meta name=\"twitter:title\" content=\"MonGuide FODMAP\" />\n    <meta name=\"twitter:description\" content=\"Votre guide alimentaire personnalisé pour le régime FODMAP\" />\n    <link rel=\"canonical\" href=\"https://mon-guide-fodmap.com/\" />\n    <meta property=\"og:url\" content=\"https://mon-guide-fodmap.com/\" />\n    <!-- TODO(shipready): Replace with an absolute public Twitter/X image URL. -->\n    <meta name=\"twitter:image\" content=\"TODO: Absolute image URL\" />\n    <!-- TODO(shipready): Confirm this structured data before applying. -->\n    <script type=\"application/ld+json\">\n      {\n        \"@context\": \"https://schema.org\",\n        \"@type\": \"WebSite\",\n        \"name\": \"MonGuide FODMAP - Votre guide alimentaire personnalisé\",\n        \"url\": \"https://mon-guide-fodmap.com/\"\n      }\n    </script>\n  </head>\n\n  <body>\n    <div id=\"root\"></div>\n    <script type=\"module\" src=\"/src/main.tsx\"></script>\n  </body>\n</html>\n",
+            "diff": "--- index.html\n+++ index.html\n@@ -15,6 +15,19 @@\n     <meta name=\"twitter:card\" content=\"summary_large_image\" />\n     <meta name=\"twitter:title\" content=\"MonGuide FODMAP\" />\n     <meta name=\"twitter:description\" content=\"Votre guide alimentaire personnalisé pour le régime FODMAP\" />\n+    <link rel=\"canonical\" href=\"https://mon-guide-fodmap.com/\" />\n+    <meta property=\"og:url\" content=\"https://mon-guide-fodmap.com/\" />\n+    <!-- TODO(shipready): Replace with an absolute public Twitter/X image URL. -->\n+    <meta name=\"twitter:image\" content=\"TODO: Absolute image URL\" />\n+    <!-- TODO(shipready): Confirm this structured data before applying. -->\n+    <script type=\"application/ld+json\">\n+      {\n+        \"@context\": \"https://schema.org\",\n+        \"@type\": \"WebSite\",\n+        \"name\": \"MonGuide FODMAP - Votre guide alimentaire personnalisé\",\n+        \"url\": \"https://mon-guide-fodmap.com/\"\n+      }\n+    </script>\n   </head>\n \n   <body>"
+          },
+          {
+            "path": "public/sitemap.xml",
+            "changeType": "create",
+            "reason": "Create a valid single-URL sitemap.xml preview.",
+            "sourceActionIds": [
+              "vite_react.sitemap"
+            ],
+            "risk": "low",
+            "requiresHumanReview": true,
+            "reviewStatus": "review_required",
+            "after": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n  <url>\n    <loc>https://mon-guide-fodmap.com/</loc>\n  </url>\n</urlset>\n",
+            "diff": "--- /dev/null\n+++ public/sitemap.xml\n@@\n+<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n+<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n+  <url>\n+    <loc>https://mon-guide-fodmap.com/</loc>\n+  </url>\n+</urlset>\n+"
+          }
+        ],
+        "skippedActions": [
+          {
+            "actionId": "vite_react.heading",
+            "title": "Review page heading structure",
+            "reasonKind": "requires_more_information",
+            "reason": "H1 review is a content change and requires human review.",
+            "sourceActionIds": [
+              "structure.h1.missing"
+            ],
+            "risk": "medium"
+          }
+        ],
+        "safetyNotes": [
+          "Dry-run only. No files were modified.",
+          "This is fallback metadata for the app shell. Route-specific metadata may require prerendering, SSR, or a later framework-specific strategy.",
+          "Review generated changes before applying.",
+          "TODO placeholder metadata is for preview only and must be replaced before any future write.",
+          "JSON-LD previews use only conservative WebSite schema and require human confirmation."
+        ],
+        "recommendedNextStep": "review_patch_preview"
+      }
+    }
+  }
+}

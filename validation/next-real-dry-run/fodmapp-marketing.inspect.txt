@@ -1,0 +1,61 @@
+ShipReady repo inspection: /Users/fabiencampana/Documents/fodmapp/apps/marketing
+
+Framework
+- Detected: Next.js App Router
+- Confidence: high
+
+Evidence
+- package.json: package.json includes dependency "next"
+- next.config.ts: Next.js config found
+- app: App Router directory found
+- app/layout.tsx: App Router root layout found
+- app/mentions-legales/page.tsx: app/mentions-legales/page.tsx found
+- app/page.tsx: app/page.tsx found
+- app/layout.tsx: app/layout.tsx exports metadata or generateMetadata
+
+Package manager
+- unknown
+
+Important files
+- package.json (Project package manifest)
+- next.config.ts (Framework or TypeScript config)
+- tsconfig.json (Framework or TypeScript config)
+- app/ (Important project directory)
+- src/ (Important project directory)
+- public/ (Important project directory)
+- app/layout.tsx (Next.js App Router file)
+- app/mentions-legales/page.tsx (Next.js App Router file)
+- app/page.tsx (Next.js App Router file)
+
+Likely route/page structure
+- /mentions-legales -> app/mentions-legales/page.tsx (App Router page file)
+- / -> app/page.tsx (App Router page file)
+
+Likely metadata locations
+- app/layout.tsx (found; App Router layout can define shared metadata)
+- app/**/page.tsx (not found yet; Route-level pages can define metadata)
+- app/**/layout.tsx (not found yet; Nested layouts can define section metadata)
+- app/sitemap.ts (not found yet; App Router sitemap route)
+- app/robots.ts (not found yet; App Router robots route)
+- app/opengraph-image.tsx (not found yet; Open Graph image route)
+
+Supported future fixes
+- Add/update static metadata export
+- Add route-level metadata
+- Add/update generateMetadata
+- Add JSON-LD component
+- Add robots.ts
+- Add sitemap.ts
+- Add Open Graph image route
+
+Limitations
+- File writing is disabled; use `shipready fix --dry-run` for supported patch previews.
+- This command is read-only and does not modify repository files.
+- Dynamic route metadata may require human review.
+- Existing complex metadata logic should not be overwritten blindly.
+
+Warnings
+- Package manager could not be inferred from a lockfile or packageManager field.
+
+Recommended next action
+Use this inspection result with a URL audit to produce a read-only fix plan.

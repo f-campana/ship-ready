@@ -1,0 +1,40 @@
+ShipReady write result
+URL: https://fodmapp.fr/
+Repo: validation/write-v1-real-repos/tmp/fodmapp-marketing
+
+Mode: write
+Policy: creation-only robots/sitemap
+Files actually changed: 2
+
+Created files: 2
+- app/robots.ts (226 bytes, sha256 67bc0ae0b62e438ea9a738dbc1ec98ffe3f62b786ffed83e3d45a320f6a01514)
+- app/sitemap.ts (220 bytes, sha256 be94df2d42ac33697661795d00e2f2524bbe7297eed8d48507c1430018e96d82)
+
+Blocked changes:
+- None
+
+Skipped actions:
+- Review and improve weak metadata: Existing metadata export found; merging metadata is skipped until a tested merge path exists.
+- Add JSON-LD with review: Next.js App Router JSON-LD preview requires a reviewed structured-data component and factual schema details.
+
+Safety:
+- No existing files overwritten.
+- No files outside repo root touched.
+- No Git operations performed.
+- No commits created.
+- No dependencies installed.
+- No package files or lockfiles changed.
+- No formatting run.
+- No deploys performed.
+- Passed: Write candidates are selected only from the regenerated dry-run result.
+- Passed: Write policy is limited to missing robots/sitemap file creations.
+- Passed: 2 eligible creation candidate(s) passed validation.
+- Passed: No existing files will be overwritten.
+- Passed: No Git operations, commits, branches, or GitHub calls will be performed.
+- Passed: No dependencies, package files, lockfiles, or config files will be changed.
+- Passed: No formatting or deploy commands will be run.
+- Passed: 2 file(s) were created with exclusive create semantics.
+- Rollback not needed.
+
+Recommended next step:
+- Review created files, run your tests, then run: pnpm shipready audit https://fodmapp.fr/

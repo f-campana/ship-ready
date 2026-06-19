@@ -1,0 +1,519 @@
+{
+  "url": "https://fodmapp.fr/",
+  "finalUrl": "https://fodmapp.fr/",
+  "auditedAt": "2026-06-14T21:43:43.841Z",
+  "httpStatus": 200,
+  "score": 59,
+  "status": "needs_work",
+  "raw": {
+    "source": "raw",
+    "url": "https://fodmapp.fr/",
+    "metadata": {
+      "htmlLang": "fr",
+      "title": "FODMAPP",
+      "description": "Un outil pour trouver des substitutions compatibles avec un régime pauvre en FODMAP.",
+      "viewport": "width=device-width, initial-scale=1",
+      "faviconLinks": [],
+      "openGraph": {
+        "title": "FODMAPP",
+        "description": "Un outil pour trouver des substitutions compatibles avec un régime pauvre en FODMAP.",
+        "image": "https://fodmapp.fr/og.png"
+      },
+      "twitter": {
+        "card": "summary_large_image",
+        "title": "FODMAPP",
+        "description": "Un outil pour trouver des substitutions compatibles avec un régime pauvre en FODMAP.",
+        "image": "https://fodmapp.fr/og.png"
+      }
+    },
+    "headings": {
+      "h1": [
+        "Tu suis un régime pauvre en FODMAP et tu ne sais plus quoi cuisiner ?"
+      ],
+      "all": [
+        {
+          "level": 1,
+          "text": "Tu suis un régime pauvre en FODMAP et tu ne sais plus quoi cuisiner ?"
+        },
+        {
+          "level": 2,
+          "text": "Reste en lien"
+        },
+        {
+          "level": 2,
+          "text": "Questions fréquentes"
+        },
+        {
+          "level": 3,
+          "text": "C'est un avis médical ?"
+        },
+        {
+          "level": 3,
+          "text": "J'ai besoin d'un diagnostic ?"
+        },
+        {
+          "level": 3,
+          "text": "Combien ça coûte ?"
+        },
+        {
+          "level": 3,
+          "text": "C'est quoi CIQUAL ?"
+        }
+      ]
+    },
+    "images": {
+      "total": 0,
+      "missingAlt": 0,
+      "items": []
+    },
+    "links": {
+      "total": 3,
+      "missingAccessibleText": 0,
+      "items": [
+        {
+          "href": "#waitlist",
+          "text": "Rejoins la liste d'attente"
+        },
+        {
+          "href": "https://github.com/f-campana/fodmapp",
+          "text": "GitHub"
+        },
+        {
+          "href": "/mentions-legales",
+          "text": "Mentions légales"
+        }
+      ]
+    },
+    "jsonLd": []
+  },
+  "rendered": {
+    "source": "rendered",
+    "url": "https://fodmapp.fr/",
+    "metadata": {
+      "htmlLang": "fr",
+      "title": "FODMAPP",
+      "description": "Un outil pour trouver des substitutions compatibles avec un régime pauvre en FODMAP.",
+      "viewport": "width=device-width, initial-scale=1",
+      "faviconLinks": [],
+      "openGraph": {
+        "title": "FODMAPP",
+        "description": "Un outil pour trouver des substitutions compatibles avec un régime pauvre en FODMAP.",
+        "image": "https://fodmapp.fr/og.png"
+      },
+      "twitter": {
+        "card": "summary_large_image",
+        "title": "FODMAPP",
+        "description": "Un outil pour trouver des substitutions compatibles avec un régime pauvre en FODMAP.",
+        "image": "https://fodmapp.fr/og.png"
+      }
+    },
+    "headings": {
+      "h1": [
+        "Tu suis un régime pauvre en FODMAP et tu ne sais plus quoi cuisiner ?"
+      ],
+      "all": [
+        {
+          "level": 1,
+          "text": "Tu suis un régime pauvre en FODMAP et tu ne sais plus quoi cuisiner ?"
+        },
+        {
+          "level": 2,
+          "text": "Reste en lien"
+        },
+        {
+          "level": 2,
+          "text": "Questions fréquentes"
+        },
+        {
+          "level": 3,
+          "text": "C'est un avis médical ?"
+        },
+        {
+          "level": 3,
+          "text": "J'ai besoin d'un diagnostic ?"
+        },
+        {
+          "level": 3,
+          "text": "Combien ça coûte ?"
+        },
+        {
+          "level": 3,
+          "text": "C'est quoi CIQUAL ?"
+        }
+      ]
+    },
+    "images": {
+      "total": 0,
+      "missingAlt": 0,
+      "items": []
+    },
+    "links": {
+      "total": 3,
+      "missingAccessibleText": 0,
+      "items": [
+        {
+          "href": "#waitlist",
+          "text": "Rejoins la liste d'attente"
+        },
+        {
+          "href": "https://github.com/f-campana/fodmapp",
+          "text": "GitHub"
+        },
+        {
+          "href": "/mentions-legales",
+          "text": "Mentions légales"
+        }
+      ]
+    },
+    "jsonLd": []
+  },
+  "comparison": {
+    "fields": [
+      {
+        "field": "title",
+        "rawValue": "FODMAPP",
+        "renderedValue": "FODMAPP",
+        "status": "present_in_raw"
+      },
+      {
+        "field": "description",
+        "rawValue": "Un outil pour trouver des substitutions compatibles avec un régime pauvre en FODMAP.",
+        "renderedValue": "Un outil pour trouver des substitutions compatibles avec un régime pauvre en FODMAP.",
+        "status": "present_in_raw"
+      },
+      {
+        "field": "canonical",
+        "status": "missing_in_both"
+      },
+      {
+        "field": "robots",
+        "status": "missing_in_both"
+      },
+      {
+        "field": "html.lang",
+        "rawValue": "fr",
+        "renderedValue": "fr",
+        "status": "present_in_raw"
+      },
+      {
+        "field": "viewport",
+        "rawValue": "width=device-width, initial-scale=1",
+        "renderedValue": "width=device-width, initial-scale=1",
+        "status": "present_in_raw"
+      },
+      {
+        "field": "theme-color",
+        "status": "missing_in_both"
+      },
+      {
+        "field": "favicon",
+        "status": "missing_in_both"
+      },
+      {
+        "field": "og:title",
+        "rawValue": "FODMAPP",
+        "renderedValue": "FODMAPP",
+        "status": "present_in_raw"
+      },
+      {
+        "field": "og:description",
+        "rawValue": "Un outil pour trouver des substitutions compatibles avec un régime pauvre en FODMAP.",
+        "renderedValue": "Un outil pour trouver des substitutions compatibles avec un régime pauvre en FODMAP.",
+        "status": "present_in_raw"
+      },
+      {
+        "field": "og:image",
+        "rawValue": "https://fodmapp.fr/og.png",
+        "renderedValue": "https://fodmapp.fr/og.png",
+        "status": "present_in_raw"
+      },
+      {
+        "field": "og:url",
+        "status": "missing_in_both"
+      },
+      {
+        "field": "og:type",
+        "status": "missing_in_both"
+      },
+      {
+        "field": "og:site_name",
+        "status": "missing_in_both"
+      },
+      {
+        "field": "twitter:card",
+        "rawValue": "summary_large_image",
+        "renderedValue": "summary_large_image",
+        "status": "present_in_raw"
+      },
+      {
+        "field": "twitter:title",
+        "rawValue": "FODMAPP",
+        "renderedValue": "FODMAPP",
+        "status": "present_in_raw"
+      },
+      {
+        "field": "twitter:description",
+        "rawValue": "Un outil pour trouver des substitutions compatibles avec un régime pauvre en FODMAP.",
+        "renderedValue": "Un outil pour trouver des substitutions compatibles avec un régime pauvre en FODMAP.",
+        "status": "present_in_raw"
+      },
+      {
+        "field": "twitter:image",
+        "rawValue": "https://fodmapp.fr/og.png",
+        "renderedValue": "https://fodmapp.fr/og.png",
+        "status": "present_in_raw"
+      }
+    ]
+  },
+  "checks": [
+    {
+      "id": "crawl.status.ok",
+      "category": "crawlability",
+      "severity": "passed",
+      "title": "Page returns HTTP success",
+      "description": "The audited URL returned a 2xx HTTP status.",
+      "confidence": "high",
+      "fixability": "not_fixable"
+    },
+    {
+      "id": "metadata.title.present",
+      "category": "metadata",
+      "severity": "passed",
+      "title": "Title present",
+      "description": "Raw title: FODMAPP",
+      "confidence": "high",
+      "fixability": "not_fixable"
+    },
+    {
+      "id": "metadata.title.too_short",
+      "category": "metadata",
+      "severity": "warning",
+      "title": "Title is very short",
+      "description": "A very short title may not explain the page clearly.",
+      "evidence": {
+        "title": "FODMAPP"
+      },
+      "confidence": "high",
+      "fixability": "plan_only"
+    },
+    {
+      "id": "metadata.description.present",
+      "category": "metadata",
+      "severity": "passed",
+      "title": "Meta description present",
+      "description": "Raw meta description is present.",
+      "confidence": "high",
+      "fixability": "not_fixable"
+    },
+    {
+      "id": "metadata.canonical.missing",
+      "category": "metadata",
+      "severity": "critical",
+      "title": "Missing canonical URL",
+      "description": "The raw HTML does not include a canonical link.",
+      "recommendation": "Add a canonical link that points to the preferred public URL for this page.",
+      "confidence": "high",
+      "fixability": "auto_fixable",
+      "fixStrategy": "Add a canonical link in the page head or framework metadata config."
+    },
+    {
+      "id": "metadata.robots.indexable",
+      "category": "crawlability",
+      "severity": "passed",
+      "title": "Page is not marked noindex",
+      "description": "No noindex robots meta directive was detected.",
+      "confidence": "high",
+      "fixability": "not_fixable"
+    },
+    {
+      "id": "metadata.lang.present",
+      "category": "metadata",
+      "severity": "passed",
+      "title": "HTML lang attribute present",
+      "description": "fr",
+      "confidence": "high",
+      "fixability": "not_fixable"
+    },
+    {
+      "id": "metadata.viewport.present",
+      "category": "metadata",
+      "severity": "passed",
+      "title": "Viewport present",
+      "description": "width=device-width, initial-scale=1",
+      "confidence": "high",
+      "fixability": "not_fixable"
+    },
+    {
+      "id": "metadata.theme_color.missing",
+      "category": "metadata",
+      "severity": "info",
+      "title": "Theme color is not set",
+      "description": "Optional theme-color metadata was not found in the initial HTML.",
+      "recommendation": "Add a theme-color meta tag if you want branded browser UI on supported surfaces.",
+      "confidence": "high",
+      "fixability": "plan_only"
+    },
+    {
+      "id": "metadata.favicon.missing",
+      "category": "metadata",
+      "severity": "warning",
+      "title": "No favicon links found",
+      "description": "Favicons and app icons help the site look complete in tabs, bookmarks, and device surfaces.",
+      "confidence": "high",
+      "fixability": "plan_only"
+    },
+    {
+      "id": "social.og.title_present",
+      "category": "social",
+      "severity": "passed",
+      "title": "og:title present",
+      "description": "FODMAPP",
+      "confidence": "high",
+      "fixability": "not_fixable"
+    },
+    {
+      "id": "social.og.description_present",
+      "category": "social",
+      "severity": "passed",
+      "title": "og:description present",
+      "description": "Open Graph description is present.",
+      "confidence": "high",
+      "fixability": "not_fixable"
+    },
+    {
+      "id": "social.og.image_present",
+      "category": "social",
+      "severity": "passed",
+      "title": "og:image present",
+      "description": "https://fodmapp.fr/og.png",
+      "confidence": "high",
+      "fixability": "not_fixable"
+    },
+    {
+      "id": "social.og.url_missing",
+      "category": "social",
+      "severity": "warning",
+      "title": "Missing og:url",
+      "description": "Open Graph metadata should include the canonical page URL.",
+      "confidence": "high",
+      "fixability": "plan_only"
+    },
+    {
+      "id": "social.og.type_missing",
+      "category": "social",
+      "severity": "warning",
+      "title": "Missing og:type",
+      "description": "Open Graph metadata should include a type such as website.",
+      "confidence": "high",
+      "fixability": "plan_only"
+    },
+    {
+      "id": "social.twitter.card_present",
+      "category": "social",
+      "severity": "passed",
+      "title": "twitter:card present",
+      "description": "summary_large_image",
+      "confidence": "high",
+      "fixability": "not_fixable"
+    },
+    {
+      "id": "social.twitter.title_present",
+      "category": "social",
+      "severity": "passed",
+      "title": "twitter:title present",
+      "description": "FODMAPP",
+      "confidence": "high",
+      "fixability": "not_fixable"
+    },
+    {
+      "id": "social.twitter.description_present",
+      "category": "social",
+      "severity": "passed",
+      "title": "twitter:description present",
+      "description": "Twitter/X description is present.",
+      "confidence": "high",
+      "fixability": "not_fixable"
+    },
+    {
+      "id": "social.twitter.image_present",
+      "category": "social",
+      "severity": "passed",
+      "title": "twitter:image present",
+      "description": "https://fodmapp.fr/og.png",
+      "confidence": "high",
+      "fixability": "not_fixable"
+    },
+    {
+      "id": "schema.jsonld.missing",
+      "category": "schema",
+      "severity": "critical",
+      "title": "No JSON-LD detected",
+      "description": "No structured data script tags were found in the raw HTML.",
+      "recommendation": "Add conservative, factual JSON-LD such as WebSite or Organization when appropriate.",
+      "confidence": "high",
+      "fixability": "plan_only"
+    },
+    {
+      "id": "structure.h1.single",
+      "category": "structure",
+      "severity": "passed",
+      "title": "Single H1 found",
+      "description": "Tu suis un régime pauvre en FODMAP et tu ne sais plus quoi cuisiner ?",
+      "confidence": "high",
+      "fixability": "not_fixable"
+    },
+    {
+      "id": "crawl.robots_txt.missing",
+      "category": "crawlability",
+      "severity": "warning",
+      "title": "robots.txt not found",
+      "description": "No robots.txt file was found at the origin root.",
+      "evidence": {
+        "url": "https://fodmapp.fr/robots.txt",
+        "statusCode": 404
+      },
+      "confidence": "high",
+      "fixability": "plan_only"
+    },
+    {
+      "id": "crawl.sitemap.missing",
+      "category": "crawlability",
+      "severity": "warning",
+      "title": "sitemap.xml not found",
+      "description": "No sitemap.xml file was found at the origin root.",
+      "evidence": {
+        "url": "https://fodmapp.fr/sitemap.xml",
+        "statusCode": 404
+      },
+      "confidence": "high",
+      "fixability": "plan_only"
+    },
+    {
+      "id": "crawl.raw_render.consistent",
+      "category": "crawlability",
+      "severity": "passed",
+      "title": "Key metadata present in raw HTML",
+      "description": "No render-only metadata fields were detected.",
+      "confidence": "high",
+      "fixability": "not_fixable"
+    }
+  ],
+  "resources": {
+    "robotsTxt": {
+      "url": "https://fodmapp.fr/robots.txt",
+      "finalUrl": "https://fodmapp.fr/robots.txt",
+      "exists": false,
+      "ok": false,
+      "statusCode": 404,
+      "blocksPage": false
+    },
+    "sitemapXml": {
+      "url": "https://fodmapp.fr/sitemap.xml",
+      "finalUrl": "https://fodmapp.fr/sitemap.xml",
+      "exists": false,
+      "ok": false,
+      "statusCode": 404,
+      "includesAuditedUrl": false
+    }
+  }
+}

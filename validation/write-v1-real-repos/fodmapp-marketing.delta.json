@@ -1,0 +1,15 @@
+{
+  "repo": "fodmapp-marketing",
+  "created": [
+    {
+      "path": "validation/write-v1-real-repos/tmp/fodmapp-marketing/app/robots.ts",
+      "hash": "67bc0ae0b62e438ea9a738dbc1ec98ffe3f62b786ffed83e3d45a320f6a01514"
+    },
+    {
+      "path": "validation/write-v1-real-repos/tmp/fodmapp-marketing/app/sitemap.ts",
+      "hash": "be94df2d42ac33697661795d00e2f2524bbe7297eed8d48507c1430018e96d82"
+    }
+  ],
+  "modified": [],
+  "deleted": []
+}

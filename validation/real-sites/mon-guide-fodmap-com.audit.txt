@@ -1,0 +1,49 @@
+ShipReady audit: https://mon-guide-fodmap.com/
+
+Score: 60/100
+Status: Needs work
+
+Critical
+- Missing canonical URL
+- No JSON-LD detected
+
+Warnings
+- No favicon links found
+- Missing og:url
+- Missing twitter:image
+- No H1 found
+- sitemap.xml is not a valid sitemap
+
+Notes
+- Theme color is not set
+
+Passed
+- Page returns HTTP success
+- Title present
+- Meta description present
+- Page is not marked noindex
+- HTML lang attribute present
+- Viewport present
+- og:title present
+- og:description present
+- og:image present
+- og:type present
+- twitter:card present
+- twitter:title present
+- twitter:description present
+- robots.txt found
+- Key metadata present in raw HTML
+
+Raw vs rendered
+- title: raw=MonGuide FODMAP - Votre guide alimentaire personnalisé; rendered=MonGuide FODMAP - Votre guide alimentaire personnalisé
+- description: raw=Guide alimentaire personnalisé pour le régime FODMAP. Gérez vos intolérances spécifiques au syndrome de l'intestin irritable (SII).; rendered=Guide alimentaire personnalisé pour le régime FODMAP. Gérez vos intolérances spécifiques au syndrome de l'intestin irritable (SII).
+- canonical: not set in raw or rendered HTML
+- robots meta: not set in raw or rendered HTML
+- viewport: raw=width=device-width, initial-scale=1.0; rendered=width=device-width, initial-scale=1.0
+- theme-color: not set in raw or rendered HTML
+- favicon: not set in raw or rendered HTML
+- og:image: raw=https://mon-guide-fodmap.com/og-image.png; rendered=https://mon-guide-fodmap.com/og-image.png
+- twitter:image: not set in raw or rendered HTML
+
+Recommended next action
+Fix the critical production-readiness issues first, then rerun the audit.

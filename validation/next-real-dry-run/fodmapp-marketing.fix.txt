@@ -1,0 +1,63 @@
+ShipReady dry-run fix preview
+URL: https://fodmapp.fr/
+Repo: /Users/fabiencampana/Documents/fodmapp/apps/marketing
+
+Summary
+- Mode: dry_run
+- Audit score: 59/100
+- Audit status: Needs work
+- Framework: Next.js App Router
+- Files that would be changed: 2
+- Files actually changed: 0
+
+Would create:
+- app/robots.ts (Create an App Router robots.ts route that allows crawling and points to the sitemap.; risk: low; automation candidate)
+- app/sitemap.ts (Create an App Router sitemap.ts route for the audited URL.; risk: low; automation candidate)
+
+Would update:
+- None
+
+Skipped:
+- Review and improve weak metadata: Existing metadata export found; merging metadata is skipped until a tested merge path exists.
+- Add JSON-LD with review: Next.js App Router JSON-LD preview requires a reviewed structured-data component and factual schema details.
+
+Diff preview
+--- /dev/null
++++ app/robots.ts
+@@
++import type { MetadataRoute } from "next";
++
++export default function robots(): MetadataRoute.Robots {
++  return {
++    rules: {
++      userAgent: "*",
++      allow: "/",
++    },
++    sitemap: "https://fodmapp.fr/sitemap.xml",
++  };
++}
++
+
+--- /dev/null
++++ app/sitemap.ts
+@@
++import type { MetadataRoute } from "next";
++
++export default function sitemap(): MetadataRoute.Sitemap {
++  return [
++    {
++      url: "https://fodmapp.fr/",
++      lastModified: new Date(),
++      changeFrequency: "weekly",
++      priority: 1,
++    },
++  ];
++}
++
+
+Safety
+- Dry-run only. No files were modified.
+- Next.js App Router previews are conservative and read-only; dynamic metadata and component changes are skipped.
+
+Recommended next step
+- Review patch preview

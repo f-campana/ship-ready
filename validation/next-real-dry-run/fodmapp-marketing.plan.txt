@@ -1,0 +1,85 @@
+ShipReady fix plan
+URL: https://fodmapp.fr/
+Repo: /Users/fabiencampana/Documents/fodmapp/apps/marketing
+
+Audit summary
+- Score: 59/100
+- Status: Needs work
+- Critical issues: 2
+- Warnings: 6
+- Notes: 1
+
+Repo summary
+- Framework: Next.js App Router
+- Confidence: high
+- Package manager: unknown
+
+Recommended next step
+- Review plan before generating patches
+
+Safe automated later
+1. Add robots.ts
+   Priority: medium
+   Risk: low
+   Confidence: high
+   Target: app/robots.ts
+   Reason: Add a robots file or framework route so crawlers can discover the intended crawl policy.
+   Strategy: Add an App Router robots.ts route.
+   Future automation: likely safe later; The framework and likely robots target are clear.
+2. Add sitemap.ts
+   Priority: high
+   Risk: low
+   Confidence: high
+   Target: app/sitemap.ts
+   Reason: Add a sitemap so crawlers can discover the public URL set.
+   Strategy: Add an App Router sitemap.ts route. Use audited URL https://fodmapp.fr/.
+   Future automation: likely safe later; The framework and likely sitemap target are clear.
+
+Automated with review
+1. Review and improve weak metadata
+   Priority: critical
+   Risk: medium
+   Confidence: high
+   Target: app/layout.tsx
+   Reason: Review weak or risky metadata before changing production copy or crawler signals.
+   Strategy: Use App Router metadata exports, route-level metadata, or generateMetadata in server-rendered files.
+   Future automation: possible with review; Metadata changes affect production copy and crawler/share-preview signals, so generated changes should be reviewed.
+2. Add JSON-LD with review
+   Priority: critical
+   Risk: medium
+   Confidence: high
+   Target: app/layout.tsx
+   Reason: Add or fix conservative structured data only after confirming schema type and business facts.
+   Strategy: Add a reviewed JSON-LD script or component in an App Router layout/page.
+   Future automation: possible with review; Structured data must be factually accurate; ShipReady should not invent schema facts without review.
+
+Manual recommendations
+- None
+
+No action
+- Page returns HTTP success
+- Title present
+- Meta description present
+- Page is not marked noindex
+- HTML lang attribute present
+- Viewport present
+- og:title present
+- og:description present
+- og:image present
+- twitter:card present
+- twitter:title present
+- twitter:description present
+- twitter:image present
+- Single H1 found
+- Key metadata present in raw HTML
+
+Optional polish
+- Theme color is not set: Optional theme-color metadata was not found in the initial HTML.
+
+Limitations
+- This is a read-only plan. No files were modified and no patches were generated.
+- Future automation must re-check the repo before writing changes.
+- File writing is disabled; use `shipready fix --dry-run` for supported patch previews.
+- This command is read-only and does not modify repository files.
+- Dynamic route metadata may require human review.
+- Existing complex metadata logic should not be overwritten blindly.

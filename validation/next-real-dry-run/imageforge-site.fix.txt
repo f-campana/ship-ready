@@ -1,0 +1,30 @@
+ShipReady dry-run fix preview
+URL: https://imageforge.dev/
+Repo: /Users/fabiencampana/Documents/imageforge-site
+
+Summary
+- Mode: dry_run
+- Audit score: 100/100
+- Audit status: Good
+- Framework: Next.js App Router
+- Files that would be changed: 0
+- Files actually changed: 0
+
+Would create:
+- None
+
+Would update:
+- None
+
+Skipped:
+- None
+
+Diff preview
+- None
+
+Safety
+- Dry-run only. No files were modified.
+- No file changes were generated because the fix plan has no required actions.
+
+Recommended next step
+- No changes needed

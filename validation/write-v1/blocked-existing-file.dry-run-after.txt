@@ -1,0 +1,39 @@
+ShipReady dry-run fix preview
+URL: http://127.0.0.1:59494/
+Repo: /var/folders/tl/ldqht3rj4bbfy8xqbj59tfd40000gn/T/shipready-write-v1-UpCByb/blocked-existing-file-human
+
+Summary
+- Mode: dry_run
+- Audit score: 90/100
+- Audit status: Good
+- Framework: Plain static HTML
+- Files that would be changed: 1
+- Files actually changed: 0
+
+Would create:
+- None
+
+Would update:
+- sitemap.xml (Replace or update sitemap.xml with a valid single-URL sitemap preview.; risk: low; automation candidate)
+
+Skipped:
+- Add robots.txt: robots.txt already exists locally; verify deployment wiring before changing it.
+
+Diff preview
+--- sitemap.xml
++++ sitemap.xml
+@@ -1,2 +1,7 @@
+-<urlset><url><loc>https://example.com/</loc></url></urlset>
++<?xml version="1.0" encoding="UTF-8"?>
++<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
++  <url>
++    <loc>http://127.0.0.1:59494/</loc>
++  </url>
++</urlset>
+ 
+
+Safety
+- Dry-run only. No files were modified.
+
+Recommended next step
+- Review patch preview

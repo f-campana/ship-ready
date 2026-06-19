@@ -1,0 +1,1654 @@
+{
+  "schemaVersion": "ui-report-v1",
+  "generatedAt": "2026-06-15T20:50:20.644Z",
+  "input": {
+    "url": "https://imageforge.dev/",
+    "mode": "url_only"
+  },
+  "workflow": {
+    "currentRecommendedStep": "no_changes_needed",
+    "completedStages": [
+      "audit"
+    ],
+    "availableNextActions": [
+      {
+        "label": "No changes needed",
+        "action": "none",
+        "primary": true,
+        "enabled": true
+      }
+    ]
+  },
+  "readiness": {
+    "label": "ready",
+    "title": "Ready to ship",
+    "summary": "Core launch checks look good. 1 optional polish item(s) remain.",
+    "score": 100,
+    "topIssues": [],
+    "passedHighlights": [
+      {
+        "id": "crawl.status.ok",
+        "title": "Page returns HTTP success",
+        "explanation": "The audited URL returned a 2xx HTTP status.",
+        "whyItMatters": "This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.",
+        "userSeverity": "ready",
+        "technicalSeverity": "passed",
+        "sourceCheckIds": [
+          "crawl.status.ok"
+        ],
+        "developerDetails": {
+          "rawTitle": "Page returns HTTP success",
+          "rawDescription": "The audited URL returned a 2xx HTTP status.",
+          "category": "crawlability",
+          "confidence": "high",
+          "fixability": "not_fixable"
+        }
+      },
+      {
+        "id": "metadata.title.present",
+        "title": "Title present",
+        "explanation": "Raw title: ImageForge CLI | Build-Time Image Optimization, Zero Monthly Cost",
+        "whyItMatters": "This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.",
+        "userSeverity": "ready",
+        "technicalSeverity": "passed",
+        "sourceCheckIds": [
+          "metadata.title.present"
+        ],
+        "developerDetails": {
+          "rawTitle": "Title present",
+          "rawDescription": "Raw title: ImageForge CLI | Build-Time Image Optimization, Zero Monthly Cost",
+          "category": "metadata",
+          "confidence": "high",
+          "fixability": "not_fixable"
+        }
+      },
+      {
+        "id": "metadata.description.present",
+        "title": "Meta description present",
+        "explanation": "Raw meta description is present.",
+        "whyItMatters": "This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.",
+        "userSeverity": "ready",
+        "technicalSeverity": "passed",
+        "sourceCheckIds": [
+          "metadata.description.present"
+        ],
+        "developerDetails": {
+          "rawTitle": "Meta description present",
+          "rawDescription": "Raw meta description is present.",
+          "category": "metadata",
+          "confidence": "high",
+          "fixability": "not_fixable"
+        }
+      },
+      {
+        "id": "metadata.canonical.present",
+        "title": "Canonical URL present",
+        "explanation": "https://imageforge.dev/",
+        "whyItMatters": "This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.",
+        "userSeverity": "ready",
+        "technicalSeverity": "passed",
+        "sourceCheckIds": [
+          "metadata.canonical.present"
+        ],
+        "developerDetails": {
+          "rawTitle": "Canonical URL present",
+          "rawDescription": "https://imageforge.dev/",
+          "category": "metadata",
+          "confidence": "high",
+          "fixability": "not_fixable"
+        }
+      },
+      {
+        "id": "metadata.robots.indexable",
+        "title": "Page is not marked noindex",
+        "explanation": "No noindex robots meta directive was detected.",
+        "whyItMatters": "This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.",
+        "userSeverity": "ready",
+        "technicalSeverity": "passed",
+        "sourceCheckIds": [
+          "metadata.robots.indexable"
+        ],
+        "developerDetails": {
+          "rawTitle": "Page is not marked noindex",
+          "rawDescription": "No noindex robots meta directive was detected.",
+          "category": "crawlability",
+          "confidence": "high",
+          "fixability": "not_fixable"
+        }
+      },
+      {
+        "id": "metadata.lang.present",
+        "title": "HTML lang attribute present",
+        "explanation": "en",
+        "whyItMatters": "This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.",
+        "userSeverity": "ready",
+        "technicalSeverity": "passed",
+        "sourceCheckIds": [
+          "metadata.lang.present"
+        ],
+        "developerDetails": {
+          "rawTitle": "HTML lang attribute present",
+          "rawDescription": "en",
+          "category": "metadata",
+          "confidence": "high",
+          "fixability": "not_fixable"
+        }
+      },
+      {
+        "id": "metadata.viewport.present",
+        "title": "Viewport present",
+        "explanation": "width=device-width, initial-scale=1",
+        "whyItMatters": "This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.",
+        "userSeverity": "ready",
+        "technicalSeverity": "passed",
+        "sourceCheckIds": [
+          "metadata.viewport.present"
+        ],
+        "developerDetails": {
+          "rawTitle": "Viewport present",
+          "rawDescription": "width=device-width, initial-scale=1",
+          "category": "metadata",
+          "confidence": "high",
+          "fixability": "not_fixable"
+        }
+      },
+      {
+        "id": "metadata.favicon.present",
+        "title": "Favicon link found",
+        "explanation": "https://imageforge.dev/favicon.ico",
+        "whyItMatters": "This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.",
+        "userSeverity": "ready",
+        "technicalSeverity": "passed",
+        "sourceCheckIds": [
+          "metadata.favicon.present"
+        ],
+        "developerDetails": {
+          "rawTitle": "Favicon link found",
+          "rawDescription": "https://imageforge.dev/favicon.ico",
+          "category": "metadata",
+          "confidence": "high",
+          "fixability": "not_fixable"
+        }
+      },
+      {
+        "id": "social.og.title_present",
+        "title": "og:title present",
+        "explanation": "ImageForge CLI",
+        "whyItMatters": "This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.",
+        "userSeverity": "ready",
+        "technicalSeverity": "passed",
+        "sourceCheckIds": [
+          "social.og.title_present"
+        ],
+        "developerDetails": {
+          "rawTitle": "og:title present",
+          "rawDescription": "ImageForge CLI",
+          "category": "social",
+          "confidence": "high",
+          "fixability": "not_fixable"
+        }
+      },
+      {
+        "id": "social.og.description_present",
+        "title": "og:description present",
+        "explanation": "Open Graph description is present.",
+        "whyItMatters": "This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.",
+        "userSeverity": "ready",
+        "technicalSeverity": "passed",
+        "sourceCheckIds": [
+          "social.og.description_present"
+        ],
+        "developerDetails": {
+          "rawTitle": "og:description present",
+          "rawDescription": "Open Graph description is present.",
+          "category": "social",
+          "confidence": "high",
+          "fixability": "not_fixable"
+        }
+      },
+      {
+        "id": "social.og.image_present",
+        "title": "og:image present",
+        "explanation": "https://imageforge.dev/opengraph-image?5be7b9e6a095abcd",
+        "whyItMatters": "This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.",
+        "userSeverity": "ready",
+        "technicalSeverity": "passed",
+        "sourceCheckIds": [
+          "social.og.image_present"
+        ],
+        "developerDetails": {
+          "rawTitle": "og:image present",
+          "rawDescription": "https://imageforge.dev/opengraph-image?5be7b9e6a095abcd",
+          "category": "social",
+          "confidence": "high",
+          "fixability": "not_fixable"
+        }
+      },
+      {
+        "id": "social.og.url_present",
+        "title": "og:url present",
+        "explanation": "https://imageforge.dev/",
+        "whyItMatters": "This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.",
+        "userSeverity": "ready",
+        "technicalSeverity": "passed",
+        "sourceCheckIds": [
+          "social.og.url_present"
+        ],
+        "developerDetails": {
+          "rawTitle": "og:url present",
+          "rawDescription": "https://imageforge.dev/",
+          "category": "social",
+          "confidence": "high",
+          "fixability": "not_fixable"
+        }
+      },
+      {
+        "id": "social.og.type_present",
+        "title": "og:type present",
+        "explanation": "website",
+        "whyItMatters": "This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.",
+        "userSeverity": "ready",
+        "technicalSeverity": "passed",
+        "sourceCheckIds": [
+          "social.og.type_present"
+        ],
+        "developerDetails": {
+          "rawTitle": "og:type present",
+          "rawDescription": "website",
+          "category": "social",
+          "confidence": "high",
+          "fixability": "not_fixable"
+        }
+      },
+      {
+        "id": "social.og.site_name_present",
+        "title": "og:site_name present",
+        "explanation": "ImageForge CLI",
+        "whyItMatters": "This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.",
+        "userSeverity": "ready",
+        "technicalSeverity": "passed",
+        "sourceCheckIds": [
+          "social.og.site_name_present"
+        ],
+        "developerDetails": {
+          "rawTitle": "og:site_name present",
+          "rawDescription": "ImageForge CLI",
+          "category": "social",
+          "confidence": "high",
+          "fixability": "not_fixable"
+        }
+      },
+      {
+        "id": "social.twitter.card_present",
+        "title": "twitter:card present",
+        "explanation": "summary_large_image",
+        "whyItMatters": "This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.",
+        "userSeverity": "ready",
+        "technicalSeverity": "passed",
+        "sourceCheckIds": [
+          "social.twitter.card_present"
+        ],
+        "developerDetails": {
+          "rawTitle": "twitter:card present",
+          "rawDescription": "summary_large_image",
+          "category": "social",
+          "confidence": "high",
+          "fixability": "not_fixable"
+        }
+      },
+      {
+        "id": "social.twitter.title_present",
+        "title": "twitter:title present",
+        "explanation": "ImageForge CLI",
+        "whyItMatters": "This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.",
+        "userSeverity": "ready",
+        "technicalSeverity": "passed",
+        "sourceCheckIds": [
+          "social.twitter.title_present"
+        ],
+        "developerDetails": {
+          "rawTitle": "twitter:title present",
+          "rawDescription": "ImageForge CLI",
+          "category": "social",
+          "confidence": "high",
+          "fixability": "not_fixable"
+        }
+      },
+      {
+        "id": "social.twitter.description_present",
+        "title": "twitter:description present",
+        "explanation": "Twitter/X description is present.",
+        "whyItMatters": "This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.",
+        "userSeverity": "ready",
+        "technicalSeverity": "passed",
+        "sourceCheckIds": [
+          "social.twitter.description_present"
+        ],
+        "developerDetails": {
+          "rawTitle": "twitter:description present",
+          "rawDescription": "Twitter/X description is present.",
+          "category": "social",
+          "confidence": "high",
+          "fixability": "not_fixable"
+        }
+      },
+      {
+        "id": "social.twitter.image_present",
+        "title": "twitter:image present",
+        "explanation": "https://imageforge.dev/twitter-image?1aedab77cefc7bb1",
+        "whyItMatters": "This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.",
+        "userSeverity": "ready",
+        "technicalSeverity": "passed",
+        "sourceCheckIds": [
+          "social.twitter.image_present"
+        ],
+        "developerDetails": {
+          "rawTitle": "twitter:image present",
+          "rawDescription": "https://imageforge.dev/twitter-image?1aedab77cefc7bb1",
+          "category": "social",
+          "confidence": "high",
+          "fixability": "not_fixable"
+        }
+      },
+      {
+        "id": "schema.jsonld.valid",
+        "title": "Valid JSON-LD detected",
+        "explanation": "Valid blocks: 2",
+        "whyItMatters": "This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.",
+        "userSeverity": "ready",
+        "technicalSeverity": "passed",
+        "sourceCheckIds": [
+          "schema.jsonld.valid"
+        ],
+        "developerDetails": {
+          "rawTitle": "Valid JSON-LD detected",
+          "rawDescription": "Valid blocks: 2",
+          "category": "schema",
+          "confidence": "high",
+          "fixability": "not_fixable"
+        }
+      },
+      {
+        "id": "structure.h1.single",
+        "title": "Single H1 found",
+        "explanation": "Optimize once, deploy everywhere, pay nothing monthly.",
+        "whyItMatters": "This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.",
+        "userSeverity": "ready",
+        "technicalSeverity": "passed",
+        "sourceCheckIds": [
+          "structure.h1.single"
+        ],
+        "developerDetails": {
+          "rawTitle": "Single H1 found",
+          "rawDescription": "Optimize once, deploy everywhere, pay nothing monthly.",
+          "category": "structure",
+          "confidence": "high",
+          "fixability": "not_fixable"
+        }
+      },
+      {
+        "id": "crawl.robots_txt.found",
+        "title": "robots.txt found",
+        "explanation": "https://imageforge.dev/robots.txt",
+        "whyItMatters": "This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.",
+        "userSeverity": "ready",
+        "technicalSeverity": "passed",
+        "sourceCheckIds": [
+          "crawl.robots_txt.found"
+        ],
+        "developerDetails": {
+          "rawTitle": "robots.txt found",
+          "rawDescription": "https://imageforge.dev/robots.txt",
+          "category": "crawlability",
+          "confidence": "high",
+          "fixability": "not_fixable"
+        }
+      },
+      {
+        "id": "crawl.sitemap.found",
+        "title": "sitemap.xml found",
+        "explanation": "https://imageforge.dev/sitemap.xml",
+        "whyItMatters": "This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.",
+        "userSeverity": "ready",
+        "technicalSeverity": "passed",
+        "sourceCheckIds": [
+          "crawl.sitemap.found"
+        ],
+        "developerDetails": {
+          "rawTitle": "sitemap.xml found",
+          "rawDescription": "https://imageforge.dev/sitemap.xml",
+          "category": "crawlability",
+          "confidence": "high",
+          "fixability": "not_fixable"
+        }
+      },
+      {
+        "id": "crawl.raw_render.consistent",
+        "title": "Key metadata present in raw HTML",
+        "explanation": "No render-only metadata fields were detected.",
+        "whyItMatters": "This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.",
+        "userSeverity": "ready",
+        "technicalSeverity": "passed",
+        "sourceCheckIds": [
+          "crawl.raw_render.consistent"
+        ],
+        "developerDetails": {
+          "rawTitle": "Key metadata present in raw HTML",
+          "rawDescription": "No render-only metadata fields were detected.",
+          "category": "crawlability",
+          "confidence": "high",
+          "fixability": "not_fixable"
+        }
+      }
+    ],
+    "optionalPolish": [
+      {
+        "id": "metadata.theme_color.missing",
+        "title": "Theme color is not set",
+        "explanation": "Optional theme-color metadata was not found in the initial HTML.",
+        "whyItMatters": "Add a theme-color meta tag if you want branded browser UI on supported surfaces.",
+        "userSeverity": "optional_polish",
+        "technicalSeverity": "info",
+        "sourceCheckIds": [
+          "metadata.theme_color.missing"
+        ],
+        "developerDetails": {
+          "rawTitle": "Theme color is not set",
+          "rawDescription": "Optional theme-color metadata was not found in the initial HTML.",
+          "category": "metadata",
+          "confidence": "high",
+          "fixability": "plan_only",
+          "recommendation": "Add a theme-color meta tag if you want branded browser UI on supported surfaces."
+        }
+      }
+    ]
+  },
+  "previews": {
+    "google": {
+      "title": "ImageForge CLI | Build-Time Image Optimization, Zero Monthly Cost",
+      "url": "https://imageforge.dev/",
+      "description": "ImageForge CLI pre-generates WebP/AVIF assets, writes imageforge.json, and adds --check CI enforcement so teams ship optimized images with zero recurring runtime cost.",
+      "missingFields": [],
+      "source": "raw"
+    },
+    "social": {
+      "title": "ImageForge CLI",
+      "url": "https://imageforge.dev/",
+      "description": "Build-time image optimization with WebP/AVIF, CI guardrails, and zero recurring runtime image optimization cost.",
+      "image": "https://imageforge.dev/opengraph-image?5be7b9e6a095abcd",
+      "missingFields": [],
+      "source": "raw"
+    },
+    "twitter": {
+      "title": "ImageForge CLI",
+      "description": "Optimize once, deploy everywhere, and keep recurring image optimization costs at zero.",
+      "image": "https://imageforge.dev/twitter-image?1aedab77cefc7bb1",
+      "card": "summary_large_image",
+      "missingFields": [],
+      "source": "raw"
+    },
+    "crawlerView": {
+      "rawHtmlSummary": "Raw HTML includes title, description, canonical, language, 6 Open Graph field(s), 4 Twitter/X field(s), and 2 JSON-LD block(s).",
+      "renderedHtmlSummary": "Rendered HTML includes title, description, canonical, language, 6 Open Graph field(s), 4 Twitter/X field(s), and 2 JSON-LD block(s).",
+      "renderOnlyWarnings": []
+    }
+  },
+  "safeApply": {
+    "available": false,
+    "buttonLabel": "No safe automatic fixes",
+    "explanation": "No dry-run file change currently qualifies for V1 safe apply.",
+    "eligibleFiles": [],
+    "blockedFiles": [],
+    "policy": "creation_only_robots_sitemap_v1",
+    "safetyNotes": [
+      "This ui-report command never writes files.",
+      "V1 safe apply is limited to creation-only robots/sitemap files.",
+      "ShipReady will not overwrite existing files in V1 safe apply.",
+      "ShipReady will not edit metadata, JSON-LD, page content, package files, or configuration in V1 safe apply.",
+      "ShipReady will not run Git operations, create commits, push, or deploy."
+    ]
+  },
+  "liveVsLocal": {
+    "localChangesAffectLiveSite": false,
+    "deploymentRequired": false,
+    "message": "This report audits the live URL only. Select a local project folder before previewing local changes."
+  },
+  "errors": [],
+  "developerDetails": {
+    "rawAudit": {
+      "url": "https://imageforge.dev/",
+      "finalUrl": "https://imageforge.dev/",
+      "auditedAt": "2026-06-15T20:50:21.556Z",
+      "httpStatus": 200,
+      "score": 100,
+      "status": "good",
+      "raw": {
+        "source": "raw",
+        "url": "https://imageforge.dev/",
+        "metadata": {
+          "htmlLang": "en",
+          "title": "ImageForge CLI | Build-Time Image Optimization, Zero Monthly Cost",
+          "description": "ImageForge CLI pre-generates WebP/AVIF assets, writes imageforge.json, and adds --check CI enforcement so teams ship optimized images with zero recurring runtime cost.",
+          "viewport": "width=device-width, initial-scale=1",
+          "canonical": "https://imageforge.dev/",
+          "favicon": "https://imageforge.dev/favicon.ico",
+          "faviconLinks": [
+            "https://imageforge.dev/favicon.ico",
+            "https://imageforge.dev/favicon.ico?favicon.0x3dzn~oxb6tn.ico"
+          ],
+          "openGraph": {
+            "title": "ImageForge CLI",
+            "description": "Build-time image optimization with WebP/AVIF, CI guardrails, and zero recurring runtime image optimization cost.",
+            "image": "https://imageforge.dev/opengraph-image?5be7b9e6a095abcd",
+            "url": "https://imageforge.dev/",
+            "type": "website",
+            "siteName": "ImageForge CLI"
+          },
+          "twitter": {
+            "card": "summary_large_image",
+            "title": "ImageForge CLI",
+            "description": "Optimize once, deploy everywhere, and keep recurring image optimization costs at zero.",
+            "image": "https://imageforge.dev/twitter-image?1aedab77cefc7bb1"
+          }
+        },
+        "headings": {
+          "h1": [
+            "Optimize once, deploy everywhere, pay nothing monthly."
+          ],
+          "all": [
+            {
+              "level": 1,
+              "text": "Optimize once, deploy everywhere, pay nothing monthly."
+            },
+            {
+              "level": 2,
+              "text": "Comparison and cost"
+            },
+            {
+              "level": 3,
+              "text": "Processing model"
+            },
+            {
+              "level": 3,
+              "text": "Entry pricing"
+            },
+            {
+              "level": 3,
+              "text": "Illustrative 28K-transform monthly scenario"
+            },
+            {
+              "level": 3,
+              "text": "CI quality gate"
+            },
+            {
+              "level": 3,
+              "text": "Air-gapped compatibility"
+            },
+            {
+              "level": 2,
+              "text": "How it works"
+            },
+            {
+              "level": 3,
+              "text": "Run"
+            },
+            {
+              "level": 3,
+              "text": "Check"
+            },
+            {
+              "level": 3,
+              "text": "Ship"
+            },
+            {
+              "level": 2,
+              "text": "Why teams choose ImageForge"
+            },
+            {
+              "level": 3,
+              "text": "Pay once at build time"
+            },
+            {
+              "level": 3,
+              "text": "CI guardrails by default"
+            },
+            {
+              "level": 3,
+              "text": "Fast reruns with hash cache"
+            },
+            {
+              "level": 3,
+              "text": "Blur placeholders and metadata"
+            },
+            {
+              "level": 3,
+              "text": "Bounded parallelism"
+            },
+            {
+              "level": 3,
+              "text": "Machine-readable run output"
+            },
+            {
+              "level": 2,
+              "text": "Methodology"
+            },
+            {
+              "level": 3,
+              "text": "Sample Set"
+            },
+            {
+              "level": 3,
+              "text": "Runtime Environment"
+            },
+            {
+              "level": 3,
+              "text": "Command and Options"
+            },
+            {
+              "level": 3,
+              "text": "What the Headline Numbers Mean"
+            },
+            {
+              "level": 2,
+              "text": "CI enforcement with --check"
+            },
+            {
+              "level": 2,
+              "text": "Next.js-first integration"
+            },
+            {
+              "level": 2,
+              "text": "Who this is for"
+            },
+            {
+              "level": 3,
+              "text": "cost-conscious teams"
+            },
+            {
+              "level": 3,
+              "text": "CI/CD teams"
+            },
+            {
+              "level": 3,
+              "text": "air-gapped/compliance teams"
+            },
+            {
+              "level": 3,
+              "text": "Vercel-to-self-host migrations"
+            },
+            {
+              "level": 2,
+              "text": "Honest limitations"
+            },
+            {
+              "level": 3,
+              "text": "Responsive widths are target-based and bounded"
+            },
+            {
+              "level": 3,
+              "text": "No runtime responsive resizing"
+            },
+            {
+              "level": 3,
+              "text": "No bundled global CDN"
+            },
+            {
+              "level": 3,
+              "text": "First run scales with catalog size"
+            },
+            {
+              "level": 2,
+              "text": "Build once. Ship fast. Keep costs at zero."
+            }
+          ]
+        },
+        "images": {
+          "total": 0,
+          "missingAlt": 0,
+          "items": []
+        },
+        "links": {
+          "total": 39,
+          "missingAccessibleText": 0,
+          "items": [
+            {
+              "href": "#top",
+              "text": "imageforge"
+            },
+            {
+              "href": "#comparison",
+              "text": "Comparison"
+            },
+            {
+              "href": "#features",
+              "text": "Features"
+            },
+            {
+              "href": "#use-cases",
+              "text": "Use cases"
+            },
+            {
+              "href": "#limitations",
+              "text": "Limitations"
+            },
+            {
+              "href": "/docs",
+              "text": "Docs"
+            },
+            {
+              "href": "/contact",
+              "text": "Contact"
+            },
+            {
+              "href": "https://github.com/f-campana/imageforge",
+              "text": "GitHub"
+            },
+            {
+              "href": "https://www.npmjs.com/package/@imageforge/cli",
+              "text": "npm package"
+            },
+            {
+              "href": "https://www.npmjs.com/package/@imageforge/cli",
+              "text": "Get Started"
+            },
+            {
+              "href": "/docs",
+              "text": "Read Docs"
+            },
+            {
+              "href": "/contact",
+              "text": "Contact"
+            },
+            {
+              "href": "https://vercel.com/docs/image-optimization/limits-and-pricing",
+              "text": "[Vercel limits and pricing]"
+            },
+            {
+              "href": "https://cloudinary.com/pricing",
+              "text": "[Cloudinary pricing]"
+            },
+            {
+              "href": "https://www.imgix.com/pricing",
+              "text": "[imgix pricing]"
+            },
+            {
+              "href": "https://www.howdygo.com/blog/cutting-howdygos-vercel-costs-by-80-without-compromising-ux-or-dx",
+              "text": "[HowdyGo cost case study]"
+            },
+            {
+              "href": "https://vercel.com/docs/image-optimization/limits-and-pricing",
+              "text": "[Vercel limits and pricing]"
+            },
+            {
+              "href": "https://vercel.com/docs/image-optimization/legacy-pricing",
+              "text": "[Vercel legacy image pricing]"
+            },
+            {
+              "href": "https://cloudinary.com/pricing",
+              "text": "[Cloudinary pricing]"
+            },
+            {
+              "href": "https://www.imgix.com/pricing",
+              "text": "[imgix pricing]"
+            },
+            {
+              "href": "https://vercel.com/docs/image-optimization/limits-and-pricing",
+              "text": "[Vercel limits and pricing]"
+            },
+            {
+              "href": "https://cloudinary.com/pricing",
+              "text": "[Cloudinary pricing]"
+            },
+            {
+              "href": "https://www.imgix.com/pricing",
+              "text": "[imgix pricing]"
+            },
+            {
+              "href": "https://www.howdygo.com/blog/cutting-howdygos-vercel-costs-by-80-without-compromising-ux-or-dx",
+              "text": "[HowdyGo cost case study]"
+            },
+            {
+              "href": "https://vercel.com/docs/image-optimization/limits-and-pricing",
+              "text": "[Vercel limits and pricing]"
+            },
+            {
+              "href": "https://vercel.com/docs/image-optimization/legacy-pricing",
+              "text": "[Vercel legacy image pricing]"
+            },
+            {
+              "href": "https://cloudinary.com/pricing",
+              "text": "[Cloudinary pricing]"
+            },
+            {
+              "href": "https://www.imgix.com/pricing",
+              "text": "[imgix pricing]"
+            },
+            {
+              "href": "#methodology",
+              "text": "Methodology"
+            },
+            {
+              "href": "/benchmarks/latest",
+              "text": "full evidence page"
+            },
+            {
+              "href": "/benchmarks/latest",
+              "text": "View the full benchmark report"
+            },
+            {
+              "href": "https://github.com/f-campana/imageforge/actions/runs/26928624304",
+              "text": "benchmark workflow"
+            },
+            {
+              "href": "/docs",
+              "text": "Docs"
+            },
+            {
+              "href": "/contact",
+              "text": "Contact"
+            },
+            {
+              "href": "https://github.com/f-campana/imageforge/blob/main/CHANGELOG.md",
+              "text": "Changelog"
+            },
+            {
+              "href": "https://github.com/f-campana/imageforge/issues",
+              "text": "Issues"
+            },
+            {
+              "href": "https://github.com/f-campana/imageforge/blob/main/SECURITY.md",
+              "text": "Security"
+            },
+            {
+              "href": "https://github.com/f-campana/imageforge",
+              "text": "GitHub"
+            },
+            {
+              "href": "https://www.npmjs.com/package/@imageforge/cli",
+              "text": "npm package"
+            }
+          ]
+        },
+        "jsonLd": [
+          {
+            "raw": "{\"@context\":\"https://schema.org\",\"@type\":\"WebSite\",\"name\":\"ImageForge CLI\",\"description\":\"Build-time image optimization for Next.js and modern web apps with WebP/AVIF conversion, blurDataURL placeholders, deterministic hash caching, and CI enforcement.\",\"url\":\"https://imageforge.dev\",\"inLanguage\":\"en-US\"}",
+            "valid": true,
+            "parsed": {
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              "name": "ImageForge CLI",
+              "description": "Build-time image optimization for Next.js and modern web apps with WebP/AVIF conversion, blurDataURL placeholders, deterministic hash caching, and CI enforcement.",
+              "url": "https://imageforge.dev",
+              "inLanguage": "en-US"
+            },
+            "types": [
+              "WebSite"
+            ]
+          },
+          {
+            "raw": "{\"@context\":\"https://schema.org\",\"@type\":\"SoftwareApplication\",\"name\":\"ImageForge CLI\",\"applicationCategory\":\"DeveloperApplication\",\"operatingSystem\":\"Cross-platform\",\"description\":\"Build-time image optimization for Next.js and modern web apps with WebP/AVIF conversion, blurDataURL placeholders, deterministic hash caching, and CI enforcement.\",\"softwareVersion\":\"0.1.6\",\"offers\":{\"@type\":\"Offer\",\"price\":\"0\",\"priceCurrency\":\"USD\"},\"url\":\"https://imageforge.dev\",\"sameAs\":[\"https://github.com/f-campana/imageforge\",\"https://www.npmjs.com/package/@imageforge/cli\"]}",
+            "valid": true,
+            "parsed": {
+              "@context": "https://schema.org",
+              "@type": "SoftwareApplication",
+              "name": "ImageForge CLI",
+              "applicationCategory": "DeveloperApplication",
+              "operatingSystem": "Cross-platform",
+              "description": "Build-time image optimization for Next.js and modern web apps with WebP/AVIF conversion, blurDataURL placeholders, deterministic hash caching, and CI enforcement.",
+              "softwareVersion": "0.1.6",
+              "offers": {
+                "@type": "Offer",
+                "price": "0",
+                "priceCurrency": "USD"
+              },
+              "url": "https://imageforge.dev",
+              "sameAs": [
+                "https://github.com/f-campana/imageforge",
+                "https://www.npmjs.com/package/@imageforge/cli"
+              ]
+            },
+            "types": [
+              "SoftwareApplication"
+            ]
+          }
+        ]
+      },
+      "rendered": {
+        "source": "rendered",
+        "url": "https://imageforge.dev/",
+        "metadata": {
+          "htmlLang": "en",
+          "title": "ImageForge CLI | Build-Time Image Optimization, Zero Monthly Cost",
+          "description": "ImageForge CLI pre-generates WebP/AVIF assets, writes imageforge.json, and adds --check CI enforcement so teams ship optimized images with zero recurring runtime cost.",
+          "viewport": "width=device-width, initial-scale=1",
+          "canonical": "https://imageforge.dev/",
+          "favicon": "https://imageforge.dev/favicon.ico",
+          "faviconLinks": [
+            "https://imageforge.dev/favicon.ico",
+            "https://imageforge.dev/favicon.ico?favicon.0x3dzn~oxb6tn.ico"
+          ],
+          "openGraph": {
+            "title": "ImageForge CLI",
+            "description": "Build-time image optimization with WebP/AVIF, CI guardrails, and zero recurring runtime image optimization cost.",
+            "image": "https://imageforge.dev/opengraph-image?5be7b9e6a095abcd",
+            "url": "https://imageforge.dev/",
+            "type": "website",
+            "siteName": "ImageForge CLI"
+          },
+          "twitter": {
+            "card": "summary_large_image",
+            "title": "ImageForge CLI",
+            "description": "Optimize once, deploy everywhere, and keep recurring image optimization costs at zero.",
+            "image": "https://imageforge.dev/twitter-image?1aedab77cefc7bb1"
+          }
+        },
+        "headings": {
+          "h1": [
+            "Optimize once, deploy everywhere, pay nothing monthly."
+          ],
+          "all": [
+            {
+              "level": 1,
+              "text": "Optimize once, deploy everywhere, pay nothing monthly."
+            },
+            {
+              "level": 2,
+              "text": "Comparison and cost"
+            },
+            {
+              "level": 3,
+              "text": "Processing model"
+            },
+            {
+              "level": 3,
+              "text": "Entry pricing"
+            },
+            {
+              "level": 3,
+              "text": "Illustrative 28K-transform monthly scenario"
+            },
+            {
+              "level": 3,
+              "text": "CI quality gate"
+            },
+            {
+              "level": 3,
+              "text": "Air-gapped compatibility"
+            },
+            {
+              "level": 2,
+              "text": "How it works"
+            },
+            {
+              "level": 3,
+              "text": "Run"
+            },
+            {
+              "level": 3,
+              "text": "Check"
+            },
+            {
+              "level": 3,
+              "text": "Ship"
+            },
+            {
+              "level": 2,
+              "text": "Why teams choose ImageForge"
+            },
+            {
+              "level": 3,
+              "text": "Pay once at build time"
+            },
+            {
+              "level": 3,
+              "text": "CI guardrails by default"
+            },
+            {
+              "level": 3,
+              "text": "Fast reruns with hash cache"
+            },
+            {
+              "level": 3,
+              "text": "Blur placeholders and metadata"
+            },
+            {
+              "level": 3,
+              "text": "Bounded parallelism"
+            },
+            {
+              "level": 3,
+              "text": "Machine-readable run output"
+            },
+            {
+              "level": 2,
+              "text": "Methodology"
+            },
+            {
+              "level": 3,
+              "text": "Sample Set"
+            },
+            {
+              "level": 3,
+              "text": "Runtime Environment"
+            },
+            {
+              "level": 3,
+              "text": "Command and Options"
+            },
+            {
+              "level": 3,
+              "text": "What the Headline Numbers Mean"
+            },
+            {
+              "level": 2,
+              "text": "CI enforcement with --check"
+            },
+            {
+              "level": 2,
+              "text": "Next.js-first integration"
+            },
+            {
+              "level": 2,
+              "text": "Who this is for"
+            },
+            {
+              "level": 3,
+              "text": "cost-conscious teams"
+            },
+            {
+              "level": 3,
+              "text": "CI/CD teams"
+            },
+            {
+              "level": 3,
+              "text": "air-gapped/compliance teams"
+            },
+            {
+              "level": 3,
+              "text": "Vercel-to-self-host migrations"
+            },
+            {
+              "level": 2,
+              "text": "Honest limitations"
+            },
+            {
+              "level": 3,
+              "text": "Responsive widths are target-based and bounded"
+            },
+            {
+              "level": 3,
+              "text": "No runtime responsive resizing"
+            },
+            {
+              "level": 3,
+              "text": "No bundled global CDN"
+            },
+            {
+              "level": 3,
+              "text": "First run scales with catalog size"
+            },
+            {
+              "level": 2,
+              "text": "Build once. Ship fast. Keep costs at zero."
+            }
+          ]
+        },
+        "images": {
+          "total": 0,
+          "missingAlt": 0,
+          "items": []
+        },
+        "links": {
+          "total": 39,
+          "missingAccessibleText": 0,
+          "items": [
+            {
+              "href": "#top",
+              "text": "imageforge"
+            },
+            {
+              "href": "#comparison",
+              "text": "Comparison"
+            },
+            {
+              "href": "#features",
+              "text": "Features"
+            },
+            {
+              "href": "#use-cases",
+              "text": "Use cases"
+            },
+            {
+              "href": "#limitations",
+              "text": "Limitations"
+            },
+            {
+              "href": "/docs",
+              "text": "Docs"
+            },
+            {
+              "href": "/contact",
+              "text": "Contact"
+            },
+            {
+              "href": "https://github.com/f-campana/imageforge",
+              "text": "GitHub"
+            },
+            {
+              "href": "https://www.npmjs.com/package/@imageforge/cli",
+              "text": "npm package"
+            },
+            {
+              "href": "https://www.npmjs.com/package/@imageforge/cli",
+              "text": "Get Started"
+            },
+            {
+              "href": "/docs",
+              "text": "Read Docs"
+            },
+            {
+              "href": "/contact",
+              "text": "Contact"
+            },
+            {
+              "href": "https://vercel.com/docs/image-optimization/limits-and-pricing",
+              "text": "[Vercel limits and pricing]"
+            },
+            {
+              "href": "https://cloudinary.com/pricing",
+              "text": "[Cloudinary pricing]"
+            },
+            {
+              "href": "https://www.imgix.com/pricing",
+              "text": "[imgix pricing]"
+            },
+            {
+              "href": "https://www.howdygo.com/blog/cutting-howdygos-vercel-costs-by-80-without-compromising-ux-or-dx",
+              "text": "[HowdyGo cost case study]"
+            },
+            {
+              "href": "https://vercel.com/docs/image-optimization/limits-and-pricing",
+              "text": "[Vercel limits and pricing]"
+            },
+            {
+              "href": "https://vercel.com/docs/image-optimization/legacy-pricing",
+              "text": "[Vercel legacy image pricing]"
+            },
+            {
+              "href": "https://cloudinary.com/pricing",
+              "text": "[Cloudinary pricing]"
+            },
+            {
+              "href": "https://www.imgix.com/pricing",
+              "text": "[imgix pricing]"
+            },
+            {
+              "href": "https://vercel.com/docs/image-optimization/limits-and-pricing",
+              "text": "[Vercel limits and pricing]"
+            },
+            {
+              "href": "https://cloudinary.com/pricing",
+              "text": "[Cloudinary pricing]"
+            },
+            {
+              "href": "https://www.imgix.com/pricing",
+              "text": "[imgix pricing]"
+            },
+            {
+              "href": "https://www.howdygo.com/blog/cutting-howdygos-vercel-costs-by-80-without-compromising-ux-or-dx",
+              "text": "[HowdyGo cost case study]"
+            },
+            {
+              "href": "https://vercel.com/docs/image-optimization/limits-and-pricing",
+              "text": "[Vercel limits and pricing]"
+            },
+            {
+              "href": "https://vercel.com/docs/image-optimization/legacy-pricing",
+              "text": "[Vercel legacy image pricing]"
+            },
+            {
+              "href": "https://cloudinary.com/pricing",
+              "text": "[Cloudinary pricing]"
+            },
+            {
+              "href": "https://www.imgix.com/pricing",
+              "text": "[imgix pricing]"
+            },
+            {
+              "href": "#methodology",
+              "text": "Methodology"
+            },
+            {
+              "href": "/benchmarks/latest",
+              "text": "full evidence page"
+            },
+            {
+              "href": "/benchmarks/latest",
+              "text": "View the full benchmark report"
+            },
+            {
+              "href": "https://github.com/f-campana/imageforge/actions/runs/26928624304",
+              "text": "benchmark workflow"
+            },
+            {
+              "href": "/docs",
+              "text": "Docs"
+            },
+            {
+              "href": "/contact",
+              "text": "Contact"
+            },
+            {
+              "href": "https://github.com/f-campana/imageforge/blob/main/CHANGELOG.md",
+              "text": "Changelog"
+            },
+            {
+              "href": "https://github.com/f-campana/imageforge/issues",
+              "text": "Issues"
+            },
+            {
+              "href": "https://github.com/f-campana/imageforge/blob/main/SECURITY.md",
+              "text": "Security"
+            },
+            {
+              "href": "https://github.com/f-campana/imageforge",
+              "text": "GitHub"
+            },
+            {
+              "href": "https://www.npmjs.com/package/@imageforge/cli",
+              "text": "npm package"
+            }
+          ]
+        },
+        "jsonLd": [
+          {
+            "raw": "{\"@context\":\"https://schema.org\",\"@type\":\"WebSite\",\"name\":\"ImageForge CLI\",\"description\":\"Build-time image optimization for Next.js and modern web apps with WebP/AVIF conversion, blurDataURL placeholders, deterministic hash caching, and CI enforcement.\",\"url\":\"https://imageforge.dev\",\"inLanguage\":\"en-US\"}",
+            "valid": true,
+            "parsed": {
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              "name": "ImageForge CLI",
+              "description": "Build-time image optimization for Next.js and modern web apps with WebP/AVIF conversion, blurDataURL placeholders, deterministic hash caching, and CI enforcement.",
+              "url": "https://imageforge.dev",
+              "inLanguage": "en-US"
+            },
+            "types": [
+              "WebSite"
+            ]
+          },
+          {
+            "raw": "{\"@context\":\"https://schema.org\",\"@type\":\"SoftwareApplication\",\"name\":\"ImageForge CLI\",\"applicationCategory\":\"DeveloperApplication\",\"operatingSystem\":\"Cross-platform\",\"description\":\"Build-time image optimization for Next.js and modern web apps with WebP/AVIF conversion, blurDataURL placeholders, deterministic hash caching, and CI enforcement.\",\"softwareVersion\":\"0.1.6\",\"offers\":{\"@type\":\"Offer\",\"price\":\"0\",\"priceCurrency\":\"USD\"},\"url\":\"https://imageforge.dev\",\"sameAs\":[\"https://github.com/f-campana/imageforge\",\"https://www.npmjs.com/package/@imageforge/cli\"]}",
+            "valid": true,
+            "parsed": {
+              "@context": "https://schema.org",
+              "@type": "SoftwareApplication",
+              "name": "ImageForge CLI",
+              "applicationCategory": "DeveloperApplication",
+              "operatingSystem": "Cross-platform",
+              "description": "Build-time image optimization for Next.js and modern web apps with WebP/AVIF conversion, blurDataURL placeholders, deterministic hash caching, and CI enforcement.",
+              "softwareVersion": "0.1.6",
+              "offers": {
+                "@type": "Offer",
+                "price": "0",
+                "priceCurrency": "USD"
+              },
+              "url": "https://imageforge.dev",
+              "sameAs": [
+                "https://github.com/f-campana/imageforge",
+                "https://www.npmjs.com/package/@imageforge/cli"
+              ]
+            },
+            "types": [
+              "SoftwareApplication"
+            ]
+          }
+        ]
+      },
+      "comparison": {
+        "fields": [
+          {
+            "field": "title",
+            "rawValue": "ImageForge CLI | Build-Time Image Optimization, Zero Monthly Cost",
+            "renderedValue": "ImageForge CLI | Build-Time Image Optimization, Zero Monthly Cost",
+            "status": "present_in_raw"
+          },
+          {
+            "field": "description",
+            "rawValue": "ImageForge CLI pre-generates WebP/AVIF assets, writes imageforge.json, and adds --check CI enforcement so teams ship optimized images with zero recurring runtime cost.",
+            "renderedValue": "ImageForge CLI pre-generates WebP/AVIF assets, writes imageforge.json, and adds --check CI enforcement so teams ship optimized images with zero recurring runtime cost.",
+            "status": "present_in_raw"
+          },
+          {
+            "field": "canonical",
+            "rawValue": "https://imageforge.dev/",
+            "renderedValue": "https://imageforge.dev/",
+            "status": "present_in_raw"
+          },
+          {
+            "field": "robots",
+            "status": "missing_in_both"
+          },
+          {
+            "field": "html.lang",
+            "rawValue": "en",
+            "renderedValue": "en",
+            "status": "present_in_raw"
+          },
+          {
+            "field": "viewport",
+            "rawValue": "width=device-width, initial-scale=1",
+            "renderedValue": "width=device-width, initial-scale=1",
+            "status": "present_in_raw"
+          },
+          {
+            "field": "theme-color",
+            "status": "missing_in_both"
+          },
+          {
+            "field": "favicon",
+            "rawValue": "https://imageforge.dev/favicon.ico, https://imageforge.dev/favicon.ico?favicon.0x3dzn~oxb6tn.ico",
+            "renderedValue": "https://imageforge.dev/favicon.ico, https://imageforge.dev/favicon.ico?favicon.0x3dzn~oxb6tn.ico",
+            "status": "present_in_raw"
+          },
+          {
+            "field": "og:title",
+            "rawValue": "ImageForge CLI",
+            "renderedValue": "ImageForge CLI",
+            "status": "present_in_raw"
+          },
+          {
+            "field": "og:description",
+            "rawValue": "Build-time image optimization with WebP/AVIF, CI guardrails, and zero recurring runtime image optimization cost.",
+            "renderedValue": "Build-time image optimization with WebP/AVIF, CI guardrails, and zero recurring runtime image optimization cost.",
+            "status": "present_in_raw"
+          },
+          {
+            "field": "og:image",
+            "rawValue": "https://imageforge.dev/opengraph-image?5be7b9e6a095abcd",
+            "renderedValue": "https://imageforge.dev/opengraph-image?5be7b9e6a095abcd",
+            "status": "present_in_raw"
+          },
+          {
+            "field": "og:url",
+            "rawValue": "https://imageforge.dev/",
+            "renderedValue": "https://imageforge.dev/",
+            "status": "present_in_raw"
+          },
+          {
+            "field": "og:type",
+            "rawValue": "website",
+            "renderedValue": "website",
+            "status": "present_in_raw"
+          },
+          {
+            "field": "og:site_name",
+            "rawValue": "ImageForge CLI",
+            "renderedValue": "ImageForge CLI",
+            "status": "present_in_raw"
+          },
+          {
+            "field": "twitter:card",
+            "rawValue": "summary_large_image",
+            "renderedValue": "summary_large_image",
+            "status": "present_in_raw"
+          },
+          {
+            "field": "twitter:title",
+            "rawValue": "ImageForge CLI",
+            "renderedValue": "ImageForge CLI",
+            "status": "present_in_raw"
+          },
+          {
+            "field": "twitter:description",
+            "rawValue": "Optimize once, deploy everywhere, and keep recurring image optimization costs at zero.",
+            "renderedValue": "Optimize once, deploy everywhere, and keep recurring image optimization costs at zero.",
+            "status": "present_in_raw"
+          },
+          {
+            "field": "twitter:image",
+            "rawValue": "https://imageforge.dev/twitter-image?1aedab77cefc7bb1",
+            "renderedValue": "https://imageforge.dev/twitter-image?1aedab77cefc7bb1",
+            "status": "present_in_raw"
+          }
+        ]
+      },
+      "checks": [
+        {
+          "id": "crawl.status.ok",
+          "category": "crawlability",
+          "severity": "passed",
+          "title": "Page returns HTTP success",
+          "description": "The audited URL returned a 2xx HTTP status.",
+          "confidence": "high",
+          "fixability": "not_fixable"
+        },
+        {
+          "id": "metadata.title.present",
+          "category": "metadata",
+          "severity": "passed",
+          "title": "Title present",
+          "description": "Raw title: ImageForge CLI | Build-Time Image Optimization, Zero Monthly Cost",
+          "confidence": "high",
+          "fixability": "not_fixable"
+        },
+        {
+          "id": "metadata.description.present",
+          "category": "metadata",
+          "severity": "passed",
+          "title": "Meta description present",
+          "description": "Raw meta description is present.",
+          "confidence": "high",
+          "fixability": "not_fixable"
+        },
+        {
+          "id": "metadata.canonical.present",
+          "category": "metadata",
+          "severity": "passed",
+          "title": "Canonical URL present",
+          "description": "https://imageforge.dev/",
+          "confidence": "high",
+          "fixability": "not_fixable"
+        },
+        {
+          "id": "metadata.robots.indexable",
+          "category": "crawlability",
+          "severity": "passed",
+          "title": "Page is not marked noindex",
+          "description": "No noindex robots meta directive was detected.",
+          "confidence": "high",
+          "fixability": "not_fixable"
+        },
+        {
+          "id": "metadata.lang.present",
+          "category": "metadata",
+          "severity": "passed",
+          "title": "HTML lang attribute present",
+          "description": "en",
+          "confidence": "high",
+          "fixability": "not_fixable"
+        },
+        {
+          "id": "metadata.viewport.present",
+          "category": "metadata",
+          "severity": "passed",
+          "title": "Viewport present",
+          "description": "width=device-width, initial-scale=1",
+          "confidence": "high",
+          "fixability": "not_fixable"
+        },
+        {
+          "id": "metadata.theme_color.missing",
+          "category": "metadata",
+          "severity": "info",
+          "title": "Theme color is not set",
+          "description": "Optional theme-color metadata was not found in the initial HTML.",
+          "recommendation": "Add a theme-color meta tag if you want branded browser UI on supported surfaces.",
+          "confidence": "high",
+          "fixability": "plan_only"
+        },
+        {
+          "id": "metadata.favicon.present",
+          "category": "metadata",
+          "severity": "passed",
+          "title": "Favicon link found",
+          "description": "https://imageforge.dev/favicon.ico",
+          "confidence": "high",
+          "fixability": "not_fixable"
+        },
+        {
+          "id": "social.og.title_present",
+          "category": "social",
+          "severity": "passed",
+          "title": "og:title present",
+          "description": "ImageForge CLI",
+          "confidence": "high",
+          "fixability": "not_fixable"
+        },
+        {
+          "id": "social.og.description_present",
+          "category": "social",
+          "severity": "passed",
+          "title": "og:description present",
+          "description": "Open Graph description is present.",
+          "confidence": "high",
+          "fixability": "not_fixable"
+        },
+        {
+          "id": "social.og.image_present",
+          "category": "social",
+          "severity": "passed",
+          "title": "og:image present",
+          "description": "https://imageforge.dev/opengraph-image?5be7b9e6a095abcd",
+          "confidence": "high",
+          "fixability": "not_fixable"
+        },
+        {
+          "id": "social.og.url_present",
+          "category": "social",
+          "severity": "passed",
+          "title": "og:url present",
+          "description": "https://imageforge.dev/",
+          "confidence": "high",
+          "fixability": "not_fixable"
+        },
+        {
+          "id": "social.og.type_present",
+          "category": "social",
+          "severity": "passed",
+          "title": "og:type present",
+          "description": "website",
+          "confidence": "high",
+          "fixability": "not_fixable"
+        },
+        {
+          "id": "social.og.site_name_present",
+          "category": "social",
+          "severity": "passed",
+          "title": "og:site_name present",
+          "description": "ImageForge CLI",
+          "confidence": "high",
+          "fixability": "not_fixable"
+        },
+        {
+          "id": "social.twitter.card_present",
+          "category": "social",
+          "severity": "passed",
+          "title": "twitter:card present",
+          "description": "summary_large_image",
+          "confidence": "high",
+          "fixability": "not_fixable"
+        },
+        {
+          "id": "social.twitter.title_present",
+          "category": "social",
+          "severity": "passed",
+          "title": "twitter:title present",
+          "description": "ImageForge CLI",
+          "confidence": "high",
+          "fixability": "not_fixable"
+        },
+        {
+          "id": "social.twitter.description_present",
+          "category": "social",
+          "severity": "passed",
+          "title": "twitter:description present",
+          "description": "Twitter/X description is present.",
+          "confidence": "high",
+          "fixability": "not_fixable"
+        },
+        {
+          "id": "social.twitter.image_present",
+          "category": "social",
+          "severity": "passed",
+          "title": "twitter:image present",
+          "description": "https://imageforge.dev/twitter-image?1aedab77cefc7bb1",
+          "confidence": "high",
+          "fixability": "not_fixable"
+        },
+        {
+          "id": "schema.jsonld.valid",
+          "category": "schema",
+          "severity": "passed",
+          "title": "Valid JSON-LD detected",
+          "description": "Valid blocks: 2",
+          "confidence": "high",
+          "fixability": "not_fixable"
+        },
+        {
+          "id": "structure.h1.single",
+          "category": "structure",
+          "severity": "passed",
+          "title": "Single H1 found",
+          "description": "Optimize once, deploy everywhere, pay nothing monthly.",
+          "confidence": "high",
+          "fixability": "not_fixable"
+        },
+        {
+          "id": "crawl.robots_txt.found",
+          "category": "crawlability",
+          "severity": "passed",
+          "title": "robots.txt found",
+          "description": "https://imageforge.dev/robots.txt",
+          "confidence": "high",
+          "fixability": "not_fixable"
+        },
+        {
+          "id": "crawl.sitemap.found",
+          "category": "crawlability",
+          "severity": "passed",
+          "title": "sitemap.xml found",
+          "description": "https://imageforge.dev/sitemap.xml",
+          "confidence": "high",
+          "fixability": "not_fixable"
+        },
+        {
+          "id": "crawl.raw_render.consistent",
+          "category": "crawlability",
+          "severity": "passed",
+          "title": "Key metadata present in raw HTML",
+          "description": "No render-only metadata fields were detected.",
+          "confidence": "high",
+          "fixability": "not_fixable"
+        }
+      ],
+      "resources": {
+        "robotsTxt": {
+          "url": "https://imageforge.dev/robots.txt",
+          "finalUrl": "https://imageforge.dev/robots.txt",
+          "exists": true,
+          "ok": true,
+          "statusCode": 200,
+          "blocksPage": false
+        },
+        "sitemapXml": {
+          "url": "https://imageforge.dev/sitemap.xml",
+          "finalUrl": "https://imageforge.dev/sitemap.xml",
+          "exists": true,
+          "ok": true,
+          "statusCode": 200,
+          "includesAuditedUrl": true
+        }
+      }
+    }
+  }
+}

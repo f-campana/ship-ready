@@ -1,0 +1,73 @@
+{
+  "url": "http://127.0.0.1:59494/",
+  "repoPath": "/var/folders/tl/ldqht3rj4bbfy8xqbj59tfd40000gn/T/shipready-write-v1-UpCByb/next-json",
+  "generatedAt": "2026-06-15T14:27:32.613Z",
+  "mode": "write",
+  "wroteFiles": true,
+  "policy": "creation_only_robots_sitemap_v1",
+  "createdFiles": [
+    {
+      "path": "src/app/robots.ts",
+      "reason": "Create an App Router robots.ts route that allows crawling and points to the sitemap.",
+      "sourceActionIds": [
+        "next_app_router.robots"
+      ],
+      "bytesWritten": 230,
+      "sha256": "9ff96854f12a1b8874df958be7b67445f8410041944739e85a933d2d5745ddff"
+    },
+    {
+      "path": "src/app/sitemap.ts",
+      "reason": "Create an App Router sitemap.ts route for the audited URL.",
+      "sourceActionIds": [
+        "next_app_router.sitemap"
+      ],
+      "bytesWritten": 224,
+      "sha256": "0c92c8479073b73160f3d9558b5bc7e2324f0312789fc1560f72674c5f38f457"
+    }
+  ],
+  "skippedActions": [],
+  "blockedChanges": [],
+  "safetyChecks": [
+    {
+      "id": "current_dry_run",
+      "status": "passed",
+      "message": "Write candidates are selected only from the regenerated dry-run result."
+    },
+    {
+      "id": "creation_only_policy",
+      "status": "passed",
+      "message": "Write policy is limited to missing robots/sitemap file creations."
+    },
+    {
+      "id": "eligible_candidates",
+      "status": "passed",
+      "message": "2 eligible creation candidate(s) passed validation."
+    },
+    {
+      "id": "no_overwrites",
+      "status": "passed",
+      "message": "No existing files will be overwritten."
+    },
+    {
+      "id": "no_git_operations",
+      "status": "passed",
+      "message": "No Git operations, commits, branches, or GitHub calls will be performed."
+    },
+    {
+      "id": "no_dependency_operations",
+      "status": "passed",
+      "message": "No dependencies, package files, lockfiles, or config files will be changed."
+    },
+    {
+      "id": "no_formatting_or_deploy",
+      "status": "passed",
+      "message": "No formatting or deploy commands will be run."
+    },
+    {
+      "id": "files_created",
+      "status": "passed",
+      "message": "2 file(s) were created with exclusive create semantics."
+    }
+  ],
+  "recommendedNextStep": "review_created_files"
+}

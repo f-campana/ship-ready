@@ -1,0 +1,21 @@
+{
+  "url": "https://imageforge.dev/",
+  "repoPath": "/Users/fabiencampana/Documents/imageforge-site",
+  "generatedAt": "2026-06-15T13:41:08.744Z",
+  "mode": "dry_run",
+  "wroteFiles": false,
+  "planSummary": {
+    "auditScore": 100,
+    "auditStatus": "good",
+    "frameworkId": "next_app_router",
+    "frameworkName": "Next.js App Router",
+    "recommendedNextStep": "no_changes_needed"
+  },
+  "fileChanges": [],
+  "skippedActions": [],
+  "safetyNotes": [
+    "Dry-run only. No files were modified.",
+    "No file changes were generated because the fix plan has no required actions."
+  ],
+  "recommendedNextStep": "no_changes_needed"
+}

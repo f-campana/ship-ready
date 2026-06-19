@@ -1,0 +1,86 @@
+ShipReady fix plan
+URL: https://mon-guide-fodmap.com/
+Repo: validation/write-v1-real-repos/tmp/mon-guide-fodmap-2
+
+Audit summary
+- Score: 60/100
+- Status: Needs work
+- Critical issues: 2
+- Warnings: 5
+- Notes: 1
+
+Repo summary
+- Framework: Vite React
+- Confidence: high
+- Package manager: npm
+
+Recommended next step
+- Review plan before generating patches
+
+Safe automated later
+- None
+
+Automated with review
+1. Add fallback metadata to index.html
+   Priority: critical
+   Risk: medium
+   Confidence: high
+   Target: index.html, src/App.tsx, src/main.tsx, public/robots.txt
+   Reason: Add missing metadata in the framework's server-visible metadata surface.
+   Strategy: Update index.html for crawler-visible fallback metadata; route-specific metadata may need prerendering or SSR.
+   Future automation: possible with review; Metadata changes affect production copy and crawler/share-preview signals, so generated changes should be reviewed.
+2. Add JSON-LD with review
+   Priority: critical
+   Risk: medium
+   Confidence: high
+   Target: index.html, src/App.tsx, src/main.tsx, public/robots.txt
+   Reason: Add or fix conservative structured data only after confirming schema type and business facts.
+   Strategy: Add static JSON-LD only when it accurately describes the app shell.
+   Future automation: possible with review; Structured data must be factually accurate; ShipReady should not invent schema facts without review.
+3. Review page heading structure
+   Priority: medium
+   Risk: medium
+   Confidence: high
+   Target: src/main.tsx, src/App.tsx
+   Reason: The page should have one clear H1.
+   Strategy: Locate the relevant page or component and make semantic/content changes with review.
+   Future automation: possible with review; Content and accessibility text changes require human review for accuracy.
+4. Update sitemap.xml
+   Priority: high
+   Risk: low
+   Confidence: high
+   Target: public/sitemap.xml
+   Reason: Replace the invalid sitemap response with a valid sitemap.
+   Strategy: Add a public sitemap.xml file using the framework's static asset convention. Use audited URL https://mon-guide-fodmap.com/.
+   Future automation: possible with review; The URL set or lower-confidence repo detection should be reviewed before generating sitemap changes.
+
+Manual recommendations
+- None
+
+No action
+- Page returns HTTP success
+- Title present
+- Meta description present
+- Page is not marked noindex
+- HTML lang attribute present
+- Viewport present
+- og:title present
+- og:description present
+- og:image present
+- og:type present
+- twitter:card present
+- twitter:title present
+- twitter:description present
+- robots.txt found
+- Key metadata present in raw HTML
+
+Optional polish
+- Theme color is not set: Optional theme-color metadata was not found in the initial HTML.
+
+Limitations
+- This is a read-only plan. No files were modified and no patches were generated.
+- Future automation must re-check the repo before writing changes.
+- File writing is disabled; use `shipready fix --dry-run` for supported patch previews.
+- This command is read-only and does not modify repository files.
+- Route-specific metadata in a Vite SPA may only appear after JavaScript rendering.
+- Future fixes may need to recommend prerendering or SSG instead of relying on JS-injected metadata for crawler visibility.

@@ -1,0 +1,15 @@
+{
+  "status": 400,
+  "body": {
+    "ok": false,
+    "error": {
+      "message": "Repository path does not exist: /path/that/does/not/exist",
+      "stage": "repo_inspection",
+      "details": {
+        "name": "Error",
+        "message": "Repository path does not exist: /path/that/does/not/exist",
+        "stack": "Error: Repository path does not exist: /path/that/does/not/exist\n    at createRepoSnapshot (/Users/fabiencampana/Documents/ship-ready/src/repo/repoSnapshot.ts:51:11)\n    at inspectRepo (/Users/fabiencampana/Documents/ship-ready/src/repo/inspectRepo.ts:17:20)\n    at createUiReport (/Users/fabiencampana/Documents/ship-ready/src/report/createUiReport.ts:224:24)\n    at createUiReportApiResult (/Users/fabiencampana/Documents/ship-ready/src/gui/guiApi.ts:48:51)\n    at handleGuiRequest (/Users/fabiencampana/Documents/ship-ready/src/gui/startGuiServer.ts:105:15)\n    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)"
+      }
+    }
+  }
+}

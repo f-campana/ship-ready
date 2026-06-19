@@ -1,0 +1,73 @@
+{
+  "url": "https://fodmapp.fr/",
+  "repoPath": "/Users/fabiencampana/Documents/fodmapp/apps/marketing",
+  "generatedAt": "2026-06-15T13:40:44.092Z",
+  "mode": "dry_run",
+  "wroteFiles": false,
+  "planSummary": {
+    "auditScore": 59,
+    "auditStatus": "needs_work",
+    "frameworkId": "next_app_router",
+    "frameworkName": "Next.js App Router",
+    "recommendedNextStep": "review_plan"
+  },
+  "fileChanges": [
+    {
+      "path": "app/robots.ts",
+      "changeType": "create",
+      "reason": "Create an App Router robots.ts route that allows crawling and points to the sitemap.",
+      "sourceActionIds": [
+        "next_app_router.robots"
+      ],
+      "risk": "low",
+      "requiresHumanReview": false,
+      "reviewStatus": "auto_candidate",
+      "after": "import type { MetadataRoute } from \"next\";\n\nexport default function robots(): MetadataRoute.Robots {\n  return {\n    rules: {\n      userAgent: \"*\",\n      allow: \"/\",\n    },\n    sitemap: \"https://fodmapp.fr/sitemap.xml\",\n  };\n}\n",
+      "diff": "--- /dev/null\n+++ app/robots.ts\n@@\n+import type { MetadataRoute } from \"next\";\n+\n+export default function robots(): MetadataRoute.Robots {\n+  return {\n+    rules: {\n+      userAgent: \"*\",\n+      allow: \"/\",\n+    },\n+    sitemap: \"https://fodmapp.fr/sitemap.xml\",\n+  };\n+}\n+"
+    },
+    {
+      "path": "app/sitemap.ts",
+      "changeType": "create",
+      "reason": "Create an App Router sitemap.ts route for the audited URL.",
+      "sourceActionIds": [
+        "next_app_router.sitemap"
+      ],
+      "risk": "low",
+      "requiresHumanReview": false,
+      "reviewStatus": "auto_candidate",
+      "after": "import type { MetadataRoute } from \"next\";\n\nexport default function sitemap(): MetadataRoute.Sitemap {\n  return [\n    {\n      url: \"https://fodmapp.fr/\",\n      lastModified: new Date(),\n      changeFrequency: \"weekly\",\n      priority: 1,\n    },\n  ];\n}\n",
+      "diff": "--- /dev/null\n+++ app/sitemap.ts\n@@\n+import type { MetadataRoute } from \"next\";\n+\n+export default function sitemap(): MetadataRoute.Sitemap {\n+  return [\n+    {\n+      url: \"https://fodmapp.fr/\",\n+      lastModified: new Date(),\n+      changeFrequency: \"weekly\",\n+      priority: 1,\n+    },\n+  ];\n+}\n+"
+    }
+  ],
+  "skippedActions": [
+    {
+      "actionId": "next_app_router.metadata_review",
+      "title": "Review and improve weak metadata",
+      "reasonKind": "requires_more_information",
+      "reason": "Existing metadata export found; merging metadata is skipped until a tested merge path exists.",
+      "sourceActionIds": [
+        "metadata.canonical.missing",
+        "metadata.favicon.missing",
+        "metadata.title.too_short",
+        "social.og.type_missing",
+        "social.og.url_missing"
+      ],
+      "risk": "medium"
+    },
+    {
+      "actionId": "next_app_router.json_ld_review",
+      "title": "Add JSON-LD with review",
+      "reasonKind": "requires_more_information",
+      "reason": "Next.js App Router JSON-LD preview requires a reviewed structured-data component and factual schema details.",
+      "sourceActionIds": [
+        "schema.jsonld.missing"
+      ],
+      "risk": "medium"
+    }
+  ],
+  "safetyNotes": [
+    "Dry-run only. No files were modified.",
+    "Next.js App Router previews are conservative and read-only; dynamic metadata and component changes are skipped."
+  ],
+  "recommendedNextStep": "review_patch_preview"
+}

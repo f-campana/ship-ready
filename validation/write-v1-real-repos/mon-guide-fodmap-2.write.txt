@@ -1,0 +1,40 @@
+ShipReady write result
+URL: https://mon-guide-fodmap.com/
+Repo: validation/write-v1-real-repos/tmp/mon-guide-fodmap-2
+
+Mode: write
+Policy: creation-only robots/sitemap
+Files actually changed: 0
+
+Created files: 0
+- None
+
+Blocked changes:
+- index.html was not written because HTML, metadata, and config updates are outside the V1 write policy. (dry-run: update, risk: medium, review: review_required)
+- public/sitemap.xml was not written because Review status must be auto_candidate; dry-run status was review_required. Changes that require human review are not writable. (dry-run: create, risk: low, review: review_required)
+
+Skipped actions:
+- Review page heading structure: H1 review is a content change and requires human review.
+
+Safety:
+- No existing files overwritten.
+- No files outside repo root touched.
+- No Git operations performed.
+- No commits created.
+- No dependencies installed.
+- No package files or lockfiles changed.
+- No formatting run.
+- No deploys performed.
+- Passed: Write candidates are selected only from the regenerated dry-run result.
+- Passed: Write policy is limited to missing robots/sitemap file creations.
+- Blocked: public/sitemap.xml failed write safety validation.
+- Passed: No eligible missing robots/sitemap creations were found.
+- Passed: Non-writable dry-run changes were reported and left untouched.
+- Passed: No existing files will be overwritten.
+- Passed: No Git operations, commits, branches, or GitHub calls will be performed.
+- Passed: No dependencies, package files, lockfiles, or config files will be changed.
+- Passed: No formatting or deploy commands will be run.
+- Rollback not needed.
+
+Recommended next step:
+- Review blocked or skipped changes manually; write mode did not apply them.

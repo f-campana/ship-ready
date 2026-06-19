@@ -1,0 +1,491 @@
+{
+  "tmpRoot": "/var/folders/tl/ldqht3rj4bbfy8xqbj59tfd40000gn/T/shipready-write-v1-UpCByb",
+  "missingUrl": "http://127.0.0.1:59494/",
+  "cleanUrl": "http://127.0.0.1:59495/",
+  "runs": [
+    {
+      "name": "static.human",
+      "command": "pnpm shipready fix /var/folders/tl/ldqht3rj4bbfy8xqbj59tfd40000gn/T/shipready-write-v1-UpCByb/static-human --url http://127.0.0.1:59494/ --no-render --write --allow-create",
+      "status": 0,
+      "signal": null,
+      "repo": "/var/folders/tl/ldqht3rj4bbfy8xqbj59tfd40000gn/T/shipready-write-v1-UpCByb/static-human",
+      "url": "http://127.0.0.1:59494/",
+      "before": [
+        "about.html\t100\t6390a16ea7760c1c9957b5e37b40203b5aff6200341e3198127f44e1e642c344",
+        "index.html\t105\t7b77450322c5bf9fa7eb9cba9b1154bdab25a9694a45c66d9cf7020a69015990"
+      ],
+      "after": [
+        "about.html\t100\t6390a16ea7760c1c9957b5e37b40203b5aff6200341e3198127f44e1e642c344",
+        "index.html\t105\t7b77450322c5bf9fa7eb9cba9b1154bdab25a9694a45c66d9cf7020a69015990",
+        "robots.txt\t68\t14c87fefc467f00e7ec8d5ba5fd24dfdc534103986e682b64da923b2d3119122",
+        "sitemap.xml\t166\t58cb29c63cee13a28d145820ac022512a5c6522fd1f0cee23a9df9c289289d60"
+      ],
+      "stdoutBytes": 1436,
+      "stderr": ""
+    },
+    {
+      "name": "static.second-human",
+      "command": "pnpm shipready fix /var/folders/tl/ldqht3rj4bbfy8xqbj59tfd40000gn/T/shipready-write-v1-UpCByb/static-human --url http://127.0.0.1:59494/ --no-render --write --allow-create",
+      "status": 0,
+      "signal": null,
+      "repo": "/var/folders/tl/ldqht3rj4bbfy8xqbj59tfd40000gn/T/shipready-write-v1-UpCByb/static-human",
+      "url": "http://127.0.0.1:59494/",
+      "before": [
+        "about.html\t100\t6390a16ea7760c1c9957b5e37b40203b5aff6200341e3198127f44e1e642c344",
+        "index.html\t105\t7b77450322c5bf9fa7eb9cba9b1154bdab25a9694a45c66d9cf7020a69015990",
+        "robots.txt\t68\t14c87fefc467f00e7ec8d5ba5fd24dfdc534103986e682b64da923b2d3119122",
+        "sitemap.xml\t166\t58cb29c63cee13a28d145820ac022512a5c6522fd1f0cee23a9df9c289289d60"
+      ],
+      "after": [
+        "about.html\t100\t6390a16ea7760c1c9957b5e37b40203b5aff6200341e3198127f44e1e642c344",
+        "index.html\t105\t7b77450322c5bf9fa7eb9cba9b1154bdab25a9694a45c66d9cf7020a69015990",
+        "robots.txt\t68\t14c87fefc467f00e7ec8d5ba5fd24dfdc534103986e682b64da923b2d3119122",
+        "sitemap.xml\t166\t58cb29c63cee13a28d145820ac022512a5c6522fd1f0cee23a9df9c289289d60"
+      ],
+      "stdoutBytes": 1259,
+      "stderr": ""
+    },
+    {
+      "name": "static.dry-run-after",
+      "command": "pnpm shipready fix /var/folders/tl/ldqht3rj4bbfy8xqbj59tfd40000gn/T/shipready-write-v1-UpCByb/static-human --url http://127.0.0.1:59494/ --no-render --dry-run",
+      "status": 0,
+      "signal": null,
+      "repo": "/var/folders/tl/ldqht3rj4bbfy8xqbj59tfd40000gn/T/shipready-write-v1-UpCByb/static-human",
+      "url": "http://127.0.0.1:59494/",
+      "before": [
+        "about.html\t100\t6390a16ea7760c1c9957b5e37b40203b5aff6200341e3198127f44e1e642c344",
+        "index.html\t105\t7b77450322c5bf9fa7eb9cba9b1154bdab25a9694a45c66d9cf7020a69015990",
+        "robots.txt\t68\t14c87fefc467f00e7ec8d5ba5fd24dfdc534103986e682b64da923b2d3119122",
+        "sitemap.xml\t166\t58cb29c63cee13a28d145820ac022512a5c6522fd1f0cee23a9df9c289289d60"
+      ],
+      "after": [
+        "about.html\t100\t6390a16ea7760c1c9957b5e37b40203b5aff6200341e3198127f44e1e642c344",
+        "index.html\t105\t7b77450322c5bf9fa7eb9cba9b1154bdab25a9694a45c66d9cf7020a69015990",
+        "robots.txt\t68\t14c87fefc467f00e7ec8d5ba5fd24dfdc534103986e682b64da923b2d3119122",
+        "sitemap.xml\t166\t58cb29c63cee13a28d145820ac022512a5c6522fd1f0cee23a9df9c289289d60"
+      ],
+      "stdoutBytes": 582,
+      "stderr": ""
+    },
+    {
+      "name": "static.json",
+      "command": "pnpm shipready fix /var/folders/tl/ldqht3rj4bbfy8xqbj59tfd40000gn/T/shipready-write-v1-UpCByb/static-json --url http://127.0.0.1:59494/ --no-render --write --allow-create --json",
+      "status": 0,
+      "signal": null,
+      "repo": "/var/folders/tl/ldqht3rj4bbfy8xqbj59tfd40000gn/T/shipready-write-v1-UpCByb/static-json",
+      "url": "http://127.0.0.1:59494/",
+      "before": [
+        "about.html\t100\t6390a16ea7760c1c9957b5e37b40203b5aff6200341e3198127f44e1e642c344",
+        "index.html\t105\t7b77450322c5bf9fa7eb9cba9b1154bdab25a9694a45c66d9cf7020a69015990"
+      ],
+      "after": [
+        "about.html\t100\t6390a16ea7760c1c9957b5e37b40203b5aff6200341e3198127f44e1e642c344",
+        "index.html\t105\t7b77450322c5bf9fa7eb9cba9b1154bdab25a9694a45c66d9cf7020a69015990",
+        "robots.txt\t68\t14c87fefc467f00e7ec8d5ba5fd24dfdc534103986e682b64da923b2d3119122",
+        "sitemap.xml\t166\t58cb29c63cee13a28d145820ac022512a5c6522fd1f0cee23a9df9c289289d60"
+      ],
+      "stdoutBytes": 2230,
+      "stderr": ""
+    },
+    {
+      "name": "vite.human",
+      "command": "pnpm shipready fix /var/folders/tl/ldqht3rj4bbfy8xqbj59tfd40000gn/T/shipready-write-v1-UpCByb/vite-human --url http://127.0.0.1:59494/ --no-render --write --allow-create",
+      "status": 0,
+      "signal": null,
+      "repo": "/var/folders/tl/ldqht3rj4bbfy8xqbj59tfd40000gn/T/shipready-write-v1-UpCByb/vite-human",
+      "url": "http://127.0.0.1:59494/",
+      "before": [
+        "index.html\t135\te8760997f143ba4fa23f37021b06eedae806ab2cb2f054d1d97fed94b54cd5ef",
+        "package.json\t171\t039eea978fbdf6b7a2da7fd626f5bbdf1c614f4fd80fad1c5f2b9f7912417c4c",
+        "src/App.tsx\t62\t96f01899c5efbb56639052c68e9a6f248bac2b539763475d416317175f469012",
+        "src/main.tsx\t162\t2d7141496215d408f9f8197cd4f4190326aba358b3c8d37561433dbd1c072cb9",
+        "vite.config.ts\t133\t23ccfdc62a166532ddfdbf8fbf538ebc6ca39d1865589d666364db1fb3dea46a",
+        "yarn.lock\t16\t3b8b53588bf56703d72faa33b6bf910367cc985af1d823eaacf702304bb8c554"
+      ],
+      "after": [
+        "index.html\t135\te8760997f143ba4fa23f37021b06eedae806ab2cb2f054d1d97fed94b54cd5ef",
+        "package.json\t171\t039eea978fbdf6b7a2da7fd626f5bbdf1c614f4fd80fad1c5f2b9f7912417c4c",
+        "public/robots.txt\t68\t14c87fefc467f00e7ec8d5ba5fd24dfdc534103986e682b64da923b2d3119122",
+        "public/sitemap.xml\t166\t58cb29c63cee13a28d145820ac022512a5c6522fd1f0cee23a9df9c289289d60",
+        "src/App.tsx\t62\t96f01899c5efbb56639052c68e9a6f248bac2b539763475d416317175f469012",
+        "src/main.tsx\t162\t2d7141496215d408f9f8197cd4f4190326aba358b3c8d37561433dbd1c072cb9",
+        "vite.config.ts\t133\t23ccfdc62a166532ddfdbf8fbf538ebc6ca39d1865589d666364db1fb3dea46a",
+        "yarn.lock\t16\t3b8b53588bf56703d72faa33b6bf910367cc985af1d823eaacf702304bb8c554"
+      ],
+      "stdoutBytes": 1448,
+      "stderr": ""
+    },
+    {
+      "name": "vite.second-human",
+      "command": "pnpm shipready fix /var/folders/tl/ldqht3rj4bbfy8xqbj59tfd40000gn/T/shipready-write-v1-UpCByb/vite-human --url http://127.0.0.1:59494/ --no-render --write --allow-create",
+      "status": 0,
+      "signal": null,
+      "repo": "/var/folders/tl/ldqht3rj4bbfy8xqbj59tfd40000gn/T/shipready-write-v1-UpCByb/vite-human",
+      "url": "http://127.0.0.1:59494/",
+      "before": [
+        "index.html\t135\te8760997f143ba4fa23f37021b06eedae806ab2cb2f054d1d97fed94b54cd5ef",
+        "package.json\t171\t039eea978fbdf6b7a2da7fd626f5bbdf1c614f4fd80fad1c5f2b9f7912417c4c",
+        "public/robots.txt\t68\t14c87fefc467f00e7ec8d5ba5fd24dfdc534103986e682b64da923b2d3119122",
+        "public/sitemap.xml\t166\t58cb29c63cee13a28d145820ac022512a5c6522fd1f0cee23a9df9c289289d60",
+        "src/App.tsx\t62\t96f01899c5efbb56639052c68e9a6f248bac2b539763475d416317175f469012",
+        "src/main.tsx\t162\t2d7141496215d408f9f8197cd4f4190326aba358b3c8d37561433dbd1c072cb9",
+        "vite.config.ts\t133\t23ccfdc62a166532ddfdbf8fbf538ebc6ca39d1865589d666364db1fb3dea46a",
+        "yarn.lock\t16\t3b8b53588bf56703d72faa33b6bf910367cc985af1d823eaacf702304bb8c554"
+      ],
+      "after": [
+        "index.html\t135\te8760997f143ba4fa23f37021b06eedae806ab2cb2f054d1d97fed94b54cd5ef",
+        "package.json\t171\t039eea978fbdf6b7a2da7fd626f5bbdf1c614f4fd80fad1c5f2b9f7912417c4c",
+        "public/robots.txt\t68\t14c87fefc467f00e7ec8d5ba5fd24dfdc534103986e682b64da923b2d3119122",
+        "public/sitemap.xml\t166\t58cb29c63cee13a28d145820ac022512a5c6522fd1f0cee23a9df9c289289d60",
+        "src/App.tsx\t62\t96f01899c5efbb56639052c68e9a6f248bac2b539763475d416317175f469012",
+        "src/main.tsx\t162\t2d7141496215d408f9f8197cd4f4190326aba358b3c8d37561433dbd1c072cb9",
+        "vite.config.ts\t133\t23ccfdc62a166532ddfdbf8fbf538ebc6ca39d1865589d666364db1fb3dea46a",
+        "yarn.lock\t16\t3b8b53588bf56703d72faa33b6bf910367cc985af1d823eaacf702304bb8c554"
+      ],
+      "stdoutBytes": 1264,
+      "stderr": ""
+    },
+    {
+      "name": "vite.dry-run-after",
+      "command": "pnpm shipready fix /var/folders/tl/ldqht3rj4bbfy8xqbj59tfd40000gn/T/shipready-write-v1-UpCByb/vite-human --url http://127.0.0.1:59494/ --no-render --dry-run",
+      "status": 0,
+      "signal": null,
+      "repo": "/var/folders/tl/ldqht3rj4bbfy8xqbj59tfd40000gn/T/shipready-write-v1-UpCByb/vite-human",
+      "url": "http://127.0.0.1:59494/",
+      "before": [
+        "index.html\t135\te8760997f143ba4fa23f37021b06eedae806ab2cb2f054d1d97fed94b54cd5ef",
+        "package.json\t171\t039eea978fbdf6b7a2da7fd626f5bbdf1c614f4fd80fad1c5f2b9f7912417c4c",
+        "public/robots.txt\t68\t14c87fefc467f00e7ec8d5ba5fd24dfdc534103986e682b64da923b2d3119122",
+        "public/sitemap.xml\t166\t58cb29c63cee13a28d145820ac022512a5c6522fd1f0cee23a9df9c289289d60",
+        "src/App.tsx\t62\t96f01899c5efbb56639052c68e9a6f248bac2b539763475d416317175f469012",
+        "src/main.tsx\t162\t2d7141496215d408f9f8197cd4f4190326aba358b3c8d37561433dbd1c072cb9",
+        "vite.config.ts\t133\t23ccfdc62a166532ddfdbf8fbf538ebc6ca39d1865589d666364db1fb3dea46a",
+        "yarn.lock\t16\t3b8b53588bf56703d72faa33b6bf910367cc985af1d823eaacf702304bb8c554"
+      ],
+      "after": [
+        "index.html\t135\te8760997f143ba4fa23f37021b06eedae806ab2cb2f054d1d97fed94b54cd5ef",
+        "package.json\t171\t039eea978fbdf6b7a2da7fd626f5bbdf1c614f4fd80fad1c5f2b9f7912417c4c",
+        "public/robots.txt\t68\t14c87fefc467f00e7ec8d5ba5fd24dfdc534103986e682b64da923b2d3119122",
+        "public/sitemap.xml\t166\t58cb29c63cee13a28d145820ac022512a5c6522fd1f0cee23a9df9c289289d60",
+        "src/App.tsx\t62\t96f01899c5efbb56639052c68e9a6f248bac2b539763475d416317175f469012",
+        "src/main.tsx\t162\t2d7141496215d408f9f8197cd4f4190326aba358b3c8d37561433dbd1c072cb9",
+        "vite.config.ts\t133\t23ccfdc62a166532ddfdbf8fbf538ebc6ca39d1865589d666364db1fb3dea46a",
+        "yarn.lock\t16\t3b8b53588bf56703d72faa33b6bf910367cc985af1d823eaacf702304bb8c554"
+      ],
+      "stdoutBytes": 722,
+      "stderr": ""
+    },
+    {
+      "name": "vite.json",
+      "command": "pnpm shipready fix /var/folders/tl/ldqht3rj4bbfy8xqbj59tfd40000gn/T/shipready-write-v1-UpCByb/vite-json --url http://127.0.0.1:59494/ --no-render --write --allow-create --json",
+      "status": 0,
+      "signal": null,
+      "repo": "/var/folders/tl/ldqht3rj4bbfy8xqbj59tfd40000gn/T/shipready-write-v1-UpCByb/vite-json",
+      "url": "http://127.0.0.1:59494/",
+      "before": [
+        "index.html\t135\te8760997f143ba4fa23f37021b06eedae806ab2cb2f054d1d97fed94b54cd5ef",
+        "package.json\t171\t039eea978fbdf6b7a2da7fd626f5bbdf1c614f4fd80fad1c5f2b9f7912417c4c",
+        "src/App.tsx\t62\t96f01899c5efbb56639052c68e9a6f248bac2b539763475d416317175f469012",
+        "src/main.tsx\t162\t2d7141496215d408f9f8197cd4f4190326aba358b3c8d37561433dbd1c072cb9",
+        "vite.config.ts\t133\t23ccfdc62a166532ddfdbf8fbf538ebc6ca39d1865589d666364db1fb3dea46a",
+        "yarn.lock\t16\t3b8b53588bf56703d72faa33b6bf910367cc985af1d823eaacf702304bb8c554"
+      ],
+      "after": [
+        "index.html\t135\te8760997f143ba4fa23f37021b06eedae806ab2cb2f054d1d97fed94b54cd5ef",
+        "package.json\t171\t039eea978fbdf6b7a2da7fd626f5bbdf1c614f4fd80fad1c5f2b9f7912417c4c",
+        "public/robots.txt\t68\t14c87fefc467f00e7ec8d5ba5fd24dfdc534103986e682b64da923b2d3119122",
+        "public/sitemap.xml\t166\t58cb29c63cee13a28d145820ac022512a5c6522fd1f0cee23a9df9c289289d60",
+        "src/App.tsx\t62\t96f01899c5efbb56639052c68e9a6f248bac2b539763475d416317175f469012",
+        "src/main.tsx\t162\t2d7141496215d408f9f8197cd4f4190326aba358b3c8d37561433dbd1c072cb9",
+        "vite.config.ts\t133\t23ccfdc62a166532ddfdbf8fbf538ebc6ca39d1865589d666364db1fb3dea46a",
+        "yarn.lock\t16\t3b8b53588bf56703d72faa33b6bf910367cc985af1d823eaacf702304bb8c554"
+      ],
+      "stdoutBytes": 2240,
+      "stderr": ""
+    },
+    {
+      "name": "next.human",
+      "command": "pnpm shipready fix /var/folders/tl/ldqht3rj4bbfy8xqbj59tfd40000gn/T/shipready-write-v1-UpCByb/next-human --url http://127.0.0.1:59494/ --no-render --write --allow-create",
+      "status": 0,
+      "signal": null,
+      "repo": "/var/folders/tl/ldqht3rj4bbfy8xqbj59tfd40000gn/T/shipready-write-v1-UpCByb/next-human",
+      "url": "http://127.0.0.1:59494/",
+      "before": [
+        "next.config.mjs\t19\t450f0af4f4c1ecc4c7180f2e364c8a59bfed69dd350fb6b47bce8641c2a37786",
+        "package.json\t99\tee219cb1111324107ac57d7b61925ecee1aa029d545333ada5c54510e6638784",
+        "pnpm-lock.yaml\t23\tf0bcde463fa201480015b9caa7db2017d3c1b6ca9c7e133df955038c54333d48",
+        "src/app/layout.tsx\t141\t15fb774a0d96928eb0d99e5b6f8b8948843603e0ac44d6c26eea116c4c84f552",
+        "src/app/page.tsx\t63\t3fd252d1b85d2c0fd351b34260faa7131419236981f07793159b2f2fb294c914"
+      ],
+      "after": [
+        "next.config.mjs\t19\t450f0af4f4c1ecc4c7180f2e364c8a59bfed69dd350fb6b47bce8641c2a37786",
+        "package.json\t99\tee219cb1111324107ac57d7b61925ecee1aa029d545333ada5c54510e6638784",
+        "pnpm-lock.yaml\t23\tf0bcde463fa201480015b9caa7db2017d3c1b6ca9c7e133df955038c54333d48",
+        "src/app/layout.tsx\t141\t15fb774a0d96928eb0d99e5b6f8b8948843603e0ac44d6c26eea116c4c84f552",
+        "src/app/page.tsx\t63\t3fd252d1b85d2c0fd351b34260faa7131419236981f07793159b2f2fb294c914",
+        "src/app/robots.ts\t230\t9ff96854f12a1b8874df958be7b67445f8410041944739e85a933d2d5745ddff",
+        "src/app/sitemap.ts\t224\t0c92c8479073b73160f3d9558b5bc7e2324f0312789fc1560f72674c5f38f457"
+      ],
+      "stdoutBytes": 1449,
+      "stderr": ""
+    },
+    {
+      "name": "next.second-human",
+      "command": "pnpm shipready fix /var/folders/tl/ldqht3rj4bbfy8xqbj59tfd40000gn/T/shipready-write-v1-UpCByb/next-human --url http://127.0.0.1:59494/ --no-render --write --allow-create",
+      "status": 0,
+      "signal": null,
+      "repo": "/var/folders/tl/ldqht3rj4bbfy8xqbj59tfd40000gn/T/shipready-write-v1-UpCByb/next-human",
+      "url": "http://127.0.0.1:59494/",
+      "before": [
+        "next.config.mjs\t19\t450f0af4f4c1ecc4c7180f2e364c8a59bfed69dd350fb6b47bce8641c2a37786",
+        "package.json\t99\tee219cb1111324107ac57d7b61925ecee1aa029d545333ada5c54510e6638784",
+        "pnpm-lock.yaml\t23\tf0bcde463fa201480015b9caa7db2017d3c1b6ca9c7e133df955038c54333d48",
+        "src/app/layout.tsx\t141\t15fb774a0d96928eb0d99e5b6f8b8948843603e0ac44d6c26eea116c4c84f552",
+        "src/app/page.tsx\t63\t3fd252d1b85d2c0fd351b34260faa7131419236981f07793159b2f2fb294c914",
+        "src/app/robots.ts\t230\t9ff96854f12a1b8874df958be7b67445f8410041944739e85a933d2d5745ddff",
+        "src/app/sitemap.ts\t224\t0c92c8479073b73160f3d9558b5bc7e2324f0312789fc1560f72674c5f38f457"
+      ],
+      "after": [
+        "next.config.mjs\t19\t450f0af4f4c1ecc4c7180f2e364c8a59bfed69dd350fb6b47bce8641c2a37786",
+        "package.json\t99\tee219cb1111324107ac57d7b61925ecee1aa029d545333ada5c54510e6638784",
+        "pnpm-lock.yaml\t23\tf0bcde463fa201480015b9caa7db2017d3c1b6ca9c7e133df955038c54333d48",
+        "src/app/layout.tsx\t141\t15fb774a0d96928eb0d99e5b6f8b8948843603e0ac44d6c26eea116c4c84f552",
+        "src/app/page.tsx\t63\t3fd252d1b85d2c0fd351b34260faa7131419236981f07793159b2f2fb294c914",
+        "src/app/robots.ts\t230\t9ff96854f12a1b8874df958be7b67445f8410041944739e85a933d2d5745ddff",
+        "src/app/sitemap.ts\t224\t0c92c8479073b73160f3d9558b5bc7e2324f0312789fc1560f72674c5f38f457"
+      ],
+      "stdoutBytes": 1371,
+      "stderr": ""
+    },
+    {
+      "name": "next.dry-run-after",
+      "command": "pnpm shipready fix /var/folders/tl/ldqht3rj4bbfy8xqbj59tfd40000gn/T/shipready-write-v1-UpCByb/next-human --url http://127.0.0.1:59494/ --no-render --dry-run",
+      "status": 0,
+      "signal": null,
+      "repo": "/var/folders/tl/ldqht3rj4bbfy8xqbj59tfd40000gn/T/shipready-write-v1-UpCByb/next-human",
+      "url": "http://127.0.0.1:59494/",
+      "before": [
+        "next.config.mjs\t19\t450f0af4f4c1ecc4c7180f2e364c8a59bfed69dd350fb6b47bce8641c2a37786",
+        "package.json\t99\tee219cb1111324107ac57d7b61925ecee1aa029d545333ada5c54510e6638784",
+        "pnpm-lock.yaml\t23\tf0bcde463fa201480015b9caa7db2017d3c1b6ca9c7e133df955038c54333d48",
+        "src/app/layout.tsx\t141\t15fb774a0d96928eb0d99e5b6f8b8948843603e0ac44d6c26eea116c4c84f552",
+        "src/app/page.tsx\t63\t3fd252d1b85d2c0fd351b34260faa7131419236981f07793159b2f2fb294c914",
+        "src/app/robots.ts\t230\t9ff96854f12a1b8874df958be7b67445f8410041944739e85a933d2d5745ddff",
+        "src/app/sitemap.ts\t224\t0c92c8479073b73160f3d9558b5bc7e2324f0312789fc1560f72674c5f38f457"
+      ],
+      "after": [
+        "next.config.mjs\t19\t450f0af4f4c1ecc4c7180f2e364c8a59bfed69dd350fb6b47bce8641c2a37786",
+        "package.json\t99\tee219cb1111324107ac57d7b61925ecee1aa029d545333ada5c54510e6638784",
+        "pnpm-lock.yaml\t23\tf0bcde463fa201480015b9caa7db2017d3c1b6ca9c7e133df955038c54333d48",
+        "src/app/layout.tsx\t141\t15fb774a0d96928eb0d99e5b6f8b8948843603e0ac44d6c26eea116c4c84f552",
+        "src/app/page.tsx\t63\t3fd252d1b85d2c0fd351b34260faa7131419236981f07793159b2f2fb294c914",
+        "src/app/robots.ts\t230\t9ff96854f12a1b8874df958be7b67445f8410041944739e85a933d2d5745ddff",
+        "src/app/sitemap.ts\t224\t0c92c8479073b73160f3d9558b5bc7e2324f0312789fc1560f72674c5f38f457"
+      ],
+      "stdoutBytes": 809,
+      "stderr": ""
+    },
+    {
+      "name": "next.json",
+      "command": "pnpm shipready fix /var/folders/tl/ldqht3rj4bbfy8xqbj59tfd40000gn/T/shipready-write-v1-UpCByb/next-json --url http://127.0.0.1:59494/ --no-render --write --allow-create --json",
+      "status": 0,
+      "signal": null,
+      "repo": "/var/folders/tl/ldqht3rj4bbfy8xqbj59tfd40000gn/T/shipready-write-v1-UpCByb/next-json",
+      "url": "http://127.0.0.1:59494/",
+      "before": [
+        "next.config.mjs\t19\t450f0af4f4c1ecc4c7180f2e364c8a59bfed69dd350fb6b47bce8641c2a37786",
+        "package.json\t99\tee219cb1111324107ac57d7b61925ecee1aa029d545333ada5c54510e6638784",
+        "pnpm-lock.yaml\t23\tf0bcde463fa201480015b9caa7db2017d3c1b6ca9c7e133df955038c54333d48",
+        "src/app/layout.tsx\t141\t15fb774a0d96928eb0d99e5b6f8b8948843603e0ac44d6c26eea116c4c84f552",
+        "src/app/page.tsx\t63\t3fd252d1b85d2c0fd351b34260faa7131419236981f07793159b2f2fb294c914"
+      ],
+      "after": [
+        "next.config.mjs\t19\t450f0af4f4c1ecc4c7180f2e364c8a59bfed69dd350fb6b47bce8641c2a37786",
+        "package.json\t99\tee219cb1111324107ac57d7b61925ecee1aa029d545333ada5c54510e6638784",
+        "pnpm-lock.yaml\t23\tf0bcde463fa201480015b9caa7db2017d3c1b6ca9c7e133df955038c54333d48",
+        "src/app/layout.tsx\t141\t15fb774a0d96928eb0d99e5b6f8b8948843603e0ac44d6c26eea116c4c84f552",
+        "src/app/page.tsx\t63\t3fd252d1b85d2c0fd351b34260faa7131419236981f07793159b2f2fb294c914",
+        "src/app/robots.ts\t230\t9ff96854f12a1b8874df958be7b67445f8410041944739e85a933d2d5745ddff",
+        "src/app/sitemap.ts\t224\t0c92c8479073b73160f3d9558b5bc7e2324f0312789fc1560f72674c5f38f457"
+      ],
+      "stdoutBytes": 2273,
+      "stderr": ""
+    },
+    {
+      "name": "clean.human",
+      "command": "pnpm shipready fix /var/folders/tl/ldqht3rj4bbfy8xqbj59tfd40000gn/T/shipready-write-v1-UpCByb/clean-human --url http://127.0.0.1:59495/ --no-render --write --allow-create",
+      "status": 0,
+      "signal": null,
+      "repo": "/var/folders/tl/ldqht3rj4bbfy8xqbj59tfd40000gn/T/shipready-write-v1-UpCByb/clean-human",
+      "url": "http://127.0.0.1:59495/",
+      "before": [
+        "about.html\t100\t6390a16ea7760c1c9957b5e37b40203b5aff6200341e3198127f44e1e642c344",
+        "index.html\t105\t7b77450322c5bf9fa7eb9cba9b1154bdab25a9694a45c66d9cf7020a69015990",
+        "robots.txt\t23\t603587120bf7a39aaec16e02e0665735019d2281f3bf16ae1eaa57d532dc5372",
+        "sitemap.xml\t60\t2cf6bb273ce28c70dea2d62fdc00373053f747e58011b257a2c31094e4b18ad1"
+      ],
+      "after": [
+        "about.html\t100\t6390a16ea7760c1c9957b5e37b40203b5aff6200341e3198127f44e1e642c344",
+        "index.html\t105\t7b77450322c5bf9fa7eb9cba9b1154bdab25a9694a45c66d9cf7020a69015990",
+        "robots.txt\t23\t603587120bf7a39aaec16e02e0665735019d2281f3bf16ae1eaa57d532dc5372",
+        "sitemap.xml\t60\t2cf6bb273ce28c70dea2d62fdc00373053f747e58011b257a2c31094e4b18ad1"
+      ],
+      "stdoutBytes": 1111,
+      "stderr": ""
+    },
+    {
+      "name": "clean.second-human",
+      "command": "pnpm shipready fix /var/folders/tl/ldqht3rj4bbfy8xqbj59tfd40000gn/T/shipready-write-v1-UpCByb/clean-human --url http://127.0.0.1:59495/ --no-render --write --allow-create",
+      "status": 0,
+      "signal": null,
+      "repo": "/var/folders/tl/ldqht3rj4bbfy8xqbj59tfd40000gn/T/shipready-write-v1-UpCByb/clean-human",
+      "url": "http://127.0.0.1:59495/",
+      "before": [
+        "about.html\t100\t6390a16ea7760c1c9957b5e37b40203b5aff6200341e3198127f44e1e642c344",
+        "index.html\t105\t7b77450322c5bf9fa7eb9cba9b1154bdab25a9694a45c66d9cf7020a69015990",
+        "robots.txt\t23\t603587120bf7a39aaec16e02e0665735019d2281f3bf16ae1eaa57d532dc5372",
+        "sitemap.xml\t60\t2cf6bb273ce28c70dea2d62fdc00373053f747e58011b257a2c31094e4b18ad1"
+      ],
+      "after": [
+        "about.html\t100\t6390a16ea7760c1c9957b5e37b40203b5aff6200341e3198127f44e1e642c344",
+        "index.html\t105\t7b77450322c5bf9fa7eb9cba9b1154bdab25a9694a45c66d9cf7020a69015990",
+        "robots.txt\t23\t603587120bf7a39aaec16e02e0665735019d2281f3bf16ae1eaa57d532dc5372",
+        "sitemap.xml\t60\t2cf6bb273ce28c70dea2d62fdc00373053f747e58011b257a2c31094e4b18ad1"
+      ],
+      "stdoutBytes": 1111,
+      "stderr": ""
+    },
+    {
+      "name": "clean.dry-run-after",
+      "command": "pnpm shipready fix /var/folders/tl/ldqht3rj4bbfy8xqbj59tfd40000gn/T/shipready-write-v1-UpCByb/clean-human --url http://127.0.0.1:59495/ --no-render --dry-run",
+      "status": 0,
+      "signal": null,
+      "repo": "/var/folders/tl/ldqht3rj4bbfy8xqbj59tfd40000gn/T/shipready-write-v1-UpCByb/clean-human",
+      "url": "http://127.0.0.1:59495/",
+      "before": [
+        "about.html\t100\t6390a16ea7760c1c9957b5e37b40203b5aff6200341e3198127f44e1e642c344",
+        "index.html\t105\t7b77450322c5bf9fa7eb9cba9b1154bdab25a9694a45c66d9cf7020a69015990",
+        "robots.txt\t23\t603587120bf7a39aaec16e02e0665735019d2281f3bf16ae1eaa57d532dc5372",
+        "sitemap.xml\t60\t2cf6bb273ce28c70dea2d62fdc00373053f747e58011b257a2c31094e4b18ad1"
+      ],
+      "after": [
+        "about.html\t100\t6390a16ea7760c1c9957b5e37b40203b5aff6200341e3198127f44e1e642c344",
+        "index.html\t105\t7b77450322c5bf9fa7eb9cba9b1154bdab25a9694a45c66d9cf7020a69015990",
+        "robots.txt\t23\t603587120bf7a39aaec16e02e0665735019d2281f3bf16ae1eaa57d532dc5372",
+        "sitemap.xml\t60\t2cf6bb273ce28c70dea2d62fdc00373053f747e58011b257a2c31094e4b18ad1"
+      ],
+      "stdoutBytes": 565,
+      "stderr": ""
+    },
+    {
+      "name": "clean.json",
+      "command": "pnpm shipready fix /var/folders/tl/ldqht3rj4bbfy8xqbj59tfd40000gn/T/shipready-write-v1-UpCByb/clean-json --url http://127.0.0.1:59495/ --no-render --write --allow-create --json",
+      "status": 0,
+      "signal": null,
+      "repo": "/var/folders/tl/ldqht3rj4bbfy8xqbj59tfd40000gn/T/shipready-write-v1-UpCByb/clean-json",
+      "url": "http://127.0.0.1:59495/",
+      "before": [
+        "about.html\t100\t6390a16ea7760c1c9957b5e37b40203b5aff6200341e3198127f44e1e642c344",
+        "index.html\t105\t7b77450322c5bf9fa7eb9cba9b1154bdab25a9694a45c66d9cf7020a69015990",
+        "robots.txt\t23\t603587120bf7a39aaec16e02e0665735019d2281f3bf16ae1eaa57d532dc5372",
+        "sitemap.xml\t60\t2cf6bb273ce28c70dea2d62fdc00373053f747e58011b257a2c31094e4b18ad1"
+      ],
+      "after": [
+        "about.html\t100\t6390a16ea7760c1c9957b5e37b40203b5aff6200341e3198127f44e1e642c344",
+        "index.html\t105\t7b77450322c5bf9fa7eb9cba9b1154bdab25a9694a45c66d9cf7020a69015990",
+        "robots.txt\t23\t603587120bf7a39aaec16e02e0665735019d2281f3bf16ae1eaa57d532dc5372",
+        "sitemap.xml\t60\t2cf6bb273ce28c70dea2d62fdc00373053f747e58011b257a2c31094e4b18ad1"
+      ],
+      "stdoutBytes": 1494,
+      "stderr": ""
+    },
+    {
+      "name": "blocked-existing-file.human",
+      "command": "pnpm shipready fix /var/folders/tl/ldqht3rj4bbfy8xqbj59tfd40000gn/T/shipready-write-v1-UpCByb/blocked-existing-file-human --url http://127.0.0.1:59494/ --no-render --write --allow-create",
+      "status": 0,
+      "signal": null,
+      "repo": "/var/folders/tl/ldqht3rj4bbfy8xqbj59tfd40000gn/T/shipready-write-v1-UpCByb/blocked-existing-file-human",
+      "url": "http://127.0.0.1:59494/",
+      "before": [
+        "about.html\t100\t6390a16ea7760c1c9957b5e37b40203b5aff6200341e3198127f44e1e642c344",
+        "index.html\t105\t7b77450322c5bf9fa7eb9cba9b1154bdab25a9694a45c66d9cf7020a69015990",
+        "robots.txt\t23\t603587120bf7a39aaec16e02e0665735019d2281f3bf16ae1eaa57d532dc5372",
+        "sitemap.xml\t60\t2cf6bb273ce28c70dea2d62fdc00373053f747e58011b257a2c31094e4b18ad1"
+      ],
+      "after": [
+        "about.html\t100\t6390a16ea7760c1c9957b5e37b40203b5aff6200341e3198127f44e1e642c344",
+        "index.html\t105\t7b77450322c5bf9fa7eb9cba9b1154bdab25a9694a45c66d9cf7020a69015990",
+        "robots.txt\t23\t603587120bf7a39aaec16e02e0665735019d2281f3bf16ae1eaa57d532dc5372",
+        "sitemap.xml\t60\t2cf6bb273ce28c70dea2d62fdc00373053f747e58011b257a2c31094e4b18ad1"
+      ],
+      "stdoutBytes": 1498,
+      "stderr": ""
+    },
+    {
+      "name": "blocked-existing-file.second-human",
+      "command": "pnpm shipready fix /var/folders/tl/ldqht3rj4bbfy8xqbj59tfd40000gn/T/shipready-write-v1-UpCByb/blocked-existing-file-human --url http://127.0.0.1:59494/ --no-render --write --allow-create",
+      "status": 0,
+      "signal": null,
+      "repo": "/var/folders/tl/ldqht3rj4bbfy8xqbj59tfd40000gn/T/shipready-write-v1-UpCByb/blocked-existing-file-human",
+      "url": "http://127.0.0.1:59494/",
+      "before": [
+        "about.html\t100\t6390a16ea7760c1c9957b5e37b40203b5aff6200341e3198127f44e1e642c344",
+        "index.html\t105\t7b77450322c5bf9fa7eb9cba9b1154bdab25a9694a45c66d9cf7020a69015990",
+        "robots.txt\t23\t603587120bf7a39aaec16e02e0665735019d2281f3bf16ae1eaa57d532dc5372",
+        "sitemap.xml\t60\t2cf6bb273ce28c70dea2d62fdc00373053f747e58011b257a2c31094e4b18ad1"
+      ],
+      "after": [
+        "about.html\t100\t6390a16ea7760c1c9957b5e37b40203b5aff6200341e3198127f44e1e642c344",
+        "index.html\t105\t7b77450322c5bf9fa7eb9cba9b1154bdab25a9694a45c66d9cf7020a69015990",
+        "robots.txt\t23\t603587120bf7a39aaec16e02e0665735019d2281f3bf16ae1eaa57d532dc5372",
+        "sitemap.xml\t60\t2cf6bb273ce28c70dea2d62fdc00373053f747e58011b257a2c31094e4b18ad1"
+      ],
+      "stdoutBytes": 1498,
+      "stderr": ""
+    },
+    {
+      "name": "blocked-existing-file.dry-run-after",
+      "command": "pnpm shipready fix /var/folders/tl/ldqht3rj4bbfy8xqbj59tfd40000gn/T/shipready-write-v1-UpCByb/blocked-existing-file-human --url http://127.0.0.1:59494/ --no-render --dry-run",
+      "status": 0,
+      "signal": null,
+      "repo": "/var/folders/tl/ldqht3rj4bbfy8xqbj59tfd40000gn/T/shipready-write-v1-UpCByb/blocked-existing-file-human",
+      "url": "http://127.0.0.1:59494/",
+      "before": [
+        "about.html\t100\t6390a16ea7760c1c9957b5e37b40203b5aff6200341e3198127f44e1e642c344",
+        "index.html\t105\t7b77450322c5bf9fa7eb9cba9b1154bdab25a9694a45c66d9cf7020a69015990",
+        "robots.txt\t23\t603587120bf7a39aaec16e02e0665735019d2281f3bf16ae1eaa57d532dc5372",
+        "sitemap.xml\t60\t2cf6bb273ce28c70dea2d62fdc00373053f747e58011b257a2c31094e4b18ad1"
+      ],
+      "after": [
+        "about.html\t100\t6390a16ea7760c1c9957b5e37b40203b5aff6200341e3198127f44e1e642c344",
+        "index.html\t105\t7b77450322c5bf9fa7eb9cba9b1154bdab25a9694a45c66d9cf7020a69015990",
+        "robots.txt\t23\t603587120bf7a39aaec16e02e0665735019d2281f3bf16ae1eaa57d532dc5372",
+        "sitemap.xml\t60\t2cf6bb273ce28c70dea2d62fdc00373053f747e58011b257a2c31094e4b18ad1"
+      ],
+      "stdoutBytes": 984,
+      "stderr": ""
+    },
+    {
+      "name": "blocked-existing-file.json",
+      "command": "pnpm shipready fix /var/folders/tl/ldqht3rj4bbfy8xqbj59tfd40000gn/T/shipready-write-v1-UpCByb/blocked-existing-file-json --url http://127.0.0.1:59494/ --no-render --write --allow-create --json",
+      "status": 0,
+      "signal": null,
+      "repo": "/var/folders/tl/ldqht3rj4bbfy8xqbj59tfd40000gn/T/shipready-write-v1-UpCByb/blocked-existing-file-json",
+      "url": "http://127.0.0.1:59494/",
+      "before": [
+        "about.html\t100\t6390a16ea7760c1c9957b5e37b40203b5aff6200341e3198127f44e1e642c344",
+        "index.html\t105\t7b77450322c5bf9fa7eb9cba9b1154bdab25a9694a45c66d9cf7020a69015990",
+        "robots.txt\t23\t603587120bf7a39aaec16e02e0665735019d2281f3bf16ae1eaa57d532dc5372",
+        "sitemap.xml\t60\t2cf6bb273ce28c70dea2d62fdc00373053f747e58011b257a2c31094e4b18ad1"
+      ],
+      "after": [
+        "about.html\t100\t6390a16ea7760c1c9957b5e37b40203b5aff6200341e3198127f44e1e642c344",
+        "index.html\t105\t7b77450322c5bf9fa7eb9cba9b1154bdab25a9694a45c66d9cf7020a69015990",
+        "robots.txt\t23\t603587120bf7a39aaec16e02e0665735019d2281f3bf16ae1eaa57d532dc5372",
+        "sitemap.xml\t60\t2cf6bb273ce28c70dea2d62fdc00373053f747e58011b257a2c31094e4b18ad1"
+      ],
+      "stdoutBytes": 2233,
+      "stderr": ""
+    }
+  ]
+}

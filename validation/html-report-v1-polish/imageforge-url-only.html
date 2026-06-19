@@ -1,0 +1,3946 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ShipReady report - https://imageforge.dev/</title>
+<style>
+:root {
+  color-scheme: light;
+  --bg: #f5f6f8;
+  --paper: #ffffff;
+  --paper-soft: #fafbfc;
+  --text: #1f2328;
+  --muted: #69717d;
+  --muted-strong: #515963;
+  --line: #dfe4ea;
+  --line-strong: #c7d0da;
+  --positive-bg: #e8f6ed;
+  --positive-text: #155c35;
+  --caution-bg: #fff5dd;
+  --caution-text: #754c00;
+  --attention-bg: #fff0ed;
+  --attention-text: #963022;
+  --info-bg: #edf5ff;
+  --info-text: #27578f;
+  --code-bg: #161a1f;
+  --code-text: #edf1f5;
+  --shadow: 0 12px 30px rgba(31, 35, 40, 0.07);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.shell {
+  width: min(1180px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 34px 0 64px;
+}
+
+.hero {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  padding: 30px;
+}
+
+.positive-hero {
+  border-top: 5px solid #2d8a57;
+}
+
+.caution-hero {
+  border-top: 5px solid #c0841a;
+}
+
+.attention-hero {
+  border-top: 5px solid #c55246;
+}
+
+.hero-topline {
+  align-items: center;
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 370px);
+  gap: 26px;
+  align-items: start;
+}
+
+.hero-main {
+  min-width: 0;
+}
+
+.decision-panel {
+  background: var(--paper-soft);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 18px;
+}
+
+.decision-panel h2,
+.decision-card h3 {
+  font-size: 18px;
+  line-height: 1.25;
+  margin: 0 0 8px;
+}
+
+.decision-panel p:last-child,
+.decision-card p:last-child {
+  margin-bottom: 0;
+}
+
+.decision-label {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0;
+  margin: 0 0 8px;
+  text-transform: uppercase;
+}
+
+.decision-metrics {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-top: 24px;
+}
+
+.decision-metrics div {
+  background: var(--paper-soft);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  min-width: 0;
+  padding: 12px 14px;
+}
+
+.decision-metrics dd {
+  font-weight: 750;
+}
+
+.section {
+  margin-top: 38px;
+}
+
+.section-heading {
+  max-width: 820px;
+  margin-bottom: 18px;
+}
+
+.section-heading h2,
+.hero h1 {
+  margin: 0;
+  font-size: 29px;
+  line-height: 1.18;
+  letter-spacing: 0;
+}
+
+.hero h1 {
+  font-size: 40px;
+  max-width: 780px;
+}
+
+h3,
+h4,
+p {
+  margin-top: 0;
+}
+
+h3 {
+  font-size: 17px;
+  line-height: 1.3;
+  margin-bottom: 0;
+}
+
+h4 {
+  font-size: 15px;
+  line-height: 1.35;
+  margin-bottom: 8px;
+}
+
+p {
+  margin-bottom: 12px;
+}
+
+.lede {
+  color: var(--muted-strong);
+  font-size: 18px;
+  margin-bottom: 0;
+  max-width: 760px;
+}
+
+.audited-url {
+  color: var(--muted);
+  margin: 0 0 12px;
+}
+
+.eyebrow {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+
+.context-details {
+  background: transparent;
+  margin-top: 18px;
+  padding: 0;
+}
+
+.context-details summary {
+  color: var(--muted-strong);
+  font-size: 13px;
+  width: fit-content;
+}
+
+.meta-grid {
+  display: grid;
+  gap: 14px;
+  margin: 14px 0 0;
+}
+
+.meta-grid.has-repo {
+  grid-template-columns: minmax(150px, 1fr) minmax(300px, 2fr) minmax(180px, 1.2fr) minmax(120px, 0.8fr);
+}
+
+.meta-grid.url-only {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.meta-grid div {
+  background: var(--paper-soft);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  min-width: 0;
+  padding: 12px 14px;
+}
+
+dt,
+.field-label {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0;
+  margin: 0 0 4px;
+  text-transform: uppercase;
+}
+
+dd {
+  margin: 0;
+}
+
+.overview-layout {
+  display: grid;
+  gap: 18px;
+  grid-template-columns: minmax(0, 1fr) minmax(270px, 340px);
+  align-items: start;
+}
+
+.overview-main,
+.overview-side,
+.ready-overview,
+.passed-highlights {
+  display: grid;
+  gap: 14px;
+}
+
+.overview-side {
+  align-content: start;
+}
+
+.subsection-heading {
+  align-items: center;
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+}
+
+.issue-card-stack {
+  display: grid;
+  gap: 12px;
+}
+
+.highlight-grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.mini-issue-card {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  min-width: 0;
+  padding: 13px 14px;
+}
+
+.mini-issue-card strong {
+  display: block;
+  margin: 8px 0 4px;
+  overflow-wrap: anywhere;
+}
+
+.mini-issue-card p {
+  color: var(--muted);
+  font-size: 13px;
+  margin-bottom: 0;
+}
+
+.preview-grid {
+  display: grid;
+  gap: 18px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.crawler-card {
+  grid-column: 1 / -1;
+}
+
+.crawler-snapshot {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.crawler-snapshot div {
+  background: var(--paper-soft);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.action-groups,
+.patch-list,
+.skipped-actions,
+.blocked-files {
+  display: grid;
+  gap: 14px;
+}
+
+.action-group {
+  display: grid;
+  gap: 12px;
+}
+
+.quiet-group {
+  display: block;
+  padding: 0;
+}
+
+.quiet-group summary {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  padding: 14px 16px;
+}
+
+.quiet-group summary::-webkit-details-marker {
+  display: none;
+}
+
+.summary-count {
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.quiet-group-content {
+  border-top: 1px solid var(--line);
+  padding: 12px 16px 16px;
+}
+
+.card {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 18px;
+}
+
+.card-title-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.card-title-row h3,
+.card-title-row h4 {
+  min-width: 0;
+}
+
+.badge-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  border-radius: 999px;
+  padding: 4px 9px;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.positive {
+  background: var(--positive-bg);
+  color: var(--positive-text);
+}
+
+.caution {
+  background: var(--caution-bg);
+  color: var(--caution-text);
+}
+
+.attention {
+  background: var(--attention-bg);
+  color: var(--attention-text);
+}
+
+.muted,
+.subtle {
+  background: #f1f3f5;
+  color: #4b535c;
+}
+
+.source-badge {
+  font-size: 11px;
+  font-weight: 650;
+}
+
+.notice {
+  background: var(--info-bg);
+  border: 1px solid #d3e3fb;
+  border-radius: 8px;
+  color: var(--info-text);
+  margin-bottom: 16px;
+  padding: 14px 16px;
+}
+
+.notice.warning {
+  background: var(--attention-bg);
+  border-color: #f5c7c0;
+  color: var(--attention-text);
+}
+
+.notice.deploy {
+  background: var(--caution-bg);
+  border-color: #f1ddad;
+  color: var(--caution-text);
+}
+
+.notice p:last-child {
+  margin-bottom: 0;
+}
+
+.field {
+  border-top: 1px solid var(--line);
+  padding-top: 12px;
+  margin-top: 12px;
+}
+
+.field p:last-child,
+.key-value {
+  margin-bottom: 0;
+}
+
+.key-value span {
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.missing-fields {
+  border-top: 1px solid var(--line);
+  margin-top: 12px;
+  padding-top: 12px;
+}
+
+.missing-chip {
+  background: #f1f3f5;
+  border-radius: 999px;
+  color: #4b535c;
+  display: inline-flex;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 9px;
+}
+
+.project-summary {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.project-fact {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  min-width: 0;
+  padding: 16px;
+}
+
+.action-explanation {
+  color: var(--muted-strong);
+}
+
+.action-facts {
+  display: grid;
+  gap: 8px;
+}
+
+.fact {
+  background: var(--paper-soft);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  display: grid;
+  gap: 4px;
+  padding: 10px 12px;
+}
+
+.fact span {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 750;
+  text-transform: uppercase;
+}
+
+.fact strong {
+  font-size: 14px;
+  font-weight: 650;
+}
+
+.compact-list {
+  margin: 0;
+  padding-left: 18px;
+}
+
+.compact-list li {
+  margin: 4px 0;
+}
+
+.quiet-list {
+  display: grid;
+  gap: 10px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.quiet-list li {
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 10px;
+}
+
+.quiet-list li:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.quiet-list strong,
+.quiet-list span {
+  display: block;
+}
+
+.quiet-list span {
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+.quiet-card {
+  border-bottom: 1px solid var(--line);
+  padding: 0 0 12px;
+}
+
+.quiet-card:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.file-summary-list {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  display: grid;
+  gap: 0;
+  margin-bottom: 14px;
+}
+
+.file-summary-row {
+  align-items: center;
+  border-bottom: 1px solid var(--line);
+  display: grid;
+  gap: 12px;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  padding: 12px 14px;
+}
+
+.file-summary-row:last-child {
+  border-bottom: 0;
+}
+
+.file-summary-row strong {
+  font-weight: 750;
+}
+
+.file-summary-row > span:last-child {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.patch-meta-row {
+  color: var(--muted);
+  display: flex;
+  flex-wrap: wrap;
+  font-size: 13px;
+  gap: 8px 14px;
+  margin: 2px 0 12px;
+}
+
+.patch-meta-row span {
+  white-space: nowrap;
+}
+
+.file-chip-list,
+.trust-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  list-style: none;
+  margin: 0 0 16px;
+  padding: 0;
+}
+
+.file-chip-list li,
+.trust-row li {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--muted-strong);
+  font-size: 13px;
+  font-weight: 700;
+  padding: 7px 10px;
+}
+
+.trust-row li {
+  background: var(--positive-bg);
+  border-color: #cdebd8;
+  color: var(--positive-text);
+}
+
+.inline-details {
+  background: transparent;
+  border: 0;
+  margin-top: 8px;
+  padding: 0;
+}
+
+.inline-details summary {
+  color: var(--muted-strong);
+  font-size: 13px;
+}
+
+.empty,
+.missing,
+.muted-text,
+.more-count {
+  color: var(--muted);
+}
+
+.wrap-safe {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+pre {
+  max-height: 380px;
+  overflow: auto;
+  background: var(--code-bg);
+  color: var(--code-text);
+  border-radius: 8px;
+  padding: 14px;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  font-size: 12px;
+  line-height: 1.55;
+  white-space: pre;
+}
+
+pre.command {
+  max-height: none;
+  margin: 8px 0 0;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+details {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 14px 16px;
+}
+
+.context-details {
+  background: transparent;
+  border: 0;
+  padding: 0;
+}
+
+summary {
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.secondary-details {
+  margin-top: 14px;
+}
+
+.secondary-details summary {
+  align-items: center;
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+}
+
+.diff-details {
+  margin-top: 12px;
+}
+
+.diff-details pre {
+  margin-bottom: 0;
+}
+
+.developer-details h3,
+.secondary-details h3 {
+  margin-top: 18px;
+}
+
+@media (max-width: 980px) {
+  .preview-grid,
+  .project-summary,
+  .highlight-grid,
+  .decision-metrics {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .hero-grid,
+  .overview-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .meta-grid.has-repo,
+  .meta-grid.url-only {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .shell {
+    width: min(100% - 20px, 1180px);
+    padding-top: 16px;
+  }
+
+  .hero {
+    padding: 20px;
+  }
+
+  .hero-grid,
+  .decision-metrics,
+  .preview-grid,
+  .project-summary,
+  .highlight-grid,
+  .crawler-snapshot {
+    grid-template-columns: 1fr;
+  }
+
+  .meta-grid.has-repo,
+  .meta-grid.url-only {
+    grid-template-columns: 1fr;
+  }
+  .hero h1 {
+    font-size: 30px;
+  }
+
+  .section-heading h2 {
+    font-size: 24px;
+  }
+
+  .hero-topline,
+  .card-title-row,
+  .subsection-heading,
+  .secondary-details summary {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .file-summary-row {
+    align-items: flex-start;
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+</head>
+<body>
+<main class="shell">
+
+<header class="hero positive-hero">
+  <div class="hero-topline">
+    <span class="eyebrow">ShipReady report</span>
+    <span class="badge positive">Ready</span>
+  </div>
+  <div class="hero-grid">
+    <div class="hero-main">
+      <p class="audited-url wrap-safe">https://imageforge.dev/</p>
+      <h1>Ready to ship</h1>
+      <p class="lede">Core launch checks look good. 1 optional polish item(s) remain.</p>
+    </div>
+    <aside class="decision-panel">
+      <p class="decision-label">Next best action</p>
+      <h2>No changes needed</h2>
+      <p>No launch-blocking metadata or crawlability issues were found.</p>
+    </aside>
+  </div>
+  <dl class="decision-metrics">
+    <div>
+      <dt>Issue review</dt>
+      <dd>No launch-blocking issues</dd>
+    </div>
+    <div>
+      <dt>Safe apply</dt>
+      <dd><span class="badge muted">URL only</span></dd>
+    </div>
+    <div>
+      <dt>Mode</dt>
+      <dd>URL only</dd>
+    </div>
+    
+    <div>
+      <dt>Score</dt>
+      <dd>100 / 100</dd>
+    </div>
+  </dl>
+  <details class="context-details">
+    <summary>Audit context</summary>
+    <dl class="meta-grid url-only">
+      <div>
+        <dt>Audited URL</dt>
+        <dd class="wrap-safe">https://imageforge.dev/</dd>
+      </div>
+      
+      <div>
+        <dt>Generated</dt>
+        <dd><time datetime="2026-06-16T15:11:30.279Z">2026-06-16T15:11:30.279Z</time></dd>
+      </div>
+      <div>
+        <dt>Mode</dt>
+        <dd>URL only</dd>
+      </div>
+    </dl>
+  </details>
+</header>
+
+<section class="section">
+  <div class="section-heading">
+    <p class="eyebrow">Readiness overview</p>
+    <h2>Ready summary</h2>
+    <p>Core launch checks look good. 1 optional polish item(s) remain.</p>
+  </div>
+  
+  
+  <div class="ready-overview">
+    
+    
+  <section class="passed-highlights">
+    <div class="subsection-heading">
+      <h3>Passed highlights</h3>
+      <span class="summary-count">23 items</span>
+    </div>
+    
+      <div class="highlight-grid">
+        
+<article class="mini-issue-card">
+  <span class="badge positive">Passed</span>
+  <strong>Page returns HTTP success</strong>
+  <p>The audited URL returned a 2xx HTTP status.</p>
+</article>
+<article class="mini-issue-card">
+  <span class="badge positive">Passed</span>
+  <strong>Title present</strong>
+  <p>Raw title: ImageForge CLI | Build-Time Image Optimization, Zero Monthly Cost</p>
+</article>
+<article class="mini-issue-card">
+  <span class="badge positive">Passed</span>
+  <strong>Meta description present</strong>
+  <p>Raw meta description is present.</p>
+</article>
+<article class="mini-issue-card">
+  <span class="badge positive">Passed</span>
+  <strong>Canonical URL present</strong>
+  <p>https://imageforge.dev/</p>
+</article>
+<article class="mini-issue-card">
+  <span class="badge positive">Passed</span>
+  <strong>Page is not marked noindex</strong>
+  <p>No noindex robots meta directive was detected.</p>
+</article>
+<article class="mini-issue-card">
+  <span class="badge positive">Passed</span>
+  <strong>HTML lang attribute present</strong>
+  <p>en</p>
+</article>
+      </div>
+    
+      <details class="secondary-details issue-details">
+        <summary>
+          <span>View remaining passed checks</span>
+          <span class="summary-count">17 items</span>
+        </summary>
+        <div class="quiet-group-content">
+          
+<ul class="quiet-list">
+  
+    <li>
+      <strong>Viewport present</strong>
+      <span class="wrap-safe">width=device-width, initial-scale=1</span>
+    </li>
+    <li>
+      <strong>Favicon link found</strong>
+      <span class="wrap-safe">https://imageforge.dev/favicon.ico</span>
+    </li>
+    <li>
+      <strong>og:title present</strong>
+      <span class="wrap-safe">ImageForge CLI</span>
+    </li>
+    <li>
+      <strong>og:description present</strong>
+      <span class="wrap-safe">Open Graph description is present.</span>
+    </li>
+    <li>
+      <strong>og:image present</strong>
+      <span class="wrap-safe">https://imageforge.dev/opengraph-image?5be7b9e6a095abcd</span>
+    </li>
+    <li>
+      <strong>og:url present</strong>
+      <span class="wrap-safe">https://imageforge.dev/</span>
+    </li>
+    <li>
+      <strong>og:type present</strong>
+      <span class="wrap-safe">website</span>
+    </li>
+    <li>
+      <strong>og:site_name present</strong>
+      <span class="wrap-safe">ImageForge CLI</span>
+    </li>
+    <li>
+      <strong>twitter:card present</strong>
+      <span class="wrap-safe">summary_large_image</span>
+    </li>
+    <li>
+      <strong>twitter:title present</strong>
+      <span class="wrap-safe">ImageForge CLI</span>
+    </li>
+    <li>
+      <strong>twitter:description present</strong>
+      <span class="wrap-safe">Twitter/X description is present.</span>
+    </li>
+    <li>
+      <strong>twitter:image present</strong>
+      <span class="wrap-safe">https://imageforge.dev/twitter-image?1aedab77cefc7bb1</span>
+    </li>
+    <li>
+      <strong>Valid JSON-LD detected</strong>
+      <span class="wrap-safe">Valid blocks: 2</span>
+    </li>
+    <li>
+      <strong>Single H1 found</strong>
+      <span class="wrap-safe">Optimize once, deploy everywhere, pay nothing monthly.</span>
+    </li>
+    <li>
+      <strong>robots.txt found</strong>
+      <span class="wrap-safe">https://imageforge.dev/robots.txt</span>
+    </li>
+    <li>
+      <strong>sitemap.xml found</strong>
+      <span class="wrap-safe">https://imageforge.dev/sitemap.xml</span>
+    </li>
+    <li>
+      <strong>Key metadata present in raw HTML</strong>
+      <span class="wrap-safe">No render-only metadata fields were detected.</span>
+    </li>
+</ul>
+        </div>
+      </details>
+  </section>
+    
+  <details class="secondary-details issue-details">
+    <summary>
+      <span>Optional polish</span>
+      <span class="summary-count">1 item</span>
+    </summary>
+    <div class="quiet-group-content">
+      
+<ul class="quiet-list">
+  
+    <li>
+      <strong>Theme color is not set</strong>
+      <span class="wrap-safe">Optional theme-color metadata was not found in the initial HTML.</span>
+    </li>
+</ul>
+    </div>
+  </details>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-heading">
+    <p class="eyebrow">Preview cards</p>
+    <h2>How the page appears to crawlers and preview bots</h2>
+  </div>
+  
+  <div class="preview-grid">
+    
+<article class="card preview-card">
+  <div class="card-title-row">
+    <h3>Google preview</h3>
+    <span class="badge positive source-badge">Raw HTML</span>
+  </div>
+  
+<div class="field">
+  <p class="field-label">Title</p>
+  <p class="wrap-safe">ImageForge CLI | Build-Time Image Optimization, Zero Monthly Cost</p>
+</div>
+<div class="field">
+  <p class="field-label">URL</p>
+  <p class="wrap-safe">https://imageforge.dev/</p>
+</div>
+<div class="field">
+  <p class="field-label">Description</p>
+  <p class="wrap-safe">ImageForge CLI pre-generates WebP/AVIF assets, writes imageforge.json, and adds --check CI enforcement so teams ship optimized images with zero recurring runtime cost.</p>
+</div>
+  
+</article>
+    
+<article class="card preview-card">
+  <div class="card-title-row">
+    <h3>Social preview</h3>
+    <span class="badge positive source-badge">Raw HTML</span>
+  </div>
+  
+<div class="field">
+  <p class="field-label">Title</p>
+  <p class="wrap-safe">ImageForge CLI</p>
+</div>
+<div class="field">
+  <p class="field-label">URL</p>
+  <p class="wrap-safe">https://imageforge.dev/</p>
+</div>
+<div class="field">
+  <p class="field-label">Description</p>
+  <p class="wrap-safe">Build-time image optimization with WebP/AVIF, CI guardrails, and zero recurring runtime image optimization cost.</p>
+</div>
+<div class="field">
+  <p class="field-label">Image URL</p>
+  <p class="wrap-safe">https://imageforge.dev/opengraph-image?5be7b9e6a095abcd</p>
+</div>
+  
+</article>
+    
+<article class="card preview-card">
+  <div class="card-title-row">
+    <h3>X/Twitter preview</h3>
+    <span class="badge positive source-badge">Raw HTML</span>
+  </div>
+  
+<div class="field">
+  <p class="field-label">Card</p>
+  <p class="wrap-safe">summary_large_image</p>
+</div>
+<div class="field">
+  <p class="field-label">Title</p>
+  <p class="wrap-safe">ImageForge CLI</p>
+</div>
+<div class="field">
+  <p class="field-label">Description</p>
+  <p class="wrap-safe">Optimize once, deploy everywhere, and keep recurring image optimization costs at zero.</p>
+</div>
+<div class="field">
+  <p class="field-label">Image URL</p>
+  <p class="wrap-safe">https://imageforge.dev/twitter-image?1aedab77cefc7bb1</p>
+</div>
+  
+</article>
+    <article class="card preview-card crawler-card">
+      <div class="card-title-row">
+        <h3>Crawler view</h3>
+        <span class="badge subtle source-badge">Raw vs rendered</span>
+      </div>
+      <div class="crawler-snapshot">
+        <div>
+          <p class="field-label">Raw HTML</p>
+          <p>Raw HTML includes title, description, canonical, language, 6 Open Graph field(s), 4 Twitter/X field(s), and 2 JSON-LD block(s).</p>
+        </div>
+        <div>
+          <p class="field-label">Rendered HTML</p>
+          <p>Rendered HTML includes title, description, canonical, language, 6 Open Graph field(s), 4 Twitter/X field(s), and 2 JSON-LD block(s).</p>
+        </div>
+      </div>
+      
+    </article>
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="section-heading">
+    <p class="eyebrow">Fix plan</p>
+    <h2>Grouped actions</h2>
+    <p>No local fix plan is available in URL-only mode. Add a project folder to preview file-level changes.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-heading">
+    <p class="eyebrow">Patch preview</p>
+    <h2>No patch preview</h2>
+    <p>No file changes were generated for this report.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-heading">
+    <p class="eyebrow">Safe apply</p>
+    <h2>No local changes to apply</h2>
+    <p>This URL-only report did not inspect a local project folder, so there are no local files to apply.</p>
+  </div>
+  
+<ul class="trust-row">
+  <li>No overwrites</li><li>No metadata or content edits</li><li>No Git commits</li><li>No deploys</li>
+</ul>
+  
+</section>
+
+
+<section class="section">
+  <details class="developer-details">
+    <summary>Developer details</summary>
+    <p><strong>Schema version:</strong> ui-report-v1</p>
+    <h3>Raw JSON report</h3>
+    <pre>{
+  &quot;schemaVersion&quot;: &quot;ui-report-v1&quot;,
+  &quot;generatedAt&quot;: &quot;2026-06-16T15:11:30.279Z&quot;,
+  &quot;input&quot;: {
+    &quot;url&quot;: &quot;https://imageforge.dev/&quot;,
+    &quot;mode&quot;: &quot;url_only&quot;
+  },
+  &quot;workflow&quot;: {
+    &quot;currentRecommendedStep&quot;: &quot;no_changes_needed&quot;,
+    &quot;completedStages&quot;: [
+      &quot;audit&quot;
+    ],
+    &quot;availableNextActions&quot;: [
+      {
+        &quot;label&quot;: &quot;No changes needed&quot;,
+        &quot;action&quot;: &quot;none&quot;,
+        &quot;primary&quot;: true,
+        &quot;enabled&quot;: true
+      }
+    ]
+  },
+  &quot;readiness&quot;: {
+    &quot;label&quot;: &quot;ready&quot;,
+    &quot;title&quot;: &quot;Ready to ship&quot;,
+    &quot;summary&quot;: &quot;Core launch checks look good. 1 optional polish item(s) remain.&quot;,
+    &quot;score&quot;: 100,
+    &quot;topIssues&quot;: [],
+    &quot;passedHighlights&quot;: [
+      {
+        &quot;id&quot;: &quot;crawl.status.ok&quot;,
+        &quot;title&quot;: &quot;Page returns HTTP success&quot;,
+        &quot;explanation&quot;: &quot;The audited URL returned a 2xx HTTP status.&quot;,
+        &quot;whyItMatters&quot;: &quot;This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.&quot;,
+        &quot;userSeverity&quot;: &quot;ready&quot;,
+        &quot;technicalSeverity&quot;: &quot;passed&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;crawl.status.ok&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;Page returns HTTP success&quot;,
+          &quot;rawDescription&quot;: &quot;The audited URL returned a 2xx HTTP status.&quot;,
+          &quot;category&quot;: &quot;crawlability&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        }
+      },
+      {
+        &quot;id&quot;: &quot;metadata.title.present&quot;,
+        &quot;title&quot;: &quot;Title present&quot;,
+        &quot;explanation&quot;: &quot;Raw title: ImageForge CLI | Build-Time Image Optimization, Zero Monthly Cost&quot;,
+        &quot;whyItMatters&quot;: &quot;This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.&quot;,
+        &quot;userSeverity&quot;: &quot;ready&quot;,
+        &quot;technicalSeverity&quot;: &quot;passed&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;metadata.title.present&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;Title present&quot;,
+          &quot;rawDescription&quot;: &quot;Raw title: ImageForge CLI | Build-Time Image Optimization, Zero Monthly Cost&quot;,
+          &quot;category&quot;: &quot;metadata&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        }
+      },
+      {
+        &quot;id&quot;: &quot;metadata.description.present&quot;,
+        &quot;title&quot;: &quot;Meta description present&quot;,
+        &quot;explanation&quot;: &quot;Raw meta description is present.&quot;,
+        &quot;whyItMatters&quot;: &quot;This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.&quot;,
+        &quot;userSeverity&quot;: &quot;ready&quot;,
+        &quot;technicalSeverity&quot;: &quot;passed&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;metadata.description.present&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;Meta description present&quot;,
+          &quot;rawDescription&quot;: &quot;Raw meta description is present.&quot;,
+          &quot;category&quot;: &quot;metadata&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        }
+      },
+      {
+        &quot;id&quot;: &quot;metadata.canonical.present&quot;,
+        &quot;title&quot;: &quot;Canonical URL present&quot;,
+        &quot;explanation&quot;: &quot;https://imageforge.dev/&quot;,
+        &quot;whyItMatters&quot;: &quot;This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.&quot;,
+        &quot;userSeverity&quot;: &quot;ready&quot;,
+        &quot;technicalSeverity&quot;: &quot;passed&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;metadata.canonical.present&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;Canonical URL present&quot;,
+          &quot;rawDescription&quot;: &quot;https://imageforge.dev/&quot;,
+          &quot;category&quot;: &quot;metadata&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        }
+      },
+      {
+        &quot;id&quot;: &quot;metadata.robots.indexable&quot;,
+        &quot;title&quot;: &quot;Page is not marked noindex&quot;,
+        &quot;explanation&quot;: &quot;No noindex robots meta directive was detected.&quot;,
+        &quot;whyItMatters&quot;: &quot;This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.&quot;,
+        &quot;userSeverity&quot;: &quot;ready&quot;,
+        &quot;technicalSeverity&quot;: &quot;passed&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;metadata.robots.indexable&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;Page is not marked noindex&quot;,
+          &quot;rawDescription&quot;: &quot;No noindex robots meta directive was detected.&quot;,
+          &quot;category&quot;: &quot;crawlability&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        }
+      },
+      {
+        &quot;id&quot;: &quot;metadata.lang.present&quot;,
+        &quot;title&quot;: &quot;HTML lang attribute present&quot;,
+        &quot;explanation&quot;: &quot;en&quot;,
+        &quot;whyItMatters&quot;: &quot;This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.&quot;,
+        &quot;userSeverity&quot;: &quot;ready&quot;,
+        &quot;technicalSeverity&quot;: &quot;passed&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;metadata.lang.present&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;HTML lang attribute present&quot;,
+          &quot;rawDescription&quot;: &quot;en&quot;,
+          &quot;category&quot;: &quot;metadata&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        }
+      },
+      {
+        &quot;id&quot;: &quot;metadata.viewport.present&quot;,
+        &quot;title&quot;: &quot;Viewport present&quot;,
+        &quot;explanation&quot;: &quot;width=device-width, initial-scale=1&quot;,
+        &quot;whyItMatters&quot;: &quot;This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.&quot;,
+        &quot;userSeverity&quot;: &quot;ready&quot;,
+        &quot;technicalSeverity&quot;: &quot;passed&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;metadata.viewport.present&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;Viewport present&quot;,
+          &quot;rawDescription&quot;: &quot;width=device-width, initial-scale=1&quot;,
+          &quot;category&quot;: &quot;metadata&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        }
+      },
+      {
+        &quot;id&quot;: &quot;metadata.favicon.present&quot;,
+        &quot;title&quot;: &quot;Favicon link found&quot;,
+        &quot;explanation&quot;: &quot;https://imageforge.dev/favicon.ico&quot;,
+        &quot;whyItMatters&quot;: &quot;This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.&quot;,
+        &quot;userSeverity&quot;: &quot;ready&quot;,
+        &quot;technicalSeverity&quot;: &quot;passed&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;metadata.favicon.present&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;Favicon link found&quot;,
+          &quot;rawDescription&quot;: &quot;https://imageforge.dev/favicon.ico&quot;,
+          &quot;category&quot;: &quot;metadata&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        }
+      },
+      {
+        &quot;id&quot;: &quot;social.og.title_present&quot;,
+        &quot;title&quot;: &quot;og:title present&quot;,
+        &quot;explanation&quot;: &quot;ImageForge CLI&quot;,
+        &quot;whyItMatters&quot;: &quot;This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.&quot;,
+        &quot;userSeverity&quot;: &quot;ready&quot;,
+        &quot;technicalSeverity&quot;: &quot;passed&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;social.og.title_present&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;og:title present&quot;,
+          &quot;rawDescription&quot;: &quot;ImageForge CLI&quot;,
+          &quot;category&quot;: &quot;social&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        }
+      },
+      {
+        &quot;id&quot;: &quot;social.og.description_present&quot;,
+        &quot;title&quot;: &quot;og:description present&quot;,
+        &quot;explanation&quot;: &quot;Open Graph description is present.&quot;,
+        &quot;whyItMatters&quot;: &quot;This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.&quot;,
+        &quot;userSeverity&quot;: &quot;ready&quot;,
+        &quot;technicalSeverity&quot;: &quot;passed&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;social.og.description_present&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;og:description present&quot;,
+          &quot;rawDescription&quot;: &quot;Open Graph description is present.&quot;,
+          &quot;category&quot;: &quot;social&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        }
+      },
+      {
+        &quot;id&quot;: &quot;social.og.image_present&quot;,
+        &quot;title&quot;: &quot;og:image present&quot;,
+        &quot;explanation&quot;: &quot;https://imageforge.dev/opengraph-image?5be7b9e6a095abcd&quot;,
+        &quot;whyItMatters&quot;: &quot;This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.&quot;,
+        &quot;userSeverity&quot;: &quot;ready&quot;,
+        &quot;technicalSeverity&quot;: &quot;passed&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;social.og.image_present&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;og:image present&quot;,
+          &quot;rawDescription&quot;: &quot;https://imageforge.dev/opengraph-image?5be7b9e6a095abcd&quot;,
+          &quot;category&quot;: &quot;social&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        }
+      },
+      {
+        &quot;id&quot;: &quot;social.og.url_present&quot;,
+        &quot;title&quot;: &quot;og:url present&quot;,
+        &quot;explanation&quot;: &quot;https://imageforge.dev/&quot;,
+        &quot;whyItMatters&quot;: &quot;This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.&quot;,
+        &quot;userSeverity&quot;: &quot;ready&quot;,
+        &quot;technicalSeverity&quot;: &quot;passed&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;social.og.url_present&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;og:url present&quot;,
+          &quot;rawDescription&quot;: &quot;https://imageforge.dev/&quot;,
+          &quot;category&quot;: &quot;social&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        }
+      },
+      {
+        &quot;id&quot;: &quot;social.og.type_present&quot;,
+        &quot;title&quot;: &quot;og:type present&quot;,
+        &quot;explanation&quot;: &quot;website&quot;,
+        &quot;whyItMatters&quot;: &quot;This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.&quot;,
+        &quot;userSeverity&quot;: &quot;ready&quot;,
+        &quot;technicalSeverity&quot;: &quot;passed&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;social.og.type_present&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;og:type present&quot;,
+          &quot;rawDescription&quot;: &quot;website&quot;,
+          &quot;category&quot;: &quot;social&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        }
+      },
+      {
+        &quot;id&quot;: &quot;social.og.site_name_present&quot;,
+        &quot;title&quot;: &quot;og:site_name present&quot;,
+        &quot;explanation&quot;: &quot;ImageForge CLI&quot;,
+        &quot;whyItMatters&quot;: &quot;This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.&quot;,
+        &quot;userSeverity&quot;: &quot;ready&quot;,
+        &quot;technicalSeverity&quot;: &quot;passed&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;social.og.site_name_present&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;og:site_name present&quot;,
+          &quot;rawDescription&quot;: &quot;ImageForge CLI&quot;,
+          &quot;category&quot;: &quot;social&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        }
+      },
+      {
+        &quot;id&quot;: &quot;social.twitter.card_present&quot;,
+        &quot;title&quot;: &quot;twitter:card present&quot;,
+        &quot;explanation&quot;: &quot;summary_large_image&quot;,
+        &quot;whyItMatters&quot;: &quot;This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.&quot;,
+        &quot;userSeverity&quot;: &quot;ready&quot;,
+        &quot;technicalSeverity&quot;: &quot;passed&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;social.twitter.card_present&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;twitter:card present&quot;,
+          &quot;rawDescription&quot;: &quot;summary_large_image&quot;,
+          &quot;category&quot;: &quot;social&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        }
+      },
+      {
+        &quot;id&quot;: &quot;social.twitter.title_present&quot;,
+        &quot;title&quot;: &quot;twitter:title present&quot;,
+        &quot;explanation&quot;: &quot;ImageForge CLI&quot;,
+        &quot;whyItMatters&quot;: &quot;This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.&quot;,
+        &quot;userSeverity&quot;: &quot;ready&quot;,
+        &quot;technicalSeverity&quot;: &quot;passed&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;social.twitter.title_present&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;twitter:title present&quot;,
+          &quot;rawDescription&quot;: &quot;ImageForge CLI&quot;,
+          &quot;category&quot;: &quot;social&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        }
+      },
+      {
+        &quot;id&quot;: &quot;social.twitter.description_present&quot;,
+        &quot;title&quot;: &quot;twitter:description present&quot;,
+        &quot;explanation&quot;: &quot;Twitter/X description is present.&quot;,
+        &quot;whyItMatters&quot;: &quot;This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.&quot;,
+        &quot;userSeverity&quot;: &quot;ready&quot;,
+        &quot;technicalSeverity&quot;: &quot;passed&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;social.twitter.description_present&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;twitter:description present&quot;,
+          &quot;rawDescription&quot;: &quot;Twitter/X description is present.&quot;,
+          &quot;category&quot;: &quot;social&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        }
+      },
+      {
+        &quot;id&quot;: &quot;social.twitter.image_present&quot;,
+        &quot;title&quot;: &quot;twitter:image present&quot;,
+        &quot;explanation&quot;: &quot;https://imageforge.dev/twitter-image?1aedab77cefc7bb1&quot;,
+        &quot;whyItMatters&quot;: &quot;This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.&quot;,
+        &quot;userSeverity&quot;: &quot;ready&quot;,
+        &quot;technicalSeverity&quot;: &quot;passed&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;social.twitter.image_present&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;twitter:image present&quot;,
+          &quot;rawDescription&quot;: &quot;https://imageforge.dev/twitter-image?1aedab77cefc7bb1&quot;,
+          &quot;category&quot;: &quot;social&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        }
+      },
+      {
+        &quot;id&quot;: &quot;schema.jsonld.valid&quot;,
+        &quot;title&quot;: &quot;Valid JSON-LD detected&quot;,
+        &quot;explanation&quot;: &quot;Valid blocks: 2&quot;,
+        &quot;whyItMatters&quot;: &quot;This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.&quot;,
+        &quot;userSeverity&quot;: &quot;ready&quot;,
+        &quot;technicalSeverity&quot;: &quot;passed&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;schema.jsonld.valid&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;Valid JSON-LD detected&quot;,
+          &quot;rawDescription&quot;: &quot;Valid blocks: 2&quot;,
+          &quot;category&quot;: &quot;schema&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        }
+      },
+      {
+        &quot;id&quot;: &quot;structure.h1.single&quot;,
+        &quot;title&quot;: &quot;Single H1 found&quot;,
+        &quot;explanation&quot;: &quot;Optimize once, deploy everywhere, pay nothing monthly.&quot;,
+        &quot;whyItMatters&quot;: &quot;This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.&quot;,
+        &quot;userSeverity&quot;: &quot;ready&quot;,
+        &quot;technicalSeverity&quot;: &quot;passed&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;structure.h1.single&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;Single H1 found&quot;,
+          &quot;rawDescription&quot;: &quot;Optimize once, deploy everywhere, pay nothing monthly.&quot;,
+          &quot;category&quot;: &quot;structure&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        }
+      },
+      {
+        &quot;id&quot;: &quot;crawl.robots_txt.found&quot;,
+        &quot;title&quot;: &quot;robots.txt found&quot;,
+        &quot;explanation&quot;: &quot;https://imageforge.dev/robots.txt&quot;,
+        &quot;whyItMatters&quot;: &quot;This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.&quot;,
+        &quot;userSeverity&quot;: &quot;ready&quot;,
+        &quot;technicalSeverity&quot;: &quot;passed&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;crawl.robots_txt.found&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;robots.txt found&quot;,
+          &quot;rawDescription&quot;: &quot;https://imageforge.dev/robots.txt&quot;,
+          &quot;category&quot;: &quot;crawlability&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        }
+      },
+      {
+        &quot;id&quot;: &quot;crawl.sitemap.found&quot;,
+        &quot;title&quot;: &quot;sitemap.xml found&quot;,
+        &quot;explanation&quot;: &quot;https://imageforge.dev/sitemap.xml&quot;,
+        &quot;whyItMatters&quot;: &quot;This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.&quot;,
+        &quot;userSeverity&quot;: &quot;ready&quot;,
+        &quot;technicalSeverity&quot;: &quot;passed&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;crawl.sitemap.found&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;sitemap.xml found&quot;,
+          &quot;rawDescription&quot;: &quot;https://imageforge.dev/sitemap.xml&quot;,
+          &quot;category&quot;: &quot;crawlability&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        }
+      },
+      {
+        &quot;id&quot;: &quot;crawl.raw_render.consistent&quot;,
+        &quot;title&quot;: &quot;Key metadata present in raw HTML&quot;,
+        &quot;explanation&quot;: &quot;No render-only metadata fields were detected.&quot;,
+        &quot;whyItMatters&quot;: &quot;This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.&quot;,
+        &quot;userSeverity&quot;: &quot;ready&quot;,
+        &quot;technicalSeverity&quot;: &quot;passed&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;crawl.raw_render.consistent&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;Key metadata present in raw HTML&quot;,
+          &quot;rawDescription&quot;: &quot;No render-only metadata fields were detected.&quot;,
+          &quot;category&quot;: &quot;crawlability&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        }
+      }
+    ],
+    &quot;optionalPolish&quot;: [
+      {
+        &quot;id&quot;: &quot;metadata.theme_color.missing&quot;,
+        &quot;title&quot;: &quot;Theme color is not set&quot;,
+        &quot;explanation&quot;: &quot;Optional theme-color metadata was not found in the initial HTML.&quot;,
+        &quot;whyItMatters&quot;: &quot;Add a theme-color meta tag if you want branded browser UI on supported surfaces.&quot;,
+        &quot;userSeverity&quot;: &quot;optional_polish&quot;,
+        &quot;technicalSeverity&quot;: &quot;info&quot;,
+        &quot;sourceCheckIds&quot;: [
+          &quot;metadata.theme_color.missing&quot;
+        ],
+        &quot;developerDetails&quot;: {
+          &quot;rawTitle&quot;: &quot;Theme color is not set&quot;,
+          &quot;rawDescription&quot;: &quot;Optional theme-color metadata was not found in the initial HTML.&quot;,
+          &quot;category&quot;: &quot;metadata&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;plan_only&quot;,
+          &quot;recommendation&quot;: &quot;Add a theme-color meta tag if you want branded browser UI on supported surfaces.&quot;
+        }
+      }
+    ]
+  },
+  &quot;previews&quot;: {
+    &quot;google&quot;: {
+      &quot;title&quot;: &quot;ImageForge CLI | Build-Time Image Optimization, Zero Monthly Cost&quot;,
+      &quot;url&quot;: &quot;https://imageforge.dev/&quot;,
+      &quot;description&quot;: &quot;ImageForge CLI pre-generates WebP/AVIF assets, writes imageforge.json, and adds --check CI enforcement so teams ship optimized images with zero recurring runtime cost.&quot;,
+      &quot;missingFields&quot;: [],
+      &quot;source&quot;: &quot;raw&quot;
+    },
+    &quot;social&quot;: {
+      &quot;title&quot;: &quot;ImageForge CLI&quot;,
+      &quot;url&quot;: &quot;https://imageforge.dev/&quot;,
+      &quot;description&quot;: &quot;Build-time image optimization with WebP/AVIF, CI guardrails, and zero recurring runtime image optimization cost.&quot;,
+      &quot;image&quot;: &quot;https://imageforge.dev/opengraph-image?5be7b9e6a095abcd&quot;,
+      &quot;missingFields&quot;: [],
+      &quot;source&quot;: &quot;raw&quot;
+    },
+    &quot;twitter&quot;: {
+      &quot;title&quot;: &quot;ImageForge CLI&quot;,
+      &quot;description&quot;: &quot;Optimize once, deploy everywhere, and keep recurring image optimization costs at zero.&quot;,
+      &quot;image&quot;: &quot;https://imageforge.dev/twitter-image?1aedab77cefc7bb1&quot;,
+      &quot;card&quot;: &quot;summary_large_image&quot;,
+      &quot;missingFields&quot;: [],
+      &quot;source&quot;: &quot;raw&quot;
+    },
+    &quot;crawlerView&quot;: {
+      &quot;rawHtmlSummary&quot;: &quot;Raw HTML includes title, description, canonical, language, 6 Open Graph field(s), 4 Twitter/X field(s), and 2 JSON-LD block(s).&quot;,
+      &quot;renderedHtmlSummary&quot;: &quot;Rendered HTML includes title, description, canonical, language, 6 Open Graph field(s), 4 Twitter/X field(s), and 2 JSON-LD block(s).&quot;,
+      &quot;renderOnlyWarnings&quot;: []
+    }
+  },
+  &quot;safeApply&quot;: {
+    &quot;available&quot;: false,
+    &quot;buttonLabel&quot;: &quot;No safe automatic fixes&quot;,
+    &quot;explanation&quot;: &quot;No dry-run file change currently qualifies for V1 safe apply.&quot;,
+    &quot;eligibleFiles&quot;: [],
+    &quot;blockedFiles&quot;: [],
+    &quot;policy&quot;: &quot;creation_only_robots_sitemap_v1&quot;,
+    &quot;safetyNotes&quot;: [
+      &quot;This ui-report command never writes files.&quot;,
+      &quot;V1 safe apply is limited to creation-only robots/sitemap files.&quot;,
+      &quot;ShipReady will not overwrite existing files in V1 safe apply.&quot;,
+      &quot;ShipReady will not edit metadata, JSON-LD, page content, package files, or configuration in V1 safe apply.&quot;,
+      &quot;ShipReady will not run Git operations, create commits, push, or deploy.&quot;
+    ]
+  },
+  &quot;liveVsLocal&quot;: {
+    &quot;localChangesAffectLiveSite&quot;: false,
+    &quot;deploymentRequired&quot;: false,
+    &quot;message&quot;: &quot;This report audits the live URL only. Select a local project folder before previewing local changes.&quot;
+  },
+  &quot;errors&quot;: [],
+  &quot;developerDetails&quot;: {
+    &quot;rawAudit&quot;: {
+      &quot;url&quot;: &quot;https://imageforge.dev/&quot;,
+      &quot;finalUrl&quot;: &quot;https://imageforge.dev/&quot;,
+      &quot;auditedAt&quot;: &quot;2026-06-16T15:11:31.279Z&quot;,
+      &quot;httpStatus&quot;: 200,
+      &quot;score&quot;: 100,
+      &quot;status&quot;: &quot;good&quot;,
+      &quot;raw&quot;: {
+        &quot;source&quot;: &quot;raw&quot;,
+        &quot;url&quot;: &quot;https://imageforge.dev/&quot;,
+        &quot;metadata&quot;: {
+          &quot;htmlLang&quot;: &quot;en&quot;,
+          &quot;title&quot;: &quot;ImageForge CLI | Build-Time Image Optimization, Zero Monthly Cost&quot;,
+          &quot;description&quot;: &quot;ImageForge CLI pre-generates WebP/AVIF assets, writes imageforge.json, and adds --check CI enforcement so teams ship optimized images with zero recurring runtime cost.&quot;,
+          &quot;viewport&quot;: &quot;width=device-width, initial-scale=1&quot;,
+          &quot;canonical&quot;: &quot;https://imageforge.dev/&quot;,
+          &quot;favicon&quot;: &quot;https://imageforge.dev/favicon.ico&quot;,
+          &quot;faviconLinks&quot;: [
+            &quot;https://imageforge.dev/favicon.ico&quot;,
+            &quot;https://imageforge.dev/favicon.ico?favicon.0x3dzn~oxb6tn.ico&quot;
+          ],
+          &quot;openGraph&quot;: {
+            &quot;title&quot;: &quot;ImageForge CLI&quot;,
+            &quot;description&quot;: &quot;Build-time image optimization with WebP/AVIF, CI guardrails, and zero recurring runtime image optimization cost.&quot;,
+            &quot;image&quot;: &quot;https://imageforge.dev/opengraph-image?5be7b9e6a095abcd&quot;,
+            &quot;url&quot;: &quot;https://imageforge.dev/&quot;,
+            &quot;type&quot;: &quot;website&quot;,
+            &quot;siteName&quot;: &quot;ImageForge CLI&quot;
+          },
+          &quot;twitter&quot;: {
+            &quot;card&quot;: &quot;summary_large_image&quot;,
+            &quot;title&quot;: &quot;ImageForge CLI&quot;,
+            &quot;description&quot;: &quot;Optimize once, deploy everywhere, and keep recurring image optimization costs at zero.&quot;,
+            &quot;image&quot;: &quot;https://imageforge.dev/twitter-image?1aedab77cefc7bb1&quot;
+          }
+        },
+        &quot;headings&quot;: {
+          &quot;h1&quot;: [
+            &quot;Optimize once, deploy everywhere, pay nothing monthly.&quot;
+          ],
+          &quot;all&quot;: [
+            {
+              &quot;level&quot;: 1,
+              &quot;text&quot;: &quot;Optimize once, deploy everywhere, pay nothing monthly.&quot;
+            },
+            {
+              &quot;level&quot;: 2,
+              &quot;text&quot;: &quot;Comparison and cost&quot;
+            },
+            {
+              &quot;level&quot;: 3,
+              &quot;text&quot;: &quot;Processing model&quot;
+            },
+            {
+              &quot;level&quot;: 3,
+              &quot;text&quot;: &quot;Entry pricing&quot;
+            },
+            {
+              &quot;level&quot;: 3,
+              &quot;text&quot;: &quot;Illustrative 28K-transform monthly scenario&quot;
+            },
+            {
+              &quot;level&quot;: 3,
+              &quot;text&quot;: &quot;CI quality gate&quot;
+            },
+            {
+              &quot;level&quot;: 3,
+              &quot;text&quot;: &quot;Air-gapped compatibility&quot;
+            },
+            {
+              &quot;level&quot;: 2,
+              &quot;text&quot;: &quot;How it works&quot;
+            },
+            {
+              &quot;level&quot;: 3,
+              &quot;text&quot;: &quot;Run&quot;
+            },
+            {
+              &quot;level&quot;: 3,
+              &quot;text&quot;: &quot;Check&quot;
+            },
+            {
+              &quot;level&quot;: 3,
+              &quot;text&quot;: &quot;Ship&quot;
+            },
+            {
+              &quot;level&quot;: 2,
+              &quot;text&quot;: &quot;Why teams choose ImageForge&quot;
+            },
+            {
+              &quot;level&quot;: 3,
+              &quot;text&quot;: &quot;Pay once at build time&quot;
+            },
+            {
+              &quot;level&quot;: 3,
+              &quot;text&quot;: &quot;CI guardrails by default&quot;
+            },
+            {
+              &quot;level&quot;: 3,
+              &quot;text&quot;: &quot;Fast reruns with hash cache&quot;
+            },
+            {
+              &quot;level&quot;: 3,
+              &quot;text&quot;: &quot;Blur placeholders and metadata&quot;
+            },
+            {
+              &quot;level&quot;: 3,
+              &quot;text&quot;: &quot;Bounded parallelism&quot;
+            },
+            {
+              &quot;level&quot;: 3,
+              &quot;text&quot;: &quot;Machine-readable run output&quot;
+            },
+            {
+              &quot;level&quot;: 2,
+              &quot;text&quot;: &quot;Methodology&quot;
+            },
+            {
+              &quot;level&quot;: 3,
+              &quot;text&quot;: &quot;Sample Set&quot;
+            },
+            {
+              &quot;level&quot;: 3,
+              &quot;text&quot;: &quot;Runtime Environment&quot;
+            },
+            {
+              &quot;level&quot;: 3,
+              &quot;text&quot;: &quot;Command and Options&quot;
+            },
+            {
+              &quot;level&quot;: 3,
+              &quot;text&quot;: &quot;What the Headline Numbers Mean&quot;
+            },
+            {
+              &quot;level&quot;: 2,
+              &quot;text&quot;: &quot;CI enforcement with --check&quot;
+            },
+            {
+              &quot;level&quot;: 2,
+              &quot;text&quot;: &quot;Next.js-first integration&quot;
+            },
+            {
+              &quot;level&quot;: 2,
+              &quot;text&quot;: &quot;Who this is for&quot;
+            },
+            {
+              &quot;level&quot;: 3,
+              &quot;text&quot;: &quot;cost-conscious teams&quot;
+            },
+            {
+              &quot;level&quot;: 3,
+              &quot;text&quot;: &quot;CI/CD teams&quot;
+            },
+            {
+              &quot;level&quot;: 3,
+              &quot;text&quot;: &quot;air-gapped/compliance teams&quot;
+            },
+            {
+              &quot;level&quot;: 3,
+              &quot;text&quot;: &quot;Vercel-to-self-host migrations&quot;
+            },
+            {
+              &quot;level&quot;: 2,
+              &quot;text&quot;: &quot;Honest limitations&quot;
+            },
+            {
+              &quot;level&quot;: 3,
+              &quot;text&quot;: &quot;Responsive widths are target-based and bounded&quot;
+            },
+            {
+              &quot;level&quot;: 3,
+              &quot;text&quot;: &quot;No runtime responsive resizing&quot;
+            },
+            {
+              &quot;level&quot;: 3,
+              &quot;text&quot;: &quot;No bundled global CDN&quot;
+            },
+            {
+              &quot;level&quot;: 3,
+              &quot;text&quot;: &quot;First run scales with catalog size&quot;
+            },
+            {
+              &quot;level&quot;: 2,
+              &quot;text&quot;: &quot;Build once. Ship fast. Keep costs at zero.&quot;
+            }
+          ]
+        },
+        &quot;images&quot;: {
+          &quot;total&quot;: 0,
+          &quot;missingAlt&quot;: 0,
+          &quot;items&quot;: []
+        },
+        &quot;links&quot;: {
+          &quot;total&quot;: 39,
+          &quot;missingAccessibleText&quot;: 0,
+          &quot;items&quot;: [
+            {
+              &quot;href&quot;: &quot;#top&quot;,
+              &quot;text&quot;: &quot;imageforge&quot;
+            },
+            {
+              &quot;href&quot;: &quot;#comparison&quot;,
+              &quot;text&quot;: &quot;Comparison&quot;
+            },
+            {
+              &quot;href&quot;: &quot;#features&quot;,
+              &quot;text&quot;: &quot;Features&quot;
+            },
+            {
+              &quot;href&quot;: &quot;#use-cases&quot;,
+              &quot;text&quot;: &quot;Use cases&quot;
+            },
+            {
+              &quot;href&quot;: &quot;#limitations&quot;,
+              &quot;text&quot;: &quot;Limitations&quot;
+            },
+            {
+              &quot;href&quot;: &quot;/docs&quot;,
+              &quot;text&quot;: &quot;Docs&quot;
+            },
+            {
+              &quot;href&quot;: &quot;/contact&quot;,
+              &quot;text&quot;: &quot;Contact&quot;
+            },
+            {
+              &quot;href&quot;: &quot;https://github.com/f-campana/imageforge&quot;,
+              &quot;text&quot;: &quot;GitHub&quot;
+            },
+            {
+              &quot;href&quot;: &quot;https://www.npmjs.com/package/@imageforge/cli&quot;,
+              &quot;text&quot;: &quot;npm package&quot;
+            },
+            {
+              &quot;href&quot;: &quot;https://www.npmjs.com/package/@imageforge/cli&quot;,
+              &quot;text&quot;: &quot;Get Started&quot;
+            },
+            {
+              &quot;href&quot;: &quot;/docs&quot;,
+              &quot;text&quot;: &quot;Read Docs&quot;
+            },
+            {
+              &quot;href&quot;: &quot;/contact&quot;,
+              &quot;text&quot;: &quot;Contact&quot;
+            },
+            {
+              &quot;href&quot;: &quot;https://vercel.com/docs/image-optimization/limits-and-pricing&quot;,
+              &quot;text&quot;: &quot;[Vercel limits and pricing]&quot;
+            },
+            {
+              &quot;href&quot;: &quot;https://cloudinary.com/pricing&quot;,
+              &quot;text&quot;: &quot;[Cloudinary pricing]&quot;
+            },
+            {
+              &quot;href&quot;: &quot;https://www.imgix.com/pricing&quot;,
+              &quot;text&quot;: &quot;[imgix pricing]&quot;
+            },
+            {
+              &quot;href&quot;: &quot;https://www.howdygo.com/blog/cutting-howdygos-vercel-costs-by-80-without-compromising-ux-or-dx&quot;,
+              &quot;text&quot;: &quot;[HowdyGo cost case study]&quot;
+            },
+            {
+              &quot;href&quot;: &quot;https://vercel.com/docs/image-optimization/limits-and-pricing&quot;,
+              &quot;text&quot;: &quot;[Vercel limits and pricing]&quot;
+            },
+            {
+              &quot;href&quot;: &quot;https://vercel.com/docs/image-optimization/legacy-pricing&quot;,
+              &quot;text&quot;: &quot;[Vercel legacy image pricing]&quot;
+            },
+            {
+              &quot;href&quot;: &quot;https://cloudinary.com/pricing&quot;,
+              &quot;text&quot;: &quot;[Cloudinary pricing]&quot;
+            },
+            {
+              &quot;href&quot;: &quot;https://www.imgix.com/pricing&quot;,
+              &quot;text&quot;: &quot;[imgix pricing]&quot;
+            },
+            {
+              &quot;href&quot;: &quot;https://vercel.com/docs/image-optimization/limits-and-pricing&quot;,
+              &quot;text&quot;: &quot;[Vercel limits and pricing]&quot;
+            },
+            {
+              &quot;href&quot;: &quot;https://cloudinary.com/pricing&quot;,
+              &quot;text&quot;: &quot;[Cloudinary pricing]&quot;
+            },
+            {
+              &quot;href&quot;: &quot;https://www.imgix.com/pricing&quot;,
+              &quot;text&quot;: &quot;[imgix pricing]&quot;
+            },
+            {
+              &quot;href&quot;: &quot;https://www.howdygo.com/blog/cutting-howdygos-vercel-costs-by-80-without-compromising-ux-or-dx&quot;,
+              &quot;text&quot;: &quot;[HowdyGo cost case study]&quot;
+            },
+            {
+              &quot;href&quot;: &quot;https://vercel.com/docs/image-optimization/limits-and-pricing&quot;,
+              &quot;text&quot;: &quot;[Vercel limits and pricing]&quot;
+            },
+            {
+              &quot;href&quot;: &quot;https://vercel.com/docs/image-optimization/legacy-pricing&quot;,
+              &quot;text&quot;: &quot;[Vercel legacy image pricing]&quot;
+            },
+            {
+              &quot;href&quot;: &quot;https://cloudinary.com/pricing&quot;,
+              &quot;text&quot;: &quot;[Cloudinary pricing]&quot;
+            },
+            {
+              &quot;href&quot;: &quot;https://www.imgix.com/pricing&quot;,
+              &quot;text&quot;: &quot;[imgix pricing]&quot;
+            },
+            {
+              &quot;href&quot;: &quot;#methodology&quot;,
+              &quot;text&quot;: &quot;Methodology&quot;
+            },
+            {
+              &quot;href&quot;: &quot;/benchmarks/latest&quot;,
+              &quot;text&quot;: &quot;full evidence page&quot;
+            },
+            {
+              &quot;href&quot;: &quot;/benchmarks/latest&quot;,
+              &quot;text&quot;: &quot;View the full benchmark report&quot;
+            },
+            {
+              &quot;href&quot;: &quot;https://github.com/f-campana/imageforge/actions/runs/26928624304&quot;,
+              &quot;text&quot;: &quot;benchmark workflow&quot;
+            },
+            {
+              &quot;href&quot;: &quot;/docs&quot;,
+              &quot;text&quot;: &quot;Docs&quot;
+            },
+            {
+              &quot;href&quot;: &quot;/contact&quot;,
+              &quot;text&quot;: &quot;Contact&quot;
+            },
+            {
+              &quot;href&quot;: &quot;https://github.com/f-campana/imageforge/blob/main/CHANGELOG.md&quot;,
+              &quot;text&quot;: &quot;Changelog&quot;
+            },
+            {
+              &quot;href&quot;: &quot;https://github.com/f-campana/imageforge/issues&quot;,
+              &quot;text&quot;: &quot;Issues&quot;
+            },
+            {
+              &quot;href&quot;: &quot;https://github.com/f-campana/imageforge/blob/main/SECURITY.md&quot;,
+              &quot;text&quot;: &quot;Security&quot;
+            },
+            {
+              &quot;href&quot;: &quot;https://github.com/f-campana/imageforge&quot;,
+              &quot;text&quot;: &quot;GitHub&quot;
+            },
+            {
+              &quot;href&quot;: &quot;https://www.npmjs.com/package/@imageforge/cli&quot;,
+              &quot;text&quot;: &quot;npm package&quot;
+            }
+          ]
+        },
+        &quot;jsonLd&quot;: [
+          {
+            &quot;raw&quot;: &quot;{\&quot;@context\&quot;:\&quot;https://schema.org\&quot;,\&quot;@type\&quot;:\&quot;WebSite\&quot;,\&quot;name\&quot;:\&quot;ImageForge CLI\&quot;,\&quot;description\&quot;:\&quot;Build-time image optimization for Next.js and modern web apps with WebP/AVIF conversion, blurDataURL placeholders, deterministic hash caching, and CI enforcement.\&quot;,\&quot;url\&quot;:\&quot;https://imageforge.dev\&quot;,\&quot;inLanguage\&quot;:\&quot;en-US\&quot;}&quot;,
+            &quot;valid&quot;: true,
+            &quot;parsed&quot;: {
+              &quot;@context&quot;: &quot;https://schema.org&quot;,
+              &quot;@type&quot;: &quot;WebSite&quot;,
+              &quot;name&quot;: &quot;ImageForge CLI&quot;,
+              &quot;description&quot;: &quot;Build-time image optimization for Next.js and modern web apps with WebP/AVIF conversion, blurDataURL placeholders, deterministic hash caching, and CI enforcement.&quot;,
+              &quot;url&quot;: &quot;https://imageforge.dev&quot;,
+              &quot;inLanguage&quot;: &quot;en-US&quot;
+            },
+            &quot;types&quot;: [
+              &quot;WebSite&quot;
+            ]
+          },
+          {
+            &quot;raw&quot;: &quot;{\&quot;@context\&quot;:\&quot;https://schema.org\&quot;,\&quot;@type\&quot;:\&quot;SoftwareApplication\&quot;,\&quot;name\&quot;:\&quot;ImageForge CLI\&quot;,\&quot;applicationCategory\&quot;:\&quot;DeveloperApplication\&quot;,\&quot;operatingSystem\&quot;:\&quot;Cross-platform\&quot;,\&quot;description\&quot;:\&quot;Build-time image optimization for Next.js and modern web apps with WebP/AVIF conversion, blurDataURL placeholders, deterministic hash caching, and CI enforcement.\&quot;,\&quot;softwareVersion\&quot;:\&quot;0.1.6\&quot;,\&quot;offers\&quot;:{\&quot;@type\&quot;:\&quot;Offer\&quot;,\&quot;price\&quot;:\&quot;0\&quot;,\&quot;priceCurrency\&quot;:\&quot;USD\&quot;},\&quot;url\&quot;:\&quot;https://imageforge.dev\&quot;,\&quot;sameAs\&quot;:[\&quot;https://github.com/f-campana/imageforge\&quot;,\&quot;https://www.npmjs.com/package/@imageforge/cli\&quot;]}&quot;,
+            &quot;valid&quot;: true,
+            &quot;parsed&quot;: {
+              &quot;@context&quot;: &quot;https://schema.org&quot;,
+              &quot;@type&quot;: &quot;SoftwareApplication&quot;,
+              &quot;name&quot;: &quot;ImageForge CLI&quot;,
+              &quot;applicationCategory&quot;: &quot;DeveloperApplication&quot;,
+              &quot;operatingSystem&quot;: &quot;Cross-platform&quot;,
+              &quot;description&quot;: &quot;Build-time image optimization for Next.js and modern web apps with WebP/AVIF conversion, blurDataURL placeholders, deterministic hash caching, and CI enforcement.&quot;,
+              &quot;softwareVersion&quot;: &quot;0.1.6&quot;,
+              &quot;offers&quot;: {
+                &quot;@type&quot;: &quot;Offer&quot;,
+                &quot;price&quot;: &quot;0&quot;,
+                &quot;priceCurrency&quot;: &quot;USD&quot;
+              },
+              &quot;url&quot;: &quot;https://imageforge.dev&quot;,
+              &quot;sameAs&quot;: [
+                &quot;https://github.com/f-campana/imageforge&quot;,
+                &quot;https://www.npmjs.com/package/@imageforge/cli&quot;
+              ]
+            },
+            &quot;types&quot;: [
+              &quot;SoftwareApplication&quot;
+            ]
+          }
+        ]
+      },
+      &quot;rendered&quot;: {
+        &quot;source&quot;: &quot;rendered&quot;,
+        &quot;url&quot;: &quot;https://imageforge.dev/&quot;,
+        &quot;metadata&quot;: {
+          &quot;htmlLang&quot;: &quot;en&quot;,
+          &quot;title&quot;: &quot;ImageForge CLI | Build-Time Image Optimization, Zero Monthly Cost&quot;,
+          &quot;description&quot;: &quot;ImageForge CLI pre-generates WebP/AVIF assets, writes imageforge.json, and adds --check CI enforcement so teams ship optimized images with zero recurring runtime cost.&quot;,
+          &quot;viewport&quot;: &quot;width=device-width, initial-scale=1&quot;,
+          &quot;canonical&quot;: &quot;https://imageforge.dev/&quot;,
+          &quot;favicon&quot;: &quot;https://imageforge.dev/favicon.ico&quot;,
+          &quot;faviconLinks&quot;: [
+            &quot;https://imageforge.dev/favicon.ico&quot;,
+            &quot;https://imageforge.dev/favicon.ico?favicon.0x3dzn~oxb6tn.ico&quot;
+          ],
+          &quot;openGraph&quot;: {
+            &quot;title&quot;: &quot;ImageForge CLI&quot;,
+            &quot;description&quot;: &quot;Build-time image optimization with WebP/AVIF, CI guardrails, and zero recurring runtime image optimization cost.&quot;,
+            &quot;image&quot;: &quot;https://imageforge.dev/opengraph-image?5be7b9e6a095abcd&quot;,
+            &quot;url&quot;: &quot;https://imageforge.dev/&quot;,
+            &quot;type&quot;: &quot;website&quot;,
+            &quot;siteName&quot;: &quot;ImageForge CLI&quot;
+          },
+          &quot;twitter&quot;: {
+            &quot;card&quot;: &quot;summary_large_image&quot;,
+            &quot;title&quot;: &quot;ImageForge CLI&quot;,
+            &quot;description&quot;: &quot;Optimize once, deploy everywhere, and keep recurring image optimization costs at zero.&quot;,
+            &quot;image&quot;: &quot;https://imageforge.dev/twitter-image?1aedab77cefc7bb1&quot;
+          }
+        },
+        &quot;headings&quot;: {
+          &quot;h1&quot;: [
+            &quot;Optimize once, deploy everywhere, pay nothing monthly.&quot;
+          ],
+          &quot;all&quot;: [
+            {
+              &quot;level&quot;: 1,
+              &quot;text&quot;: &quot;Optimize once, deploy everywhere, pay nothing monthly.&quot;
+            },
+            {
+              &quot;level&quot;: 2,
+              &quot;text&quot;: &quot;Comparison and cost&quot;
+            },
+            {
+              &quot;level&quot;: 3,
+              &quot;text&quot;: &quot;Processing model&quot;
+            },
+            {
+              &quot;level&quot;: 3,
+              &quot;text&quot;: &quot;Entry pricing&quot;
+            },
+            {
+              &quot;level&quot;: 3,
+              &quot;text&quot;: &quot;Illustrative 28K-transform monthly scenario&quot;
+            },
+            {
+              &quot;level&quot;: 3,
+              &quot;text&quot;: &quot;CI quality gate&quot;
+            },
+            {
+              &quot;level&quot;: 3,
+              &quot;text&quot;: &quot;Air-gapped compatibility&quot;
+            },
+            {
+              &quot;level&quot;: 2,
+              &quot;text&quot;: &quot;How it works&quot;
+            },
+            {
+              &quot;level&quot;: 3,
+              &quot;text&quot;: &quot;Run&quot;
+            },
+            {
+              &quot;level&quot;: 3,
+              &quot;text&quot;: &quot;Check&quot;
+            },
+            {
+              &quot;level&quot;: 3,
+              &quot;text&quot;: &quot;Ship&quot;
+            },
+            {
+              &quot;level&quot;: 2,
+              &quot;text&quot;: &quot;Why teams choose ImageForge&quot;
+            },
+            {
+              &quot;level&quot;: 3,
+              &quot;text&quot;: &quot;Pay once at build time&quot;
+            },
+            {
+              &quot;level&quot;: 3,
+              &quot;text&quot;: &quot;CI guardrails by default&quot;
+            },
+            {
+              &quot;level&quot;: 3,
+              &quot;text&quot;: &quot;Fast reruns with hash cache&quot;
+            },
+            {
+              &quot;level&quot;: 3,
+              &quot;text&quot;: &quot;Blur placeholders and metadata&quot;
+            },
+            {
+              &quot;level&quot;: 3,
+              &quot;text&quot;: &quot;Bounded parallelism&quot;
+            },
+            {
+              &quot;level&quot;: 3,
+              &quot;text&quot;: &quot;Machine-readable run output&quot;
+            },
+            {
+              &quot;level&quot;: 2,
+              &quot;text&quot;: &quot;Methodology&quot;
+            },
+            {
+              &quot;level&quot;: 3,
+              &quot;text&quot;: &quot;Sample Set&quot;
+            },
+            {
+              &quot;level&quot;: 3,
+              &quot;text&quot;: &quot;Runtime Environment&quot;
+            },
+            {
+              &quot;level&quot;: 3,
+              &quot;text&quot;: &quot;Command and Options&quot;
+            },
+            {
+              &quot;level&quot;: 3,
+              &quot;text&quot;: &quot;What the Headline Numbers Mean&quot;
+            },
+            {
+              &quot;level&quot;: 2,
+              &quot;text&quot;: &quot;CI enforcement with --check&quot;
+            },
+            {
+              &quot;level&quot;: 2,
+              &quot;text&quot;: &quot;Next.js-first integration&quot;
+            },
+            {
+              &quot;level&quot;: 2,
+              &quot;text&quot;: &quot;Who this is for&quot;
+            },
+            {
+              &quot;level&quot;: 3,
+              &quot;text&quot;: &quot;cost-conscious teams&quot;
+            },
+            {
+              &quot;level&quot;: 3,
+              &quot;text&quot;: &quot;CI/CD teams&quot;
+            },
+            {
+              &quot;level&quot;: 3,
+              &quot;text&quot;: &quot;air-gapped/compliance teams&quot;
+            },
+            {
+              &quot;level&quot;: 3,
+              &quot;text&quot;: &quot;Vercel-to-self-host migrations&quot;
+            },
+            {
+              &quot;level&quot;: 2,
+              &quot;text&quot;: &quot;Honest limitations&quot;
+            },
+            {
+              &quot;level&quot;: 3,
+              &quot;text&quot;: &quot;Responsive widths are target-based and bounded&quot;
+            },
+            {
+              &quot;level&quot;: 3,
+              &quot;text&quot;: &quot;No runtime responsive resizing&quot;
+            },
+            {
+              &quot;level&quot;: 3,
+              &quot;text&quot;: &quot;No bundled global CDN&quot;
+            },
+            {
+              &quot;level&quot;: 3,
+              &quot;text&quot;: &quot;First run scales with catalog size&quot;
+            },
+            {
+              &quot;level&quot;: 2,
+              &quot;text&quot;: &quot;Build once. Ship fast. Keep costs at zero.&quot;
+            }
+          ]
+        },
+        &quot;images&quot;: {
+          &quot;total&quot;: 0,
+          &quot;missingAlt&quot;: 0,
+          &quot;items&quot;: []
+        },
+        &quot;links&quot;: {
+          &quot;total&quot;: 39,
+          &quot;missingAccessibleText&quot;: 0,
+          &quot;items&quot;: [
+            {
+              &quot;href&quot;: &quot;#top&quot;,
+              &quot;text&quot;: &quot;imageforge&quot;
+            },
+            {
+              &quot;href&quot;: &quot;#comparison&quot;,
+              &quot;text&quot;: &quot;Comparison&quot;
+            },
+            {
+              &quot;href&quot;: &quot;#features&quot;,
+              &quot;text&quot;: &quot;Features&quot;
+            },
+            {
+              &quot;href&quot;: &quot;#use-cases&quot;,
+              &quot;text&quot;: &quot;Use cases&quot;
+            },
+            {
+              &quot;href&quot;: &quot;#limitations&quot;,
+              &quot;text&quot;: &quot;Limitations&quot;
+            },
+            {
+              &quot;href&quot;: &quot;/docs&quot;,
+              &quot;text&quot;: &quot;Docs&quot;
+            },
+            {
+              &quot;href&quot;: &quot;/contact&quot;,
+              &quot;text&quot;: &quot;Contact&quot;
+            },
+            {
+              &quot;href&quot;: &quot;https://github.com/f-campana/imageforge&quot;,
+              &quot;text&quot;: &quot;GitHub&quot;
+            },
+            {
+              &quot;href&quot;: &quot;https://www.npmjs.com/package/@imageforge/cli&quot;,
+              &quot;text&quot;: &quot;npm package&quot;
+            },
+            {
+              &quot;href&quot;: &quot;https://www.npmjs.com/package/@imageforge/cli&quot;,
+              &quot;text&quot;: &quot;Get Started&quot;
+            },
+            {
+              &quot;href&quot;: &quot;/docs&quot;,
+              &quot;text&quot;: &quot;Read Docs&quot;
+            },
+            {
+              &quot;href&quot;: &quot;/contact&quot;,
+              &quot;text&quot;: &quot;Contact&quot;
+            },
+            {
+              &quot;href&quot;: &quot;https://vercel.com/docs/image-optimization/limits-and-pricing&quot;,
+              &quot;text&quot;: &quot;[Vercel limits and pricing]&quot;
+            },
+            {
+              &quot;href&quot;: &quot;https://cloudinary.com/pricing&quot;,
+              &quot;text&quot;: &quot;[Cloudinary pricing]&quot;
+            },
+            {
+              &quot;href&quot;: &quot;https://www.imgix.com/pricing&quot;,
+              &quot;text&quot;: &quot;[imgix pricing]&quot;
+            },
+            {
+              &quot;href&quot;: &quot;https://www.howdygo.com/blog/cutting-howdygos-vercel-costs-by-80-without-compromising-ux-or-dx&quot;,
+              &quot;text&quot;: &quot;[HowdyGo cost case study]&quot;
+            },
+            {
+              &quot;href&quot;: &quot;https://vercel.com/docs/image-optimization/limits-and-pricing&quot;,
+              &quot;text&quot;: &quot;[Vercel limits and pricing]&quot;
+            },
+            {
+              &quot;href&quot;: &quot;https://vercel.com/docs/image-optimization/legacy-pricing&quot;,
+              &quot;text&quot;: &quot;[Vercel legacy image pricing]&quot;
+            },
+            {
+              &quot;href&quot;: &quot;https://cloudinary.com/pricing&quot;,
+              &quot;text&quot;: &quot;[Cloudinary pricing]&quot;
+            },
+            {
+              &quot;href&quot;: &quot;https://www.imgix.com/pricing&quot;,
+              &quot;text&quot;: &quot;[imgix pricing]&quot;
+            },
+            {
+              &quot;href&quot;: &quot;https://vercel.com/docs/image-optimization/limits-and-pricing&quot;,
+              &quot;text&quot;: &quot;[Vercel limits and pricing]&quot;
+            },
+            {
+              &quot;href&quot;: &quot;https://cloudinary.com/pricing&quot;,
+              &quot;text&quot;: &quot;[Cloudinary pricing]&quot;
+            },
+            {
+              &quot;href&quot;: &quot;https://www.imgix.com/pricing&quot;,
+              &quot;text&quot;: &quot;[imgix pricing]&quot;
+            },
+            {
+              &quot;href&quot;: &quot;https://www.howdygo.com/blog/cutting-howdygos-vercel-costs-by-80-without-compromising-ux-or-dx&quot;,
+              &quot;text&quot;: &quot;[HowdyGo cost case study]&quot;
+            },
+            {
+              &quot;href&quot;: &quot;https://vercel.com/docs/image-optimization/limits-and-pricing&quot;,
+              &quot;text&quot;: &quot;[Vercel limits and pricing]&quot;
+            },
+            {
+              &quot;href&quot;: &quot;https://vercel.com/docs/image-optimization/legacy-pricing&quot;,
+              &quot;text&quot;: &quot;[Vercel legacy image pricing]&quot;
+            },
+            {
+              &quot;href&quot;: &quot;https://cloudinary.com/pricing&quot;,
+              &quot;text&quot;: &quot;[Cloudinary pricing]&quot;
+            },
+            {
+              &quot;href&quot;: &quot;https://www.imgix.com/pricing&quot;,
+              &quot;text&quot;: &quot;[imgix pricing]&quot;
+            },
+            {
+              &quot;href&quot;: &quot;#methodology&quot;,
+              &quot;text&quot;: &quot;Methodology&quot;
+            },
+            {
+              &quot;href&quot;: &quot;/benchmarks/latest&quot;,
+              &quot;text&quot;: &quot;full evidence page&quot;
+            },
+            {
+              &quot;href&quot;: &quot;/benchmarks/latest&quot;,
+              &quot;text&quot;: &quot;View the full benchmark report&quot;
+            },
+            {
+              &quot;href&quot;: &quot;https://github.com/f-campana/imageforge/actions/runs/26928624304&quot;,
+              &quot;text&quot;: &quot;benchmark workflow&quot;
+            },
+            {
+              &quot;href&quot;: &quot;/docs&quot;,
+              &quot;text&quot;: &quot;Docs&quot;
+            },
+            {
+              &quot;href&quot;: &quot;/contact&quot;,
+              &quot;text&quot;: &quot;Contact&quot;
+            },
+            {
+              &quot;href&quot;: &quot;https://github.com/f-campana/imageforge/blob/main/CHANGELOG.md&quot;,
+              &quot;text&quot;: &quot;Changelog&quot;
+            },
+            {
+              &quot;href&quot;: &quot;https://github.com/f-campana/imageforge/issues&quot;,
+              &quot;text&quot;: &quot;Issues&quot;
+            },
+            {
+              &quot;href&quot;: &quot;https://github.com/f-campana/imageforge/blob/main/SECURITY.md&quot;,
+              &quot;text&quot;: &quot;Security&quot;
+            },
+            {
+              &quot;href&quot;: &quot;https://github.com/f-campana/imageforge&quot;,
+              &quot;text&quot;: &quot;GitHub&quot;
+            },
+            {
+              &quot;href&quot;: &quot;https://www.npmjs.com/package/@imageforge/cli&quot;,
+              &quot;text&quot;: &quot;npm package&quot;
+            }
+          ]
+        },
+        &quot;jsonLd&quot;: [
+          {
+            &quot;raw&quot;: &quot;{\&quot;@context\&quot;:\&quot;https://schema.org\&quot;,\&quot;@type\&quot;:\&quot;WebSite\&quot;,\&quot;name\&quot;:\&quot;ImageForge CLI\&quot;,\&quot;description\&quot;:\&quot;Build-time image optimization for Next.js and modern web apps with WebP/AVIF conversion, blurDataURL placeholders, deterministic hash caching, and CI enforcement.\&quot;,\&quot;url\&quot;:\&quot;https://imageforge.dev\&quot;,\&quot;inLanguage\&quot;:\&quot;en-US\&quot;}&quot;,
+            &quot;valid&quot;: true,
+            &quot;parsed&quot;: {
+              &quot;@context&quot;: &quot;https://schema.org&quot;,
+              &quot;@type&quot;: &quot;WebSite&quot;,
+              &quot;name&quot;: &quot;ImageForge CLI&quot;,
+              &quot;description&quot;: &quot;Build-time image optimization for Next.js and modern web apps with WebP/AVIF conversion, blurDataURL placeholders, deterministic hash caching, and CI enforcement.&quot;,
+              &quot;url&quot;: &quot;https://imageforge.dev&quot;,
+              &quot;inLanguage&quot;: &quot;en-US&quot;
+            },
+            &quot;types&quot;: [
+              &quot;WebSite&quot;
+            ]
+          },
+          {
+            &quot;raw&quot;: &quot;{\&quot;@context\&quot;:\&quot;https://schema.org\&quot;,\&quot;@type\&quot;:\&quot;SoftwareApplication\&quot;,\&quot;name\&quot;:\&quot;ImageForge CLI\&quot;,\&quot;applicationCategory\&quot;:\&quot;DeveloperApplication\&quot;,\&quot;operatingSystem\&quot;:\&quot;Cross-platform\&quot;,\&quot;description\&quot;:\&quot;Build-time image optimization for Next.js and modern web apps with WebP/AVIF conversion, blurDataURL placeholders, deterministic hash caching, and CI enforcement.\&quot;,\&quot;softwareVersion\&quot;:\&quot;0.1.6\&quot;,\&quot;offers\&quot;:{\&quot;@type\&quot;:\&quot;Offer\&quot;,\&quot;price\&quot;:\&quot;0\&quot;,\&quot;priceCurrency\&quot;:\&quot;USD\&quot;},\&quot;url\&quot;:\&quot;https://imageforge.dev\&quot;,\&quot;sameAs\&quot;:[\&quot;https://github.com/f-campana/imageforge\&quot;,\&quot;https://www.npmjs.com/package/@imageforge/cli\&quot;]}&quot;,
+            &quot;valid&quot;: true,
+            &quot;parsed&quot;: {
+              &quot;@context&quot;: &quot;https://schema.org&quot;,
+              &quot;@type&quot;: &quot;SoftwareApplication&quot;,
+              &quot;name&quot;: &quot;ImageForge CLI&quot;,
+              &quot;applicationCategory&quot;: &quot;DeveloperApplication&quot;,
+              &quot;operatingSystem&quot;: &quot;Cross-platform&quot;,
+              &quot;description&quot;: &quot;Build-time image optimization for Next.js and modern web apps with WebP/AVIF conversion, blurDataURL placeholders, deterministic hash caching, and CI enforcement.&quot;,
+              &quot;softwareVersion&quot;: &quot;0.1.6&quot;,
+              &quot;offers&quot;: {
+                &quot;@type&quot;: &quot;Offer&quot;,
+                &quot;price&quot;: &quot;0&quot;,
+                &quot;priceCurrency&quot;: &quot;USD&quot;
+              },
+              &quot;url&quot;: &quot;https://imageforge.dev&quot;,
+              &quot;sameAs&quot;: [
+                &quot;https://github.com/f-campana/imageforge&quot;,
+                &quot;https://www.npmjs.com/package/@imageforge/cli&quot;
+              ]
+            },
+            &quot;types&quot;: [
+              &quot;SoftwareApplication&quot;
+            ]
+          }
+        ]
+      },
+      &quot;comparison&quot;: {
+        &quot;fields&quot;: [
+          {
+            &quot;field&quot;: &quot;title&quot;,
+            &quot;rawValue&quot;: &quot;ImageForge CLI | Build-Time Image Optimization, Zero Monthly Cost&quot;,
+            &quot;renderedValue&quot;: &quot;ImageForge CLI | Build-Time Image Optimization, Zero Monthly Cost&quot;,
+            &quot;status&quot;: &quot;present_in_raw&quot;
+          },
+          {
+            &quot;field&quot;: &quot;description&quot;,
+            &quot;rawValue&quot;: &quot;ImageForge CLI pre-generates WebP/AVIF assets, writes imageforge.json, and adds --check CI enforcement so teams ship optimized images with zero recurring runtime cost.&quot;,
+            &quot;renderedValue&quot;: &quot;ImageForge CLI pre-generates WebP/AVIF assets, writes imageforge.json, and adds --check CI enforcement so teams ship optimized images with zero recurring runtime cost.&quot;,
+            &quot;status&quot;: &quot;present_in_raw&quot;
+          },
+          {
+            &quot;field&quot;: &quot;canonical&quot;,
+            &quot;rawValue&quot;: &quot;https://imageforge.dev/&quot;,
+            &quot;renderedValue&quot;: &quot;https://imageforge.dev/&quot;,
+            &quot;status&quot;: &quot;present_in_raw&quot;
+          },
+          {
+            &quot;field&quot;: &quot;robots&quot;,
+            &quot;status&quot;: &quot;missing_in_both&quot;
+          },
+          {
+            &quot;field&quot;: &quot;html.lang&quot;,
+            &quot;rawValue&quot;: &quot;en&quot;,
+            &quot;renderedValue&quot;: &quot;en&quot;,
+            &quot;status&quot;: &quot;present_in_raw&quot;
+          },
+          {
+            &quot;field&quot;: &quot;viewport&quot;,
+            &quot;rawValue&quot;: &quot;width=device-width, initial-scale=1&quot;,
+            &quot;renderedValue&quot;: &quot;width=device-width, initial-scale=1&quot;,
+            &quot;status&quot;: &quot;present_in_raw&quot;
+          },
+          {
+            &quot;field&quot;: &quot;theme-color&quot;,
+            &quot;status&quot;: &quot;missing_in_both&quot;
+          },
+          {
+            &quot;field&quot;: &quot;favicon&quot;,
+            &quot;rawValue&quot;: &quot;https://imageforge.dev/favicon.ico, https://imageforge.dev/favicon.ico?favicon.0x3dzn~oxb6tn.ico&quot;,
+            &quot;renderedValue&quot;: &quot;https://imageforge.dev/favicon.ico, https://imageforge.dev/favicon.ico?favicon.0x3dzn~oxb6tn.ico&quot;,
+            &quot;status&quot;: &quot;present_in_raw&quot;
+          },
+          {
+            &quot;field&quot;: &quot;og:title&quot;,
+            &quot;rawValue&quot;: &quot;ImageForge CLI&quot;,
+            &quot;renderedValue&quot;: &quot;ImageForge CLI&quot;,
+            &quot;status&quot;: &quot;present_in_raw&quot;
+          },
+          {
+            &quot;field&quot;: &quot;og:description&quot;,
+            &quot;rawValue&quot;: &quot;Build-time image optimization with WebP/AVIF, CI guardrails, and zero recurring runtime image optimization cost.&quot;,
+            &quot;renderedValue&quot;: &quot;Build-time image optimization with WebP/AVIF, CI guardrails, and zero recurring runtime image optimization cost.&quot;,
+            &quot;status&quot;: &quot;present_in_raw&quot;
+          },
+          {
+            &quot;field&quot;: &quot;og:image&quot;,
+            &quot;rawValue&quot;: &quot;https://imageforge.dev/opengraph-image?5be7b9e6a095abcd&quot;,
+            &quot;renderedValue&quot;: &quot;https://imageforge.dev/opengraph-image?5be7b9e6a095abcd&quot;,
+            &quot;status&quot;: &quot;present_in_raw&quot;
+          },
+          {
+            &quot;field&quot;: &quot;og:url&quot;,
+            &quot;rawValue&quot;: &quot;https://imageforge.dev/&quot;,
+            &quot;renderedValue&quot;: &quot;https://imageforge.dev/&quot;,
+            &quot;status&quot;: &quot;present_in_raw&quot;
+          },
+          {
+            &quot;field&quot;: &quot;og:type&quot;,
+            &quot;rawValue&quot;: &quot;website&quot;,
+            &quot;renderedValue&quot;: &quot;website&quot;,
+            &quot;status&quot;: &quot;present_in_raw&quot;
+          },
+          {
+            &quot;field&quot;: &quot;og:site_name&quot;,
+            &quot;rawValue&quot;: &quot;ImageForge CLI&quot;,
+            &quot;renderedValue&quot;: &quot;ImageForge CLI&quot;,
+            &quot;status&quot;: &quot;present_in_raw&quot;
+          },
+          {
+            &quot;field&quot;: &quot;twitter:card&quot;,
+            &quot;rawValue&quot;: &quot;summary_large_image&quot;,
+            &quot;renderedValue&quot;: &quot;summary_large_image&quot;,
+            &quot;status&quot;: &quot;present_in_raw&quot;
+          },
+          {
+            &quot;field&quot;: &quot;twitter:title&quot;,
+            &quot;rawValue&quot;: &quot;ImageForge CLI&quot;,
+            &quot;renderedValue&quot;: &quot;ImageForge CLI&quot;,
+            &quot;status&quot;: &quot;present_in_raw&quot;
+          },
+          {
+            &quot;field&quot;: &quot;twitter:description&quot;,
+            &quot;rawValue&quot;: &quot;Optimize once, deploy everywhere, and keep recurring image optimization costs at zero.&quot;,
+            &quot;renderedValue&quot;: &quot;Optimize once, deploy everywhere, and keep recurring image optimization costs at zero.&quot;,
+            &quot;status&quot;: &quot;present_in_raw&quot;
+          },
+          {
+            &quot;field&quot;: &quot;twitter:image&quot;,
+            &quot;rawValue&quot;: &quot;https://imageforge.dev/twitter-image?1aedab77cefc7bb1&quot;,
+            &quot;renderedValue&quot;: &quot;https://imageforge.dev/twitter-image?1aedab77cefc7bb1&quot;,
+            &quot;status&quot;: &quot;present_in_raw&quot;
+          }
+        ]
+      },
+      &quot;checks&quot;: [
+        {
+          &quot;id&quot;: &quot;crawl.status.ok&quot;,
+          &quot;category&quot;: &quot;crawlability&quot;,
+          &quot;severity&quot;: &quot;passed&quot;,
+          &quot;title&quot;: &quot;Page returns HTTP success&quot;,
+          &quot;description&quot;: &quot;The audited URL returned a 2xx HTTP status.&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        },
+        {
+          &quot;id&quot;: &quot;metadata.title.present&quot;,
+          &quot;category&quot;: &quot;metadata&quot;,
+          &quot;severity&quot;: &quot;passed&quot;,
+          &quot;title&quot;: &quot;Title present&quot;,
+          &quot;description&quot;: &quot;Raw title: ImageForge CLI | Build-Time Image Optimization, Zero Monthly Cost&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        },
+        {
+          &quot;id&quot;: &quot;metadata.description.present&quot;,
+          &quot;category&quot;: &quot;metadata&quot;,
+          &quot;severity&quot;: &quot;passed&quot;,
+          &quot;title&quot;: &quot;Meta description present&quot;,
+          &quot;description&quot;: &quot;Raw meta description is present.&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        },
+        {
+          &quot;id&quot;: &quot;metadata.canonical.present&quot;,
+          &quot;category&quot;: &quot;metadata&quot;,
+          &quot;severity&quot;: &quot;passed&quot;,
+          &quot;title&quot;: &quot;Canonical URL present&quot;,
+          &quot;description&quot;: &quot;https://imageforge.dev/&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        },
+        {
+          &quot;id&quot;: &quot;metadata.robots.indexable&quot;,
+          &quot;category&quot;: &quot;crawlability&quot;,
+          &quot;severity&quot;: &quot;passed&quot;,
+          &quot;title&quot;: &quot;Page is not marked noindex&quot;,
+          &quot;description&quot;: &quot;No noindex robots meta directive was detected.&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        },
+        {
+          &quot;id&quot;: &quot;metadata.lang.present&quot;,
+          &quot;category&quot;: &quot;metadata&quot;,
+          &quot;severity&quot;: &quot;passed&quot;,
+          &quot;title&quot;: &quot;HTML lang attribute present&quot;,
+          &quot;description&quot;: &quot;en&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        },
+        {
+          &quot;id&quot;: &quot;metadata.viewport.present&quot;,
+          &quot;category&quot;: &quot;metadata&quot;,
+          &quot;severity&quot;: &quot;passed&quot;,
+          &quot;title&quot;: &quot;Viewport present&quot;,
+          &quot;description&quot;: &quot;width=device-width, initial-scale=1&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        },
+        {
+          &quot;id&quot;: &quot;metadata.theme_color.missing&quot;,
+          &quot;category&quot;: &quot;metadata&quot;,
+          &quot;severity&quot;: &quot;info&quot;,
+          &quot;title&quot;: &quot;Theme color is not set&quot;,
+          &quot;description&quot;: &quot;Optional theme-color metadata was not found in the initial HTML.&quot;,
+          &quot;recommendation&quot;: &quot;Add a theme-color meta tag if you want branded browser UI on supported surfaces.&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;plan_only&quot;
+        },
+        {
+          &quot;id&quot;: &quot;metadata.favicon.present&quot;,
+          &quot;category&quot;: &quot;metadata&quot;,
+          &quot;severity&quot;: &quot;passed&quot;,
+          &quot;title&quot;: &quot;Favicon link found&quot;,
+          &quot;description&quot;: &quot;https://imageforge.dev/favicon.ico&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        },
+        {
+          &quot;id&quot;: &quot;social.og.title_present&quot;,
+          &quot;category&quot;: &quot;social&quot;,
+          &quot;severity&quot;: &quot;passed&quot;,
+          &quot;title&quot;: &quot;og:title present&quot;,
+          &quot;description&quot;: &quot;ImageForge CLI&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        },
+        {
+          &quot;id&quot;: &quot;social.og.description_present&quot;,
+          &quot;category&quot;: &quot;social&quot;,
+          &quot;severity&quot;: &quot;passed&quot;,
+          &quot;title&quot;: &quot;og:description present&quot;,
+          &quot;description&quot;: &quot;Open Graph description is present.&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        },
+        {
+          &quot;id&quot;: &quot;social.og.image_present&quot;,
+          &quot;category&quot;: &quot;social&quot;,
+          &quot;severity&quot;: &quot;passed&quot;,
+          &quot;title&quot;: &quot;og:image present&quot;,
+          &quot;description&quot;: &quot;https://imageforge.dev/opengraph-image?5be7b9e6a095abcd&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        },
+        {
+          &quot;id&quot;: &quot;social.og.url_present&quot;,
+          &quot;category&quot;: &quot;social&quot;,
+          &quot;severity&quot;: &quot;passed&quot;,
+          &quot;title&quot;: &quot;og:url present&quot;,
+          &quot;description&quot;: &quot;https://imageforge.dev/&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        },
+        {
+          &quot;id&quot;: &quot;social.og.type_present&quot;,
+          &quot;category&quot;: &quot;social&quot;,
+          &quot;severity&quot;: &quot;passed&quot;,
+          &quot;title&quot;: &quot;og:type present&quot;,
+          &quot;description&quot;: &quot;website&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        },
+        {
+          &quot;id&quot;: &quot;social.og.site_name_present&quot;,
+          &quot;category&quot;: &quot;social&quot;,
+          &quot;severity&quot;: &quot;passed&quot;,
+          &quot;title&quot;: &quot;og:site_name present&quot;,
+          &quot;description&quot;: &quot;ImageForge CLI&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        },
+        {
+          &quot;id&quot;: &quot;social.twitter.card_present&quot;,
+          &quot;category&quot;: &quot;social&quot;,
+          &quot;severity&quot;: &quot;passed&quot;,
+          &quot;title&quot;: &quot;twitter:card present&quot;,
+          &quot;description&quot;: &quot;summary_large_image&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        },
+        {
+          &quot;id&quot;: &quot;social.twitter.title_present&quot;,
+          &quot;category&quot;: &quot;social&quot;,
+          &quot;severity&quot;: &quot;passed&quot;,
+          &quot;title&quot;: &quot;twitter:title present&quot;,
+          &quot;description&quot;: &quot;ImageForge CLI&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        },
+        {
+          &quot;id&quot;: &quot;social.twitter.description_present&quot;,
+          &quot;category&quot;: &quot;social&quot;,
+          &quot;severity&quot;: &quot;passed&quot;,
+          &quot;title&quot;: &quot;twitter:description present&quot;,
+          &quot;description&quot;: &quot;Twitter/X description is present.&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        },
+        {
+          &quot;id&quot;: &quot;social.twitter.image_present&quot;,
+          &quot;category&quot;: &quot;social&quot;,
+          &quot;severity&quot;: &quot;passed&quot;,
+          &quot;title&quot;: &quot;twitter:image present&quot;,
+          &quot;description&quot;: &quot;https://imageforge.dev/twitter-image?1aedab77cefc7bb1&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        },
+        {
+          &quot;id&quot;: &quot;schema.jsonld.valid&quot;,
+          &quot;category&quot;: &quot;schema&quot;,
+          &quot;severity&quot;: &quot;passed&quot;,
+          &quot;title&quot;: &quot;Valid JSON-LD detected&quot;,
+          &quot;description&quot;: &quot;Valid blocks: 2&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        },
+        {
+          &quot;id&quot;: &quot;structure.h1.single&quot;,
+          &quot;category&quot;: &quot;structure&quot;,
+          &quot;severity&quot;: &quot;passed&quot;,
+          &quot;title&quot;: &quot;Single H1 found&quot;,
+          &quot;description&quot;: &quot;Optimize once, deploy everywhere, pay nothing monthly.&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        },
+        {
+          &quot;id&quot;: &quot;crawl.robots_txt.found&quot;,
+          &quot;category&quot;: &quot;crawlability&quot;,
+          &quot;severity&quot;: &quot;passed&quot;,
+          &quot;title&quot;: &quot;robots.txt found&quot;,
+          &quot;description&quot;: &quot;https://imageforge.dev/robots.txt&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        },
+        {
+          &quot;id&quot;: &quot;crawl.sitemap.found&quot;,
+          &quot;category&quot;: &quot;crawlability&quot;,
+          &quot;severity&quot;: &quot;passed&quot;,
+          &quot;title&quot;: &quot;sitemap.xml found&quot;,
+          &quot;description&quot;: &quot;https://imageforge.dev/sitemap.xml&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        },
+        {
+          &quot;id&quot;: &quot;crawl.raw_render.consistent&quot;,
+          &quot;category&quot;: &quot;crawlability&quot;,
+          &quot;severity&quot;: &quot;passed&quot;,
+          &quot;title&quot;: &quot;Key metadata present in raw HTML&quot;,
+          &quot;description&quot;: &quot;No render-only metadata fields were detected.&quot;,
+          &quot;confidence&quot;: &quot;high&quot;,
+          &quot;fixability&quot;: &quot;not_fixable&quot;
+        }
+      ],
+      &quot;resources&quot;: {
+        &quot;robotsTxt&quot;: {
+          &quot;url&quot;: &quot;https://imageforge.dev/robots.txt&quot;,
+          &quot;finalUrl&quot;: &quot;https://imageforge.dev/robots.txt&quot;,
+          &quot;exists&quot;: true,
+          &quot;ok&quot;: true,
+          &quot;statusCode&quot;: 200,
+          &quot;blocksPage&quot;: false
+        },
+        &quot;sitemapXml&quot;: {
+          &quot;url&quot;: &quot;https://imageforge.dev/sitemap.xml&quot;,
+          &quot;finalUrl&quot;: &quot;https://imageforge.dev/sitemap.xml&quot;,
+          &quot;exists&quot;: true,
+          &quot;ok&quot;: true,
+          &quot;statusCode&quot;: 200,
+          &quot;includesAuditedUrl&quot;: true
+        }
+      }
+    }
+  }
+}</pre>
+    <h3>Raw developer details</h3>
+    <pre>{
+  &quot;rawAudit&quot;: {
+    &quot;url&quot;: &quot;https://imageforge.dev/&quot;,
+    &quot;finalUrl&quot;: &quot;https://imageforge.dev/&quot;,
+    &quot;auditedAt&quot;: &quot;2026-06-16T15:11:31.279Z&quot;,
+    &quot;httpStatus&quot;: 200,
+    &quot;score&quot;: 100,
+    &quot;status&quot;: &quot;good&quot;,
+    &quot;raw&quot;: {
+      &quot;source&quot;: &quot;raw&quot;,
+      &quot;url&quot;: &quot;https://imageforge.dev/&quot;,
+      &quot;metadata&quot;: {
+        &quot;htmlLang&quot;: &quot;en&quot;,
+        &quot;title&quot;: &quot;ImageForge CLI | Build-Time Image Optimization, Zero Monthly Cost&quot;,
+        &quot;description&quot;: &quot;ImageForge CLI pre-generates WebP/AVIF assets, writes imageforge.json, and adds --check CI enforcement so teams ship optimized images with zero recurring runtime cost.&quot;,
+        &quot;viewport&quot;: &quot;width=device-width, initial-scale=1&quot;,
+        &quot;canonical&quot;: &quot;https://imageforge.dev/&quot;,
+        &quot;favicon&quot;: &quot;https://imageforge.dev/favicon.ico&quot;,
+        &quot;faviconLinks&quot;: [
+          &quot;https://imageforge.dev/favicon.ico&quot;,
+          &quot;https://imageforge.dev/favicon.ico?favicon.0x3dzn~oxb6tn.ico&quot;
+        ],
+        &quot;openGraph&quot;: {
+          &quot;title&quot;: &quot;ImageForge CLI&quot;,
+          &quot;description&quot;: &quot;Build-time image optimization with WebP/AVIF, CI guardrails, and zero recurring runtime image optimization cost.&quot;,
+          &quot;image&quot;: &quot;https://imageforge.dev/opengraph-image?5be7b9e6a095abcd&quot;,
+          &quot;url&quot;: &quot;https://imageforge.dev/&quot;,
+          &quot;type&quot;: &quot;website&quot;,
+          &quot;siteName&quot;: &quot;ImageForge CLI&quot;
+        },
+        &quot;twitter&quot;: {
+          &quot;card&quot;: &quot;summary_large_image&quot;,
+          &quot;title&quot;: &quot;ImageForge CLI&quot;,
+          &quot;description&quot;: &quot;Optimize once, deploy everywhere, and keep recurring image optimization costs at zero.&quot;,
+          &quot;image&quot;: &quot;https://imageforge.dev/twitter-image?1aedab77cefc7bb1&quot;
+        }
+      },
+      &quot;headings&quot;: {
+        &quot;h1&quot;: [
+          &quot;Optimize once, deploy everywhere, pay nothing monthly.&quot;
+        ],
+        &quot;all&quot;: [
+          {
+            &quot;level&quot;: 1,
+            &quot;text&quot;: &quot;Optimize once, deploy everywhere, pay nothing monthly.&quot;
+          },
+          {
+            &quot;level&quot;: 2,
+            &quot;text&quot;: &quot;Comparison and cost&quot;
+          },
+          {
+            &quot;level&quot;: 3,
+            &quot;text&quot;: &quot;Processing model&quot;
+          },
+          {
+            &quot;level&quot;: 3,
+            &quot;text&quot;: &quot;Entry pricing&quot;
+          },
+          {
+            &quot;level&quot;: 3,
+            &quot;text&quot;: &quot;Illustrative 28K-transform monthly scenario&quot;
+          },
+          {
+            &quot;level&quot;: 3,
+            &quot;text&quot;: &quot;CI quality gate&quot;
+          },
+          {
+            &quot;level&quot;: 3,
+            &quot;text&quot;: &quot;Air-gapped compatibility&quot;
+          },
+          {
+            &quot;level&quot;: 2,
+            &quot;text&quot;: &quot;How it works&quot;
+          },
+          {
+            &quot;level&quot;: 3,
+            &quot;text&quot;: &quot;Run&quot;
+          },
+          {
+            &quot;level&quot;: 3,
+            &quot;text&quot;: &quot;Check&quot;
+          },
+          {
+            &quot;level&quot;: 3,
+            &quot;text&quot;: &quot;Ship&quot;
+          },
+          {
+            &quot;level&quot;: 2,
+            &quot;text&quot;: &quot;Why teams choose ImageForge&quot;
+          },
+          {
+            &quot;level&quot;: 3,
+            &quot;text&quot;: &quot;Pay once at build time&quot;
+          },
+          {
+            &quot;level&quot;: 3,
+            &quot;text&quot;: &quot;CI guardrails by default&quot;
+          },
+          {
+            &quot;level&quot;: 3,
+            &quot;text&quot;: &quot;Fast reruns with hash cache&quot;
+          },
+          {
+            &quot;level&quot;: 3,
+            &quot;text&quot;: &quot;Blur placeholders and metadata&quot;
+          },
+          {
+            &quot;level&quot;: 3,
+            &quot;text&quot;: &quot;Bounded parallelism&quot;
+          },
+          {
+            &quot;level&quot;: 3,
+            &quot;text&quot;: &quot;Machine-readable run output&quot;
+          },
+          {
+            &quot;level&quot;: 2,
+            &quot;text&quot;: &quot;Methodology&quot;
+          },
+          {
+            &quot;level&quot;: 3,
+            &quot;text&quot;: &quot;Sample Set&quot;
+          },
+          {
+            &quot;level&quot;: 3,
+            &quot;text&quot;: &quot;Runtime Environment&quot;
+          },
+          {
+            &quot;level&quot;: 3,
+            &quot;text&quot;: &quot;Command and Options&quot;
+          },
+          {
+            &quot;level&quot;: 3,
+            &quot;text&quot;: &quot;What the Headline Numbers Mean&quot;
+          },
+          {
+            &quot;level&quot;: 2,
+            &quot;text&quot;: &quot;CI enforcement with --check&quot;
+          },
+          {
+            &quot;level&quot;: 2,
+            &quot;text&quot;: &quot;Next.js-first integration&quot;
+          },
+          {
+            &quot;level&quot;: 2,
+            &quot;text&quot;: &quot;Who this is for&quot;
+          },
+          {
+            &quot;level&quot;: 3,
+            &quot;text&quot;: &quot;cost-conscious teams&quot;
+          },
+          {
+            &quot;level&quot;: 3,
+            &quot;text&quot;: &quot;CI/CD teams&quot;
+          },
+          {
+            &quot;level&quot;: 3,
+            &quot;text&quot;: &quot;air-gapped/compliance teams&quot;
+          },
+          {
+            &quot;level&quot;: 3,
+            &quot;text&quot;: &quot;Vercel-to-self-host migrations&quot;
+          },
+          {
+            &quot;level&quot;: 2,
+            &quot;text&quot;: &quot;Honest limitations&quot;
+          },
+          {
+            &quot;level&quot;: 3,
+            &quot;text&quot;: &quot;Responsive widths are target-based and bounded&quot;
+          },
+          {
+            &quot;level&quot;: 3,
+            &quot;text&quot;: &quot;No runtime responsive resizing&quot;
+          },
+          {
+            &quot;level&quot;: 3,
+            &quot;text&quot;: &quot;No bundled global CDN&quot;
+          },
+          {
+            &quot;level&quot;: 3,
+            &quot;text&quot;: &quot;First run scales with catalog size&quot;
+          },
+          {
+            &quot;level&quot;: 2,
+            &quot;text&quot;: &quot;Build once. Ship fast. Keep costs at zero.&quot;
+          }
+        ]
+      },
+      &quot;images&quot;: {
+        &quot;total&quot;: 0,
+        &quot;missingAlt&quot;: 0,
+        &quot;items&quot;: []
+      },
+      &quot;links&quot;: {
+        &quot;total&quot;: 39,
+        &quot;missingAccessibleText&quot;: 0,
+        &quot;items&quot;: [
+          {
+            &quot;href&quot;: &quot;#top&quot;,
+            &quot;text&quot;: &quot;imageforge&quot;
+          },
+          {
+            &quot;href&quot;: &quot;#comparison&quot;,
+            &quot;text&quot;: &quot;Comparison&quot;
+          },
+          {
+            &quot;href&quot;: &quot;#features&quot;,
+            &quot;text&quot;: &quot;Features&quot;
+          },
+          {
+            &quot;href&quot;: &quot;#use-cases&quot;,
+            &quot;text&quot;: &quot;Use cases&quot;
+          },
+          {
+            &quot;href&quot;: &quot;#limitations&quot;,
+            &quot;text&quot;: &quot;Limitations&quot;
+          },
+          {
+            &quot;href&quot;: &quot;/docs&quot;,
+            &quot;text&quot;: &quot;Docs&quot;
+          },
+          {
+            &quot;href&quot;: &quot;/contact&quot;,
+            &quot;text&quot;: &quot;Contact&quot;
+          },
+          {
+            &quot;href&quot;: &quot;https://github.com/f-campana/imageforge&quot;,
+            &quot;text&quot;: &quot;GitHub&quot;
+          },
+          {
+            &quot;href&quot;: &quot;https://www.npmjs.com/package/@imageforge/cli&quot;,
+            &quot;text&quot;: &quot;npm package&quot;
+          },
+          {
+            &quot;href&quot;: &quot;https://www.npmjs.com/package/@imageforge/cli&quot;,
+            &quot;text&quot;: &quot;Get Started&quot;
+          },
+          {
+            &quot;href&quot;: &quot;/docs&quot;,
+            &quot;text&quot;: &quot;Read Docs&quot;
+          },
+          {
+            &quot;href&quot;: &quot;/contact&quot;,
+            &quot;text&quot;: &quot;Contact&quot;
+          },
+          {
+            &quot;href&quot;: &quot;https://vercel.com/docs/image-optimization/limits-and-pricing&quot;,
+            &quot;text&quot;: &quot;[Vercel limits and pricing]&quot;
+          },
+          {
+            &quot;href&quot;: &quot;https://cloudinary.com/pricing&quot;,
+            &quot;text&quot;: &quot;[Cloudinary pricing]&quot;
+          },
+          {
+            &quot;href&quot;: &quot;https://www.imgix.com/pricing&quot;,
+            &quot;text&quot;: &quot;[imgix pricing]&quot;
+          },
+          {
+            &quot;href&quot;: &quot;https://www.howdygo.com/blog/cutting-howdygos-vercel-costs-by-80-without-compromising-ux-or-dx&quot;,
+            &quot;text&quot;: &quot;[HowdyGo cost case study]&quot;
+          },
+          {
+            &quot;href&quot;: &quot;https://vercel.com/docs/image-optimization/limits-and-pricing&quot;,
+            &quot;text&quot;: &quot;[Vercel limits and pricing]&quot;
+          },
+          {
+            &quot;href&quot;: &quot;https://vercel.com/docs/image-optimization/legacy-pricing&quot;,
+            &quot;text&quot;: &quot;[Vercel legacy image pricing]&quot;
+          },
+          {
+            &quot;href&quot;: &quot;https://cloudinary.com/pricing&quot;,
+            &quot;text&quot;: &quot;[Cloudinary pricing]&quot;
+          },
+          {
+            &quot;href&quot;: &quot;https://www.imgix.com/pricing&quot;,
+            &quot;text&quot;: &quot;[imgix pricing]&quot;
+          },
+          {
+            &quot;href&quot;: &quot;https://vercel.com/docs/image-optimization/limits-and-pricing&quot;,
+            &quot;text&quot;: &quot;[Vercel limits and pricing]&quot;
+          },
+          {
+            &quot;href&quot;: &quot;https://cloudinary.com/pricing&quot;,
+            &quot;text&quot;: &quot;[Cloudinary pricing]&quot;
+          },
+          {
+            &quot;href&quot;: &quot;https://www.imgix.com/pricing&quot;,
+            &quot;text&quot;: &quot;[imgix pricing]&quot;
+          },
+          {
+            &quot;href&quot;: &quot;https://www.howdygo.com/blog/cutting-howdygos-vercel-costs-by-80-without-compromising-ux-or-dx&quot;,
+            &quot;text&quot;: &quot;[HowdyGo cost case study]&quot;
+          },
+          {
+            &quot;href&quot;: &quot;https://vercel.com/docs/image-optimization/limits-and-pricing&quot;,
+            &quot;text&quot;: &quot;[Vercel limits and pricing]&quot;
+          },
+          {
+            &quot;href&quot;: &quot;https://vercel.com/docs/image-optimization/legacy-pricing&quot;,
+            &quot;text&quot;: &quot;[Vercel legacy image pricing]&quot;
+          },
+          {
+            &quot;href&quot;: &quot;https://cloudinary.com/pricing&quot;,
+            &quot;text&quot;: &quot;[Cloudinary pricing]&quot;
+          },
+          {
+            &quot;href&quot;: &quot;https://www.imgix.com/pricing&quot;,
+            &quot;text&quot;: &quot;[imgix pricing]&quot;
+          },
+          {
+            &quot;href&quot;: &quot;#methodology&quot;,
+            &quot;text&quot;: &quot;Methodology&quot;
+          },
+          {
+            &quot;href&quot;: &quot;/benchmarks/latest&quot;,
+            &quot;text&quot;: &quot;full evidence page&quot;
+          },
+          {
+            &quot;href&quot;: &quot;/benchmarks/latest&quot;,
+            &quot;text&quot;: &quot;View the full benchmark report&quot;
+          },
+          {
+            &quot;href&quot;: &quot;https://github.com/f-campana/imageforge/actions/runs/26928624304&quot;,
+            &quot;text&quot;: &quot;benchmark workflow&quot;
+          },
+          {
+            &quot;href&quot;: &quot;/docs&quot;,
+            &quot;text&quot;: &quot;Docs&quot;
+          },
+          {
+            &quot;href&quot;: &quot;/contact&quot;,
+            &quot;text&quot;: &quot;Contact&quot;
+          },
+          {
+            &quot;href&quot;: &quot;https://github.com/f-campana/imageforge/blob/main/CHANGELOG.md&quot;,
+            &quot;text&quot;: &quot;Changelog&quot;
+          },
+          {
+            &quot;href&quot;: &quot;https://github.com/f-campana/imageforge/issues&quot;,
+            &quot;text&quot;: &quot;Issues&quot;
+          },
+          {
+            &quot;href&quot;: &quot;https://github.com/f-campana/imageforge/blob/main/SECURITY.md&quot;,
+            &quot;text&quot;: &quot;Security&quot;
+          },
+          {
+            &quot;href&quot;: &quot;https://github.com/f-campana/imageforge&quot;,
+            &quot;text&quot;: &quot;GitHub&quot;
+          },
+          {
+            &quot;href&quot;: &quot;https://www.npmjs.com/package/@imageforge/cli&quot;,
+            &quot;text&quot;: &quot;npm package&quot;
+          }
+        ]
+      },
+      &quot;jsonLd&quot;: [
+        {
+          &quot;raw&quot;: &quot;{\&quot;@context\&quot;:\&quot;https://schema.org\&quot;,\&quot;@type\&quot;:\&quot;WebSite\&quot;,\&quot;name\&quot;:\&quot;ImageForge CLI\&quot;,\&quot;description\&quot;:\&quot;Build-time image optimization for Next.js and modern web apps with WebP/AVIF conversion, blurDataURL placeholders, deterministic hash caching, and CI enforcement.\&quot;,\&quot;url\&quot;:\&quot;https://imageforge.dev\&quot;,\&quot;inLanguage\&quot;:\&quot;en-US\&quot;}&quot;,
+          &quot;valid&quot;: true,
+          &quot;parsed&quot;: {
+            &quot;@context&quot;: &quot;https://schema.org&quot;,
+            &quot;@type&quot;: &quot;WebSite&quot;,
+            &quot;name&quot;: &quot;ImageForge CLI&quot;,
+            &quot;description&quot;: &quot;Build-time image optimization for Next.js and modern web apps with WebP/AVIF conversion, blurDataURL placeholders, deterministic hash caching, and CI enforcement.&quot;,
+            &quot;url&quot;: &quot;https://imageforge.dev&quot;,
+            &quot;inLanguage&quot;: &quot;en-US&quot;
+          },
+          &quot;types&quot;: [
+            &quot;WebSite&quot;
+          ]
+        },
+        {
+          &quot;raw&quot;: &quot;{\&quot;@context\&quot;:\&quot;https://schema.org\&quot;,\&quot;@type\&quot;:\&quot;SoftwareApplication\&quot;,\&quot;name\&quot;:\&quot;ImageForge CLI\&quot;,\&quot;applicationCategory\&quot;:\&quot;DeveloperApplication\&quot;,\&quot;operatingSystem\&quot;:\&quot;Cross-platform\&quot;,\&quot;description\&quot;:\&quot;Build-time image optimization for Next.js and modern web apps with WebP/AVIF conversion, blurDataURL placeholders, deterministic hash caching, and CI enforcement.\&quot;,\&quot;softwareVersion\&quot;:\&quot;0.1.6\&quot;,\&quot;offers\&quot;:{\&quot;@type\&quot;:\&quot;Offer\&quot;,\&quot;price\&quot;:\&quot;0\&quot;,\&quot;priceCurrency\&quot;:\&quot;USD\&quot;},\&quot;url\&quot;:\&quot;https://imageforge.dev\&quot;,\&quot;sameAs\&quot;:[\&quot;https://github.com/f-campana/imageforge\&quot;,\&quot;https://www.npmjs.com/package/@imageforge/cli\&quot;]}&quot;,
+          &quot;valid&quot;: true,
+          &quot;parsed&quot;: {
+            &quot;@context&quot;: &quot;https://schema.org&quot;,
+            &quot;@type&quot;: &quot;SoftwareApplication&quot;,
+            &quot;name&quot;: &quot;ImageForge CLI&quot;,
+            &quot;applicationCategory&quot;: &quot;DeveloperApplication&quot;,
+            &quot;operatingSystem&quot;: &quot;Cross-platform&quot;,
+            &quot;description&quot;: &quot;Build-time image optimization for Next.js and modern web apps with WebP/AVIF conversion, blurDataURL placeholders, deterministic hash caching, and CI enforcement.&quot;,
+            &quot;softwareVersion&quot;: &quot;0.1.6&quot;,
+            &quot;offers&quot;: {
+              &quot;@type&quot;: &quot;Offer&quot;,
+              &quot;price&quot;: &quot;0&quot;,
+              &quot;priceCurrency&quot;: &quot;USD&quot;
+            },
+            &quot;url&quot;: &quot;https://imageforge.dev&quot;,
+            &quot;sameAs&quot;: [
+              &quot;https://github.com/f-campana/imageforge&quot;,
+              &quot;https://www.npmjs.com/package/@imageforge/cli&quot;
+            ]
+          },
+          &quot;types&quot;: [
+            &quot;SoftwareApplication&quot;
+          ]
+        }
+      ]
+    },
+    &quot;rendered&quot;: {
+      &quot;source&quot;: &quot;rendered&quot;,
+      &quot;url&quot;: &quot;https://imageforge.dev/&quot;,
+      &quot;metadata&quot;: {
+        &quot;htmlLang&quot;: &quot;en&quot;,
+        &quot;title&quot;: &quot;ImageForge CLI | Build-Time Image Optimization, Zero Monthly Cost&quot;,
+        &quot;description&quot;: &quot;ImageForge CLI pre-generates WebP/AVIF assets, writes imageforge.json, and adds --check CI enforcement so teams ship optimized images with zero recurring runtime cost.&quot;,
+        &quot;viewport&quot;: &quot;width=device-width, initial-scale=1&quot;,
+        &quot;canonical&quot;: &quot;https://imageforge.dev/&quot;,
+        &quot;favicon&quot;: &quot;https://imageforge.dev/favicon.ico&quot;,
+        &quot;faviconLinks&quot;: [
+          &quot;https://imageforge.dev/favicon.ico&quot;,
+          &quot;https://imageforge.dev/favicon.ico?favicon.0x3dzn~oxb6tn.ico&quot;
+        ],
+        &quot;openGraph&quot;: {
+          &quot;title&quot;: &quot;ImageForge CLI&quot;,
+          &quot;description&quot;: &quot;Build-time image optimization with WebP/AVIF, CI guardrails, and zero recurring runtime image optimization cost.&quot;,
+          &quot;image&quot;: &quot;https://imageforge.dev/opengraph-image?5be7b9e6a095abcd&quot;,
+          &quot;url&quot;: &quot;https://imageforge.dev/&quot;,
+          &quot;type&quot;: &quot;website&quot;,
+          &quot;siteName&quot;: &quot;ImageForge CLI&quot;
+        },
+        &quot;twitter&quot;: {
+          &quot;card&quot;: &quot;summary_large_image&quot;,
+          &quot;title&quot;: &quot;ImageForge CLI&quot;,
+          &quot;description&quot;: &quot;Optimize once, deploy everywhere, and keep recurring image optimization costs at zero.&quot;,
+          &quot;image&quot;: &quot;https://imageforge.dev/twitter-image?1aedab77cefc7bb1&quot;
+        }
+      },
+      &quot;headings&quot;: {
+        &quot;h1&quot;: [
+          &quot;Optimize once, deploy everywhere, pay nothing monthly.&quot;
+        ],
+        &quot;all&quot;: [
+          {
+            &quot;level&quot;: 1,
+            &quot;text&quot;: &quot;Optimize once, deploy everywhere, pay nothing monthly.&quot;
+          },
+          {
+            &quot;level&quot;: 2,
+            &quot;text&quot;: &quot;Comparison and cost&quot;
+          },
+          {
+            &quot;level&quot;: 3,
+            &quot;text&quot;: &quot;Processing model&quot;
+          },
+          {
+            &quot;level&quot;: 3,
+            &quot;text&quot;: &quot;Entry pricing&quot;
+          },
+          {
+            &quot;level&quot;: 3,
+            &quot;text&quot;: &quot;Illustrative 28K-transform monthly scenario&quot;
+          },
+          {
+            &quot;level&quot;: 3,
+            &quot;text&quot;: &quot;CI quality gate&quot;
+          },
+          {
+            &quot;level&quot;: 3,
+            &quot;text&quot;: &quot;Air-gapped compatibility&quot;
+          },
+          {
+            &quot;level&quot;: 2,
+            &quot;text&quot;: &quot;How it works&quot;
+          },
+          {
+            &quot;level&quot;: 3,
+            &quot;text&quot;: &quot;Run&quot;
+          },
+          {
+            &quot;level&quot;: 3,
+            &quot;text&quot;: &quot;Check&quot;
+          },
+          {
+            &quot;level&quot;: 3,
+            &quot;text&quot;: &quot;Ship&quot;
+          },
+          {
+            &quot;level&quot;: 2,
+            &quot;text&quot;: &quot;Why teams choose ImageForge&quot;
+          },
+          {
+            &quot;level&quot;: 3,
+            &quot;text&quot;: &quot;Pay once at build time&quot;
+          },
+          {
+            &quot;level&quot;: 3,
+            &quot;text&quot;: &quot;CI guardrails by default&quot;
+          },
+          {
+            &quot;level&quot;: 3,
+            &quot;text&quot;: &quot;Fast reruns with hash cache&quot;
+          },
+          {
+            &quot;level&quot;: 3,
+            &quot;text&quot;: &quot;Blur placeholders and metadata&quot;
+          },
+          {
+            &quot;level&quot;: 3,
+            &quot;text&quot;: &quot;Bounded parallelism&quot;
+          },
+          {
+            &quot;level&quot;: 3,
+            &quot;text&quot;: &quot;Machine-readable run output&quot;
+          },
+          {
+            &quot;level&quot;: 2,
+            &quot;text&quot;: &quot;Methodology&quot;
+          },
+          {
+            &quot;level&quot;: 3,
+            &quot;text&quot;: &quot;Sample Set&quot;
+          },
+          {
+            &quot;level&quot;: 3,
+            &quot;text&quot;: &quot;Runtime Environment&quot;
+          },
+          {
+            &quot;level&quot;: 3,
+            &quot;text&quot;: &quot;Command and Options&quot;
+          },
+          {
+            &quot;level&quot;: 3,
+            &quot;text&quot;: &quot;What the Headline Numbers Mean&quot;
+          },
+          {
+            &quot;level&quot;: 2,
+            &quot;text&quot;: &quot;CI enforcement with --check&quot;
+          },
+          {
+            &quot;level&quot;: 2,
+            &quot;text&quot;: &quot;Next.js-first integration&quot;
+          },
+          {
+            &quot;level&quot;: 2,
+            &quot;text&quot;: &quot;Who this is for&quot;
+          },
+          {
+            &quot;level&quot;: 3,
+            &quot;text&quot;: &quot;cost-conscious teams&quot;
+          },
+          {
+            &quot;level&quot;: 3,
+            &quot;text&quot;: &quot;CI/CD teams&quot;
+          },
+          {
+            &quot;level&quot;: 3,
+            &quot;text&quot;: &quot;air-gapped/compliance teams&quot;
+          },
+          {
+            &quot;level&quot;: 3,
+            &quot;text&quot;: &quot;Vercel-to-self-host migrations&quot;
+          },
+          {
+            &quot;level&quot;: 2,
+            &quot;text&quot;: &quot;Honest limitations&quot;
+          },
+          {
+            &quot;level&quot;: 3,
+            &quot;text&quot;: &quot;Responsive widths are target-based and bounded&quot;
+          },
+          {
+            &quot;level&quot;: 3,
+            &quot;text&quot;: &quot;No runtime responsive resizing&quot;
+          },
+          {
+            &quot;level&quot;: 3,
+            &quot;text&quot;: &quot;No bundled global CDN&quot;
+          },
+          {
+            &quot;level&quot;: 3,
+            &quot;text&quot;: &quot;First run scales with catalog size&quot;
+          },
+          {
+            &quot;level&quot;: 2,
+            &quot;text&quot;: &quot;Build once. Ship fast. Keep costs at zero.&quot;
+          }
+        ]
+      },
+      &quot;images&quot;: {
+        &quot;total&quot;: 0,
+        &quot;missingAlt&quot;: 0,
+        &quot;items&quot;: []
+      },
+      &quot;links&quot;: {
+        &quot;total&quot;: 39,
+        &quot;missingAccessibleText&quot;: 0,
+        &quot;items&quot;: [
+          {
+            &quot;href&quot;: &quot;#top&quot;,
+            &quot;text&quot;: &quot;imageforge&quot;
+          },
+          {
+            &quot;href&quot;: &quot;#comparison&quot;,
+            &quot;text&quot;: &quot;Comparison&quot;
+          },
+          {
+            &quot;href&quot;: &quot;#features&quot;,
+            &quot;text&quot;: &quot;Features&quot;
+          },
+          {
+            &quot;href&quot;: &quot;#use-cases&quot;,
+            &quot;text&quot;: &quot;Use cases&quot;
+          },
+          {
+            &quot;href&quot;: &quot;#limitations&quot;,
+            &quot;text&quot;: &quot;Limitations&quot;
+          },
+          {
+            &quot;href&quot;: &quot;/docs&quot;,
+            &quot;text&quot;: &quot;Docs&quot;
+          },
+          {
+            &quot;href&quot;: &quot;/contact&quot;,
+            &quot;text&quot;: &quot;Contact&quot;
+          },
+          {
+            &quot;href&quot;: &quot;https://github.com/f-campana/imageforge&quot;,
+            &quot;text&quot;: &quot;GitHub&quot;
+          },
+          {
+            &quot;href&quot;: &quot;https://www.npmjs.com/package/@imageforge/cli&quot;,
+            &quot;text&quot;: &quot;npm package&quot;
+          },
+          {
+            &quot;href&quot;: &quot;https://www.npmjs.com/package/@imageforge/cli&quot;,
+            &quot;text&quot;: &quot;Get Started&quot;
+          },
+          {
+            &quot;href&quot;: &quot;/docs&quot;,
+            &quot;text&quot;: &quot;Read Docs&quot;
+          },
+          {
+            &quot;href&quot;: &quot;/contact&quot;,
+            &quot;text&quot;: &quot;Contact&quot;
+          },
+          {
+            &quot;href&quot;: &quot;https://vercel.com/docs/image-optimization/limits-and-pricing&quot;,
+            &quot;text&quot;: &quot;[Vercel limits and pricing]&quot;
+          },
+          {
+            &quot;href&quot;: &quot;https://cloudinary.com/pricing&quot;,
+            &quot;text&quot;: &quot;[Cloudinary pricing]&quot;
+          },
+          {
+            &quot;href&quot;: &quot;https://www.imgix.com/pricing&quot;,
+            &quot;text&quot;: &quot;[imgix pricing]&quot;
+          },
+          {
+            &quot;href&quot;: &quot;https://www.howdygo.com/blog/cutting-howdygos-vercel-costs-by-80-without-compromising-ux-or-dx&quot;,
+            &quot;text&quot;: &quot;[HowdyGo cost case study]&quot;
+          },
+          {
+            &quot;href&quot;: &quot;https://vercel.com/docs/image-optimization/limits-and-pricing&quot;,
+            &quot;text&quot;: &quot;[Vercel limits and pricing]&quot;
+          },
+          {
+            &quot;href&quot;: &quot;https://vercel.com/docs/image-optimization/legacy-pricing&quot;,
+            &quot;text&quot;: &quot;[Vercel legacy image pricing]&quot;
+          },
+          {
+            &quot;href&quot;: &quot;https://cloudinary.com/pricing&quot;,
+            &quot;text&quot;: &quot;[Cloudinary pricing]&quot;
+          },
+          {
+            &quot;href&quot;: &quot;https://www.imgix.com/pricing&quot;,
+            &quot;text&quot;: &quot;[imgix pricing]&quot;
+          },
+          {
+            &quot;href&quot;: &quot;https://vercel.com/docs/image-optimization/limits-and-pricing&quot;,
+            &quot;text&quot;: &quot;[Vercel limits and pricing]&quot;
+          },
+          {
+            &quot;href&quot;: &quot;https://cloudinary.com/pricing&quot;,
+            &quot;text&quot;: &quot;[Cloudinary pricing]&quot;
+          },
+          {
+            &quot;href&quot;: &quot;https://www.imgix.com/pricing&quot;,
+            &quot;text&quot;: &quot;[imgix pricing]&quot;
+          },
+          {
+            &quot;href&quot;: &quot;https://www.howdygo.com/blog/cutting-howdygos-vercel-costs-by-80-without-compromising-ux-or-dx&quot;,
+            &quot;text&quot;: &quot;[HowdyGo cost case study]&quot;
+          },
+          {
+            &quot;href&quot;: &quot;https://vercel.com/docs/image-optimization/limits-and-pricing&quot;,
+            &quot;text&quot;: &quot;[Vercel limits and pricing]&quot;
+          },
+          {
+            &quot;href&quot;: &quot;https://vercel.com/docs/image-optimization/legacy-pricing&quot;,
+            &quot;text&quot;: &quot;[Vercel legacy image pricing]&quot;
+          },
+          {
+            &quot;href&quot;: &quot;https://cloudinary.com/pricing&quot;,
+            &quot;text&quot;: &quot;[Cloudinary pricing]&quot;
+          },
+          {
+            &quot;href&quot;: &quot;https://www.imgix.com/pricing&quot;,
+            &quot;text&quot;: &quot;[imgix pricing]&quot;
+          },
+          {
+            &quot;href&quot;: &quot;#methodology&quot;,
+            &quot;text&quot;: &quot;Methodology&quot;
+          },
+          {
+            &quot;href&quot;: &quot;/benchmarks/latest&quot;,
+            &quot;text&quot;: &quot;full evidence page&quot;
+          },
+          {
+            &quot;href&quot;: &quot;/benchmarks/latest&quot;,
+            &quot;text&quot;: &quot;View the full benchmark report&quot;
+          },
+          {
+            &quot;href&quot;: &quot;https://github.com/f-campana/imageforge/actions/runs/26928624304&quot;,
+            &quot;text&quot;: &quot;benchmark workflow&quot;
+          },
+          {
+            &quot;href&quot;: &quot;/docs&quot;,
+            &quot;text&quot;: &quot;Docs&quot;
+          },
+          {
+            &quot;href&quot;: &quot;/contact&quot;,
+            &quot;text&quot;: &quot;Contact&quot;
+          },
+          {
+            &quot;href&quot;: &quot;https://github.com/f-campana/imageforge/blob/main/CHANGELOG.md&quot;,
+            &quot;text&quot;: &quot;Changelog&quot;
+          },
+          {
+            &quot;href&quot;: &quot;https://github.com/f-campana/imageforge/issues&quot;,
+            &quot;text&quot;: &quot;Issues&quot;
+          },
+          {
+            &quot;href&quot;: &quot;https://github.com/f-campana/imageforge/blob/main/SECURITY.md&quot;,
+            &quot;text&quot;: &quot;Security&quot;
+          },
+          {
+            &quot;href&quot;: &quot;https://github.com/f-campana/imageforge&quot;,
+            &quot;text&quot;: &quot;GitHub&quot;
+          },
+          {
+            &quot;href&quot;: &quot;https://www.npmjs.com/package/@imageforge/cli&quot;,
+            &quot;text&quot;: &quot;npm package&quot;
+          }
+        ]
+      },
+      &quot;jsonLd&quot;: [
+        {
+          &quot;raw&quot;: &quot;{\&quot;@context\&quot;:\&quot;https://schema.org\&quot;,\&quot;@type\&quot;:\&quot;WebSite\&quot;,\&quot;name\&quot;:\&quot;ImageForge CLI\&quot;,\&quot;description\&quot;:\&quot;Build-time image optimization for Next.js and modern web apps with WebP/AVIF conversion, blurDataURL placeholders, deterministic hash caching, and CI enforcement.\&quot;,\&quot;url\&quot;:\&quot;https://imageforge.dev\&quot;,\&quot;inLanguage\&quot;:\&quot;en-US\&quot;}&quot;,
+          &quot;valid&quot;: true,
+          &quot;parsed&quot;: {
+            &quot;@context&quot;: &quot;https://schema.org&quot;,
+            &quot;@type&quot;: &quot;WebSite&quot;,
+            &quot;name&quot;: &quot;ImageForge CLI&quot;,
+            &quot;description&quot;: &quot;Build-time image optimization for Next.js and modern web apps with WebP/AVIF conversion, blurDataURL placeholders, deterministic hash caching, and CI enforcement.&quot;,
+            &quot;url&quot;: &quot;https://imageforge.dev&quot;,
+            &quot;inLanguage&quot;: &quot;en-US&quot;
+          },
+          &quot;types&quot;: [
+            &quot;WebSite&quot;
+          ]
+        },
+        {
+          &quot;raw&quot;: &quot;{\&quot;@context\&quot;:\&quot;https://schema.org\&quot;,\&quot;@type\&quot;:\&quot;SoftwareApplication\&quot;,\&quot;name\&quot;:\&quot;ImageForge CLI\&quot;,\&quot;applicationCategory\&quot;:\&quot;DeveloperApplication\&quot;,\&quot;operatingSystem\&quot;:\&quot;Cross-platform\&quot;,\&quot;description\&quot;:\&quot;Build-time image optimization for Next.js and modern web apps with WebP/AVIF conversion, blurDataURL placeholders, deterministic hash caching, and CI enforcement.\&quot;,\&quot;softwareVersion\&quot;:\&quot;0.1.6\&quot;,\&quot;offers\&quot;:{\&quot;@type\&quot;:\&quot;Offer\&quot;,\&quot;price\&quot;:\&quot;0\&quot;,\&quot;priceCurrency\&quot;:\&quot;USD\&quot;},\&quot;url\&quot;:\&quot;https://imageforge.dev\&quot;,\&quot;sameAs\&quot;:[\&quot;https://github.com/f-campana/imageforge\&quot;,\&quot;https://www.npmjs.com/package/@imageforge/cli\&quot;]}&quot;,
+          &quot;valid&quot;: true,
+          &quot;parsed&quot;: {
+            &quot;@context&quot;: &quot;https://schema.org&quot;,
+            &quot;@type&quot;: &quot;SoftwareApplication&quot;,
+            &quot;name&quot;: &quot;ImageForge CLI&quot;,
+            &quot;applicationCategory&quot;: &quot;DeveloperApplication&quot;,
+            &quot;operatingSystem&quot;: &quot;Cross-platform&quot;,
+            &quot;description&quot;: &quot;Build-time image optimization for Next.js and modern web apps with WebP/AVIF conversion, blurDataURL placeholders, deterministic hash caching, and CI enforcement.&quot;,
+            &quot;softwareVersion&quot;: &quot;0.1.6&quot;,
+            &quot;offers&quot;: {
+              &quot;@type&quot;: &quot;Offer&quot;,
+              &quot;price&quot;: &quot;0&quot;,
+              &quot;priceCurrency&quot;: &quot;USD&quot;
+            },
+            &quot;url&quot;: &quot;https://imageforge.dev&quot;,
+            &quot;sameAs&quot;: [
+              &quot;https://github.com/f-campana/imageforge&quot;,
+              &quot;https://www.npmjs.com/package/@imageforge/cli&quot;
+            ]
+          },
+          &quot;types&quot;: [
+            &quot;SoftwareApplication&quot;
+          ]
+        }
+      ]
+    },
+    &quot;comparison&quot;: {
+      &quot;fields&quot;: [
+        {
+          &quot;field&quot;: &quot;title&quot;,
+          &quot;rawValue&quot;: &quot;ImageForge CLI | Build-Time Image Optimization, Zero Monthly Cost&quot;,
+          &quot;renderedValue&quot;: &quot;ImageForge CLI | Build-Time Image Optimization, Zero Monthly Cost&quot;,
+          &quot;status&quot;: &quot;present_in_raw&quot;
+        },
+        {
+          &quot;field&quot;: &quot;description&quot;,
+          &quot;rawValue&quot;: &quot;ImageForge CLI pre-generates WebP/AVIF assets, writes imageforge.json, and adds --check CI enforcement so teams ship optimized images with zero recurring runtime cost.&quot;,
+          &quot;renderedValue&quot;: &quot;ImageForge CLI pre-generates WebP/AVIF assets, writes imageforge.json, and adds --check CI enforcement so teams ship optimized images with zero recurring runtime cost.&quot;,
+          &quot;status&quot;: &quot;present_in_raw&quot;
+        },
+        {
+          &quot;field&quot;: &quot;canonical&quot;,
+          &quot;rawValue&quot;: &quot;https://imageforge.dev/&quot;,
+          &quot;renderedValue&quot;: &quot;https://imageforge.dev/&quot;,
+          &quot;status&quot;: &quot;present_in_raw&quot;
+        },
+        {
+          &quot;field&quot;: &quot;robots&quot;,
+          &quot;status&quot;: &quot;missing_in_both&quot;
+        },
+        {
+          &quot;field&quot;: &quot;html.lang&quot;,
+          &quot;rawValue&quot;: &quot;en&quot;,
+          &quot;renderedValue&quot;: &quot;en&quot;,
+          &quot;status&quot;: &quot;present_in_raw&quot;
+        },
+        {
+          &quot;field&quot;: &quot;viewport&quot;,
+          &quot;rawValue&quot;: &quot;width=device-width, initial-scale=1&quot;,
+          &quot;renderedValue&quot;: &quot;width=device-width, initial-scale=1&quot;,
+          &quot;status&quot;: &quot;present_in_raw&quot;
+        },
+        {
+          &quot;field&quot;: &quot;theme-color&quot;,
+          &quot;status&quot;: &quot;missing_in_both&quot;
+        },
+        {
+          &quot;field&quot;: &quot;favicon&quot;,
+          &quot;rawValue&quot;: &quot;https://imageforge.dev/favicon.ico, https://imageforge.dev/favicon.ico?favicon.0x3dzn~oxb6tn.ico&quot;,
+          &quot;renderedValue&quot;: &quot;https://imageforge.dev/favicon.ico, https://imageforge.dev/favicon.ico?favicon.0x3dzn~oxb6tn.ico&quot;,
+          &quot;status&quot;: &quot;present_in_raw&quot;
+        },
+        {
+          &quot;field&quot;: &quot;og:title&quot;,
+          &quot;rawValue&quot;: &quot;ImageForge CLI&quot;,
+          &quot;renderedValue&quot;: &quot;ImageForge CLI&quot;,
+          &quot;status&quot;: &quot;present_in_raw&quot;
+        },
+        {
+          &quot;field&quot;: &quot;og:description&quot;,
+          &quot;rawValue&quot;: &quot;Build-time image optimization with WebP/AVIF, CI guardrails, and zero recurring runtime image optimization cost.&quot;,
+          &quot;renderedValue&quot;: &quot;Build-time image optimization with WebP/AVIF, CI guardrails, and zero recurring runtime image optimization cost.&quot;,
+          &quot;status&quot;: &quot;present_in_raw&quot;
+        },
+        {
+          &quot;field&quot;: &quot;og:image&quot;,
+          &quot;rawValue&quot;: &quot;https://imageforge.dev/opengraph-image?5be7b9e6a095abcd&quot;,
+          &quot;renderedValue&quot;: &quot;https://imageforge.dev/opengraph-image?5be7b9e6a095abcd&quot;,
+          &quot;status&quot;: &quot;present_in_raw&quot;
+        },
+        {
+          &quot;field&quot;: &quot;og:url&quot;,
+          &quot;rawValue&quot;: &quot;https://imageforge.dev/&quot;,
+          &quot;renderedValue&quot;: &quot;https://imageforge.dev/&quot;,
+          &quot;status&quot;: &quot;present_in_raw&quot;
+        },
+        {
+          &quot;field&quot;: &quot;og:type&quot;,
+          &quot;rawValue&quot;: &quot;website&quot;,
+          &quot;renderedValue&quot;: &quot;website&quot;,
+          &quot;status&quot;: &quot;present_in_raw&quot;
+        },
+        {
+          &quot;field&quot;: &quot;og:site_name&quot;,
+          &quot;rawValue&quot;: &quot;ImageForge CLI&quot;,
+          &quot;renderedValue&quot;: &quot;ImageForge CLI&quot;,
+          &quot;status&quot;: &quot;present_in_raw&quot;
+        },
+        {
+          &quot;field&quot;: &quot;twitter:card&quot;,
+          &quot;rawValue&quot;: &quot;summary_large_image&quot;,
+          &quot;renderedValue&quot;: &quot;summary_large_image&quot;,
+          &quot;status&quot;: &quot;present_in_raw&quot;
+        },
+        {
+          &quot;field&quot;: &quot;twitter:title&quot;,
+          &quot;rawValue&quot;: &quot;ImageForge CLI&quot;,
+          &quot;renderedValue&quot;: &quot;ImageForge CLI&quot;,
+          &quot;status&quot;: &quot;present_in_raw&quot;
+        },
+        {
+          &quot;field&quot;: &quot;twitter:description&quot;,
+          &quot;rawValue&quot;: &quot;Optimize once, deploy everywhere, and keep recurring image optimization costs at zero.&quot;,
+          &quot;renderedValue&quot;: &quot;Optimize once, deploy everywhere, and keep recurring image optimization costs at zero.&quot;,
+          &quot;status&quot;: &quot;present_in_raw&quot;
+        },
+        {
+          &quot;field&quot;: &quot;twitter:image&quot;,
+          &quot;rawValue&quot;: &quot;https://imageforge.dev/twitter-image?1aedab77cefc7bb1&quot;,
+          &quot;renderedValue&quot;: &quot;https://imageforge.dev/twitter-image?1aedab77cefc7bb1&quot;,
+          &quot;status&quot;: &quot;present_in_raw&quot;
+        }
+      ]
+    },
+    &quot;checks&quot;: [
+      {
+        &quot;id&quot;: &quot;crawl.status.ok&quot;,
+        &quot;category&quot;: &quot;crawlability&quot;,
+        &quot;severity&quot;: &quot;passed&quot;,
+        &quot;title&quot;: &quot;Page returns HTTP success&quot;,
+        &quot;description&quot;: &quot;The audited URL returned a 2xx HTTP status.&quot;,
+        &quot;confidence&quot;: &quot;high&quot;,
+        &quot;fixability&quot;: &quot;not_fixable&quot;
+      },
+      {
+        &quot;id&quot;: &quot;metadata.title.present&quot;,
+        &quot;category&quot;: &quot;metadata&quot;,
+        &quot;severity&quot;: &quot;passed&quot;,
+        &quot;title&quot;: &quot;Title present&quot;,
+        &quot;description&quot;: &quot;Raw title: ImageForge CLI | Build-Time Image Optimization, Zero Monthly Cost&quot;,
+        &quot;confidence&quot;: &quot;high&quot;,
+        &quot;fixability&quot;: &quot;not_fixable&quot;
+      },
+      {
+        &quot;id&quot;: &quot;metadata.description.present&quot;,
+        &quot;category&quot;: &quot;metadata&quot;,
+        &quot;severity&quot;: &quot;passed&quot;,
+        &quot;title&quot;: &quot;Meta description present&quot;,
+        &quot;description&quot;: &quot;Raw meta description is present.&quot;,
+        &quot;confidence&quot;: &quot;high&quot;,
+        &quot;fixability&quot;: &quot;not_fixable&quot;
+      },
+      {
+        &quot;id&quot;: &quot;metadata.canonical.present&quot;,
+        &quot;category&quot;: &quot;metadata&quot;,
+        &quot;severity&quot;: &quot;passed&quot;,
+        &quot;title&quot;: &quot;Canonical URL present&quot;,
+        &quot;description&quot;: &quot;https://imageforge.dev/&quot;,
+        &quot;confidence&quot;: &quot;high&quot;,
+        &quot;fixability&quot;: &quot;not_fixable&quot;
+      },
+      {
+        &quot;id&quot;: &quot;metadata.robots.indexable&quot;,
+        &quot;category&quot;: &quot;crawlability&quot;,
+        &quot;severity&quot;: &quot;passed&quot;,
+        &quot;title&quot;: &quot;Page is not marked noindex&quot;,
+        &quot;description&quot;: &quot;No noindex robots meta directive was detected.&quot;,
+        &quot;confidence&quot;: &quot;high&quot;,
+        &quot;fixability&quot;: &quot;not_fixable&quot;
+      },
+      {
+        &quot;id&quot;: &quot;metadata.lang.present&quot;,
+        &quot;category&quot;: &quot;metadata&quot;,
+        &quot;severity&quot;: &quot;passed&quot;,
+        &quot;title&quot;: &quot;HTML lang attribute present&quot;,
+        &quot;description&quot;: &quot;en&quot;,
+        &quot;confidence&quot;: &quot;high&quot;,
+        &quot;fixability&quot;: &quot;not_fixable&quot;
+      },
+      {
+        &quot;id&quot;: &quot;metadata.viewport.present&quot;,
+        &quot;category&quot;: &quot;metadata&quot;,
+        &quot;severity&quot;: &quot;passed&quot;,
+        &quot;title&quot;: &quot;Viewport present&quot;,
+        &quot;description&quot;: &quot;width=device-width, initial-scale=1&quot;,
+        &quot;confidence&quot;: &quot;high&quot;,
+        &quot;fixability&quot;: &quot;not_fixable&quot;
+      },
+      {
+        &quot;id&quot;: &quot;metadata.theme_color.missing&quot;,
+        &quot;category&quot;: &quot;metadata&quot;,
+        &quot;severity&quot;: &quot;info&quot;,
+        &quot;title&quot;: &quot;Theme color is not set&quot;,
+        &quot;description&quot;: &quot;Optional theme-color metadata was not found in the initial HTML.&quot;,
+        &quot;recommendation&quot;: &quot;Add a theme-color meta tag if you want branded browser UI on supported surfaces.&quot;,
+        &quot;confidence&quot;: &quot;high&quot;,
+        &quot;fixability&quot;: &quot;plan_only&quot;
+      },
+      {
+        &quot;id&quot;: &quot;metadata.favicon.present&quot;,
+        &quot;category&quot;: &quot;metadata&quot;,
+        &quot;severity&quot;: &quot;passed&quot;,
+        &quot;title&quot;: &quot;Favicon link found&quot;,
+        &quot;description&quot;: &quot;https://imageforge.dev/favicon.ico&quot;,
+        &quot;confidence&quot;: &quot;high&quot;,
+        &quot;fixability&quot;: &quot;not_fixable&quot;
+      },
+      {
+        &quot;id&quot;: &quot;social.og.title_present&quot;,
+        &quot;category&quot;: &quot;social&quot;,
+        &quot;severity&quot;: &quot;passed&quot;,
+        &quot;title&quot;: &quot;og:title present&quot;,
+        &quot;description&quot;: &quot;ImageForge CLI&quot;,
+        &quot;confidence&quot;: &quot;high&quot;,
+        &quot;fixability&quot;: &quot;not_fixable&quot;
+      },
+      {
+        &quot;id&quot;: &quot;social.og.description_present&quot;,
+        &quot;category&quot;: &quot;social&quot;,
+        &quot;severity&quot;: &quot;passed&quot;,
+        &quot;title&quot;: &quot;og:description present&quot;,
+        &quot;description&quot;: &quot;Open Graph description is present.&quot;,
+        &quot;confidence&quot;: &quot;high&quot;,
+        &quot;fixability&quot;: &quot;not_fixable&quot;
+      },
+      {
+        &quot;id&quot;: &quot;social.og.image_present&quot;,
+        &quot;category&quot;: &quot;social&quot;,
+        &quot;severity&quot;: &quot;passed&quot;,
+        &quot;title&quot;: &quot;og:image present&quot;,
+        &quot;description&quot;: &quot;https://imageforge.dev/opengraph-image?5be7b9e6a095abcd&quot;,
+        &quot;confidence&quot;: &quot;high&quot;,
+        &quot;fixability&quot;: &quot;not_fixable&quot;
+      },
+      {
+        &quot;id&quot;: &quot;social.og.url_present&quot;,
+        &quot;category&quot;: &quot;social&quot;,
+        &quot;severity&quot;: &quot;passed&quot;,
+        &quot;title&quot;: &quot;og:url present&quot;,
+        &quot;description&quot;: &quot;https://imageforge.dev/&quot;,
+        &quot;confidence&quot;: &quot;high&quot;,
+        &quot;fixability&quot;: &quot;not_fixable&quot;
+      },
+      {
+        &quot;id&quot;: &quot;social.og.type_present&quot;,
+        &quot;category&quot;: &quot;social&quot;,
+        &quot;severity&quot;: &quot;passed&quot;,
+        &quot;title&quot;: &quot;og:type present&quot;,
+        &quot;description&quot;: &quot;website&quot;,
+        &quot;confidence&quot;: &quot;high&quot;,
+        &quot;fixability&quot;: &quot;not_fixable&quot;
+      },
+      {
+        &quot;id&quot;: &quot;social.og.site_name_present&quot;,
+        &quot;category&quot;: &quot;social&quot;,
+        &quot;severity&quot;: &quot;passed&quot;,
+        &quot;title&quot;: &quot;og:site_name present&quot;,
+        &quot;description&quot;: &quot;ImageForge CLI&quot;,
+        &quot;confidence&quot;: &quot;high&quot;,
+        &quot;fixability&quot;: &quot;not_fixable&quot;
+      },
+      {
+        &quot;id&quot;: &quot;social.twitter.card_present&quot;,
+        &quot;category&quot;: &quot;social&quot;,
+        &quot;severity&quot;: &quot;passed&quot;,
+        &quot;title&quot;: &quot;twitter:card present&quot;,
+        &quot;description&quot;: &quot;summary_large_image&quot;,
+        &quot;confidence&quot;: &quot;high&quot;,
+        &quot;fixability&quot;: &quot;not_fixable&quot;
+      },
+      {
+        &quot;id&quot;: &quot;social.twitter.title_present&quot;,
+        &quot;category&quot;: &quot;social&quot;,
+        &quot;severity&quot;: &quot;passed&quot;,
+        &quot;title&quot;: &quot;twitter:title present&quot;,
+        &quot;description&quot;: &quot;ImageForge CLI&quot;,
+        &quot;confidence&quot;: &quot;high&quot;,
+        &quot;fixability&quot;: &quot;not_fixable&quot;
+      },
+      {
+        &quot;id&quot;: &quot;social.twitter.description_present&quot;,
+        &quot;category&quot;: &quot;social&quot;,
+        &quot;severity&quot;: &quot;passed&quot;,
+        &quot;title&quot;: &quot;twitter:description present&quot;,
+        &quot;description&quot;: &quot;Twitter/X description is present.&quot;,
+        &quot;confidence&quot;: &quot;high&quot;,
+        &quot;fixability&quot;: &quot;not_fixable&quot;
+      },
+      {
+        &quot;id&quot;: &quot;social.twitter.image_present&quot;,
+        &quot;category&quot;: &quot;social&quot;,
+        &quot;severity&quot;: &quot;passed&quot;,
+        &quot;title&quot;: &quot;twitter:image present&quot;,
+        &quot;description&quot;: &quot;https://imageforge.dev/twitter-image?1aedab77cefc7bb1&quot;,
+        &quot;confidence&quot;: &quot;high&quot;,
+        &quot;fixability&quot;: &quot;not_fixable&quot;
+      },
+      {
+        &quot;id&quot;: &quot;schema.jsonld.valid&quot;,
+        &quot;category&quot;: &quot;schema&quot;,
+        &quot;severity&quot;: &quot;passed&quot;,
+        &quot;title&quot;: &quot;Valid JSON-LD detected&quot;,
+        &quot;description&quot;: &quot;Valid blocks: 2&quot;,
+        &quot;confidence&quot;: &quot;high&quot;,
+        &quot;fixability&quot;: &quot;not_fixable&quot;
+      },
+      {
+        &quot;id&quot;: &quot;structure.h1.single&quot;,
+        &quot;category&quot;: &quot;structure&quot;,
+        &quot;severity&quot;: &quot;passed&quot;,
+        &quot;title&quot;: &quot;Single H1 found&quot;,
+        &quot;description&quot;: &quot;Optimize once, deploy everywhere, pay nothing monthly.&quot;,
+        &quot;confidence&quot;: &quot;high&quot;,
+        &quot;fixability&quot;: &quot;not_fixable&quot;
+      },
+      {
+        &quot;id&quot;: &quot;crawl.robots_txt.found&quot;,
+        &quot;category&quot;: &quot;crawlability&quot;,
+        &quot;severity&quot;: &quot;passed&quot;,
+        &quot;title&quot;: &quot;robots.txt found&quot;,
+        &quot;description&quot;: &quot;https://imageforge.dev/robots.txt&quot;,
+        &quot;confidence&quot;: &quot;high&quot;,
+        &quot;fixability&quot;: &quot;not_fixable&quot;
+      },
+      {
+        &quot;id&quot;: &quot;crawl.sitemap.found&quot;,
+        &quot;category&quot;: &quot;crawlability&quot;,
+        &quot;severity&quot;: &quot;passed&quot;,
+        &quot;title&quot;: &quot;sitemap.xml found&quot;,
+        &quot;description&quot;: &quot;https://imageforge.dev/sitemap.xml&quot;,
+        &quot;confidence&quot;: &quot;high&quot;,
+        &quot;fixability&quot;: &quot;not_fixable&quot;
+      },
+      {
+        &quot;id&quot;: &quot;crawl.raw_render.consistent&quot;,
+        &quot;category&quot;: &quot;crawlability&quot;,
+        &quot;severity&quot;: &quot;passed&quot;,
+        &quot;title&quot;: &quot;Key metadata present in raw HTML&quot;,
+        &quot;description&quot;: &quot;No render-only metadata fields were detected.&quot;,
+        &quot;confidence&quot;: &quot;high&quot;,
+        &quot;fixability&quot;: &quot;not_fixable&quot;
+      }
+    ],
+    &quot;resources&quot;: {
+      &quot;robotsTxt&quot;: {
+        &quot;url&quot;: &quot;https://imageforge.dev/robots.txt&quot;,
+        &quot;finalUrl&quot;: &quot;https://imageforge.dev/robots.txt&quot;,
+        &quot;exists&quot;: true,
+        &quot;ok&quot;: true,
+        &quot;statusCode&quot;: 200,
+        &quot;blocksPage&quot;: false
+      },
+      &quot;sitemapXml&quot;: {
+        &quot;url&quot;: &quot;https://imageforge.dev/sitemap.xml&quot;,
+        &quot;finalUrl&quot;: &quot;https://imageforge.dev/sitemap.xml&quot;,
+        &quot;exists&quot;: true,
+        &quot;ok&quot;: true,
+        &quot;statusCode&quot;: 200,
+        &quot;includesAuditedUrl&quot;: true
+      }
+    }
+  }
+}</pre>
+  </details>
+</section>
+</main>
+</body>
+</html>

@@ -1,0 +1,65 @@
+ShipReady dry-run fix preview
+URL: https://mon-guide-fodmap.com/
+Repo: validation/write-v1-real-repos/tmp/mon-guide-fodmap-2
+
+Summary
+- Mode: dry_run
+- Audit score: 60/100
+- Audit status: Needs work
+- Framework: Vite React
+- Files that would be changed: 2
+- Files actually changed: 0
+
+Would create:
+- public/sitemap.xml (Create a valid single-URL sitemap.xml preview.; risk: low; review required)
+
+Would update:
+- index.html (Add or update Vite app-shell fallback metadata. Add conservative WebSite JSON-LD for human review.; risk: medium; review required)
+
+Skipped:
+- Review page heading structure: H1 review is a content change and requires human review.
+
+Diff preview
+--- index.html
++++ index.html
+@@ -15,6 +15,19 @@
+     <meta name="twitter:card" content="summary_large_image" />
+     <meta name="twitter:title" content="MonGuide FODMAP" />
+     <meta name="twitter:description" content="Votre guide alimentaire personnalisé pour le régime FODMAP" />
++    <link rel="canonical" href="https://mon-guide-fodmap.com/" />
++    <meta property="og:url" content="https://mon-guide-fodmap.com/" />
++    <!-- TODO(shipready): Replace with an absolute public Twitter/X image URL. -->
++    <meta name="twitter:image" content="TODO: Absolute image URL" />
++    <!-- TODO(shipready): Confirm this structured data before applying. -->
++    <script type="application/ld+json">
++      {
++        "@context": "https://schema.org",
++        "@type": "WebSite",
++        "name": "MonGuide FODMAP - Votre guide alimentaire personnalisé",
++        "url": "https://mon-guide-fodmap.com/"
++      }
++    </script>
+   </head>
+ 
+   <body>
+
+--- /dev/null
++++ public/sitemap.xml
+@@
++<?xml version="1.0" encoding="UTF-8"?>
++<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
++  <url>
++    <loc>https://mon-guide-fodmap.com/</loc>
++  </url>
++</urlset>
++
+
+Safety
+- Dry-run only. No files were modified.
+- This is fallback metadata for the app shell. Route-specific metadata may require prerendering, SSR, or a later framework-specific strategy.
+- Review generated changes before applying.
+- TODO placeholder metadata is for preview only and must be replaced before any future write.
+- JSON-LD previews use only conservative WebSite schema and require human confirmation.
+
+Recommended next step
+- Review patch preview

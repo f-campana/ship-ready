@@ -1,0 +1,83 @@
+{
+  "url": "http://127.0.0.1:4173/",
+  "repoPath": "tests/fixtures/repos/static-html",
+  "generatedAt": "2026-06-14T22:22:50.567Z",
+  "mode": "dry_run",
+  "wroteFiles": false,
+  "planSummary": {
+    "auditScore": 38,
+    "auditStatus": "critical",
+    "frameworkId": "static_html",
+    "frameworkName": "Plain static HTML",
+    "recommendedNextStep": "review_plan"
+  },
+  "fileChanges": [
+    {
+      "path": "index.html",
+      "changeType": "update",
+      "reason": "Add missing static metadata.",
+      "sourceActionIds": [
+        "metadata.static_html_head"
+      ],
+      "risk": "medium",
+      "requiresHumanReview": true,
+      "reviewStatus": "review_required",
+      "before": "<!doctype html>\n<html lang=\"en\"><head><title>Static Home</title></head><body><h1>Home</h1></body></html>\n",
+      "after": "<!doctype html>\n<html lang=\"en\"><head><title>Static Home</title>\n  <!-- TODO(shipready): Review and replace with a concise page description. -->\n  <meta name=\"description\" content=\"TODO: Page description\" />\n  <link rel=\"canonical\" href=\"http://127.0.0.1:4173/\" />\n  <meta property=\"og:title\" content=\"Static Home\" />\n  <!-- TODO(shipready): Replace placeholder Open Graph description before applying. -->\n  <meta property=\"og:description\" content=\"TODO: Page description\" />\n  <meta property=\"og:url\" content=\"http://127.0.0.1:4173/\" />\n  <meta property=\"og:type\" content=\"website\" />\n  <!-- TODO(shipready): Replace with an absolute public share image URL. -->\n  <meta property=\"og:image\" content=\"TODO: Absolute image URL\" />\n  <meta name=\"twitter:card\" content=\"summary_large_image\" />\n  <meta name=\"twitter:title\" content=\"Static Home\" />\n  <!-- TODO(shipready): Replace placeholder Twitter/X description before applying. -->\n  <meta name=\"twitter:description\" content=\"TODO: Page description\" />\n  <!-- TODO(shipready): Replace with an absolute public Twitter/X image URL. -->\n  <meta name=\"twitter:image\" content=\"TODO: Absolute image URL\" />\n</head><body><h1>Home</h1></body></html>\n",
+      "diff": "--- index.html\n+++ index.html\n@@ -1,3 +1,20 @@\n <!doctype html>\n-<html lang=\"en\"><head><title>Static Home</title></head><body><h1>Home</h1></body></html>\n+<html lang=\"en\"><head><title>Static Home</title>\n+  <!-- TODO(shipready): Review and replace with a concise page description. -->\n+  <meta name=\"description\" content=\"TODO: Page description\" />\n+  <link rel=\"canonical\" href=\"http://127.0.0.1:4173/\" />\n+  <meta property=\"og:title\" content=\"Static Home\" />\n+  <!-- TODO(shipready): Replace placeholder Open Graph description before applying. -->\n+  <meta property=\"og:description\" content=\"TODO: Page description\" />\n+  <meta property=\"og:url\" content=\"http://127.0.0.1:4173/\" />\n+  <meta property=\"og:type\" content=\"website\" />\n+  <!-- TODO(shipready): Replace with an absolute public share image URL. -->\n+  <meta property=\"og:image\" content=\"TODO: Absolute image URL\" />\n+  <meta name=\"twitter:card\" content=\"summary_large_image\" />\n+  <meta name=\"twitter:title\" content=\"Static Home\" />\n+  <!-- TODO(shipready): Replace placeholder Twitter/X description before applying. -->\n+  <meta name=\"twitter:description\" content=\"TODO: Page description\" />\n+  <!-- TODO(shipready): Replace with an absolute public Twitter/X image URL. -->\n+  <meta name=\"twitter:image\" content=\"TODO: Absolute image URL\" />\n+</head><body><h1>Home</h1></body></html>\n "
+    },
+    {
+      "path": "sitemap.xml",
+      "changeType": "update",
+      "reason": "Replace or update sitemap.xml with a valid single-URL sitemap preview.",
+      "sourceActionIds": [
+        "static_html.sitemap"
+      ],
+      "risk": "low",
+      "requiresHumanReview": true,
+      "reviewStatus": "review_required",
+      "before": "<urlset><url><loc>https://example.com/</loc></url></urlset>\n",
+      "after": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n  <url>\n    <loc>http://127.0.0.1:4173/</loc>\n  </url>\n</urlset>\n",
+      "diff": "--- sitemap.xml\n+++ sitemap.xml\n@@ -1,2 +1,7 @@\n-<urlset><url><loc>https://example.com/</loc></url></urlset>\n+<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n+<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n+  <url>\n+    <loc>http://127.0.0.1:4173/</loc>\n+  </url>\n+</urlset>\n "
+    }
+  ],
+  "skippedActions": [
+    {
+      "actionId": "static_html.metadata_review",
+      "title": "Review and improve weak metadata",
+      "reasonKind": "requires_more_information",
+      "reason": "Weak or risky metadata changes require human-authored copy review; dry-run only previews deterministic missing-tag inserts.",
+      "sourceActionIds": [
+        "metadata.favicon.missing",
+        "metadata.viewport.missing"
+      ],
+      "risk": "medium"
+    },
+    {
+      "actionId": "static_html.json_ld_review",
+      "title": "Add JSON-LD with review",
+      "reasonKind": "requires_more_information",
+      "reason": "JSON-LD preview needs an existing page title and description; ShipReady will not invent schema facts.",
+      "sourceActionIds": [
+        "schema.jsonld.missing"
+      ],
+      "risk": "medium"
+    },
+    {
+      "actionId": "static_html.heading",
+      "title": "Review page heading structure",
+      "reasonKind": "requires_more_information",
+      "reason": "H1 review is a content change and requires human review.",
+      "sourceActionIds": [
+        "structure.h1.generic"
+      ],
+      "risk": "medium"
+    }
+  ],
+  "safetyNotes": [
+    "Dry-run only. No files were modified.",
+    "Review generated changes before applying.",
+    "TODO placeholder metadata is for preview only and must be replaced before any future write."
+  ],
+  "recommendedNextStep": "review_patch_preview"
+}

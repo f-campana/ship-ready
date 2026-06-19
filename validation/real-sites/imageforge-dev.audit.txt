@@ -1,0 +1,52 @@
+ShipReady audit: https://imageforge.dev/
+
+Score: 100/100
+Status: Good
+
+Critical
+- None
+
+Warnings
+- None
+
+Notes
+- Theme color is not set
+
+Passed
+- Page returns HTTP success
+- Title present
+- Meta description present
+- Canonical URL present
+- Page is not marked noindex
+- HTML lang attribute present
+- Viewport present
+- Favicon link found
+- og:title present
+- og:description present
+- og:image present
+- og:url present
+- og:type present
+- og:site_name present
+- twitter:card present
+- twitter:title present
+- twitter:description present
+- twitter:image present
+- Valid JSON-LD detected
+- Single H1 found
+- robots.txt found
+- sitemap.xml found
+- Key metadata present in raw HTML
+
+Raw vs rendered
+- title: raw=ImageForge CLI | Build-Time Image Optimization, Zero Monthly Cost; rendered=ImageForge CLI | Build-Time Image Optimization, Zero Monthly Cost
+- description: raw=ImageForge CLI pre-generates WebP/AVIF assets, writes imageforge.json, and adds --check CI enforcement so teams ship optimized images with zero recurring runtime cost.; rendered=ImageForge CLI pre-generates WebP/AVIF assets, writes imageforge.json, and adds --check CI enforcement so teams ship optimized images with zero recurring runtime cost.
+- canonical: raw=https://imageforge.dev/; rendered=https://imageforge.dev/
+- robots meta: not set in raw or rendered HTML
+- viewport: raw=width=device-width, initial-scale=1; rendered=width=device-width, initial-scale=1
+- theme-color: not set in raw or rendered HTML
+- favicon: raw=https://imageforge.dev/favicon.ico, https://imageforge.dev/favicon.ico?favicon.0x3dzn~oxb6tn.ico; rendered=https://imageforge.dev/favicon.ico, https://imageforge.dev/favicon.ico?favicon.0x3dzn~oxb6tn.ico
+- og:image: raw=https://imageforge.dev/opengraph-image?5be7b9e6a095abcd; rendered=https://imageforge.dev/opengraph-image?5be7b9e6a095abcd
+- twitter:image: raw=https://imageforge.dev/twitter-image?1aedab77cefc7bb1; rendered=https://imageforge.dev/twitter-image?1aedab77cefc7bb1
+
+Recommended next action
+No launch-blocking metadata or crawlability issues were detected. Review the notes only if you want extra polish.

@@ -1,0 +1,61 @@
+ShipReady repo inspection: validation/write-v1-real-repos/tmp/mon-guide-fodmap-2
+
+Framework
+- Detected: Vite React
+- Confidence: high
+
+Evidence
+- package.json: package.json includes dependency "vite"
+- package.json: package.json includes dependency "react"
+- package.json: package.json includes dependency "react-router-dom"
+- vite.config.ts: Vite config found
+- index.html: Vite root index.html found
+- src/main.tsx: React entry file found
+- src/App.tsx: React app component found
+
+Package manager
+- npm
+
+Important files
+- package.json (Project package manifest)
+- package-lock.json (Package manager lockfile)
+- bun.lockb (Package manager lockfile)
+- vite.config.ts (Framework or TypeScript config)
+- tsconfig.json (Framework or TypeScript config)
+- src/pages/ (Important project directory)
+- src/ (Important project directory)
+- public/ (Important project directory)
+- index.html (Vite React entry file)
+- src/main.tsx (Vite React entry file)
+- src/App.tsx (Vite React entry file)
+- public/robots.txt (Crawlability asset)
+
+Likely route/page structure
+- src/main.tsx (SPA entry or root component; route-to-URL mapping requires source review)
+- src/App.tsx (SPA entry or root component; route-to-URL mapping requires source review)
+
+Likely metadata locations
+- index.html (found; Static fallback metadata for the SPA shell)
+- src/App.tsx (found; App-level component or entry point)
+- src/main.tsx (found; App-level component or entry point)
+- public/robots.txt (found; Static robots file)
+- public/sitemap.xml (not found yet; Static sitemap file)
+
+Supported future fixes
+- Update static index.html metadata
+- Add static robots.txt
+- Add static sitemap.xml
+- Add JSON-LD fallback
+- Recommend React Helmet integration
+
+Limitations
+- File writing is disabled; use `shipready fix --dry-run` for supported patch previews.
+- This command is read-only and does not modify repository files.
+- Route-specific metadata in a Vite SPA may only appear after JavaScript rendering.
+- Future fixes may need to recommend prerendering or SSG instead of relying on JS-injected metadata for crawler visibility.
+
+Warnings
+- None
+
+Recommended next action
+Use this inspection result with a URL audit to produce a read-only fix plan.

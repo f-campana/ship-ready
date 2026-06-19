@@ -1,0 +1,148 @@
+{
+  "url": "https://imageforge.dev/",
+  "repoPath": "validation/write-v1-real-repos/tmp/imageforge-site",
+  "plannedAt": "2026-06-15T14:41:52.611Z",
+  "auditSummary": {
+    "score": 100,
+    "status": "good",
+    "criticalCount": 0,
+    "warningCount": 0,
+    "noteCount": 1
+  },
+  "repoSummary": {
+    "frameworkId": "next_app_router",
+    "frameworkName": "Next.js App Router",
+    "confidence": "high",
+    "packageManager": "pnpm"
+  },
+  "actions": [],
+  "noActionChecks": [
+    {
+      "checkId": "crawl.status.ok",
+      "title": "Page returns HTTP success",
+      "reason": "This audit check passed, so ShipReady is not proposing a change."
+    },
+    {
+      "checkId": "metadata.title.present",
+      "title": "Title present",
+      "reason": "This audit check passed, so ShipReady is not proposing a change."
+    },
+    {
+      "checkId": "metadata.description.present",
+      "title": "Meta description present",
+      "reason": "This audit check passed, so ShipReady is not proposing a change."
+    },
+    {
+      "checkId": "metadata.canonical.present",
+      "title": "Canonical URL present",
+      "reason": "This audit check passed, so ShipReady is not proposing a change."
+    },
+    {
+      "checkId": "metadata.robots.indexable",
+      "title": "Page is not marked noindex",
+      "reason": "This audit check passed, so ShipReady is not proposing a change."
+    },
+    {
+      "checkId": "metadata.lang.present",
+      "title": "HTML lang attribute present",
+      "reason": "This audit check passed, so ShipReady is not proposing a change."
+    },
+    {
+      "checkId": "metadata.viewport.present",
+      "title": "Viewport present",
+      "reason": "This audit check passed, so ShipReady is not proposing a change."
+    },
+    {
+      "checkId": "metadata.favicon.present",
+      "title": "Favicon link found",
+      "reason": "This audit check passed, so ShipReady is not proposing a change."
+    },
+    {
+      "checkId": "social.og.title_present",
+      "title": "og:title present",
+      "reason": "This audit check passed, so ShipReady is not proposing a change."
+    },
+    {
+      "checkId": "social.og.description_present",
+      "title": "og:description present",
+      "reason": "This audit check passed, so ShipReady is not proposing a change."
+    },
+    {
+      "checkId": "social.og.image_present",
+      "title": "og:image present",
+      "reason": "This audit check passed, so ShipReady is not proposing a change."
+    },
+    {
+      "checkId": "social.og.url_present",
+      "title": "og:url present",
+      "reason": "This audit check passed, so ShipReady is not proposing a change."
+    },
+    {
+      "checkId": "social.og.type_present",
+      "title": "og:type present",
+      "reason": "This audit check passed, so ShipReady is not proposing a change."
+    },
+    {
+      "checkId": "social.og.site_name_present",
+      "title": "og:site_name present",
+      "reason": "This audit check passed, so ShipReady is not proposing a change."
+    },
+    {
+      "checkId": "social.twitter.card_present",
+      "title": "twitter:card present",
+      "reason": "This audit check passed, so ShipReady is not proposing a change."
+    },
+    {
+      "checkId": "social.twitter.title_present",
+      "title": "twitter:title present",
+      "reason": "This audit check passed, so ShipReady is not proposing a change."
+    },
+    {
+      "checkId": "social.twitter.description_present",
+      "title": "twitter:description present",
+      "reason": "This audit check passed, so ShipReady is not proposing a change."
+    },
+    {
+      "checkId": "social.twitter.image_present",
+      "title": "twitter:image present",
+      "reason": "This audit check passed, so ShipReady is not proposing a change."
+    },
+    {
+      "checkId": "schema.jsonld.valid",
+      "title": "Valid JSON-LD detected",
+      "reason": "This audit check passed, so ShipReady is not proposing a change."
+    },
+    {
+      "checkId": "structure.h1.single",
+      "title": "Single H1 found",
+      "reason": "This audit check passed, so ShipReady is not proposing a change."
+    },
+    {
+      "checkId": "crawl.robots_txt.found",
+      "title": "robots.txt found",
+      "reason": "This audit check passed, so ShipReady is not proposing a change."
+    },
+    {
+      "checkId": "crawl.sitemap.found",
+      "title": "sitemap.xml found",
+      "reason": "This audit check passed, so ShipReady is not proposing a change."
+    },
+    {
+      "checkId": "crawl.raw_render.consistent",
+      "title": "Key metadata present in raw HTML",
+      "reason": "This audit check passed, so ShipReady is not proposing a change."
+    }
+  ],
+  "optionalNotes": [
+    "Theme color is not set: Optional theme-color metadata was not found in the initial HTML."
+  ],
+  "limitations": [
+    "This is a read-only plan. No files were modified and no patches were generated.",
+    "Future automation must re-check the repo before writing changes.",
+    "File writing is disabled; use `shipready fix --dry-run` for supported patch previews.",
+    "This command is read-only and does not modify repository files.",
+    "Dynamic route metadata may require human review.",
+    "Existing complex metadata logic should not be overwritten blindly."
+  ],
+  "recommendedNextStep": "no_changes_needed"
+}
