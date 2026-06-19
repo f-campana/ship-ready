@@ -1,0 +1,37 @@
+[
+  {
+    "start": 0,
+    "end": 8,
+    "beat": "ShipReady checks launch readiness without changing the project."
+  },
+  {
+    "start": 8,
+    "end": 20,
+    "beat": "Enter the live URL and local project folder, then check the site."
+  },
+  {
+    "start": 20,
+    "end": 36,
+    "beat": "Needs attention highlights the next action for crawlers and preview bots."
+  },
+  {
+    "start": 36,
+    "end": 52,
+    "beat": "Safe apply previews two missing crawl files before any action."
+  },
+  {
+    "start": 52,
+    "end": 68,
+    "beat": "Review app/robots.ts and app/sitemap.ts."
+  },
+  {
+    "start": 68,
+    "end": 84,
+    "beat": "Copy the guarded creation-only command; the GUI writes nothing."
+  },
+  {
+    "start": 84,
+    "end": 94.4,
+    "beat": "Local changes do not affect the live site until deployment."
+  }
+]

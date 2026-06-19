@@ -1,0 +1,27 @@
+1
+00:00:00,000 --> 00:00:08,000
+ShipReady checks launch readiness without changing the project.
+
+2
+00:00:08,000 --> 00:00:20,000
+Enter the live URL and local project folder, then check the site.
+
+3
+00:00:20,000 --> 00:00:36,000
+Needs attention highlights the next action for crawlers and preview bots.
+
+4
+00:00:36,000 --> 00:00:52,000
+Safe apply previews two missing crawl files before any action.
+
+5
+00:00:52,000 --> 00:01:08,000
+Review app/robots.ts and app/sitemap.ts.
+
+6
+00:01:08,000 --> 00:01:24,000
+Copy the guarded creation-only command. The GUI writes nothing.
+
+7
+00:01:24,000 --> 00:01:34,400
+Local changes do not affect the live site until deployment.
