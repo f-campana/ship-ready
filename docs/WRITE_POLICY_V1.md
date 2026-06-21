@@ -2,17 +2,17 @@
 
 ## 1. Scope
 
-This document defines the strict first write policy for a future ShipReady command:
+This document defines the strict first write policy for the implemented ShipReady command:
 
 ```bash
 pnpm shipready fix <path> --url <url> --write --allow-create
 ```
 
-This policy is design-only. It does not imply that write mode exists yet.
+This policy governs the implemented guarded write command. It does not authorize execution against a repository without explicit instruction and target review.
 
-V1 write mode should be creation-only. It may create missing robots and sitemap files that already appear in the regenerated dry-run result as low-risk automation candidates. It must never overwrite user code, merge metadata, edit content, format files, run Git, commit, deploy, or install dependencies.
+V1 write mode is creation-only. It may create missing robots and sitemap files that already appear in the regenerated dry-run result as low-risk automation candidates. It must never overwrite user code, merge metadata, edit content, format files, run Git, commit, deploy, or install dependencies.
 
-The first implementation should answer one narrow question:
+The implementation answers one narrow question:
 
 > Which dry-run file creations are safe enough to write to disk without human editing?
 

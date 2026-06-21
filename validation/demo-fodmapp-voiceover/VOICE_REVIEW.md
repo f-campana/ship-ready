@@ -1,5 +1,7 @@
 # Voice review
 
+> Decision update, 2026-06-21: Candidate A subsequently received explicit human approval as good enough for current internal use. See `VOICE_DECISION.md`. The automated assessment below is retained as technical evidence.
+
 ## Outcome
 
 One ElevenLabs candidate was generated and composed. Candidate A is technically strong: the full narration is intelligible to speech recognition, has comfortable signal headroom, contains natural pauses, fits inside the video, and places the safety language during the safe-apply/file/guarded-command sequence. It makes no ranking, SEO, or guaranteed-indexing promise.

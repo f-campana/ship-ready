@@ -4,7 +4,7 @@
 
 One configured ElevenLabs voice was available and Candidate A was generated successfully. `ELEVENLABS_API_KEY` and `ELEVENLABS_VOICE_ID` were loaded from `.env`; optional A/B/C voice variables were absent. Credential values were never printed, logged, copied into commands, or stored in validation artifacts.
 
-The approved `validation/demo-fodmapp-share/final-demo.mp4` remains canonical pending explicit human voice-quality approval.
+Candidate A received explicit human approval on 2026-06-21 and is approved as the optional enhanced internal demo. The silent/captioned `validation/demo-fodmapp-share/final-demo.mp4` remains the canonical fallback. See `VOICE_DECISION.md`.
 
 ## Files
 
@@ -13,6 +13,7 @@ The approved `validation/demo-fodmapp-share/final-demo.mp4` remains canonical pe
 - `final-demo-with-voice-a.mp4` — 55.560-second composition, H.264 1280x720 video plus AAC 44.1 kHz mono audio.
 - `ffprobe-a.json` — full stream and format evidence.
 - `VOICE_REVIEW.md` — candidate assessment and publication decision.
+- `VOICE_DECISION.md` — final closure status and canonical-artifact decision for this roadmap pass.
 
 ## Reproduction
 
@@ -35,7 +36,7 @@ The ElevenLabs request submits the exact UTF-8 contents of `voiceover-final.txt`
 - Signal: peak −3.70 dB, RMS −18.74 dB; no clipping indication.
 - Automated direct decode/transcription reproduced the complete script with 0.931 English-language probability and recognized the required technical vocabulary.
 - Safety narration spans roughly 28–43 seconds, inside the broad safe-apply/file/guarded-command sequence. The final deployment warning ends around 52.48 seconds, leaving 3.08 seconds of closing dwell.
-- Human-perceived tone and natural pronunciation cannot be established from metadata/transcription. Candidate A is not recommended for publication until a person watches and listens to the complete output.
+- Human-perceived tone and natural pronunciation cannot be established from metadata/transcription. A human subsequently approved Candidate A as good enough for current internal use.
 
 ## Safety boundary
 
@@ -47,4 +48,4 @@ The ElevenLabs request submits the exact UTF-8 contents of `voiceover-final.txt`
 
 ## Recommendation and next task
 
-Keep the silent/captioned V2 canonical. Candidate A is the only and technically best voiced candidate, but publication depends on human approval of tone and pronunciation. Next: watch and listen to `final-demo-with-voice-a.mp4`. If it passes, select Candidate A and produce one final voiced share package; if it sounds weak, rushed, robotic, salesy, or mispronounced, keep the approved silent/captioned V2.
+Use Candidate A as the optional enhanced internal demo and keep the silent/captioned V2 as the canonical fallback. The final package is in `validation/demo-fodmapp-voiceover-final/`. Revisit the voice only if later human feedback identifies a concrete issue.

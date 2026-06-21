@@ -1,0 +1,31 @@
+1
+00:00:00,000 --> 00:00:07,000
+AI-generated sites can look ready, but still miss launch-readiness details.
+
+2
+00:00:07,000 --> 00:00:14,000
+ShipReady checks what crawlers and preview bots can see.
+
+3
+00:00:14,000 --> 00:00:21,000
+This page needs attention before launch.
+
+4
+00:00:21,000 --> 00:00:29,000
+ShipReady separates safe crawl files from changes that need review.
+
+5
+00:00:29,000 --> 00:00:36,000
+Two safe files are ready: robots.ts and sitemap.ts.
+
+6
+00:00:36,000 --> 00:00:44,000
+The GUI does not write files. It gives a guarded command.
+
+7
+00:00:44,000 --> 00:00:52,000
+No overwrites. No content edits. No Git commits. No deploys.
+
+8
+00:00:52,000 --> 00:01:00,000
+Deploy when ready, then re-check the live site.
