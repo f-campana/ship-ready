@@ -1,0 +1,145 @@
+{
+  "url": "https://example.com/",
+  "finalUrl": "https://example.com/",
+  "auditedAt": "2026-06-21T12:00:00.000Z",
+  "httpStatus": 200,
+  "score": 100,
+  "status": "good",
+  "raw": {
+    "source": "raw",
+    "url": "https://example.com/",
+    "metadata": {
+      "htmlLang": "en",
+      "title": "Example",
+      "description": "A deterministic ShipReady contract fixture.",
+      "canonical": "https://example.com/",
+      "faviconLinks": [],
+      "openGraph": {},
+      "twitter": {}
+    },
+    "headings": {
+      "h1": [
+        "Example"
+      ],
+      "all": [
+        {
+          "level": 1,
+          "text": "Example"
+        }
+      ]
+    },
+    "images": {
+      "total": 0,
+      "missingAlt": 0,
+      "items": []
+    },
+    "links": {
+      "total": 0,
+      "missingAccessibleText": 0,
+      "items": []
+    },
+    "jsonLd": []
+  },
+  "rendered": {
+    "source": "rendered",
+    "url": "https://example.com/",
+    "metadata": {
+      "htmlLang": "en",
+      "title": "Example",
+      "description": "A deterministic ShipReady contract fixture.",
+      "canonical": "https://example.com/",
+      "faviconLinks": [],
+      "openGraph": {},
+      "twitter": {}
+    },
+    "headings": {
+      "h1": [
+        "Example"
+      ],
+      "all": [
+        {
+          "level": 1,
+          "text": "Example"
+        }
+      ]
+    },
+    "images": {
+      "total": 0,
+      "missingAlt": 0,
+      "items": []
+    },
+    "links": {
+      "total": 0,
+      "missingAccessibleText": 0,
+      "items": []
+    },
+    "jsonLd": []
+  },
+  "comparison": {
+    "fields": []
+  },
+  "checks": [
+    {
+      "id": "metadata.title.present",
+      "category": "metadata",
+      "severity": "passed",
+      "title": "metadata.title.present",
+      "description": "Deterministic evidence for metadata.title.present.",
+      "confidence": "high",
+      "fixability": "not_fixable"
+    },
+    {
+      "id": "metadata.description.present",
+      "category": "metadata",
+      "severity": "passed",
+      "title": "metadata.description.present",
+      "description": "Deterministic evidence for metadata.description.present.",
+      "confidence": "high",
+      "fixability": "not_fixable"
+    },
+    {
+      "id": "metadata.canonical.present",
+      "category": "metadata",
+      "severity": "passed",
+      "title": "metadata.canonical.present",
+      "description": "Deterministic evidence for metadata.canonical.present.",
+      "confidence": "high",
+      "fixability": "not_fixable"
+    },
+    {
+      "id": "crawl.robots_txt.found",
+      "category": "crawlability",
+      "severity": "passed",
+      "title": "crawl.robots_txt.found",
+      "description": "Deterministic evidence for crawl.robots_txt.found.",
+      "confidence": "high",
+      "fixability": "not_fixable"
+    },
+    {
+      "id": "crawl.sitemap.found",
+      "category": "crawlability",
+      "severity": "passed",
+      "title": "crawl.sitemap.found",
+      "description": "Deterministic evidence for crawl.sitemap.found.",
+      "confidence": "high",
+      "fixability": "not_fixable"
+    }
+  ],
+  "resources": {
+    "robotsTxt": {
+      "url": "https://example.com/robots.txt",
+      "finalUrl": "https://example.com/robots.txt",
+      "exists": true,
+      "ok": true,
+      "statusCode": 200
+    },
+    "sitemapXml": {
+      "url": "https://example.com/sitemap.xml",
+      "finalUrl": "https://example.com/sitemap.xml",
+      "exists": true,
+      "ok": true,
+      "statusCode": 200
+    }
+  },
+  "contract": "shipready.audit.v1"
+}

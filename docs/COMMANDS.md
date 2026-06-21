@@ -11,7 +11,9 @@ pnpm shipready audit https://example.com --json
 
 - Purpose: audit one public HTTP(S) page, including metadata, raw/rendered differences, structure, accessibility signals, `robots.txt`, and `sitemap.xml`.
 - Behavior: reads network resources; writes no files.
-- Output: human report by default; `AuditResult` JSON with `--json`.
+- JSON contract: `shipready.audit.v1`; representative fixtures: [`audit.clean.json`](../validation/contracts/audit.clean.json) and [`audit.needs-work.json`](../validation/contracts/audit.needs-work.json).
+- Output: human report by default; the existing `AuditResult` fields plus `contract` with `--json`.
+- Exit behavior: `0` when an audit result is emitted regardless of readiness status, `1` for invalid input, `2` for operational failure. JSON action errors use `shipready.error.v1`.
 - Agent use: first live-site check and source for downstream planning.
 - Safety: this is a single-page check, not a crawler; private/authenticated pages are out of scope.
 
@@ -24,7 +26,9 @@ pnpm shipready inspect-repo . --json
 
 - Purpose: detect framework, package manager, important files, routes, metadata locations, supported fixes, warnings, and limitations.
 - Behavior: reads a bounded local repository scan; writes nothing.
-- Output: human report or `RepoInspectionResult` JSON.
+- JSON contract: `shipready.repoInspection.v1`; fixtures: [`inspect-repo.next-app.json`](../validation/contracts/inspect-repo.next-app.json) and [`inspect-repo.vite.json`](../validation/contracts/inspect-repo.vite.json).
+- Output: human report or the existing `RepoInspectionResult` fields plus `contract`.
+- Exit behavior: `0` when an inspection is emitted, including unknown projects; `1` for invalid repository input; `2` for unexpected failure.
 - Agent use: establish repository facts before planning or implementation.
 - Safety: convention-based inspection is not full AST analysis or exact route-to-URL mapping.
 
@@ -37,7 +41,9 @@ pnpm shipready plan-fixes . --url https://example.com --json
 
 - Purpose: combine a live audit and repo inspection into prioritized, risk- and confidence-labeled actions.
 - Behavior: reads the URL and repository; writes nothing.
-- Output: human report or `FixPlanResult` JSON.
+- JSON contract: `shipready.fixPlan.v1`; fixtures: [`plan-fixes.safe-apply.json`](../validation/contracts/plan-fixes.safe-apply.json) and [`plan-fixes.review-required.json`](../validation/contracts/plan-fixes.review-required.json).
+- Output: human report or the existing `FixPlanResult` fields plus `contract`.
+- Exit behavior: `0` when a plan is emitted, including manual-review/unsupported recommendations; `1` for invalid input; `2` for operational failure.
 - Agent use: decide which changes are safe candidates, review-required, manual, or unsupported.
 - Safety: plan automation fields describe capability; they do not execute changes.
 
@@ -50,7 +56,9 @@ pnpm shipready fix . --url https://example.com --dry-run --json
 
 - Purpose: generate exact create/update previews, diffs, skipped actions, and safety notes.
 - Behavior: reads the URL and repository; `mode` is `dry_run`, `wroteFiles` is `false`; writes nothing.
-- Output: human report or `DryRunFixResult` JSON.
+- JSON contract: `shipready.dryRunFix.v1`; fixtures: [`fix-dry-run.safe-apply.json`](../validation/contracts/fix-dry-run.safe-apply.json), [`fix-dry-run.review-required.json`](../validation/contracts/fix-dry-run.review-required.json), and [`fix-dry-run.skipped.json`](../validation/contracts/fix-dry-run.skipped.json).
+- Output: human report or the existing `DryRunFixResult` fields plus `contract`.
+- Exit behavior: `0` when a dry-run result is emitted; `1` for a missing/conflicting mode or invalid input; `2` for operational failure.
 - Agent use: mandatory preview before considering any write.
 - Safety: metadata, content, and JSON-LD may appear as review-required previews; preview presence does not make them writable.
 
@@ -60,15 +68,18 @@ pnpm shipready fix . --url https://example.com --dry-run --json
 
 ```bash
 pnpm shipready fix <path> --url <url> --write --allow-create [--json] [--timeout <ms>] [--no-render] [--user-agent <ua>]
+pnpm shipready fix ./fixture-copy --url https://example.com --write --allow-create --json
 ```
 
 - Purpose: create eligible missing crawl files under `creation_only_robots_sitemap_v1`.
 - Behavior: writes only after regenerating the preview and passing all V1 gates; may create multiple eligible files atomically.
-- Output: human report or `WriteFixResult` JSON; validation/execution failures include a structured result with `--json`.
+- JSON contract: `shipready.writeFix.v1`; deterministic temp-copy fixtures: [`fix-write.safe-create.json`](../validation/contracts/fix-write.safe-create.json), [`fix-write.blocked.json`](../validation/contracts/fix-write.blocked.json), and [`fix-write.skipped.json`](../validation/contracts/fix-write.skipped.json).
+- Output: human report or the existing `WriteFixResult` fields plus `contract`; validation/execution errors use `shipready.error.v1` and include a nested versioned write result.
+- Exit behavior: `0` for a completed result, including a no-op; `1` for mode/input/validation failure; `2` for execution or operational failure.
 - Agent use: only when the user explicitly authorizes the exact target after preview review.
 - Safety: `--write` without `--allow-create` is rejected. Existing files, overwrites, review-required changes, unsupported paths, metadata/content/JSON-LD, Git, and deployment are excluded. Read [WRITE_POLICY_V1.md](WRITE_POLICY_V1.md) first.
 
-No example with a real repository is provided intentionally. Never infer authorization from a copied command.
+The example target is intentionally a fixture copy. Never replace it with a real repository or infer authorization from a copied command.
 
 ## `ui-report`
 
@@ -80,7 +91,9 @@ pnpm shipready ui-report --url https://example.com --json
 
 - Purpose: normalize URL-only or URL-plus-repo results into `ui-report-v1`.
 - Behavior: reads network/repo inputs; writes nothing.
-- Output: structured report with `--json`; otherwise a short generation message. Report-stage errors set a nonzero exit status.
+- JSON contract: `shipready.uiReport.v1`, retaining `schemaVersion: "ui-report-v1"`; fixtures: [`ui-report.safe-apply.json`](../validation/contracts/ui-report.safe-apply.json) and [`ui-report.url-only.json`](../validation/contracts/ui-report.url-only.json).
+- Output: structured report with `--json`; otherwise a short generation message.
+- Exit behavior: `0` when `errors` is empty; `1` when a report is emitted with normalized stage errors. Invalid timeout/action failures use `shipready.error.v1`.
 - Agent use: stable current input for GUI/report consumers and contract fixtures.
 - Safety: safe-apply fields describe eligibility and a guarded CLI command workflow; this command never applies changes.
 
@@ -94,7 +107,7 @@ pnpm shipready html-report --url https://example.com --output validation/example
 
 - Purpose: render a self-contained static report from `ui-report-v1`.
 - Behavior: reads network/repo inputs and writes the requested HTML report file.
-- Output: the resolved output path on stdout; no `--json` mode.
+- Surface type: explicit HTML file output plus a human stdout path; no `--json` option and no JSON contract.
 - Agent use: create a reviewable artifact when an interactive GUI is unnecessary.
 - Safety: the only write is the explicitly named report file; it does not modify the inspected repository.
 
@@ -108,9 +121,16 @@ pnpm shipready gui
 - Purpose: start the local human-readable UI.
 - Defaults: `127.0.0.1:4317`.
 - Behavior: serves `/`, static assets, and `POST /api/ui-report`; reads audit/repo inputs and writes no project files.
+- Surface type: local HTTP server plus a human stdout URL; the command has no `--json` option. `POST /api/ui-report` returns an internal GUI JSON envelope, not a named CLI contract.
 - Output: server URL, then the process remains active until stopped.
 - Agent use: human review, GUI validation, and recording.
 - Safety: no GUI write endpoint exists. Safe apply is preview/copy-only.
+
+The GUI client fetches only `/api/ui-report`. `POST /api/fix` is not implemented and returns `404`.
+
+## JSON errors
+
+Command-action failures under `--json` use `shipready.error.v1`. See [`error.invalid-url.json`](../validation/contracts/error.invalid-url.json). The stable fields are `contract`, `ok: false`, `code`, `message`, and the legacy compatibility alias `error`. Commander failures that occur before the command action starts, such as missing required arguments, remain a documented normalization gap.
 
 ## Demo package scripts
 

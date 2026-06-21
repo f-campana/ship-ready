@@ -1,0 +1,33 @@
+{
+  "url": "https://example.com/",
+  "repoPath": "tests/fixtures/repos/next-app-router-dry-run",
+  "generatedAt": "2026-06-21T12:00:00.000Z",
+  "mode": "dry_run",
+  "wroteFiles": false,
+  "planSummary": {
+    "auditScore": 70,
+    "auditStatus": "needs_work",
+    "frameworkId": "next_app_router",
+    "frameworkName": "Next.js App Router",
+    "recommendedNextStep": "review_plan"
+  },
+  "fileChanges": [],
+  "skippedActions": [
+    {
+      "actionId": "next_app_router.json_ld_review",
+      "title": "Add JSON-LD with review",
+      "reasonKind": "requires_more_information",
+      "reason": "Next.js App Router JSON-LD preview requires a reviewed structured-data component and factual schema details.",
+      "sourceActionIds": [
+        "schema.jsonld.missing"
+      ],
+      "risk": "medium"
+    }
+  ],
+  "safetyNotes": [
+    "Dry-run only. No files were modified.",
+    "Next.js App Router previews are conservative and read-only; dynamic metadata and component changes are skipped."
+  ],
+  "recommendedNextStep": "manual_review_required",
+  "contract": "shipready.dryRunFix.v1"
+}

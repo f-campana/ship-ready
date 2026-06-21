@@ -1,0 +1,80 @@
+{
+  "url": "https://example.com/",
+  "repoPath": "tests/fixtures/repos/next-app-router-dry-run",
+  "plannedAt": "2026-06-21T12:00:00.000Z",
+  "auditSummary": {
+    "score": 78,
+    "status": "needs_work",
+    "criticalCount": 0,
+    "warningCount": 2,
+    "noteCount": 0
+  },
+  "repoSummary": {
+    "frameworkId": "next_app_router",
+    "frameworkName": "Next.js App Router",
+    "confidence": "high",
+    "packageManager": "pnpm"
+  },
+  "actions": [
+    {
+      "id": "next_app_router.robots",
+      "title": "Add robots.ts",
+      "description": "Add a robots file or framework route so crawlers can discover the intended crawl policy.",
+      "sourceCheckIds": [
+        "crawl.robots_txt.missing"
+      ],
+      "category": "safe_automated_later",
+      "priority": "medium",
+      "risk": "low",
+      "confidence": "high",
+      "frameworkStrategy": "Add an App Router robots.ts route.",
+      "targetFiles": [
+        "src/app/robots.ts"
+      ],
+      "targetLocations": [
+        "src/app/robots.ts"
+      ],
+      "futureAutomation": {
+        "canAutomate": true,
+        "requiresHumanReview": false,
+        "reason": "The framework and likely robots target are clear."
+      }
+    },
+    {
+      "id": "next_app_router.sitemap",
+      "title": "Add sitemap.ts",
+      "description": "Add a sitemap so crawlers can discover the public URL set.",
+      "sourceCheckIds": [
+        "crawl.sitemap.missing"
+      ],
+      "category": "safe_automated_later",
+      "priority": "high",
+      "risk": "low",
+      "confidence": "high",
+      "frameworkStrategy": "Add an App Router sitemap.ts route. Use audited URL https://example.com/.",
+      "targetFiles": [
+        "src/app/sitemap.ts"
+      ],
+      "targetLocations": [
+        "src/app/sitemap.ts"
+      ],
+      "futureAutomation": {
+        "canAutomate": true,
+        "requiresHumanReview": false,
+        "reason": "The framework and likely sitemap target are clear."
+      }
+    }
+  ],
+  "noActionChecks": [],
+  "optionalNotes": [],
+  "limitations": [
+    "This is a read-only plan. No files were modified and no patches were generated.",
+    "Future automation must re-check the repo before writing changes.",
+    "File writing is disabled; use `shipready fix --dry-run` for supported patch previews.",
+    "This command is read-only and does not modify repository files.",
+    "Dynamic route metadata may require human review.",
+    "Existing complex metadata logic should not be overwritten blindly."
+  ],
+  "recommendedNextStep": "review_plan",
+  "contract": "shipready.fixPlan.v1"
+}

@@ -1,5 +1,10 @@
 import { DryRunFixResultSchema, type DryRunFixResult } from "../types/dryRunFix";
+import { CONTRACT_NAMES, DryRunFixJsonContractSchema } from "../types/contracts";
 
 export function formatDryRunFixJsonReport(result: DryRunFixResult): string {
-  return `${JSON.stringify(DryRunFixResultSchema.parse(result), null, 2)}\n`;
+  const contract = DryRunFixJsonContractSchema.parse({
+    contract: CONTRACT_NAMES.dryRunFix,
+    ...DryRunFixResultSchema.parse(result),
+  });
+  return `${JSON.stringify(contract, null, 2)}\n`;
 }

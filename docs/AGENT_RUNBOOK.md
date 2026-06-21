@@ -70,6 +70,24 @@ git diff --check
 
 Use targeted Vitest files during implementation, then the full commands when behavior or contracts change. Documentation-only work may omit product tests if no source, scripts, package files, or generated behavior changed.
 
+## When changing CLI JSON outputs
+
+Treat every implemented `--json` output as a versioned public boundary:
+
+1. Read `docs/CONTRACTS.md` and identify the command's named contract before editing a result schema or formatter.
+2. Preserve the current top-level shape and human output unless a deliberate versioned compatibility decision says otherwise. Do not introduce a generic success envelope incidentally.
+3. Keep `contract`, mode/policy discriminators, `ui-report-v1`, error codes/messages, and the command-to-contract mapping synchronized in `src/types/contracts.ts`.
+4. Update or add deterministic fixtures under `validation/contracts/`; regenerate current fixtures with `pnpm contracts:fixtures`.
+5. Use only local test repositories and deterministic inputs. Any write-contract fixture must run against an operating-system temporary copy, never a real target repository.
+6. Update focused boundary tests in `tests/contracts.test.ts`. Assert stable keys and state distinctions rather than volatile full-object snapshots.
+7. Update `docs/CONTRACTS.md` and the affected command section in `docs/COMMANDS.md`, including exit behavior and fixture provenance.
+8. Check downstream consumers: planning, dry-run/write validation, UI normalization, static HTML, GUI API/client, and demo artifacts. Internal consumers may use result types directly and must not be assumed to parse CLI envelopes.
+9. Preserve stdout as one parseable JSON object for JSON action results/errors; keep human diagnostics on the human-output path.
+10. For V1 changes, treat removed/renamed required fields, discriminator changes, semantic repurposing, and unreviewed enum additions as compatibility risks requiring a new-version decision.
+11. Re-run `pnpm test`, `pnpm typecheck`, `pnpm build`, and `git diff --check`.
+
+JSON contract work never authorizes broader writes. `docs/WRITE_POLICY_V1.md` remains canonical: eligibility, target paths, effects, and authorization must not change as a side effect of formatting. The GUI remains a read-only report/preview/copy surface; do not infer that a CLI field should add GUI write execution or a new endpoint.
+
 ## Safety boundaries
 
 - Default to read-only commands and `fix --dry-run`.

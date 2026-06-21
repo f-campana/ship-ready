@@ -1,0 +1,39 @@
+{
+  "url": "https://example.com/",
+  "repoPath": "tests/fixtures/repos/vite-react",
+  "generatedAt": "2026-06-21T12:00:00.000Z",
+  "mode": "dry_run",
+  "wroteFiles": false,
+  "planSummary": {
+    "auditScore": 64,
+    "auditStatus": "needs_work",
+    "frameworkId": "vite_react",
+    "frameworkName": "Vite React",
+    "recommendedNextStep": "review_plan"
+  },
+  "fileChanges": [
+    {
+      "path": "index.html",
+      "changeType": "update",
+      "reason": "Add or update Vite app-shell fallback metadata.",
+      "sourceActionIds": [
+        "vite_react.metadata_review"
+      ],
+      "risk": "medium",
+      "requiresHumanReview": true,
+      "reviewStatus": "review_required",
+      "before": "<html><head><title>Vite App</title></head><body><div id=\"root\"></div><script type=\"module\" src=\"/src/main.tsx\"></script></body></html>\n",
+      "after": "<html><head><title>Vite App</title>\n  <!-- TODO(shipready): Review and replace with a concise page description. -->\n  <meta name=\"description\" content=\"TODO: Page description\" />\n  <link rel=\"canonical\" href=\"https://example.com/\" />\n  <meta property=\"og:title\" content=\"Vite App\" />\n  <!-- TODO(shipready): Replace placeholder Open Graph description before applying. -->\n  <meta property=\"og:description\" content=\"TODO: Page description\" />\n  <meta property=\"og:url\" content=\"https://example.com/\" />\n  <meta property=\"og:type\" content=\"website\" />\n  <!-- TODO(shipready): Replace with an absolute public share image URL. -->\n  <meta property=\"og:image\" content=\"TODO: Absolute image URL\" />\n  <meta name=\"twitter:card\" content=\"summary_large_image\" />\n  <meta name=\"twitter:title\" content=\"Vite App\" />\n  <!-- TODO(shipready): Replace placeholder Twitter/X description before applying. -->\n  <meta name=\"twitter:description\" content=\"TODO: Page description\" />\n  <!-- TODO(shipready): Replace with an absolute public Twitter/X image URL. -->\n  <meta name=\"twitter:image\" content=\"TODO: Absolute image URL\" />\n</head><body><div id=\"root\"></div><script type=\"module\" src=\"/src/main.tsx\"></script></body></html>\n",
+      "diff": "--- index.html\n+++ index.html\n@@ -1,2 +1,19 @@\n-<html><head><title>Vite App</title></head><body><div id=\"root\"></div><script type=\"module\" src=\"/src/main.tsx\"></script></body></html>\n+<html><head><title>Vite App</title>\n+  <!-- TODO(shipready): Review and replace with a concise page description. -->\n+  <meta name=\"description\" content=\"TODO: Page description\" />\n+  <link rel=\"canonical\" href=\"https://example.com/\" />\n+  <meta property=\"og:title\" content=\"Vite App\" />\n+  <!-- TODO(shipready): Replace placeholder Open Graph description before applying. -->\n+  <meta property=\"og:description\" content=\"TODO: Page description\" />\n+  <meta property=\"og:url\" content=\"https://example.com/\" />\n+  <meta property=\"og:type\" content=\"website\" />\n+  <!-- TODO(shipready): Replace with an absolute public share image URL. -->\n+  <meta property=\"og:image\" content=\"TODO: Absolute image URL\" />\n+  <meta name=\"twitter:card\" content=\"summary_large_image\" />\n+  <meta name=\"twitter:title\" content=\"Vite App\" />\n+  <!-- TODO(shipready): Replace placeholder Twitter/X description before applying. -->\n+  <meta name=\"twitter:description\" content=\"TODO: Page description\" />\n+  <!-- TODO(shipready): Replace with an absolute public Twitter/X image URL. -->\n+  <meta name=\"twitter:image\" content=\"TODO: Absolute image URL\" />\n+</head><body><div id=\"root\"></div><script type=\"module\" src=\"/src/main.tsx\"></script></body></html>\n "
+    }
+  ],
+  "skippedActions": [],
+  "safetyNotes": [
+    "Dry-run only. No files were modified.",
+    "This is fallback metadata for the app shell. Route-specific metadata may require prerendering, SSR, or a later framework-specific strategy.",
+    "Review generated changes before applying.",
+    "TODO placeholder metadata is for preview only and must be replaced before any future write."
+  ],
+  "recommendedNextStep": "review_patch_preview",
+  "contract": "shipready.dryRunFix.v1"
+}

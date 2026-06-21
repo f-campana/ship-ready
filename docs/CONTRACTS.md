@@ -1,59 +1,192 @@
-# Contract Map
+# CLI JSON Contracts
 
-**MCP should wrap stable CLI contracts, not internal ad-hoc behavior.** Today, JSON outputs are Zod-validated and used by reports, GUI, demos, tests, and validation fixtures. Only `ui-report-v1` has an explicit schema version; the other results need hardening before they become MCP contracts.
+The CLI is the source of truth. Future MCP tools should invoke or faithfully wrap these named CLI boundaries rather than exposing internal helper return values.
 
-| Contract | Source type/schema | CLI JSON exposure | Current consumers | Readiness |
-|---|---|---|---|---|
-| Audit result | `AuditResultSchema`, `AuditResult` in `src/types/audit.ts` | `audit <url> --json` | fix planning, UI normalization, human/JSON reports, fixtures | Proven current output; unversioned, harden before MCP |
-| Repo inspection result | `RepoInspectionResultSchema`, `RepoInspectionResult` in `src/types/repoInspection.ts` | `inspect-repo <path> --json` | fix planning, UI normalization, reports, fixtures | Proven current output; unversioned, harden before MCP |
-| Fix plan result | `FixPlanResultSchema`, `FixPlanResult` in `src/types/fixPlan.ts` | `plan-fixes <path> --url <url> --json` | dry-run generation, UI normalization, reports, fixtures | Proven current output; unversioned, harden before MCP |
-| Dry-run result | `DryRunFixResultSchema`, `DryRunFixResult` in `src/types/dryRunFix.ts` | `fix <path> --url <url> --dry-run --json` | UI patch/safe-apply summaries, reports, fixtures | Stable enough for current GUI/demo use; unversioned, harden before MCP |
-| Write result | `WriteFixResultSchema`, `WriteFixResult`, `WRITE_POLICY_V1` in `src/types/writeFix.ts` | `fix <path> --url <url> --write --allow-create --json` | human/JSON reports, safety validation fixtures | Policy-bound and tested; mutation/error semantics require MCP hardening |
-| UI report V1 | `UiReportSchema`, `UiReport` in `src/types/uiReport.ts` | `ui-report [path] --url <url> --json` | local GUI API, static HTML renderer, demo, contract fixtures | Explicit `schemaVersion: "ui-report-v1"`; stable enough for GUI/demo use, not yet an MCP guarantee |
+## Hardening decision
 
-## Important shapes
+This pass chose **Path A: small runtime hardening**.
 
-### Audit result
+Every successful `--json` formatter now adds one additive top-level `contract` discriminator while retaining the previous result shape. JSON errors now add `contract`, `code`, and `message` while retaining the previous `ok: false` and `error` string. Success results were not forced into a generic `{ ok, data }` envelope. Internal audit, planning, fix, UI, HTML, and GUI API models remain unchanged.
 
-Top-level fields: `url`, `finalUrl`, `auditedAt`, optional `httpStatus`, `score`, `status`, `raw`, `rendered`, `comparison`, `checks`, and `resources`. Checks include category, severity, evidence, confidence, and fixability. No `schemaVersion` or success envelope exists.
+This was low risk because CLI JSON formatting already had a dedicated Zod-validated boundary, consumers use named result fields, and an additive discriminator does not rename or nest existing data. It also avoids making the GUI or static renderer depend on a CLI-only envelope.
 
-### Repo inspection result
+## Command-to-contract map
 
-Top-level fields: `path`, `inspectedAt`, `packageManager`, `framework`, `importantFiles`, `routes`, `metadataLocations`, `supportedFixes`, `limitations`, and `warnings`. Results are convention-based and bounded, not a full semantic model.
+| CLI surface | `--json` | Named contract | Stability | Read/write |
+|---|---:|---|---|---|
+| `audit <url> --json` | Yes | `shipready.audit.v1` | V1 CLI boundary | Network read only |
+| `inspect-repo <path> --json` | Yes | `shipready.repoInspection.v1` | V1 CLI boundary | Local read only |
+| `plan-fixes <path> --url <url> --json` | Yes | `shipready.fixPlan.v1` | V1 CLI boundary | Network/local read only |
+| `fix <path> --url <url> --dry-run --json` | Yes | `shipready.dryRunFix.v1` | V1 CLI boundary | Network/local read only |
+| `fix <path> --url <url> --write --allow-create --json` | Yes | `shipready.writeFix.v1` | V1 CLI boundary, policy-bound mutation | Creation-only crawl-file write |
+| `ui-report [path] --url <url> --json` | Yes | `shipready.uiReport.v1` | V1 CLI boundary plus `ui-report-v1` model | Network/optional local read only |
+| JSON command failure | When the invoked command accepted `--json` | `shipready.error.v1` | V1 error boundary; Commander parse gaps remain | No additional effects |
 
-### Fix plan result
+The authoritative mapping and CLI contract schemas are in `src/types/contracts.ts`.
 
-Top-level fields: `url`, `repoPath`, `plannedAt`, audit/repo summaries, `actions`, `noActionChecks`, `optionalNotes`, `limitations`, and `recommendedNextStep`. Actions carry category, priority, risk, confidence, target locations, and future-automation guidance.
+## Exact success shapes
 
-### Dry-run result
+All success outputs are one JSON object followed by a newline. They do not contain `ok: true` and do not wrap data.
 
-Discriminators are `mode: "dry_run"` and `wroteFiles: false`. `fileChanges` includes `path`, create/update type, risk, review status, before/after content, and diff. `skippedActions`, `safetyNotes`, and the next step remain part of the result.
+### `shipready.audit.v1`
 
-### Write result
+Top-level keys: `url`, `finalUrl`, `auditedAt`, optional `httpStatus`, `score`, `status`, `raw`, `rendered`, `comparison`, `checks`, `resources`, and `contract`.
 
-Discriminator is `mode: "write"`; policy is `creation_only_robots_sitemap_v1`. The result records `wroteFiles`, created-file hashes/byte counts, skipped and blocked changes, safety checks, optional rollback, and next step. JSON validation or execution failures use `{ ok: false, error, result }`; other CLI errors use `{ ok: false, error }`.
+Internal source: `AuditResultSchema` / `AuditResult` in `src/types/audit.ts`. CLI formatter: `src/report/formatJsonReport.ts`.
 
-### `ui-report-v1`
+Exit behavior: `0` after an emitted audit result, including `needs_work` or `critical`; `1` for invalid URL/timeout input; `2` for operational audit failure.
 
-Top-level fields are `schemaVersion`, generation/input/workflow data, readiness, previews, optional project/action/patch/safe-apply sections, live-vs-local state, errors, and developer details. It normalizes lower-level results for screens. The GUI API wraps successful reports as `{ ok: true, report }` and errors as `{ ok: false, error }`.
+Consumers: fix planning, UI normalization, human/JSON reports, validation fixtures.
 
-## Report and consumer paths
+### `shipready.repoInspection.v1`
 
-- JSON formatters: `src/report/format*JsonReport.ts`.
-- Human formatters: `src/report/format*HumanReport.ts` and `src/report/formatHumanReport.ts`.
-- UI normalization: `src/ui/createUiReport.ts`.
-- Static HTML: `src/report/renderHtmlReport.ts`, `src/report/writeHtmlReport.ts`.
-- Local GUI API: `src/gui/guiApi.ts`, served by `src/gui/startGuiServer.ts`.
-- Contract evidence: `validation/ui-report-v1-contract/`, `validation/next-real-dry-run/`, `validation/write-v1/`, and other command-specific validation directories.
+Top-level keys: `path`, `inspectedAt`, `packageManager`, `framework`, `importantFiles`, `routes`, `metadataLocations`, `supportedFixes`, `limitations`, `warnings`, and `contract`.
 
-## Required hardening before MCP
+Internal source: `RepoInspectionResultSchema` / `RepoInspectionResult` in `src/types/repoInspection.ts`. CLI formatter: `src/report/formatRepoInspectionJsonReport.ts`.
 
-1. Add explicit versions or a versioned envelope for every exposed result.
-2. Define stable error codes, exit-code mapping, and success/error envelopes.
-3. Specify compatibility rules for optional fields, enum additions, and removals.
-4. Separate machine output from progress and diagnostics.
-5. Add CLI-level golden contract tests for success and failure modes.
-6. Define timeouts, cancellation, path normalization, and secret-redaction rules.
-7. Keep mutation authorization and write-policy evidence explicit in write responses.
+Exit behavior: `0` after an emitted inspection, including unknown frameworks; `1` for an invalid repository path; `2` for an unexpected inspection failure.
 
-Do not expose internal helper return values directly through MCP. Harden the CLI boundary first, then wrap it.
+Consumers: fix planning, UI normalization, reports, tests, validation fixtures.
+
+### `shipready.fixPlan.v1`
+
+Top-level keys: `url`, `repoPath`, `plannedAt`, `auditSummary`, `repoSummary`, `actions`, `noActionChecks`, `optionalNotes`, `limitations`, `recommendedNextStep`, and `contract`.
+
+Internal source: `FixPlanResultSchema` / `FixPlanResult` in `src/types/fixPlan.ts`. CLI formatter: `src/report/formatFixPlanJsonReport.ts`.
+
+Exit behavior: `0` after an emitted plan, including manual-review or unsupported-project recommendations; `1` for invalid URL/path/timeout input; `2` for an operational failure.
+
+Consumers: dry-run generation, UI normalization, reports, tests, validation fixtures.
+
+### `shipready.dryRunFix.v1`
+
+Top-level keys: `url`, `repoPath`, `generatedAt`, `mode`, `wroteFiles`, `planSummary`, `fileChanges`, `skippedActions`, `safetyNotes`, `recommendedNextStep`, and `contract`.
+
+Stable discriminators are `mode: "dry_run"` and `wroteFiles: false`. `fileChanges[].reviewStatus` distinguishes `auto_candidate` from `review_required`; `skippedActions[]` records non-previewed actions separately.
+
+Internal source: `DryRunFixResultSchema` / `DryRunFixResult` in `src/types/dryRunFix.ts`. CLI formatter: `src/report/formatDryRunFixJsonReport.ts`.
+
+Exit behavior: `0` after an emitted dry-run result; `1` for a missing/conflicting mode or invalid URL/path/timeout input; `2` for an operational failure.
+
+Consumers: UI patch and safe-apply summaries, reports, tests, validation fixtures.
+
+### `shipready.writeFix.v1`
+
+Top-level keys: `url`, `repoPath`, `generatedAt`, `mode`, `wroteFiles`, `policy`, `createdFiles`, `skippedActions`, `blockedChanges`, `safetyChecks`, optional `rollback`, `recommendedNextStep`, and `contract`.
+
+Stable discriminators are `mode: "write"` and `policy: "creation_only_robots_sitemap_v1"`. Effects remain explicit: `createdFiles` are written, `skippedActions` are not previewed/written, and `blockedChanges` are reported but not written. `wroteFiles` is true only when at least one eligible file was created.
+
+Internal source: `WriteFixResultSchema` / `WriteFixResult` / `WRITE_POLICY_V1` in `src/types/writeFix.ts`. CLI formatter: `src/report/formatWriteFixJsonReport.ts`. Mutation rules remain canonical in `docs/WRITE_POLICY_V1.md`.
+
+Exit behavior: `0` for an emitted write result, including a successful no-op; `1` for invalid modes/input or write validation failure; `2` for operational/write execution failure. Write validation/execution errors include a nested `result` with its own `shipready.writeFix.v1` discriminator.
+
+Consumers: reports, tests, creation-only safety validation fixtures. The GUI does not execute this command.
+
+### `shipready.uiReport.v1`
+
+Top-level keys: `schemaVersion`, `generatedAt`, `input`, `workflow`, `readiness`, `previews`, optional `project`, optional `actionGroups`, optional `patchPreview`, optional `safeApply`, `liveVsLocal`, `errors`, `developerDetails`, and `contract`.
+
+Both discriminators are stable: `contract: "shipready.uiReport.v1"` identifies the CLI boundary and `schemaVersion: "ui-report-v1"` identifies the UI model.
+
+Internal source: `UiReportSchema` / `UiReport` in `src/types/uiReport.ts`; normalization in `src/report/createUiReport.ts`; CLI formatter in `src/report/formatUiReportJsonReport.ts`.
+
+Exit behavior: `0` when `errors` is empty; `1` when a valid UI report is emitted with one or more normalized stage errors. Invalid timeout input emits `shipready.error.v1` and exits `1`; an unexpected top-level failure exits `1` or `2` according to the common command classifier.
+
+Consumers: CLI users, the normalized model used by the local GUI and static HTML renderer, tests, demos, validation fixtures.
+
+## Error contract
+
+`shipready.error.v1` has required keys:
+
+```json
+{
+  "contract": "shipready.error.v1",
+  "ok": false,
+  "code": "invalid_url",
+  "message": "Invalid URL. Provide an absolute http:// or https:// URL.",
+  "error": "Invalid URL. Provide an absolute http:// or https:// URL."
+}
+```
+
+`error` is a compatibility alias for existing consumers and equals `message`. Stable codes are `invalid_url`, `invalid_timeout`, `invalid_repo_path`, `invalid_mode`, `write_validation_failed`, `write_execution_failed`, and `command_failed`. A write validation/execution error may also contain `result: shipready.writeFix.v1`.
+
+Known gap: errors raised by Commander before a command action runs, such as missing required arguments or an unknown option, still use Commander's stderr text and are not guaranteed to emit `shipready.error.v1`. Exit `5` remains reserved for an uncaught `parseAsync` failure and is also plain stderr.
+
+## Non-CLI surfaces
+
+`html-report` has no `--json` option and exposes no JSON contract. It is a file surface: it writes one explicitly named, self-contained HTML file derived from `ui-report-v1`, then prints the resolved path. Its source is `src/report/renderHtmlReport.ts` and `src/report/writeHtmlReport.ts`.
+
+`gui` has no `--json` option. The command starts a local HTTP server and prints its URL. The server has a machine-readable local endpoint, `POST /api/ui-report`, whose success shape is `{ "ok": true, "report": UiReport }` and whose API/parse errors use `{ "ok": false, "error": { ... } }`. This is a GUI server surface, not one of the named CLI JSON contracts. The report inside that envelope retains `schemaVersion: "ui-report-v1"`; the GUI API does not add the CLI-only `contract` field. `POST /api/fix` is absent and returns `404`.
+
+Sources: `src/gui/guiApi.ts`, `src/gui/startGuiServer.ts`, and `src/gui/guiClient.ts`. The client fetches only `/api/ui-report`.
+
+## Compatibility policy
+
+- A V1 `contract` value, existing required top-level key, discriminator, or field meaning must not be removed, renamed, or repurposed without a new contract version.
+- New optional fields may be additive within V1 after downstream-consumer review and fixture/test updates.
+- Enum additions require explicit compatibility review because exhaustive clients may treat them as breaking.
+- Timestamps, paths, check/action lists, evidence, recommendations, scores, and generated file hashes are data, not golden constants.
+- Human output is intentionally separate and is not covered by these JSON contracts.
+- Diagnostics for JSON commands must not be mixed into stdout JSON.
+- Write eligibility and effects are not contract-format decisions; they remain governed by `docs/WRITE_POLICY_V1.md`.
+
+## Contract fixtures and provenance
+
+Deterministic fixtures live in `validation/contracts/`:
+
+- `audit.clean.json`
+- `audit.needs-work.json`
+- `inspect-repo.next-app.json`
+- `inspect-repo.vite.json`
+- `plan-fixes.safe-apply.json`
+- `plan-fixes.review-required.json`
+- `fix-dry-run.safe-apply.json`
+- `fix-dry-run.review-required.json`
+- `fix-dry-run.skipped.json`
+- `fix-write.safe-create.json`
+- `fix-write.blocked.json`
+- `fix-write.skipped.json`
+- `ui-report.safe-apply.json`
+- `ui-report.url-only.json`
+- `error.invalid-url.json`
+
+Regenerate them from local test repositories and deterministic in-memory audit results:
+
+```bash
+pnpm contracts:fixtures
+```
+
+The generator is `scripts/validation/generateContractFixtures.ts`. It makes no external requests. The write fixtures run `writeFixFromDryRun` only against temporary copies under the operating-system temp directory, record the returned results, and remove the copies. They never target a real repository. Fixed timestamps and repository display paths keep fixtures reproducible.
+
+Focused drift coverage is in `tests/contracts.test.ts`. Tests validate every fixture, every formatter discriminator, error code/message compatibility, UI report dual discriminators, dry-run state separation, write effect fields, the command mapping, and an invalid-URL CLI exit.
+
+## Downstream consumers
+
+- Planning: audit plus repo inspection feed `planFixesFromResults`.
+- Preview/write: fix plans feed dry-run generation; write mode regenerates and validates dry-run candidates.
+- UI normalization: internal results feed `createUiReport`; it does not parse CLI JSON.
+- Static HTML: renders the internal `UiReport` model.
+- GUI: serves the internal `UiReport` model through a local API; it does not execute write mode.
+- Demo tooling: drives the GUI server surface and captures report artifacts.
+- Future MCP: should wrap the named CLI contracts and preserve exit/error semantics, not import ad-hoc internals.
+
+## Before MCP
+
+Ready now:
+
+- Six implemented JSON-capable command surfaces have explicit V1 contract names.
+- Success outputs retain their existing fields and add stable discriminators.
+- Action-level JSON errors have stable codes/messages and preserve the legacy `error` field.
+- Deterministic local fixtures and focused drift tests cover success, failure, dry-run, write, and UI states.
+- Creation-only write evidence remains explicit and policy-bound.
+- Human CLI, HTML file, and GUI server surfaces are clearly separated from CLI JSON contracts.
+
+Remaining for the MCP plan/spec pass:
+
+- Define MCP tool names, input schemas, output mapping, timeout/cancellation behavior, and transport-level error mapping.
+- Decide how MCP represents Commander pre-action errors that are not yet normalized JSON.
+- Define path authorization, working-directory rules, secret redaction, output-size limits, and cancellation behavior.
+- Specify mutation confirmation and capability boundaries for the guarded write tool without changing write eligibility.
+- Define whether MCP returns CLI exit metadata alongside the parsed contract object.
+
+Do not add MCP implementation during contract hardening.

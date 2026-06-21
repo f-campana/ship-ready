@@ -1,0 +1,661 @@
+{
+  "schemaVersion": "ui-report-v1",
+  "generatedAt": "2026-06-21T12:00:00.000Z",
+  "input": {
+    "url": "https://example.com/",
+    "repoPath": "tests/fixtures/repos/next-app-router-dry-run",
+    "mode": "url_and_repo"
+  },
+  "workflow": {
+    "currentRecommendedStep": "apply_safe_fixes",
+    "completedStages": [
+      "audit",
+      "repo_inspection",
+      "fix_plan",
+      "dry_run"
+    ],
+    "availableNextActions": [
+      {
+        "label": "Create safe crawl files",
+        "action": "write_safe_fixes",
+        "primary": true,
+        "enabled": true,
+        "explanation": "Only V1-eligible robots/sitemap creations qualify."
+      }
+    ]
+  },
+  "readiness": {
+    "label": "needs_attention",
+    "title": "Needs attention before launch",
+    "summary": "2 issue(s) need review before this page should be considered launch-ready.",
+    "score": 78,
+    "topIssues": [
+      {
+        "id": "crawl.sitemap.missing",
+        "title": "Your site does not have a sitemap yet.",
+        "explanation": "A sitemap lists the pages you want crawlers to discover.",
+        "whyItMatters": "For supported projects, ShipReady can safely create a simple sitemap file.",
+        "userSeverity": "important",
+        "technicalSeverity": "warning",
+        "sourceCheckIds": [
+          "crawl.sitemap.missing"
+        ],
+        "developerDetails": {
+          "rawTitle": "crawl.sitemap.missing",
+          "rawDescription": "Deterministic evidence for crawl.sitemap.missing.",
+          "category": "crawlability",
+          "confidence": "high",
+          "fixability": "plan_only"
+        }
+      },
+      {
+        "id": "crawl.robots_txt.missing",
+        "title": "Your site does not have crawl instructions yet.",
+        "explanation": "A robots file gives crawlers basic instructions and can point them to your sitemap.",
+        "whyItMatters": "For supported projects, ShipReady can safely create this file without changing existing code.",
+        "userSeverity": "recommended",
+        "technicalSeverity": "warning",
+        "sourceCheckIds": [
+          "crawl.robots_txt.missing"
+        ],
+        "developerDetails": {
+          "rawTitle": "crawl.robots_txt.missing",
+          "rawDescription": "Deterministic evidence for crawl.robots_txt.missing.",
+          "category": "crawlability",
+          "confidence": "high",
+          "fixability": "plan_only"
+        }
+      }
+    ],
+    "passedHighlights": [],
+    "optionalPolish": []
+  },
+  "previews": {
+    "google": {
+      "title": "Example",
+      "url": "https://example.com/",
+      "description": "A deterministic ShipReady contract fixture.",
+      "missingFields": [],
+      "source": "raw"
+    },
+    "social": {
+      "title": "Example",
+      "url": "https://example.com/",
+      "description": "A deterministic ShipReady contract fixture.",
+      "missingFields": [
+        "image"
+      ],
+      "source": "raw"
+    },
+    "twitter": {
+      "title": "Example",
+      "description": "A deterministic ShipReady contract fixture.",
+      "missingFields": [
+        "card",
+        "image"
+      ],
+      "source": "raw"
+    },
+    "crawlerView": {
+      "rawHtmlSummary": "Raw HTML includes title, description, canonical, language, 0 Open Graph field(s), 0 Twitter/X field(s), and 0 JSON-LD block(s).",
+      "renderedHtmlSummary": "Rendered HTML includes title, description, canonical, language, 0 Open Graph field(s), 0 Twitter/X field(s), and 0 JSON-LD block(s).",
+      "renderOnlyWarnings": []
+    }
+  },
+  "project": {
+    "detected": true,
+    "frameworkLabel": "Next.js App Router",
+    "confidenceLabel": "good_match",
+    "explanation": "ShipReady detected Next.js App Router from local project files.",
+    "importantFiles": [
+      "package.json",
+      "pnpm-lock.yaml",
+      "next.config.mjs",
+      "src/app/",
+      "src/",
+      "src/app/layout.tsx",
+      "src/app/page.tsx"
+    ],
+    "supportedFixes": [
+      "Add/update static metadata export",
+      "Add route-level metadata",
+      "Add/update generateMetadata",
+      "Add JSON-LD component",
+      "Add robots.ts",
+      "Add sitemap.ts",
+      "Add Open Graph image route"
+    ],
+    "limitations": [
+      "File writing is disabled; use `shipready fix --dry-run` for supported patch previews.",
+      "This command is read-only and does not modify repository files.",
+      "Dynamic route metadata may require human review.",
+      "Existing complex metadata logic should not be overwritten blindly."
+    ]
+  },
+  "actionGroups": {
+    "safeToApply": [
+      {
+        "id": "file.src/app/robots.ts",
+        "title": "Create src/app/robots.ts",
+        "explanation": "Create an App Router robots.ts route that allows crawling and points to the sitemap.",
+        "targetLabel": "src/app/robots.ts",
+        "affectsLiveSiteAfterDeploy": true,
+        "safety": "safe_to_apply",
+        "canApplyInV1": true,
+        "sourceActionIds": [
+          "next_app_router.robots"
+        ],
+        "developerDetails": {
+          "changeType": "create",
+          "risk": "low",
+          "reviewStatus": "auto_candidate",
+          "requiresHumanReview": false
+        }
+      },
+      {
+        "id": "file.src/app/sitemap.ts",
+        "title": "Create src/app/sitemap.ts",
+        "explanation": "Create an App Router sitemap.ts route for the audited URL.",
+        "targetLabel": "src/app/sitemap.ts",
+        "affectsLiveSiteAfterDeploy": true,
+        "safety": "safe_to_apply",
+        "canApplyInV1": true,
+        "sourceActionIds": [
+          "next_app_router.sitemap"
+        ],
+        "developerDetails": {
+          "changeType": "create",
+          "risk": "low",
+          "reviewStatus": "auto_candidate",
+          "requiresHumanReview": false
+        }
+      }
+    ],
+    "needsReview": [],
+    "manualOnly": [],
+    "alreadyGood": [],
+    "optionalPolish": []
+  },
+  "patchPreview": {
+    "hasPreview": true,
+    "fileChanges": [
+      {
+        "path": "src/app/robots.ts",
+        "changeType": "create",
+        "title": "Create src/app/robots.ts",
+        "risk": "low",
+        "reviewStatus": "auto_candidate",
+        "eligibleForWrite": true,
+        "writePolicy": "creation_only_robots_sitemap_v1",
+        "sourceActionIds": [
+          "next_app_router.robots"
+        ],
+        "diff": "--- /dev/null\n+++ src/app/robots.ts\n@@\n+import type { MetadataRoute } from \"next\";\n+\n+export default function robots(): MetadataRoute.Robots {\n+  return {\n+    rules: {\n+      userAgent: \"*\",\n+      allow: \"/\",\n+    },\n+    sitemap: \"https://example.com/sitemap.xml\",\n+  };\n+}\n+"
+      },
+      {
+        "path": "src/app/sitemap.ts",
+        "changeType": "create",
+        "title": "Create src/app/sitemap.ts",
+        "risk": "low",
+        "reviewStatus": "auto_candidate",
+        "eligibleForWrite": true,
+        "writePolicy": "creation_only_robots_sitemap_v1",
+        "sourceActionIds": [
+          "next_app_router.sitemap"
+        ],
+        "diff": "--- /dev/null\n+++ src/app/sitemap.ts\n@@\n+import type { MetadataRoute } from \"next\";\n+\n+export default function sitemap(): MetadataRoute.Sitemap {\n+  return [\n+    {\n+      url: \"https://example.com/\",\n+      changeFrequency: \"weekly\",\n+      priority: 1,\n+    },\n+  ];\n+}\n+"
+      }
+    ],
+    "skippedActions": []
+  },
+  "safeApply": {
+    "available": true,
+    "buttonLabel": "Create safe crawl files",
+    "explanation": "ShipReady can create the listed missing robots/sitemap files, but this report does not apply them automatically.",
+    "eligibleFiles": [
+      "src/app/robots.ts",
+      "src/app/sitemap.ts"
+    ],
+    "blockedFiles": [],
+    "policy": "creation_only_robots_sitemap_v1",
+    "safetyNotes": [
+      "This ui-report command never writes files.",
+      "V1 safe apply is limited to creation-only robots/sitemap files.",
+      "ShipReady will not overwrite existing files in V1 safe apply.",
+      "ShipReady will not edit metadata, JSON-LD, page content, package files, or configuration in V1 safe apply.",
+      "ShipReady will not run Git operations, create commits, push, or deploy.",
+      "Dry-run only. No files were modified.",
+      "Next.js App Router previews are conservative and read-only; dynamic metadata and component changes are skipped."
+    ]
+  },
+  "liveVsLocal": {
+    "localChangesAffectLiveSite": false,
+    "deploymentRequired": true,
+    "message": "Local changes will not affect the live site until this repository is deployed and the URL is re-checked."
+  },
+  "errors": [],
+  "developerDetails": {
+    "rawAudit": {
+      "url": "https://example.com/",
+      "finalUrl": "https://example.com/",
+      "auditedAt": "2026-06-21T12:00:00.000Z",
+      "httpStatus": 200,
+      "score": 78,
+      "status": "needs_work",
+      "raw": {
+        "source": "raw",
+        "url": "https://example.com/",
+        "metadata": {
+          "htmlLang": "en",
+          "title": "Example",
+          "description": "A deterministic ShipReady contract fixture.",
+          "canonical": "https://example.com/",
+          "faviconLinks": [],
+          "openGraph": {},
+          "twitter": {}
+        },
+        "headings": {
+          "h1": [
+            "Example"
+          ],
+          "all": [
+            {
+              "level": 1,
+              "text": "Example"
+            }
+          ]
+        },
+        "images": {
+          "total": 0,
+          "missingAlt": 0,
+          "items": []
+        },
+        "links": {
+          "total": 0,
+          "missingAccessibleText": 0,
+          "items": []
+        },
+        "jsonLd": []
+      },
+      "rendered": {
+        "source": "rendered",
+        "url": "https://example.com/",
+        "metadata": {
+          "htmlLang": "en",
+          "title": "Example",
+          "description": "A deterministic ShipReady contract fixture.",
+          "canonical": "https://example.com/",
+          "faviconLinks": [],
+          "openGraph": {},
+          "twitter": {}
+        },
+        "headings": {
+          "h1": [
+            "Example"
+          ],
+          "all": [
+            {
+              "level": 1,
+              "text": "Example"
+            }
+          ]
+        },
+        "images": {
+          "total": 0,
+          "missingAlt": 0,
+          "items": []
+        },
+        "links": {
+          "total": 0,
+          "missingAccessibleText": 0,
+          "items": []
+        },
+        "jsonLd": []
+      },
+      "comparison": {
+        "fields": []
+      },
+      "checks": [
+        {
+          "id": "crawl.robots_txt.missing",
+          "category": "crawlability",
+          "severity": "warning",
+          "title": "crawl.robots_txt.missing",
+          "description": "Deterministic evidence for crawl.robots_txt.missing.",
+          "confidence": "high",
+          "fixability": "plan_only"
+        },
+        {
+          "id": "crawl.sitemap.missing",
+          "category": "crawlability",
+          "severity": "warning",
+          "title": "crawl.sitemap.missing",
+          "description": "Deterministic evidence for crawl.sitemap.missing.",
+          "confidence": "high",
+          "fixability": "plan_only"
+        }
+      ],
+      "resources": {
+        "robotsTxt": {
+          "url": "https://example.com/robots.txt",
+          "finalUrl": "https://example.com/robots.txt",
+          "exists": false,
+          "ok": false,
+          "statusCode": 404
+        },
+        "sitemapXml": {
+          "url": "https://example.com/sitemap.xml",
+          "finalUrl": "https://example.com/sitemap.xml",
+          "exists": false,
+          "ok": false,
+          "statusCode": 404
+        }
+      }
+    },
+    "rawRepoInspection": {
+      "path": "tests/fixtures/repos/next-app-router-dry-run",
+      "inspectedAt": "2026-06-21T12:00:00.000Z",
+      "packageManager": "pnpm",
+      "framework": {
+        "id": "next_app_router",
+        "name": "Next.js App Router",
+        "confidence": "high",
+        "evidence": [
+          {
+            "kind": "package_dependency",
+            "path": "package.json",
+            "value": "package.json includes dependency \"next\"",
+            "weight": "strong"
+          },
+          {
+            "kind": "file",
+            "path": "next.config.mjs",
+            "value": "Next.js config found",
+            "weight": "medium"
+          },
+          {
+            "kind": "directory",
+            "path": "src/app",
+            "value": "App Router directory found",
+            "weight": "strong"
+          },
+          {
+            "kind": "file",
+            "path": "src/app/layout.tsx",
+            "value": "App Router root layout found",
+            "weight": "strong"
+          },
+          {
+            "kind": "file",
+            "path": "src/app/page.tsx",
+            "value": "src/app/page.tsx found",
+            "weight": "medium"
+          }
+        ]
+      },
+      "importantFiles": [
+        {
+          "path": "package.json",
+          "kind": "package_file",
+          "reason": "Project package manifest"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "kind": "lockfile",
+          "reason": "Package manager lockfile"
+        },
+        {
+          "path": "next.config.mjs",
+          "kind": "config_file",
+          "reason": "Framework or TypeScript config"
+        },
+        {
+          "path": "src/app/",
+          "kind": "directory",
+          "reason": "Important project directory"
+        },
+        {
+          "path": "src/",
+          "kind": "directory",
+          "reason": "Important project directory"
+        },
+        {
+          "path": "src/app/layout.tsx",
+          "kind": "metadata_file",
+          "reason": "Next.js App Router file"
+        },
+        {
+          "path": "src/app/page.tsx",
+          "kind": "route_file",
+          "reason": "Next.js App Router file"
+        }
+      ],
+      "routes": [
+        {
+          "path": "src/app/page.tsx",
+          "route": "/",
+          "kind": "page",
+          "confidence": "high",
+          "reason": "App Router page file"
+        }
+      ],
+      "metadataLocations": [
+        {
+          "path": "src/app/layout.tsx",
+          "kind": "file",
+          "exists": true,
+          "reason": "App Router layout can define shared metadata"
+        },
+        {
+          "path": "src/app/**/page.tsx",
+          "kind": "pattern",
+          "exists": false,
+          "reason": "Route-level pages can define metadata"
+        },
+        {
+          "path": "src/app/**/layout.tsx",
+          "kind": "pattern",
+          "exists": false,
+          "reason": "Nested layouts can define section metadata"
+        },
+        {
+          "path": "src/app/sitemap.ts",
+          "kind": "file",
+          "exists": false,
+          "reason": "App Router sitemap route"
+        },
+        {
+          "path": "src/app/robots.ts",
+          "kind": "file",
+          "exists": false,
+          "reason": "App Router robots route"
+        },
+        {
+          "path": "src/app/opengraph-image.tsx",
+          "kind": "file",
+          "exists": false,
+          "reason": "Open Graph image route"
+        }
+      ],
+      "supportedFixes": [
+        {
+          "id": "next_app.metadata_export",
+          "title": "Add/update static metadata export",
+          "description": "Add or update App Router metadata exports where simple and local.",
+          "safety": "review_required"
+        },
+        {
+          "id": "next_app.route_metadata",
+          "title": "Add route-level metadata",
+          "description": "Add metadata to route page or layout files.",
+          "safety": "review_required"
+        },
+        {
+          "id": "next_app.generate_metadata",
+          "title": "Add/update generateMetadata",
+          "description": "Plan generateMetadata changes when route metadata is dynamic.",
+          "safety": "review_required"
+        },
+        {
+          "id": "next_app.json_ld",
+          "title": "Add JSON-LD component",
+          "description": "Add conservative structured data in a layout or page.",
+          "safety": "review_required"
+        },
+        {
+          "id": "next_app.robots",
+          "title": "Add robots.ts",
+          "description": "Add an App Router robots route.",
+          "safety": "review_required"
+        },
+        {
+          "id": "next_app.sitemap",
+          "title": "Add sitemap.ts",
+          "description": "Add an App Router sitemap route.",
+          "safety": "review_required"
+        },
+        {
+          "id": "next_app.og_image",
+          "title": "Add Open Graph image route",
+          "description": "Add an opengraph-image route where appropriate.",
+          "safety": "review_required"
+        }
+      ],
+      "limitations": [
+        "File writing is disabled; use `shipready fix --dry-run` for supported patch previews.",
+        "This command is read-only and does not modify repository files.",
+        "Dynamic route metadata may require human review.",
+        "Existing complex metadata logic should not be overwritten blindly."
+      ],
+      "warnings": []
+    },
+    "rawFixPlan": {
+      "url": "https://example.com/",
+      "repoPath": "tests/fixtures/repos/next-app-router-dry-run",
+      "plannedAt": "2026-06-21T12:00:00.000Z",
+      "auditSummary": {
+        "score": 78,
+        "status": "needs_work",
+        "criticalCount": 0,
+        "warningCount": 2,
+        "noteCount": 0
+      },
+      "repoSummary": {
+        "frameworkId": "next_app_router",
+        "frameworkName": "Next.js App Router",
+        "confidence": "high",
+        "packageManager": "pnpm"
+      },
+      "actions": [
+        {
+          "id": "next_app_router.robots",
+          "title": "Add robots.ts",
+          "description": "Add a robots file or framework route so crawlers can discover the intended crawl policy.",
+          "sourceCheckIds": [
+            "crawl.robots_txt.missing"
+          ],
+          "category": "safe_automated_later",
+          "priority": "medium",
+          "risk": "low",
+          "confidence": "high",
+          "frameworkStrategy": "Add an App Router robots.ts route.",
+          "targetFiles": [
+            "src/app/robots.ts"
+          ],
+          "targetLocations": [
+            "src/app/robots.ts"
+          ],
+          "futureAutomation": {
+            "canAutomate": true,
+            "requiresHumanReview": false,
+            "reason": "The framework and likely robots target are clear."
+          }
+        },
+        {
+          "id": "next_app_router.sitemap",
+          "title": "Add sitemap.ts",
+          "description": "Add a sitemap so crawlers can discover the public URL set.",
+          "sourceCheckIds": [
+            "crawl.sitemap.missing"
+          ],
+          "category": "safe_automated_later",
+          "priority": "high",
+          "risk": "low",
+          "confidence": "high",
+          "frameworkStrategy": "Add an App Router sitemap.ts route. Use audited URL https://example.com/.",
+          "targetFiles": [
+            "src/app/sitemap.ts"
+          ],
+          "targetLocations": [
+            "src/app/sitemap.ts"
+          ],
+          "futureAutomation": {
+            "canAutomate": true,
+            "requiresHumanReview": false,
+            "reason": "The framework and likely sitemap target are clear."
+          }
+        }
+      ],
+      "noActionChecks": [],
+      "optionalNotes": [],
+      "limitations": [
+        "This is a read-only plan. No files were modified and no patches were generated.",
+        "Future automation must re-check the repo before writing changes.",
+        "File writing is disabled; use `shipready fix --dry-run` for supported patch previews.",
+        "This command is read-only and does not modify repository files.",
+        "Dynamic route metadata may require human review.",
+        "Existing complex metadata logic should not be overwritten blindly."
+      ],
+      "recommendedNextStep": "review_plan"
+    },
+    "rawDryRun": {
+      "url": "https://example.com/",
+      "repoPath": "tests/fixtures/repos/next-app-router-dry-run",
+      "generatedAt": "2026-06-21T12:00:00.000Z",
+      "mode": "dry_run",
+      "wroteFiles": false,
+      "planSummary": {
+        "auditScore": 78,
+        "auditStatus": "needs_work",
+        "frameworkId": "next_app_router",
+        "frameworkName": "Next.js App Router",
+        "recommendedNextStep": "review_plan"
+      },
+      "fileChanges": [
+        {
+          "path": "src/app/robots.ts",
+          "changeType": "create",
+          "reason": "Create an App Router robots.ts route that allows crawling and points to the sitemap.",
+          "sourceActionIds": [
+            "next_app_router.robots"
+          ],
+          "risk": "low",
+          "requiresHumanReview": false,
+          "reviewStatus": "auto_candidate",
+          "after": "import type { MetadataRoute } from \"next\";\n\nexport default function robots(): MetadataRoute.Robots {\n  return {\n    rules: {\n      userAgent: \"*\",\n      allow: \"/\",\n    },\n    sitemap: \"https://example.com/sitemap.xml\",\n  };\n}\n",
+          "diff": "--- /dev/null\n+++ src/app/robots.ts\n@@\n+import type { MetadataRoute } from \"next\";\n+\n+export default function robots(): MetadataRoute.Robots {\n+  return {\n+    rules: {\n+      userAgent: \"*\",\n+      allow: \"/\",\n+    },\n+    sitemap: \"https://example.com/sitemap.xml\",\n+  };\n+}\n+"
+        },
+        {
+          "path": "src/app/sitemap.ts",
+          "changeType": "create",
+          "reason": "Create an App Router sitemap.ts route for the audited URL.",
+          "sourceActionIds": [
+            "next_app_router.sitemap"
+          ],
+          "risk": "low",
+          "requiresHumanReview": false,
+          "reviewStatus": "auto_candidate",
+          "after": "import type { MetadataRoute } from \"next\";\n\nexport default function sitemap(): MetadataRoute.Sitemap {\n  return [\n    {\n      url: \"https://example.com/\",\n      changeFrequency: \"weekly\",\n      priority: 1,\n    },\n  ];\n}\n",
+          "diff": "--- /dev/null\n+++ src/app/sitemap.ts\n@@\n+import type { MetadataRoute } from \"next\";\n+\n+export default function sitemap(): MetadataRoute.Sitemap {\n+  return [\n+    {\n+      url: \"https://example.com/\",\n+      changeFrequency: \"weekly\",\n+      priority: 1,\n+    },\n+  ];\n+}\n+"
+        }
+      ],
+      "skippedActions": [],
+      "safetyNotes": [
+        "Dry-run only. No files were modified.",
+        "Next.js App Router previews are conservative and read-only; dynamic metadata and component changes are skipped."
+      ],
+      "recommendedNextStep": "review_patch_preview"
+    }
+  },
+  "contract": "shipready.uiReport.v1"
+}

@@ -1,0 +1,63 @@
+{
+  "url": "https://example.com/",
+  "repoPath": "tests/fixtures/repos/vite-react",
+  "plannedAt": "2026-06-21T12:00:00.000Z",
+  "auditSummary": {
+    "score": 64,
+    "status": "needs_work",
+    "criticalCount": 1,
+    "warningCount": 1,
+    "noteCount": 0
+  },
+  "repoSummary": {
+    "frameworkId": "vite_react",
+    "frameworkName": "Vite React",
+    "confidence": "high",
+    "packageManager": "yarn"
+  },
+  "actions": [
+    {
+      "id": "vite_react.metadata_review",
+      "title": "Add fallback metadata to index.html",
+      "description": "Add missing metadata in the framework's server-visible metadata surface.",
+      "sourceCheckIds": [
+        "metadata.canonical.missing",
+        "social.og.url_missing"
+      ],
+      "category": "automated_with_review",
+      "priority": "critical",
+      "risk": "medium",
+      "confidence": "high",
+      "frameworkStrategy": "Update index.html for crawler-visible fallback metadata; route-specific metadata may need prerendering or SSR.",
+      "targetFiles": [
+        "index.html",
+        "src/App.tsx",
+        "src/main.tsx"
+      ],
+      "targetLocations": [
+        "index.html",
+        "src/App.tsx",
+        "src/main.tsx",
+        "public/robots.txt",
+        "public/sitemap.xml"
+      ],
+      "futureAutomation": {
+        "canAutomate": true,
+        "requiresHumanReview": true,
+        "reason": "Metadata changes affect production copy and crawler/share-preview signals, so generated changes should be reviewed."
+      }
+    }
+  ],
+  "noActionChecks": [],
+  "optionalNotes": [],
+  "limitations": [
+    "This is a read-only plan. No files were modified and no patches were generated.",
+    "Future automation must re-check the repo before writing changes.",
+    "File writing is disabled; use `shipready fix --dry-run` for supported patch previews.",
+    "This command is read-only and does not modify repository files.",
+    "Route-specific metadata in a Vite SPA may only appear after JavaScript rendering.",
+    "Future fixes may need to recommend prerendering or SSG instead of relying on JS-injected metadata for crawler visibility."
+  ],
+  "recommendedNextStep": "review_plan",
+  "contract": "shipready.fixPlan.v1"
+}

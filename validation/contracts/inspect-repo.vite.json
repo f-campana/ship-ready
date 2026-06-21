@@ -1,0 +1,183 @@
+{
+  "path": "tests/fixtures/repos/vite-react",
+  "inspectedAt": "2026-06-21T12:00:00.000Z",
+  "packageManager": "yarn",
+  "framework": {
+    "id": "vite_react",
+    "name": "Vite React",
+    "confidence": "high",
+    "evidence": [
+      {
+        "kind": "package_dependency",
+        "path": "package.json",
+        "value": "package.json includes dependency \"vite\"",
+        "weight": "strong"
+      },
+      {
+        "kind": "package_dependency",
+        "path": "package.json",
+        "value": "package.json includes dependency \"react\"",
+        "weight": "weak"
+      },
+      {
+        "kind": "package_dependency",
+        "path": "package.json",
+        "value": "package.json includes dependency \"@vitejs/plugin-react\"",
+        "weight": "medium"
+      },
+      {
+        "kind": "package_dependency",
+        "path": "package.json",
+        "value": "package.json includes dependency \"react-router-dom\"",
+        "weight": "weak"
+      },
+      {
+        "kind": "file",
+        "path": "vite.config.ts",
+        "value": "Vite config found",
+        "weight": "medium"
+      },
+      {
+        "kind": "file",
+        "path": "index.html",
+        "value": "Vite root index.html found",
+        "weight": "medium"
+      },
+      {
+        "kind": "file",
+        "path": "src/main.tsx",
+        "value": "React entry file found",
+        "weight": "medium"
+      },
+      {
+        "kind": "file",
+        "path": "src/App.tsx",
+        "value": "React app component found",
+        "weight": "weak"
+      }
+    ]
+  },
+  "importantFiles": [
+    {
+      "path": "package.json",
+      "kind": "package_file",
+      "reason": "Project package manifest"
+    },
+    {
+      "path": "yarn.lock",
+      "kind": "lockfile",
+      "reason": "Package manager lockfile"
+    },
+    {
+      "path": "vite.config.ts",
+      "kind": "config_file",
+      "reason": "Framework or TypeScript config"
+    },
+    {
+      "path": "src/",
+      "kind": "directory",
+      "reason": "Important project directory"
+    },
+    {
+      "path": "index.html",
+      "kind": "metadata_file",
+      "reason": "Vite React entry file"
+    },
+    {
+      "path": "src/main.tsx",
+      "kind": "source_file",
+      "reason": "Vite React entry file"
+    },
+    {
+      "path": "src/App.tsx",
+      "kind": "source_file",
+      "reason": "Vite React entry file"
+    }
+  ],
+  "routes": [
+    {
+      "path": "src/main.tsx",
+      "kind": "app_entry",
+      "confidence": "low",
+      "reason": "SPA entry or root component; route-to-URL mapping requires source review"
+    },
+    {
+      "path": "src/App.tsx",
+      "kind": "app_entry",
+      "confidence": "low",
+      "reason": "SPA entry or root component; route-to-URL mapping requires source review"
+    }
+  ],
+  "metadataLocations": [
+    {
+      "path": "index.html",
+      "kind": "file",
+      "exists": true,
+      "reason": "Static fallback metadata for the SPA shell"
+    },
+    {
+      "path": "src/App.tsx",
+      "kind": "file",
+      "exists": true,
+      "reason": "App-level component or entry point"
+    },
+    {
+      "path": "src/main.tsx",
+      "kind": "file",
+      "exists": true,
+      "reason": "App-level component or entry point"
+    },
+    {
+      "path": "public/robots.txt",
+      "kind": "file",
+      "exists": false,
+      "reason": "Static robots file"
+    },
+    {
+      "path": "public/sitemap.xml",
+      "kind": "file",
+      "exists": false,
+      "reason": "Static sitemap file"
+    }
+  ],
+  "supportedFixes": [
+    {
+      "id": "vite.index_html_metadata",
+      "title": "Update static index.html metadata",
+      "description": "Improve fallback metadata in index.html.",
+      "safety": "review_required"
+    },
+    {
+      "id": "vite.robots_txt",
+      "title": "Add static robots.txt",
+      "description": "Add public/robots.txt.",
+      "safety": "review_required"
+    },
+    {
+      "id": "vite.sitemap_xml",
+      "title": "Add static sitemap.xml",
+      "description": "Add public/sitemap.xml.",
+      "safety": "review_required"
+    },
+    {
+      "id": "vite.json_ld_fallback",
+      "title": "Add JSON-LD fallback",
+      "description": "Add static JSON-LD where it accurately describes the app shell.",
+      "safety": "review_required"
+    },
+    {
+      "id": "vite.helmet_future",
+      "title": "Recommend React Helmet integration",
+      "description": "Plan a route-aware metadata strategy when client-side routes need distinct metadata.",
+      "safety": "review_required"
+    }
+  ],
+  "limitations": [
+    "File writing is disabled; use `shipready fix --dry-run` for supported patch previews.",
+    "This command is read-only and does not modify repository files.",
+    "Route-specific metadata in a Vite SPA may only appear after JavaScript rendering.",
+    "Future fixes may need to recommend prerendering or SSG instead of relying on JS-injected metadata for crawler visibility."
+  ],
+  "warnings": [],
+  "contract": "shipready.repoInspection.v1"
+}

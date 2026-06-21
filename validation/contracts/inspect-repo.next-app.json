@@ -1,0 +1,178 @@
+{
+  "path": "tests/fixtures/repos/next-app-router-dry-run",
+  "inspectedAt": "2026-06-21T12:00:00.000Z",
+  "packageManager": "pnpm",
+  "framework": {
+    "id": "next_app_router",
+    "name": "Next.js App Router",
+    "confidence": "high",
+    "evidence": [
+      {
+        "kind": "package_dependency",
+        "path": "package.json",
+        "value": "package.json includes dependency \"next\"",
+        "weight": "strong"
+      },
+      {
+        "kind": "file",
+        "path": "next.config.mjs",
+        "value": "Next.js config found",
+        "weight": "medium"
+      },
+      {
+        "kind": "directory",
+        "path": "src/app",
+        "value": "App Router directory found",
+        "weight": "strong"
+      },
+      {
+        "kind": "file",
+        "path": "src/app/layout.tsx",
+        "value": "App Router root layout found",
+        "weight": "strong"
+      },
+      {
+        "kind": "file",
+        "path": "src/app/page.tsx",
+        "value": "src/app/page.tsx found",
+        "weight": "medium"
+      }
+    ]
+  },
+  "importantFiles": [
+    {
+      "path": "package.json",
+      "kind": "package_file",
+      "reason": "Project package manifest"
+    },
+    {
+      "path": "pnpm-lock.yaml",
+      "kind": "lockfile",
+      "reason": "Package manager lockfile"
+    },
+    {
+      "path": "next.config.mjs",
+      "kind": "config_file",
+      "reason": "Framework or TypeScript config"
+    },
+    {
+      "path": "src/app/",
+      "kind": "directory",
+      "reason": "Important project directory"
+    },
+    {
+      "path": "src/",
+      "kind": "directory",
+      "reason": "Important project directory"
+    },
+    {
+      "path": "src/app/layout.tsx",
+      "kind": "metadata_file",
+      "reason": "Next.js App Router file"
+    },
+    {
+      "path": "src/app/page.tsx",
+      "kind": "route_file",
+      "reason": "Next.js App Router file"
+    }
+  ],
+  "routes": [
+    {
+      "path": "src/app/page.tsx",
+      "route": "/",
+      "kind": "page",
+      "confidence": "high",
+      "reason": "App Router page file"
+    }
+  ],
+  "metadataLocations": [
+    {
+      "path": "src/app/layout.tsx",
+      "kind": "file",
+      "exists": true,
+      "reason": "App Router layout can define shared metadata"
+    },
+    {
+      "path": "src/app/**/page.tsx",
+      "kind": "pattern",
+      "exists": false,
+      "reason": "Route-level pages can define metadata"
+    },
+    {
+      "path": "src/app/**/layout.tsx",
+      "kind": "pattern",
+      "exists": false,
+      "reason": "Nested layouts can define section metadata"
+    },
+    {
+      "path": "src/app/sitemap.ts",
+      "kind": "file",
+      "exists": false,
+      "reason": "App Router sitemap route"
+    },
+    {
+      "path": "src/app/robots.ts",
+      "kind": "file",
+      "exists": false,
+      "reason": "App Router robots route"
+    },
+    {
+      "path": "src/app/opengraph-image.tsx",
+      "kind": "file",
+      "exists": false,
+      "reason": "Open Graph image route"
+    }
+  ],
+  "supportedFixes": [
+    {
+      "id": "next_app.metadata_export",
+      "title": "Add/update static metadata export",
+      "description": "Add or update App Router metadata exports where simple and local.",
+      "safety": "review_required"
+    },
+    {
+      "id": "next_app.route_metadata",
+      "title": "Add route-level metadata",
+      "description": "Add metadata to route page or layout files.",
+      "safety": "review_required"
+    },
+    {
+      "id": "next_app.generate_metadata",
+      "title": "Add/update generateMetadata",
+      "description": "Plan generateMetadata changes when route metadata is dynamic.",
+      "safety": "review_required"
+    },
+    {
+      "id": "next_app.json_ld",
+      "title": "Add JSON-LD component",
+      "description": "Add conservative structured data in a layout or page.",
+      "safety": "review_required"
+    },
+    {
+      "id": "next_app.robots",
+      "title": "Add robots.ts",
+      "description": "Add an App Router robots route.",
+      "safety": "review_required"
+    },
+    {
+      "id": "next_app.sitemap",
+      "title": "Add sitemap.ts",
+      "description": "Add an App Router sitemap route.",
+      "safety": "review_required"
+    },
+    {
+      "id": "next_app.og_image",
+      "title": "Add Open Graph image route",
+      "description": "Add an opengraph-image route where appropriate.",
+      "safety": "review_required"
+    }
+  ],
+  "limitations": [
+    "File writing is disabled; use `shipready fix --dry-run` for supported patch previews.",
+    "This command is read-only and does not modify repository files.",
+    "Dynamic route metadata may require human review.",
+    "Existing complex metadata logic should not be overwritten blindly."
+  ],
+  "warnings": [],
+  "contract": "shipready.repoInspection.v1"
+}

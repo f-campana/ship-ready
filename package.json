@@ -13,6 +13,7 @@
     "build": "tsup",
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
+    "contracts:fixtures": "tsx scripts/validation/generateContractFixtures.ts",
     "playwright:install": "playwright install chromium",
     "demo:fodmapp:record": "tsx scripts/demo/recordFodmappDemo.ts",
     "demo:fodmapp:captions": "tsx scripts/demo/createFodmappCaptions.ts",

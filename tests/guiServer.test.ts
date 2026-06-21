@@ -199,6 +199,19 @@ describe("ShipReady local GUI", () => {
     });
   });
 
+  it("keeps POST /api/fix unavailable", async () => {
+    await withServer(async (server) => {
+      const response = await fetch(`${server.url}/api/fix`, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: "{}",
+      });
+
+      expect(response.status).toBe(404);
+      expect(await response.text()).toBe("Not found");
+    });
+  });
+
   it("keeps developer details collapsed on initial page load", async () => {
     await withServer(async (server) => {
       const html = await fetchText(`${server.url}/`);

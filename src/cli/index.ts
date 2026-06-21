@@ -8,6 +8,7 @@ import { planFixes } from "../plan/planFixes";
 import { inspectRepo } from "../repo/inspectRepo";
 import { formatDryRunFixHumanReport } from "../report/formatDryRunFixHumanReport";
 import { formatDryRunFixJsonReport } from "../report/formatDryRunFixJsonReport";
+import { formatCliErrorJson } from "../report/formatCliErrorJson";
 import { formatFixPlanHumanReport } from "../report/formatFixPlanHumanReport";
 import { formatFixPlanJsonReport } from "../report/formatFixPlanJsonReport";
 import { formatHumanReport } from "../report/formatHumanReport";
@@ -19,6 +20,7 @@ import { formatWriteFixHumanReport } from "../report/formatWriteFixHumanReport";
 import { formatWriteFixJsonReport } from "../report/formatWriteFixJsonReport";
 import { writeHtmlReport } from "../report/writeHtmlReport";
 import { createUiReport } from "../ui/createUiReport";
+import type { CliErrorCode } from "../types/contracts";
 
 const program = new Command();
 
@@ -344,16 +346,10 @@ function writeCommandError(
   exitCode: number,
 ): void {
   if (asJson) {
-    process.stdout.write(
-      `${JSON.stringify(
-        {
-          ok: false,
-          error: message,
-        },
-        null,
-        2,
-      )}\n`,
-    );
+    process.stdout.write(formatCliErrorJson({
+      code: classifyCommandError(message),
+      message,
+    }));
   } else {
     process.stderr.write(`ShipReady ${command} failed: ${message}\n`);
   }
@@ -363,7 +359,7 @@ function writeCommandError(
 
 function writeModeError(message: string, asJson: boolean | undefined): void {
   if (asJson) {
-    process.stdout.write(`${JSON.stringify({ ok: false, error: message }, null, 2)}\n`);
+    process.stdout.write(formatCliErrorJson({ code: "invalid_mode", message }));
   } else {
     process.stderr.write(`${message}\n`);
   }
@@ -376,22 +372,25 @@ function writeWriteFixError(
   asJson: boolean | undefined,
 ): void {
   if (asJson) {
-    process.stdout.write(
-      `${JSON.stringify(
-        {
-          ok: false,
-          error: error.message,
-          result: error.result,
-        },
-        null,
-        2,
-      )}\n`,
-    );
+    process.stdout.write(formatCliErrorJson({
+      code: error instanceof WriteFixValidationError
+        ? "write_validation_failed"
+        : "write_execution_failed",
+      message: error.message,
+      result: error.result,
+    }));
   } else {
     process.stderr.write(formatWriteFixHumanReport(error.result));
   }
 
   process.exitCode = error instanceof WriteFixValidationError ? 1 : 2;
+}
+
+function classifyCommandError(message: string): CliErrorCode {
+  if (message.startsWith("Invalid URL")) return "invalid_url";
+  if (message.startsWith("Invalid timeout")) return "invalid_timeout";
+  if (message.startsWith("Repository path")) return "invalid_repo_path";
+  return "command_failed";
 }
 
 function isInputError(message: string): boolean {

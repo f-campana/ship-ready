@@ -1,0 +1,7 @@
+{
+  "contract": "shipready.error.v1",
+  "ok": false,
+  "code": "invalid_url",
+  "message": "Invalid URL. Provide an absolute http:// or https:// URL.",
+  "error": "Invalid URL. Provide an absolute http:// or https:// URL."
+}

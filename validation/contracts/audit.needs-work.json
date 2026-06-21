@@ -1,0 +1,127 @@
+{
+  "url": "https://example.com/",
+  "finalUrl": "https://example.com/",
+  "auditedAt": "2026-06-21T12:00:00.000Z",
+  "httpStatus": 200,
+  "score": 62,
+  "status": "needs_work",
+  "raw": {
+    "source": "raw",
+    "url": "https://example.com/",
+    "metadata": {
+      "htmlLang": "en",
+      "title": "Example",
+      "description": "A deterministic ShipReady contract fixture.",
+      "canonical": "https://example.com/",
+      "faviconLinks": [],
+      "openGraph": {},
+      "twitter": {}
+    },
+    "headings": {
+      "h1": [
+        "Example"
+      ],
+      "all": [
+        {
+          "level": 1,
+          "text": "Example"
+        }
+      ]
+    },
+    "images": {
+      "total": 0,
+      "missingAlt": 0,
+      "items": []
+    },
+    "links": {
+      "total": 0,
+      "missingAccessibleText": 0,
+      "items": []
+    },
+    "jsonLd": []
+  },
+  "rendered": {
+    "source": "rendered",
+    "url": "https://example.com/",
+    "metadata": {
+      "htmlLang": "en",
+      "title": "Example",
+      "description": "A deterministic ShipReady contract fixture.",
+      "canonical": "https://example.com/",
+      "faviconLinks": [],
+      "openGraph": {},
+      "twitter": {}
+    },
+    "headings": {
+      "h1": [
+        "Example"
+      ],
+      "all": [
+        {
+          "level": 1,
+          "text": "Example"
+        }
+      ]
+    },
+    "images": {
+      "total": 0,
+      "missingAlt": 0,
+      "items": []
+    },
+    "links": {
+      "total": 0,
+      "missingAccessibleText": 0,
+      "items": []
+    },
+    "jsonLd": []
+  },
+  "comparison": {
+    "fields": []
+  },
+  "checks": [
+    {
+      "id": "crawl.robots_txt.missing",
+      "category": "crawlability",
+      "severity": "warning",
+      "title": "crawl.robots_txt.missing",
+      "description": "Deterministic evidence for crawl.robots_txt.missing.",
+      "confidence": "high",
+      "fixability": "plan_only"
+    },
+    {
+      "id": "crawl.sitemap.missing",
+      "category": "crawlability",
+      "severity": "warning",
+      "title": "crawl.sitemap.missing",
+      "description": "Deterministic evidence for crawl.sitemap.missing.",
+      "confidence": "high",
+      "fixability": "plan_only"
+    },
+    {
+      "id": "metadata.canonical.missing",
+      "category": "metadata",
+      "severity": "critical",
+      "title": "metadata.canonical.missing",
+      "description": "Deterministic evidence for metadata.canonical.missing.",
+      "confidence": "high",
+      "fixability": "plan_only"
+    }
+  ],
+  "resources": {
+    "robotsTxt": {
+      "url": "https://example.com/robots.txt",
+      "finalUrl": "https://example.com/robots.txt",
+      "exists": false,
+      "ok": false,
+      "statusCode": 404
+    },
+    "sitemapXml": {
+      "url": "https://example.com/sitemap.xml",
+      "finalUrl": "https://example.com/sitemap.xml",
+      "exists": false,
+      "ok": false,
+      "statusCode": 404
+    }
+  },
+  "contract": "shipready.audit.v1"
+}

@@ -1,0 +1,322 @@
+{
+  "schemaVersion": "ui-report-v1",
+  "generatedAt": "2026-06-21T12:00:00.000Z",
+  "input": {
+    "url": "https://example.com/",
+    "mode": "url_only"
+  },
+  "workflow": {
+    "currentRecommendedStep": "no_changes_needed",
+    "completedStages": [
+      "audit"
+    ],
+    "availableNextActions": [
+      {
+        "label": "No changes needed",
+        "action": "none",
+        "primary": true,
+        "enabled": true
+      }
+    ]
+  },
+  "readiness": {
+    "label": "ready",
+    "title": "Ready to ship",
+    "summary": "Core launch checks look good and no changes are needed.",
+    "score": 100,
+    "topIssues": [],
+    "passedHighlights": [
+      {
+        "id": "metadata.title.present",
+        "title": "metadata.title.present",
+        "explanation": "Deterministic evidence for metadata.title.present.",
+        "whyItMatters": "This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.",
+        "userSeverity": "ready",
+        "technicalSeverity": "passed",
+        "sourceCheckIds": [
+          "metadata.title.present"
+        ],
+        "developerDetails": {
+          "rawTitle": "metadata.title.present",
+          "rawDescription": "Deterministic evidence for metadata.title.present.",
+          "category": "metadata",
+          "confidence": "high",
+          "fixability": "not_fixable"
+        }
+      },
+      {
+        "id": "metadata.description.present",
+        "title": "metadata.description.present",
+        "explanation": "Deterministic evidence for metadata.description.present.",
+        "whyItMatters": "This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.",
+        "userSeverity": "ready",
+        "technicalSeverity": "passed",
+        "sourceCheckIds": [
+          "metadata.description.present"
+        ],
+        "developerDetails": {
+          "rawTitle": "metadata.description.present",
+          "rawDescription": "Deterministic evidence for metadata.description.present.",
+          "category": "metadata",
+          "confidence": "high",
+          "fixability": "not_fixable"
+        }
+      },
+      {
+        "id": "metadata.canonical.present",
+        "title": "metadata.canonical.present",
+        "explanation": "Deterministic evidence for metadata.canonical.present.",
+        "whyItMatters": "This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.",
+        "userSeverity": "ready",
+        "technicalSeverity": "passed",
+        "sourceCheckIds": [
+          "metadata.canonical.present"
+        ],
+        "developerDetails": {
+          "rawTitle": "metadata.canonical.present",
+          "rawDescription": "Deterministic evidence for metadata.canonical.present.",
+          "category": "metadata",
+          "confidence": "high",
+          "fixability": "not_fixable"
+        }
+      },
+      {
+        "id": "crawl.robots_txt.found",
+        "title": "crawl.robots_txt.found",
+        "explanation": "Deterministic evidence for crawl.robots_txt.found.",
+        "whyItMatters": "This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.",
+        "userSeverity": "ready",
+        "technicalSeverity": "passed",
+        "sourceCheckIds": [
+          "crawl.robots_txt.found"
+        ],
+        "developerDetails": {
+          "rawTitle": "crawl.robots_txt.found",
+          "rawDescription": "Deterministic evidence for crawl.robots_txt.found.",
+          "category": "crawlability",
+          "confidence": "high",
+          "fixability": "not_fixable"
+        }
+      },
+      {
+        "id": "crawl.sitemap.found",
+        "title": "crawl.sitemap.found",
+        "explanation": "Deterministic evidence for crawl.sitemap.found.",
+        "whyItMatters": "This signal helps ShipReady decide whether the page is easy for crawlers, previews, and visitors to understand.",
+        "userSeverity": "ready",
+        "technicalSeverity": "passed",
+        "sourceCheckIds": [
+          "crawl.sitemap.found"
+        ],
+        "developerDetails": {
+          "rawTitle": "crawl.sitemap.found",
+          "rawDescription": "Deterministic evidence for crawl.sitemap.found.",
+          "category": "crawlability",
+          "confidence": "high",
+          "fixability": "not_fixable"
+        }
+      }
+    ],
+    "optionalPolish": []
+  },
+  "previews": {
+    "google": {
+      "title": "Example",
+      "url": "https://example.com/",
+      "description": "A deterministic ShipReady contract fixture.",
+      "missingFields": [],
+      "source": "raw"
+    },
+    "social": {
+      "title": "Example",
+      "url": "https://example.com/",
+      "description": "A deterministic ShipReady contract fixture.",
+      "missingFields": [
+        "image"
+      ],
+      "source": "raw"
+    },
+    "twitter": {
+      "title": "Example",
+      "description": "A deterministic ShipReady contract fixture.",
+      "missingFields": [
+        "card",
+        "image"
+      ],
+      "source": "raw"
+    },
+    "crawlerView": {
+      "rawHtmlSummary": "Raw HTML includes title, description, canonical, language, 0 Open Graph field(s), 0 Twitter/X field(s), and 0 JSON-LD block(s).",
+      "renderedHtmlSummary": "Rendered HTML includes title, description, canonical, language, 0 Open Graph field(s), 0 Twitter/X field(s), and 0 JSON-LD block(s).",
+      "renderOnlyWarnings": []
+    }
+  },
+  "safeApply": {
+    "available": false,
+    "buttonLabel": "No safe automatic fixes",
+    "explanation": "No dry-run file change currently qualifies for V1 safe apply.",
+    "eligibleFiles": [],
+    "blockedFiles": [],
+    "policy": "creation_only_robots_sitemap_v1",
+    "safetyNotes": [
+      "This ui-report command never writes files.",
+      "V1 safe apply is limited to creation-only robots/sitemap files.",
+      "ShipReady will not overwrite existing files in V1 safe apply.",
+      "ShipReady will not edit metadata, JSON-LD, page content, package files, or configuration in V1 safe apply.",
+      "ShipReady will not run Git operations, create commits, push, or deploy."
+    ]
+  },
+  "liveVsLocal": {
+    "localChangesAffectLiveSite": false,
+    "deploymentRequired": false,
+    "message": "This report audits the live URL only. Select a local project folder before previewing local changes."
+  },
+  "errors": [],
+  "developerDetails": {
+    "rawAudit": {
+      "url": "https://example.com/",
+      "finalUrl": "https://example.com/",
+      "auditedAt": "2026-06-21T12:00:00.000Z",
+      "httpStatus": 200,
+      "score": 100,
+      "status": "good",
+      "raw": {
+        "source": "raw",
+        "url": "https://example.com/",
+        "metadata": {
+          "htmlLang": "en",
+          "title": "Example",
+          "description": "A deterministic ShipReady contract fixture.",
+          "canonical": "https://example.com/",
+          "faviconLinks": [],
+          "openGraph": {},
+          "twitter": {}
+        },
+        "headings": {
+          "h1": [
+            "Example"
+          ],
+          "all": [
+            {
+              "level": 1,
+              "text": "Example"
+            }
+          ]
+        },
+        "images": {
+          "total": 0,
+          "missingAlt": 0,
+          "items": []
+        },
+        "links": {
+          "total": 0,
+          "missingAccessibleText": 0,
+          "items": []
+        },
+        "jsonLd": []
+      },
+      "rendered": {
+        "source": "rendered",
+        "url": "https://example.com/",
+        "metadata": {
+          "htmlLang": "en",
+          "title": "Example",
+          "description": "A deterministic ShipReady contract fixture.",
+          "canonical": "https://example.com/",
+          "faviconLinks": [],
+          "openGraph": {},
+          "twitter": {}
+        },
+        "headings": {
+          "h1": [
+            "Example"
+          ],
+          "all": [
+            {
+              "level": 1,
+              "text": "Example"
+            }
+          ]
+        },
+        "images": {
+          "total": 0,
+          "missingAlt": 0,
+          "items": []
+        },
+        "links": {
+          "total": 0,
+          "missingAccessibleText": 0,
+          "items": []
+        },
+        "jsonLd": []
+      },
+      "comparison": {
+        "fields": []
+      },
+      "checks": [
+        {
+          "id": "metadata.title.present",
+          "category": "metadata",
+          "severity": "passed",
+          "title": "metadata.title.present",
+          "description": "Deterministic evidence for metadata.title.present.",
+          "confidence": "high",
+          "fixability": "not_fixable"
+        },
+        {
+          "id": "metadata.description.present",
+          "category": "metadata",
+          "severity": "passed",
+          "title": "metadata.description.present",
+          "description": "Deterministic evidence for metadata.description.present.",
+          "confidence": "high",
+          "fixability": "not_fixable"
+        },
+        {
+          "id": "metadata.canonical.present",
+          "category": "metadata",
+          "severity": "passed",
+          "title": "metadata.canonical.present",
+          "description": "Deterministic evidence for metadata.canonical.present.",
+          "confidence": "high",
+          "fixability": "not_fixable"
+        },
+        {
+          "id": "crawl.robots_txt.found",
+          "category": "crawlability",
+          "severity": "passed",
+          "title": "crawl.robots_txt.found",
+          "description": "Deterministic evidence for crawl.robots_txt.found.",
+          "confidence": "high",
+          "fixability": "not_fixable"
+        },
+        {
+          "id": "crawl.sitemap.found",
+          "category": "crawlability",
+          "severity": "passed",
+          "title": "crawl.sitemap.found",
+          "description": "Deterministic evidence for crawl.sitemap.found.",
+          "confidence": "high",
+          "fixability": "not_fixable"
+        }
+      ],
+      "resources": {
+        "robotsTxt": {
+          "url": "https://example.com/robots.txt",
+          "finalUrl": "https://example.com/robots.txt",
+          "exists": true,
+          "ok": true,
+          "statusCode": 200
+        },
+        "sitemapXml": {
+          "url": "https://example.com/sitemap.xml",
+          "finalUrl": "https://example.com/sitemap.xml",
+          "exists": true,
+          "ok": true,
+          "statusCode": 200
+        }
+      }
+    }
+  },
+  "contract": "shipready.uiReport.v1"
+}
