@@ -29,11 +29,12 @@ Primary readers are Codex, Claude Code, Cursor, and future MCP clients; human de
 3. `docs/STATUS.md`
 4. `docs/COMMANDS.md`
 5. `docs/CONTRACTS.md`
-6. `docs/WRITE_POLICY_V1.md` for any fix or write work
-7. `docs/CLAIMS_POLICY.md` for UI, demo, report, or public copy
-8. `docs/LOCAL_FIRST_GUI_SPEC.md` for GUI direction
-9. `docs/DEMO.md` for demo work
-10. `docs/ROADMAP.md` for sequencing
+6. `docs/MCP_PLAN.md` before any MCP work
+7. `docs/WRITE_POLICY_V1.md` for any fix or write work
+8. `docs/CLAIMS_POLICY.md` for UI, demo, report, or public copy
+9. `docs/LOCAL_FIRST_GUI_SPEC.md` for GUI direction
+10. `docs/DEMO.md` for demo work
+11. `docs/ROADMAP.md` for sequencing
 
 ## Before any implementation
 
@@ -44,6 +45,8 @@ Primary readers are Codex, Claude Code, Cursor, and future MCP clients; human de
 5. Run targeted tests before changing behavior.
 6. Preserve CLI as source of truth.
 7. Do not broaden safe writes without updating policy and tests.
+
+For Pass 5 MCP work, read [MCP_PLAN.md](MCP_PLAN.md) first. Pass 5 is strictly read-only: do not add, register, advertise, or stub any MCP write tool.
 
 ## Main commands
 

@@ -154,4 +154,10 @@ See [DEMO.md](DEMO.md) before recording. None of these scripts executes the disp
 
 ## Planned
 
-No planned CLI syntax is defined in this pass. MCP, doctor/status UX, Search Console, DNS, multi-page crawl, patch export, and GitHub PR work are future roadmap items. Define their CLI contracts before documenting commands.
+The following local stdio command is specified in [MCP_PLAN.md](MCP_PLAN.md) but is **Planned, not implemented**:
+
+```bash
+pnpm shipready mcp --allow-root /absolute/workspace
+```
+
+Pass 5 will implement read-only MCP only. No MCP write command/tool is planned for Pass 5. Doctor/status UX, Search Console, DNS, multi-page crawl, patch export, and GitHub PR work remain later roadmap items.

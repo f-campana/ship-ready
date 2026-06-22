@@ -41,4 +41,4 @@ Read-only inspection and preview are the default. The only product write surface
 
 ## Next pass
 
-**Pass 3: CLI contract hardening.** Add explicit versions/envelopes, stable error codes, compatibility rules, and CLI-level contract tests before specifying MCP.
+**Pass 5: read-only MCP implementation.** Implement the tools, resources, prompts, path authorization, error mapping, cancellation, and stdio lifecycle specified in [MCP_PLAN.md](MCP_PLAN.md), without adding an MCP write tool.

@@ -170,7 +170,9 @@ Focused drift coverage is in `tests/contracts.test.ts`. Tests validate every fix
 - Demo tooling: drives the GUI server surface and captures report artifacts.
 - Future MCP: should wrap the named CLI contracts and preserve exit/error semantics, not import ad-hoc internals.
 
-## Before MCP
+## MCP mapping
+
+The implementation-ready Pass 4 specification is [MCP_PLAN.md](MCP_PLAN.md). It maps the six read-only MCP operations to the current CLI contracts, defines canonical doc/fixture reads, closes Commander pre-action errors at the MCP boundary, and specifies path authorization, cancellation, timeouts, lifecycle, and tests. Pass 5 remains strictly read-only; `shipready.writeFix.v1` is documented there only as a future Pass 6-or-later wrapper.
 
 Ready now:
 
@@ -181,12 +183,11 @@ Ready now:
 - Creation-only write evidence remains explicit and policy-bound.
 - Human CLI, HTML file, and GUI server surfaces are clearly separated from CLI JSON contracts.
 
-Remaining for the MCP plan/spec pass:
+Required during the Pass 5 implementation:
 
-- Define MCP tool names, input schemas, output mapping, timeout/cancellation behavior, and transport-level error mapping.
-- Decide how MCP represents Commander pre-action errors that are not yet normalized JSON.
-- Define path authorization, working-directory rules, secret redaction, output-size limits, and cancellation behavior.
-- Specify mutation confirmation and capability boundaries for the guarded write tool without changing write eligibility.
-- Define whether MCP returns CLI exit metadata alongside the parsed contract object.
+- Implement only the read-only tools/resources/prompts and stdio server defined in `MCP_PLAN.md`.
+- Extend `shipready.error.v1` compatibly for the reviewed MCP boundary codes and add deterministic fixtures/tests.
+- Add optional cancellation propagation without changing default CLI behavior.
+- Keep successful MCP structured output equal to the named CLI contract object, with no generic wrapper or CLI exit metadata.
 
-Do not add MCP implementation during contract hardening.
+Do not add an MCP write tool during Pass 5.
