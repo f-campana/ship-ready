@@ -8,8 +8,8 @@ Order is contractual: harden CLI interfaces before wrapping them, ship read-only
 | 2 | Complete | Consolidate agent-first operational documentation. | Establishes one navigation and safety contract before interface changes. | Read-only/docs | Pass 1 |
 | 3 | Complete | Harden CLI JSON, errors, versions, and compatibility contracts. | Stable machine interfaces are required by every client. | Read-only contract | Pass 2 |
 | 4 | Complete | Specify MCP tools, schemas, authorization, failure behavior, lifecycle, and tests in [MCP_PLAN.md](MCP_PLAN.md). | The wrapper must follow hardened CLI contracts. | Read-only/spec | Pass 3 |
-| 5 | Next | Implement the strictly read-only MCP tools, resources, and prompts specified in [MCP_PLAN.md](MCP_PLAN.md). | Validates the wrapper without mutation risk. | Read-only | Pass 4 |
-| 6 | Planned | Wrap the existing guarded V1 write through MCP. | Mutation follows proven read-only transport and explicit authorization. | Write-bearing | Pass 5 |
+| 5 | Complete | Implement the strictly read-only MCP tools, resources, and prompts specified in [MCP_PLAN.md](MCP_PLAN.md). | Validates the wrapper without mutation risk. | Read-only | Pass 4 |
+| 6 | Next | Wrap the existing guarded V1 write through MCP. | Mutation follows proven read-only transport and explicit authorization. | Write-bearing | Pass 5 |
 | 7 | Planned | Polish CLI UX and define `doctor`/`status` contracts. | Improves operability after core machine contracts stabilize. | Read-only | Pass 3 |
 | 8 | Planned | Research and specify Search Console readiness boundaries. | Establishes claims, auth, and data limits before integration. | Read-only/spec | Pass 7 |
 | 9 | Planned | Prototype read-only Search Console status. | Tests useful status retrieval without third-party mutation. | Read-only | Pass 8 |

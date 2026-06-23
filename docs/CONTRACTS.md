@@ -168,11 +168,11 @@ Focused drift coverage is in `tests/contracts.test.ts`. Tests validate every fix
 - Static HTML: renders the internal `UiReport` model.
 - GUI: serves the internal `UiReport` model through a local API; it does not execute write mode.
 - Demo tooling: drives the GUI server surface and captures report artifacts.
-- Future MCP: should wrap the named CLI contracts and preserve exit/error semantics, not import ad-hoc internals.
+- MCP: wraps the named CLI contracts through the existing application functions and JSON formatters; it does not expose ad-hoc internal models.
 
 ## MCP mapping
 
-The implementation-ready Pass 4 specification is [MCP_PLAN.md](MCP_PLAN.md). It maps the six read-only MCP operations to the current CLI contracts, defines canonical doc/fixture reads, closes Commander pre-action errors at the MCP boundary, and specifies path authorization, cancellation, timeouts, lifecycle, and tests. Pass 5 remains strictly read-only; `shipready.writeFix.v1` is documented there only as a future Pass 6-or-later wrapper.
+The implemented Pass 5 specification is [MCP_PLAN.md](MCP_PLAN.md). Five contract-backed tools preserve their exact top-level CLI objects; two canonical-read tools expose validated fixtures and allowlisted documents. `shipready.writeFix.v1` remains CLI-only and is documented there only as a future Pass 6 wrapper.
 
 Ready now:
 
@@ -183,11 +183,6 @@ Ready now:
 - Creation-only write evidence remains explicit and policy-bound.
 - Human CLI, HTML file, and GUI server surfaces are clearly separated from CLI JSON contracts.
 
-Required during the Pass 5 implementation:
+The compatible `shipready.error.v1` enum now also covers MCP boundary codes: `path_not_authorized`, `fixture_not_found`, `doc_not_found`, `network_error`, `render_error`, `timeout`, `cancelled`, `contract_error`, `write_forbidden`, `unsupported_command`, and `internal_error`. Optional `retryable` and safe `details` fields are additive; `error === message` remains required.
 
-- Implement only the read-only tools/resources/prompts and stdio server defined in `MCP_PLAN.md`.
-- Extend `shipready.error.v1` compatibly for the reviewed MCP boundary codes and add deterministic fixtures/tests.
-- Add optional cancellation propagation without changing default CLI behavior.
-- Keep successful MCP structured output equal to the named CLI contract object, with no generic wrapper or CLI exit metadata.
-
-Do not add an MCP write tool during Pass 5.
+No MCP write tool is registered in Pass 5.

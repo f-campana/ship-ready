@@ -21,6 +21,8 @@ import { formatWriteFixJsonReport } from "../report/formatWriteFixJsonReport";
 import { writeHtmlReport } from "../report/writeHtmlReport";
 import { createUiReport } from "../ui/createUiReport";
 import type { CliErrorCode } from "../types/contracts";
+import { resolveAllowedRoots } from "../mcp/config";
+import { startMcpServer } from "../mcp/server";
 
 const program = new Command();
 
@@ -28,6 +30,27 @@ program
   .name("shipready")
   .description("Production-readiness hygiene checks for generated websites.")
   .version("0.1.0");
+
+program
+  .command("mcp")
+  .description("Start the read-only ShipReady MCP stdio server.")
+  .option(
+    "--allow-root <absolute-path>",
+    "Authorize one repository root (repeatable)",
+    collectOption,
+    [],
+  )
+  .action(async (options: McpCommandOptions) => {
+    try {
+      await startMcpServer({
+        allowRoots: resolveAllowedRoots(options.allowRoot),
+      });
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "ShipReady MCP startup failed.";
+      process.stderr.write(`${message}\n`);
+      process.exitCode = 1;
+    }
+  });
 
 program
   .command("audit")
@@ -294,6 +317,14 @@ type AuditCommandOptions = {
   render: boolean;
   userAgent?: string;
 };
+
+type McpCommandOptions = {
+  allowRoot: string[];
+};
+
+function collectOption(value: string, previous: string[]): string[] {
+  return [...previous, value];
+}
 
 type InspectRepoCommandOptions = {
   json?: boolean;

@@ -19,6 +19,7 @@ Primary readers are Codex, Claude Code, Cursor, and future MCP clients; human de
 - `src/report/`: human, JSON, UI, and static HTML formatting.
 - `src/ui/`: normalized `ui-report-v1` creation.
 - `src/gui/`: local server and preview/copy-only browser UI.
+- `src/mcp/`: local stdio adapter, exact read-only registry, canonical reads, prompts, authorization, errors, and deadlines.
 - `scripts/demo/`: Fodmapp recording, captions, optional voice, and composition.
 - `validation/`: contract fixtures, reports, reviews, and approved demo artifacts.
 
@@ -46,7 +47,7 @@ Primary readers are Codex, Claude Code, Cursor, and future MCP clients; human de
 6. Preserve CLI as source of truth.
 7. Do not broaden safe writes without updating policy and tests.
 
-For Pass 5 MCP work, read [MCP_PLAN.md](MCP_PLAN.md) first. Pass 5 is strictly read-only: do not add, register, advertise, or stub any MCP write tool.
+For MCP work, read [MCP_PLAN.md](MCP_PLAN.md) first. The implemented Pass 5 server is strictly read-only. Pass 6 may add only the separately reviewed safe-write wrapper; until then, do not add, register, advertise, or stub any MCP write tool.
 
 ## Main commands
 
@@ -58,6 +59,7 @@ pnpm shipready fix <path> --url <url> --dry-run --json
 pnpm shipready ui-report [path] --url <url> --json
 pnpm shipready html-report [path] --url <url> --output <file>
 pnpm shipready gui
+pnpm shipready mcp --allow-root /absolute/workspace
 ```
 
 The guarded write command exists but is not a routine validation command. Use it only with explicit instruction and the checks in the canonical write policy.

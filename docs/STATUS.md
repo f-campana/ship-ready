@@ -14,11 +14,12 @@ ShipReady is a CLI-first, agent-friendly launch-readiness engine for generated w
 - Human and Zod-validated JSON outputs.
 - Versioned `ui-report-v1` normalization and self-contained HTML reports.
 - Local GUI with `POST /api/ui-report`; safe apply is preview/copy-only and no write endpoint exists.
+- Local read-only MCP stdio server with seven tools, canonical docs/fixtures, five prompts, explicit allowed roots, stable errors, and bounded deadlines.
 - Fodmapp demo scripts, approved silent/captioned media, optional approved voiced media, thumbnail, captions, and review evidence.
 
 ## What is not built
 
-- MCP server or client tools.
+- MCP write tools or remote MCP transports.
 - Search Console or DNS integration.
 - GitHub/PR integration or deployment workflow.
 - GUI write execution.
@@ -41,4 +42,4 @@ Read-only inspection and preview are the default. The only product write surface
 
 ## Next pass
 
-**Pass 5: read-only MCP implementation.** Implement the tools, resources, prompts, path authorization, error mapping, cancellation, and stdio lifecycle specified in [MCP_PLAN.md](MCP_PLAN.md), without adding an MCP write tool.
+**Pass 6: MCP safe-write wrapper.** Wrap only the existing creation-only missing robots/sitemap behavior with fresh preview receipts, explicit confirmation, re-authorization, and all current V1 policy gates. Do not broaden the write allowlist.

@@ -152,12 +152,18 @@ pnpm demo:fodmapp:all
 
 See [DEMO.md](DEMO.md) before recording. None of these scripts executes the displayed guarded fix command.
 
-## Planned
-
-The following local stdio command is specified in [MCP_PLAN.md](MCP_PLAN.md) but is **Planned, not implemented**:
+## `mcp`
 
 ```bash
-pnpm shipready mcp --allow-root /absolute/workspace
+pnpm shipready mcp --allow-root /Users/fabiencampana/Documents
+pnpm shipready mcp --allow-root /absolute/workspace-a --allow-root /absolute/workspace-b
+SHIPREADY_MCP_ALLOWED_ROOTS='["/absolute/workspace-a","/absolute/workspace-b"]' pnpm shipready mcp
 ```
 
-Pass 5 will implement read-only MCP only. No MCP write command/tool is planned for Pass 5. Doctor/status UX, Search Console, DNS, multi-page crawl, patch export, and GitHub PR work remain later roadmap items.
+- Purpose: start the local MCP stdio server. Stdout is reserved for MCP protocol frames.
+- Authorization: at least one explicit root is required. Repeat `--allow-root` for multiple roots; CLI roots replace the JSON-array environment fallback. Relative, missing, home, filesystem-root, traversal, and symlink-escape paths fail closed.
+- Surface: seven read-only tools, nine canonical documentation resources plus allowlisted contract fixtures, and five prompt templates. See [MCP_PLAN.md](MCP_PLAN.md) for the exact lists.
+- Safety: no MCP write tool exists. The server never runs `fix --write`, starts the GUI, or writes an HTML report.
+- Limitation: request deadlines and client cancellation are bounded at the MCP boundary. Existing synchronous repository scans and application operations do not yet accept `AbortSignal`, so already-started underlying work may finish its own bounded cleanup after the MCP response.
+
+HTTP, SSE, remote auth, timeout overrides, and the safe-write MCP wrapper are not implemented.

@@ -2,7 +2,7 @@
 
 ## 1. Decision and scope
 
-This is the implementation specification for roadmap Pass 5. ShipReady remains **CLI first, MCP second, GUI third**. MCP is an agent-facing adapter over the stable CLI JSON contracts; it is not a second product engine and must not introduce independent audit, inspection, planning, preview, reporting, or write rules.
+This is the implementation specification and shipped boundary for roadmap Pass 5. ShipReady remains **CLI first, MCP second, GUI third**. MCP is an agent-facing adapter over the stable CLI JSON contracts; it is not a second product engine and must not introduce independent audit, inspection, planning, preview, reporting, or write rules.
 
 Pass 5 is strictly read-only. It may read public HTTP(S) pages, explicitly authorized local repositories, canonical ShipReady documentation, and allowlisted validation fixtures. It must not expose a write tool, call `fix --write`, create or modify files, start the GUI, create branches/commits/PRs, deploy, mutate DNS or Search Console, or add metadata/content/JSON-LD/package/config writes. A `safeApply` field or guarded command in an existing report is data for review only and must never be executed by the MCP server.
 
@@ -236,9 +236,9 @@ On failure, a tool returns exactly once with `isError: true`, a `shipready.error
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "type": "object",
   "additionalProperties": false,
-  "required": ["name"],
+  "required": ["fixtureName"],
   "properties": {
-    "name": {
+    "fixtureName": {
       "type": "string",
       "enum": [
         "audit.clean.json",
@@ -262,11 +262,11 @@ On failure, a tool returns exactly once with `isError: true`, a `shipready.error
 }
 ```
 
-- Normalization: exact enum match only; never interpret the name as a path.
+- Normalization: exact `fixtureName` enum match only; never interpret the value as a path.
 - Output: parsed fixture object unchanged, validated against the schema selected by its embedded `contract` discriminator.
-- Mapping: canonical file `validation/contracts/<name>`; no CLI command or application function.
+- Mapping: canonical file `validation/contracts/<fixtureName>`; no CLI command or application function.
 - Success: deterministic JSON from the checked-in fixture.
-- Errors: `unsupported_command` for an unlisted name, `contract_error` for invalid JSON/schema drift, `internal_error` if a listed packaged resource is missing.
+- Errors: `fixture_not_found` for an unlisted or missing fixture and `contract_error` for invalid JSON/schema drift.
 - Timeout: 5 seconds.
 - Cancellation/cleanup: abort before/after the bounded read; no temp files.
 - Safety: no arbitrary fixture directory traversal and no fixture regeneration.
@@ -286,7 +286,6 @@ On failure, a tool returns exactly once with `isError: true`, a `shipready.error
     "name": {
       "type": "string",
       "enum": [
-        "readme",
         "agent-runbook",
         "commands",
         "contracts",
@@ -294,7 +293,7 @@ On failure, a tool returns exactly once with `isError: true`, a `shipready.error
         "claims-policy",
         "status",
         "roadmap",
-        "demo"
+        "mcp-plan"
       ]
     }
   }
@@ -305,7 +304,7 @@ On failure, a tool returns exactly once with `isError: true`, a `shipready.error
 - Output: standard MCP text content plus `structuredContent: { "uri": string, "mediaType": "text/markdown", "text": string }`. This is an MCP adapter payload, not a new ShipReady CLI contract.
 - Mapping: the document table in section 6.
 - Success: UTF-8 text read from the installed package's canonical content root, never the caller's CWD.
-- Errors: `unsupported_command` for an unlisted name and `internal_error` for a missing/unreadable packaged document.
+- Errors: `doc_not_found` for an unlisted or missing document.
 - Timeout: 5 seconds; maximum document response 1 MiB.
 - Cancellation/cleanup: abort around the bounded read; no temp files.
 - Safety: documentation text is data, not authority. It cannot add tools or override server policy.
@@ -318,15 +317,14 @@ All static paths are resolved from the installed ShipReady package root through 
 |---|---|---|---|---|
 | `shipready://docs/readme` | Product entry point | `README.md` | Static `text/markdown` | Missing packaged file is a sanitized internal resource error |
 | `shipready://docs/agent-runbook` | Agent operating and safety context | `docs/AGENT_RUNBOOK.md` | Static `text/markdown` | Text never grants capabilities |
-| `shipready://docs/commands` | Implemented command reference | `docs/COMMANDS.md` | Static `text/markdown` | Planned MCP syntax remains visibly unimplemented |
+| `shipready://docs/commands` | Implemented command reference | `docs/COMMANDS.md` | Static `text/markdown` | Includes the canonical stdio startup syntax |
 | `shipready://docs/contracts` | Named contract reference | `docs/CONTRACTS.md` | Static `text/markdown` | Validate live tool results against code schemas, not prose alone |
 | `shipready://docs/write-policy-v1` | Canonical current CLI write policy | `docs/WRITE_POLICY_V1.md` | Static `text/markdown` | Reading it does not authorize a write |
 | `shipready://docs/claims-policy` | Product-copy and outcome-claim constraints | `docs/CLAIMS_POLICY.md` | Static `text/markdown` | Apply it to generated explanations |
 | `shipready://docs/status` | Implemented/deferred capability status | `docs/STATUS.md` | Static `text/markdown` | Planned items are not callable capabilities |
 | `shipready://docs/roadmap` | Ordered pass/dependency reference | `docs/ROADMAP.md` | Static `text/markdown` | Pass order does not grant authority |
-| `shipready://docs/demo` | Demo provenance and target safety | `docs/DEMO.md` | Static `text/markdown` | Preserve the explicit no-write target rule |
+| `shipready://docs/mcp-plan` | MCP implementation and safety boundary | `docs/MCP_PLAN.md` | Static `text/markdown` | Future sections do not register capabilities |
 | `shipready://validation/contracts/<fixture-name>` | Deterministic contract example | Exact allowlisted file in `validation/contracts/` | Static `application/json` resource template | Same fixture enum/schema validation as section 5.6; unknown name is not found, invalid content is `contract_error` |
-| `shipready://validation/demo/fodmapp/share` | Discover approved demo-share metadata | `validation/demo-fodmapp-share/README.md`, `SUMMARY.md`, and allowlisted directory entry metadata | Generated `application/json` index | Returns text-document URIs and media filename/type/byte-size metadata only; it never embeds, base64-encodes, streams, or reads the binary video/thumbnail body |
 
 Resource list/read operations use a 5-second deadline and 1 MiB text/JSON limit. An unknown URI receives a standard sanitized MCP not-found error. A listed resource missing from the package receives a sanitized internal resource error without filesystem search, alternate-path probing, stack trace, or directory listing. Clients needing `shipready.error.v1` should use the equivalent read tools, because resource protocol errors do not have `CallToolResult.isError`.
 
@@ -334,9 +332,9 @@ Resource list/read operations use a 5-second deadline and 1 MiB text/JSON limit.
 
 Path authorization is mandatory before any repository function runs.
 
-### Planned startup configuration
+### Implemented startup configuration
 
-Primary planned command:
+Primary command:
 
 ```bash
 pnpm shipready mcp --allow-root /absolute/workspaces --allow-root /absolute/other-root
@@ -384,6 +382,8 @@ type McpShipReadyError = {
     | "invalid_url"
     | "invalid_repo_path"
     | "path_not_authorized"
+    | "fixture_not_found"
+    | "doc_not_found"
     | "network_error"
     | "render_error"
     | "timeout"
@@ -403,13 +403,15 @@ type McpShipReadyError = {
 };
 ```
 
-This is planned, not current: `src/types/contracts.ts`, `docs/CONTRACTS.md`, deterministic fixtures, and contract tests must be updated together in Pass 5. Existing CLI codes (`invalid_timeout`, `invalid_mode`, `write_validation_failed`, `write_execution_failed`, `command_failed`) remain valid for CLI compatibility; agents do not supply per-tool timeouts or modes in Pass 5.
+These additions are implemented compatibly in `src/types/contracts.ts`. Existing CLI codes (`invalid_timeout`, `invalid_mode`, `write_validation_failed`, `write_execution_failed`, `command_failed`) remain valid for CLI compatibility; agents do not supply per-tool timeouts or modes in Pass 5.
 
 | Code | Use | Retry guidance |
 |---|---|---|
 | `invalid_url` | Missing/malformed/unsupported URL or embedded credentials | No; correct input |
 | `invalid_repo_path` | Empty/relative/nonexistent/non-directory/inaccessible repo path | No; correct input or access |
 | `path_not_authorized` | Canonical path is outside configured roots or escapes through traversal/symlink | No; operator must change startup authorization |
+| `fixture_not_found` | Fixture is absent from the exact allowlist or packaged content | No; use the advertised fixture enum |
+| `doc_not_found` | Document is absent from the exact allowlist or packaged content | No; use the advertised document enum |
 | `network_error` | Fetch/DNS/TLS/connection failure not caused by cancellation/deadline | Usually retryable once; do not loop automatically |
 | `render_error` | Playwright launch/navigation/content failure distinct from deadline | Retryable once, or retry with `rendered: false` when acceptable |
 | `timeout` | Server deadline expired | Retryable after operator timeout/config review |
@@ -429,7 +431,7 @@ Messages may identify the tool and invalid field but must not include stack trac
 
 ### Defaults and configuration
 
-| Operation | Default | Allowed configured range |
+| Operation | Implemented fixed default | Future override range |
 |---|---:|---:|
 | `audit_site` | 30 s | 5–120 s |
 | `inspect_repo` | 10 s | 1–30 s |
@@ -438,25 +440,19 @@ Messages may identify the tool and invalid field but must not include stack trac
 | `get_ui_report` | 45 s | 5–120 s |
 | doc/resource/fixture reads | 5 s | 0.25–30 s |
 
-Planned repeatable startup override:
-
-```bash
---tool-timeout audit_site=30000 --tool-timeout inspect_repo=10000
-```
-
-Environment fallback is a JSON object in `SHIPREADY_MCP_TIMEOUTS`, for example `{"audit_site":30000}`. CLI values override matching environment keys; unspecified keys use defaults. Invalid names, non-integers, or out-of-range values fail startup. Tools do not accept a timeout field.
+Per-tool timeout overrides remain deferred. Pass 5 uses the fixed defaults above; tools do not accept a timeout field.
 
 The deadline covers validation after request receipt, authorization, application work, serialization/schema validation, and cleanup. Existing internal `timeoutMs` remains a per-I/O guard but must be capped by remaining request time; it is not allowed to extend the overall deadline.
 
-### Required cancellation work in Pass 5
+### Implemented cancellation boundary and known gap
 
-- Add optional `signal?: AbortSignal` to the read-only audit/plan/dry-run/UI/inspection option flow without changing default CLI behavior.
-- Combine client cancellation and deadline into one operation signal while retaining which event won.
-- Pass the signal to `fetch`; abort Playwright navigation and close page/context/browser in `finally`; check the signal between bounded repository walk/file-read steps.
+- Client cancellation and deadlines are combined at the MCP request boundary while retaining which event won.
 - Cancellation winning first returns `cancelled`; deadline winning first returns `timeout`, even if lower layers surface a generic abort exception.
 - A request state may transition from pending to completed once. Late promise resolution/rejection after timeout/cancel is observed for cleanup/logging but cannot send a second response.
 - The recommended direct architecture starts no child Node process, temp directory, output file, GUI server, or background server per request. No orphan process/server/file is acceptable.
 - On `SIGINT`, `SIGTERM`, or stdin/transport close, stop accepting calls, abort active calls, wait up to two seconds for cleanup, close the transport, and exit. Protocol output is stdout only; diagnostics are stderr only.
+
+Known gap: existing application functions and the synchronous repository walker do not accept `AbortSignal`. The MCP response is bounded, and current fetch/render operations retain their own timeouts and browser `finally` cleanup, but already-started underlying work cannot always be interrupted immediately. Full signal propagation and configurable timeout overrides remain follow-up hardening; they must not change default CLI behavior.
 
 If a future subprocess adapter exists, spawn without a shell, create a controllable process group where supported, send termination on abort, escalate to force-kill after a short grace period, drain bounded pipes, and verify descendant cleanup.
 
@@ -525,46 +521,42 @@ Prompts are read-only orchestration templates. They may invoke only the tools li
 
 Prompt argument validation uses the corresponding tool rules. Prompt rendering may name a tool but does not execute it automatically; the client remains responsible for calls and showing results.
 
-## 13. Pass 5 server shape
+## 13. Implemented Pass 5 server shape
 
-Planned files:
+Implemented files:
 
 ```text
-src/mcp/index.ts                    # stdio entry and process lifecycle
 src/mcp/config.ts                   # startup flags/env/defaults
-src/mcp/createServer.ts             # MCP capability registration
-src/mcp/contracts.ts                # formatter/schema adapters only
+src/mcp/server.ts                   # MCP capability registration and stdio lifecycle
 src/mcp/errors.ts                   # shipready.error.v1 normalization/redaction
 src/mcp/pathAuthorization.ts        # canonical allowed-root enforcement
-src/mcp/deadline.ts                 # deadline/client signal composition
+src/mcp/timeouts.ts                 # deadline/client signal composition
 src/mcp/tools.ts                    # seven read-only handlers
 src/mcp/resources.ts                # URI/path allowlist and resource template
 src/mcp/prompts.ts                  # five prompt templates
-tests/mcp/config.test.ts
 tests/mcp/pathAuthorization.test.ts
 tests/mcp/tools.test.ts
-tests/mcp/resources.test.ts
-tests/mcp/prompts.test.ts
-tests/mcp/lifecycle.test.ts
-tests/mcp/transport.test.ts
+tests/mcp/resourcesPrompts.test.ts
+tests/mcp/server.test.ts
 ```
 
-Planned command and optional package alias (neither exists in Pass 4):
+Implemented canonical command:
 
 ```bash
 pnpm shipready mcp --allow-root /absolute/workspace
-pnpm mcp --allow-root /absolute/workspace
 ```
 
-The CLI subcommand is canonical. A future `package.json` alias may invoke that same entry point; it must not create a separate implementation. `docs/COMMANDS.md` must keep both visibly marked **Planned** until Pass 5 ships.
+The CLI subcommand is canonical. No separate package alias exists.
 
 Use local stdio transport only in Pass 5. It matches local-agent use, avoids authentication/listener/CORS exposure, and has the smallest lifecycle surface. HTTP, SSE, and Streamable HTTP are deferred until a separate remote-host/auth/threat specification exists.
 
-Use the official MCP TypeScript SDK as the only planned new runtime dependency and existing Zod/contracts for validation. Pin the selected SDK through the lockfile during Pass 5; do not add an HTTP framework, database, auth system, telemetry service, shell helper, or duplicate schema library.
+The official MCP TypeScript SDK is the only new runtime dependency; existing Zod contracts validate inputs and outputs. No HTTP framework, database, auth system, telemetry service, shell helper, or duplicate schema library was added.
 
-Stdout is reserved exclusively for MCP frames. Structured single-line diagnostics go to stderr and include timestamp, level, request ID, tool/resource name, duration, and safe error code; omit arguments, URLs with query strings, result bodies, document text, allowed-root values, environment variables, stacks, and raw filesystem errors by default. Startup validates all config/content allowlists before transport connection. Shutdown follows section 9.
+Stdout is reserved exclusively for MCP frames. Startup/config failures go to stderr without arguments, result bodies, document text, allowed-root lists, environment values, stacks, or raw filesystem errors. Startup validates config and canonical content before transport connection. Shutdown follows section 9.
 
 ## 14. Pass 5 test and validation plan
+
+The focused suite covers the shipped registry, canonical reads/prompts, path containment and symlink escape, stable representative errors, practical deadline behavior, contract outputs, a full dry-run tree digest, and an SDK stdio initialize/list/call/read/get-prompt smoke. The deeper interruption points listed below remain the cancellation hardening gap described in section 9.
 
 ### Automated coverage
 
@@ -574,9 +566,9 @@ Stdout is reserved exclusively for MCP frames. Structured single-line diagnostic
 - Read-only invariants: hash fixture trees before/after every repo-capable tool and prompt flow using paths, file types, modes, symlink targets, sizes, and content hashes; exclude access timestamps only. Assert no created/deleted/modified entries and no temp artifacts.
 - Error mapping: every code in section 8, redaction, retryability, exactly one response, unknown tool/doc/fixture, malformed contract, and cleanup failure. Mirror Commander pre-action cases (missing required argument, unknown option, plain stderr, exit 5) and prove they become safe MCP input/unsupported errors rather than leaked stderr.
 - Timeout/cancellation: client cancellation before start, during fetch, render, repo walk, serialization, and cleanup; deadline race; cancellation-vs-timeout winner; browser closure; late-result suppression; no orphan processes/servers/files.
-- Resources: exact URI allowlist, media types, canonical content-root resolution, fixture template enum/schema, missing resource behavior, size cap, and demo share metadata-only response with no binary body/base64.
+- Resources: exact URI allowlist, media types, canonical content-root resolution, fixture template enum/schema, missing resource behavior, and size cap.
 - Prompts: all five exist, validate arguments, name only allowed tools, state safety limitations, and resist untrusted instructions embedded in mocked reports/docs/repo content.
-- Startup/transport: required roots, environment/flag timeout precedence and bounds, stdio initialize/list/call/read/get-prompt smoke, stdout protocol purity, sanitized stderr, stdin close/SIGTERM cleanup.
+- Startup/transport: required roots, CLI/environment root precedence, stdio initialize/list/call/read/get-prompt smoke, stdout protocol purity, sanitized stderr, and stdin close/SIGTERM cleanup.
 - Regression: `POST /api/fix` remains 404; GUI client remains preview/copy-only and calls no write endpoint; `docs/WRITE_POLICY_V1.md` semantics and writable allowlist are unchanged; no metadata/content/JSON-LD/package/config write becomes eligible.
 
 Use temporary fixture copies only. Never execute guarded write mode against `/Users/fabiencampana/Documents/fodmapp/apps/marketing` or any real repository.
@@ -587,7 +579,7 @@ Use temporary fixture copies only. Never execute guarded write mode against `/Us
 2. No write tool is registered or present as a callable/stub handler.
 3. Named output contracts and expanded error compatibility tests pass.
 4. Path authorization and no-mutation hashes pass, including symlink escape.
-5. Timeout/cancellation cleanup and stdio smoke tests pass.
+5. Boundary timeout/cancellation and stdio smoke tests pass; deeper signal propagation is deferred as documented in section 9.
 6. Full `pnpm test`, `pnpm typecheck`, `pnpm build`, and `git diff --check` pass because Pass 5 changes source/package behavior.
 7. Documentation is updated from **Planned** to implemented only after the implementation and evidence pass.
 
@@ -595,4 +587,4 @@ Use temporary fixture copies only. Never execute guarded write mode against `/Us
 
 Pass 5 does not implement or add secrets, authentication, accounts, billing, hosted SaaS, remote MCP transport, Search Console, DNS, deployment, Git/GitHub operations, patch export, social preview simulation, implementation-smell detection, bounded multi-page crawl, broader safe writes, metadata/content/JSON-LD/package/config writes, HTML-report file creation, GUI write execution, or the future safe-write tool.
 
-The recommended next pass is exactly: **Pass 5 — implement and validate the read-only MCP server described here.**
+The recommended next pass is exactly: **Pass 6 — MCP safe-write wrapper**, limited to the existing creation-only robots/sitemap policy and the preview-receipt design in section 11.

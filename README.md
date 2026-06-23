@@ -1,10 +1,10 @@
 # ShipReady
 
-ShipReady is a CLI-first, agent-friendly launch-readiness engine for generated websites. It audits a public URL, inspects a local repository, plans fixes, previews file changes, and can create a narrow set of missing crawl files under an explicit V1 policy. **CLI first. MCP second. GUI third.** The CLI is the source of truth; future MCP clients should wrap stable CLI contracts, while the GUI explains the engine to humans.
+ShipReady is a CLI-first, agent-friendly launch-readiness engine for generated websites. It audits a public URL, inspects a local repository, plans fixes, previews file changes, and can create a narrow set of missing crawl files under an explicit V1 policy. **CLI first. MCP second. GUI third.** The CLI is the source of truth; the read-only MCP server wraps stable CLI contracts, while the GUI explains the engine to humans.
 
 ## Current status
 
-Implemented: CLI audit and repo inspection, fix planning, dry-run previews, guarded creation-only writes, UI and static HTML reports, a local preview/copy-only GUI, and Fodmapp demo tooling. MCP, Search Console, DNS, GitHub, deployment, accounts, billing, and hosted SaaS integrations are not built.
+Implemented: CLI audit and repo inspection, fix planning, dry-run previews, guarded creation-only writes, UI and static HTML reports, a local preview/copy-only GUI, a read-only stdio MCP server, and Fodmapp demo tooling. MCP writes, Search Console, DNS, GitHub, deployment, accounts, billing, and hosted SaaS integrations are not built.
 
 ## Core commands
 
