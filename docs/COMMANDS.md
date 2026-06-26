@@ -162,8 +162,9 @@ SHIPREADY_MCP_ALLOWED_ROOTS='["/absolute/workspace-a","/absolute/workspace-b"]' 
 
 - Purpose: start the local MCP stdio server. Stdout is reserved for MCP protocol frames.
 - Authorization: at least one explicit root is required. Repeat `--allow-root` for multiple roots; CLI roots replace the JSON-array environment fallback. Relative, missing, home, filesystem-root, traversal, and symlink-escape paths fail closed.
-- Surface: seven read-only tools, nine canonical documentation resources plus allowlisted contract fixtures, and five prompt templates. See [MCP_PLAN.md](MCP_PLAN.md) for the exact lists.
-- Safety: no MCP write tool exists. The server never runs `fix --write`, starts the GUI, or writes an HTML report.
+- Surface: seven read-only tools, one guarded write tool, nine canonical documentation resources plus allowlisted contract fixtures, and five prompt templates. See [MCP_PLAN.md](MCP_PLAN.md) for the exact lists.
+- Safe write tool: `shipready.write_safe_crawl_files` can create only current V1-eligible missing robots/sitemap files. Required flow: call `shipready.preview_fixes`, review `shipready.dryRunFix.v1` and its fresh `previewReceipt`, then call the write tool with the same URL, same authorized repo path, that receipt, and `confirmation: "CREATE_SAFE_CRAWL_FILES_ONLY"`.
+- Safety: the write tool re-authorizes the path, validates the receipt signature/expiry/bindings, regenerates the current dry-run, revalidates `WRITE_POLICY_V1`, and returns `shipready.writeFix.v1`. It never accepts arbitrary file paths or client-supplied file lists as authority. The server does not start the GUI or write an HTML report.
 - Limitation: request deadlines and client cancellation are bounded at the MCP boundary. Existing synchronous repository scans and application operations do not yet accept `AbortSignal`, so already-started underlying work may finish its own bounded cleanup after the MCP response.
 
-HTTP, SSE, remote auth, timeout overrides, and the safe-write MCP wrapper are not implemented.
+HTTP, SSE, remote auth, timeout overrides, broader MCP writes, GUI write execution, Git/GitHub, deploy, DNS, and Search Console integrations are not implemented.

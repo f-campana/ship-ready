@@ -19,7 +19,7 @@ Primary readers are Codex, Claude Code, Cursor, and future MCP clients; human de
 - `src/report/`: human, JSON, UI, and static HTML formatting.
 - `src/ui/`: normalized `ui-report-v1` creation.
 - `src/gui/`: local server and preview/copy-only browser UI.
-- `src/mcp/`: local stdio adapter, exact read-only registry, canonical reads, prompts, authorization, errors, and deadlines.
+- `src/mcp/`: local stdio adapter, seven read-only tools, one guarded safe-write tool, preview receipts, canonical reads, prompts, authorization, errors, and deadlines.
 - `scripts/demo/`: Fodmapp recording, captions, optional voice, and composition.
 - `validation/`: contract fixtures, reports, reviews, and approved demo artifacts.
 
@@ -47,7 +47,7 @@ Primary readers are Codex, Claude Code, Cursor, and future MCP clients; human de
 6. Preserve CLI as source of truth.
 7. Do not broaden safe writes without updating policy and tests.
 
-For MCP work, read [MCP_PLAN.md](MCP_PLAN.md) first. The implemented Pass 5 server is strictly read-only. Pass 6 may add only the separately reviewed safe-write wrapper; until then, do not add, register, advertise, or stub any MCP write tool.
+For MCP work, read [MCP_PLAN.md](MCP_PLAN.md) first. The implemented Pass 6 server has exactly one write tool, `shipready.write_safe_crawl_files`. It may create only current V1-eligible missing robots/sitemap files after `shipready.preview_fixes` returns a fresh signed preview receipt, the repository path is re-authorized, and the caller supplies the exact confirmation phrase `CREATE_SAFE_CRAWL_FILES_ONLY`. Do not add any other MCP write tool or broaden this wrapper.
 
 ## Main commands
 
@@ -63,6 +63,13 @@ pnpm shipready mcp --allow-root /absolute/workspace
 ```
 
 The guarded write command exists but is not a routine validation command. Use it only with explicit instruction and the checks in the canonical write policy.
+
+MCP safe-write flow:
+
+1. Call `shipready.preview_fixes` with the normalized URL and authorized repository path.
+2. Review the `shipready.dryRunFix.v1` result and any `previewReceipt`.
+3. Call `shipready.write_safe_crawl_files` only with the same URL, same authorized repo path, fresh receipt, and `confirmation: "CREATE_SAFE_CRAWL_FILES_ONLY"`.
+4. Treat missing, expired, tampered, mismatched, or stale receipts as a hard stop.
 
 ## Validation commands
 
@@ -98,6 +105,7 @@ JSON contract work never authorizes broader writes. `docs/WRITE_POLICY_V1.md` re
 - Default to read-only commands and `fix --dry-run`.
 - Treat any filesystem write, external mutation, secret use, Git action, or deployment as a separate authorization boundary.
 - Never execute a copied guarded command merely because the GUI displays it.
+- Never call `shipready.write_safe_crawl_files` without a same-session preview receipt and exact confirmation phrase.
 - Never use the Fodmapp marketing repository as a write target for demos or validation.
 - The GUI may generate reports and copy a command; it cannot execute writes.
 - Local changes do not affect a live site until the owner deploys them through their normal workflow.

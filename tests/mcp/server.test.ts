@@ -1,11 +1,15 @@
+import { execFile } from "node:child_process";
+import { readFile } from "node:fs/promises";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
+import { promisify } from "node:util";
 import { resolveAllowedRoots } from "../../src/mcp/config";
 
 const root = join(import.meta.dirname, "..", "..");
 const fixtureRoot = join(root, "tests", "fixtures", "repos");
+const execFileAsync = promisify(execFile);
 
 describe("MCP startup and stdio transport", () => {
   it("uses repeated CLI roots in preference to the JSON environment fallback", () => {
@@ -31,8 +35,10 @@ describe("MCP startup and stdio transport", () => {
       const resources = await client.listResources();
       const templates = await client.listResourceTemplates();
       const prompts = await client.listPrompts();
-      expect(tools.tools).toHaveLength(7);
-      expect(tools.tools.map((tool) => tool.name)).not.toContain("shipready.write_safe_crawl_files");
+      expect(tools.tools).toHaveLength(8);
+      expect(tools.tools.map((tool) => tool.name).filter((name) => name.includes("write"))).toEqual([
+        "shipready.write_safe_crawl_files",
+      ]);
       expect(resources.resources.map((resource) => resource.uri)).toContain("shipready://docs/mcp-plan");
       expect(templates.resourceTemplates).toEqual([
         expect.objectContaining({ uriTemplate: "shipready://validation/contracts/{fixtureName}" }),
@@ -53,4 +59,23 @@ describe("MCP startup and stdio transport", () => {
       await client.close();
     }
   }, 20_000);
+
+  it("fails startup without allowed roots before writing protocol bytes to stdout", async () => {
+    try {
+      await execFileAsync("pnpm", ["shipready", "mcp"], { cwd: root, timeout: 10_000 });
+      throw new Error("Expected MCP startup to fail.");
+    } catch (error) {
+      const result = error as { code?: number; stdout?: string; stderr?: string };
+      expect(result.code).toBe(1);
+      expect(result.stdout).toBe("");
+      expect(result.stderr).toContain("requires at least one explicit");
+    }
+  });
+
+  it("keeps MCP transport stdio-only", async () => {
+    const source = await readFile(join(root, "src", "mcp", "server.ts"), "utf8");
+
+    expect(source).toContain("StdioServerTransport");
+    expect(source).not.toMatch(/\b(?:SSE|StreamableHTTP|HttpServer|createServer)\b/);
+  });
 });

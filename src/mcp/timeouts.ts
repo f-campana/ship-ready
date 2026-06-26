@@ -5,6 +5,7 @@ export const DEFAULT_MCP_TIMEOUTS = {
   inspect_repo: 10_000,
   plan_fixes: 45_000,
   preview_fixes: 45_000,
+  write_safe_crawl_files: 45_000,
   get_ui_report: 45_000,
   canonical_read: 5_000,
 } as const;

@@ -172,7 +172,11 @@ Focused drift coverage is in `tests/contracts.test.ts`. Tests validate every fix
 
 ## MCP mapping
 
-The implemented Pass 5 specification is [MCP_PLAN.md](MCP_PLAN.md). Five contract-backed tools preserve their exact top-level CLI objects; two canonical-read tools expose validated fixtures and allowlisted documents. `shipready.writeFix.v1` remains CLI-only and is documented there only as a future Pass 6 wrapper.
+The implemented Pass 6 specification is [MCP_PLAN.md](MCP_PLAN.md). Six contract-backed tools preserve their top-level CLI contract objects; two canonical-read tools expose validated fixtures and allowlisted documents. `shipready.write_safe_crawl_files` returns `shipready.writeFix.v1` and is the only MCP write tool.
+
+`shipready.preview_fixes` still returns `shipready.dryRunFix.v1`; when current V1-eligible crawl-file creations exist, the MCP layer adds an agent-facing `previewReceipt` to the tool payload. The receipt is not a CLI contract field and is not write authority by itself. It is a signed, short-lived MCP precondition binding the normalized URL, authorized canonical repository path, policy, eligible paths, and stable dry-run/candidate digests.
+
+The MCP write call must supply the same URL and repo path, the fresh receipt, and `confirmation: "CREATE_SAFE_CRAWL_FILES_ONLY"`. The server re-authorizes and recomputes current candidates before writing, then validates and serializes the existing write result through `WriteFixJsonContractSchema`.
 
 Ready now:
 
@@ -185,4 +189,4 @@ Ready now:
 
 The compatible `shipready.error.v1` enum now also covers MCP boundary codes: `path_not_authorized`, `fixture_not_found`, `doc_not_found`, `network_error`, `render_error`, `timeout`, `cancelled`, `contract_error`, `write_forbidden`, `unsupported_command`, and `internal_error`. Optional `retryable` and safe `details` fields are additive; `error === message` remains required.
 
-No MCP write tool is registered in Pass 5.
+No other MCP write tool is registered. The GUI remains preview/copy-only, and `POST /api/fix` remains absent.

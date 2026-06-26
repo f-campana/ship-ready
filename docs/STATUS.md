@@ -14,12 +14,12 @@ ShipReady is a CLI-first, agent-friendly launch-readiness engine for generated w
 - Human and Zod-validated JSON outputs.
 - Versioned `ui-report-v1` normalization and self-contained HTML reports.
 - Local GUI with `POST /api/ui-report`; safe apply is preview/copy-only and no write endpoint exists.
-- Local read-only MCP stdio server with seven tools, canonical docs/fixtures, five prompts, explicit allowed roots, stable errors, and bounded deadlines.
+- Local MCP stdio server with seven read-only tools, one guarded safe-write tool for V1 crawl-file creations, canonical docs/fixtures, five prompts, explicit allowed roots, stable errors, preview receipts, and bounded deadlines.
 - Fodmapp demo scripts, approved silent/captioned media, optional approved voiced media, thumbnail, captions, and review evidence.
 
 ## What is not built
 
-- MCP write tools or remote MCP transports.
+- Any MCP write tool beyond `shipready.write_safe_crawl_files`, or any remote MCP transport.
 - Search Console or DNS integration.
 - GitHub/PR integration or deployment workflow.
 - GUI write execution.
@@ -38,8 +38,8 @@ See [DEMO.md](DEMO.md) for reproduction and safety details.
 
 ## Safety posture
 
-Read-only inspection and preview are the default. The only product write surface requires `fix --write --allow-create` and is governed by [WRITE_POLICY_V1.md](WRITE_POLICY_V1.md). It is creation-only, exact-allowlist, no-overwrite, and all-or-nothing. The GUI never executes it. Claims follow [CLAIMS_POLICY.md](CLAIMS_POLICY.md). GUI direction remains in [LOCAL_FIRST_GUI_SPEC.md](LOCAL_FIRST_GUI_SPEC.md).
+Read-only inspection and preview are the default. CLI write mode requires `fix --write --allow-create` and is governed by [WRITE_POLICY_V1.md](WRITE_POLICY_V1.md). The MCP write wrapper is stricter: `shipready.write_safe_crawl_files` requires an authorized repo path, a fresh signed preview receipt from `shipready.preview_fixes`, exact confirmation text `CREATE_SAFE_CRAWL_FILES_ONLY`, re-authorization, and regenerated current write validation before creating only missing robots/sitemap files. The GUI never executes writes. Claims follow [CLAIMS_POLICY.md](CLAIMS_POLICY.md). GUI direction remains in [LOCAL_FIRST_GUI_SPEC.md](LOCAL_FIRST_GUI_SPEC.md).
 
 ## Next pass
 
-**Pass 6: MCP safe-write wrapper.** Wrap only the existing creation-only missing robots/sitemap behavior with fresh preview receipts, explicit confirmation, re-authorization, and all current V1 policy gates. Do not broaden the write allowlist.
+**Pass 7: CLI UX polish / doctor / status.** Improve operability around the now-stable CLI and MCP surfaces without adding new mutation scope.

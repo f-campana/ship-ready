@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { auditUrl } from "../audit/auditUrl";
 import { dryRunFix } from "../fix/dryRunFix";
+import { writeFixFromDryRun } from "../fix/writeFix";
 import { planFixes } from "../plan/planFixes";
 import { inspectRepo } from "../repo/inspectRepo";
 import { formatDryRunFixJsonReport } from "../report/formatDryRunFixJsonReport";
@@ -8,17 +9,25 @@ import { formatFixPlanJsonReport } from "../report/formatFixPlanJsonReport";
 import { formatJsonReport } from "../report/formatJsonReport";
 import { formatRepoInspectionJsonReport } from "../report/formatRepoInspectionJsonReport";
 import { formatUiReportJsonReport } from "../report/formatUiReportJsonReport";
+import { formatWriteFixJsonReport } from "../report/formatWriteFixJsonReport";
 import {
   AuditJsonContractSchema,
   DryRunFixJsonContractSchema,
   FixPlanJsonContractSchema,
   RepoInspectionJsonContractSchema,
   UiReportJsonContractSchema,
+  WriteFixJsonContractSchema,
 } from "../types/contracts";
+import type { DryRunFixResult } from "../types/dryRunFix";
 import { createUiReport } from "../ui/createUiReport";
 import { normalizeAuditUrl } from "../utils/url";
 import { ShipReadyMcpError, toolErrorResult } from "./errors";
 import type { PathAuthorizer } from "./pathAuthorization";
+import {
+  createPreviewReceiptManager,
+  McpPreviewReceiptSchema,
+  type PreviewReceiptManager,
+} from "./previewReceipts";
 import {
   FIXTURE_NAMES,
   POLICY_DOCS,
@@ -28,12 +37,14 @@ import {
 import { DEFAULT_MCP_TIMEOUTS, type McpTimeouts, withDeadline } from "./timeouts";
 
 const MAX_TOOL_RESULT_BYTES = 4 * 1024 * 1024;
+export const WRITE_SAFE_CRAWL_FILES_CONFIRMATION = "CREATE_SAFE_CRAWL_FILES_ONLY" as const;
 
 export const TOOL_NAMES = [
   "shipready.audit_site",
   "shipready.inspect_repo",
   "shipready.plan_fixes",
   "shipready.preview_fixes",
+  "shipready.write_safe_crawl_files",
   "shipready.get_ui_report",
   "shipready.get_contract_fixture",
   "shipready.get_policy_doc",
@@ -47,6 +58,10 @@ const UrlInputSchema = z.object({
 }).strict();
 const RepoInputSchema = z.object({ repoPath: z.string().trim().min(1).max(4096) }).strict();
 const UrlRepoInputSchema = UrlInputSchema.extend({ repoPath: z.string().trim().min(1).max(4096) }).strict();
+const WriteSafeCrawlFilesInputSchema = UrlRepoInputSchema.extend({
+  previewReceipt: McpPreviewReceiptSchema,
+  confirmation: z.string(),
+}).strict();
 const UiReportInputSchema = UrlInputSchema.extend({ repoPath: z.string().trim().min(1).max(4096).optional() }).strict();
 const FixtureInputSchema = z.object({ fixtureName: z.enum(FIXTURE_NAMES) }).strict();
 const PolicyInputSchema = z.object({ name: z.enum(Object.keys(POLICY_DOCS) as [keyof typeof POLICY_DOCS, ...(keyof typeof POLICY_DOCS)[]]) }).strict();
@@ -56,6 +71,7 @@ export type McpOperations = {
   inspectRepo: typeof inspectRepo;
   planFixes: typeof planFixes;
   previewFixes: typeof dryRunFix;
+  writeSafeCrawlFiles: typeof writeFixFromDryRun;
   getUiReport: typeof createUiReport;
 };
 
@@ -64,6 +80,7 @@ export type McpToolContext = {
   packageRoot: string;
   timeouts?: McpTimeouts;
   operations?: Partial<McpOperations>;
+  previewReceipts?: PreviewReceiptManager;
 };
 
 const DEFAULT_OPERATIONS: McpOperations = {
@@ -71,8 +88,11 @@ const DEFAULT_OPERATIONS: McpOperations = {
   inspectRepo,
   planFixes,
   previewFixes: dryRunFix,
+  writeSafeCrawlFiles: writeFixFromDryRun,
   getUiReport: createUiReport,
 };
+
+const FALLBACK_PREVIEW_RECEIPTS = createPreviewReceiptManager();
 
 export function listTools() {
   const readOnly = {
@@ -89,6 +109,39 @@ export function listTools() {
     }, ["repoPath"]), { ...readOnly, openWorldHint: false }),
     tool("shipready.plan_fixes", "Create the existing read-only fix plan contract.", urlRepoJsonSchema(), { ...readOnly, openWorldHint: true }),
     tool("shipready.preview_fixes", "Create the existing dry-run preview; never writes files.", urlRepoJsonSchema(), { ...readOnly, openWorldHint: true }),
+    tool("shipready.write_safe_crawl_files", "Create only current V1-eligible missing robots/sitemap files after a fresh MCP preview receipt and exact confirmation.", schema({
+      url: stringSchema(2048),
+      repoPath: stringSchema(4096),
+      previewReceipt: {
+        type: "object",
+        additionalProperties: false,
+        required: [
+          "kind", "policy", "url", "repoRealPath", "dryRunContract", "eligiblePaths",
+          "dryRunDigest", "eligibleDigest", "issuedAt", "expiresAt", "nonce", "signature",
+        ],
+        properties: {
+          kind: { type: "string", const: "shipready.mcp.previewReceipt.v1" },
+          policy: { type: "string", const: "creation_only_robots_sitemap_v1" },
+          url: { type: "string" },
+          repoRealPath: { type: "string" },
+          dryRunContract: { type: "string", const: "shipready.dryRunFix.v1" },
+          eligiblePaths: { type: "array", items: { type: "string" }, minItems: 1 },
+          dryRunDigest: { type: "string" },
+          eligibleDigest: { type: "string" },
+          issuedAt: { type: "string" },
+          expiresAt: { type: "string" },
+          nonce: { type: "string" },
+          signature: { type: "string" },
+        },
+      },
+      confirmation: { type: "string", const: WRITE_SAFE_CRAWL_FILES_CONFIRMATION },
+      rendered: { type: "boolean", default: true },
+    }, ["url", "repoPath", "previewReceipt", "confirmation"]), {
+      readOnlyHint: false,
+      destructiveHint: false,
+      idempotentHint: false,
+      openWorldHint: true,
+    }),
     tool("shipready.get_ui_report", "Build the existing UI report contract without starting the GUI.", schema({
       url: stringSchema(2048), repoPath: stringSchema(4096), rendered: { type: "boolean", default: true },
     }, ["url"]), { ...readOnly, openWorldHint: true }),
@@ -102,6 +155,22 @@ export function listTools() {
 }
 
 export async function callReadOnlyTool(
+  context: McpToolContext,
+  name: string,
+  args: unknown,
+  clientSignal?: AbortSignal,
+) {
+  if (name === "shipready.write_safe_crawl_files") {
+    return toolErrorResult(new ShipReadyMcpError(
+      "write_forbidden",
+      "Requested MCP tool is not read-only.",
+      { stage: "input", retryable: false },
+    ), name);
+  }
+  return callTool(context, name, args, clientSignal);
+}
+
+export async function callTool(
   context: McpToolContext,
   name: string,
   args: unknown,
@@ -165,7 +234,40 @@ async function executeTool(
         stage: "contract", retryable: false,
       });
     }
-    return contractResult(formatDryRunFixJsonReport(result), DryRunFixJsonContractSchema);
+    const structuredContent = contractJson(formatDryRunFixJsonReport(result), DryRunFixJsonContractSchema);
+    const previewReceipt = (context.previewReceipts ?? FALLBACK_PREVIEW_RECEIPTS).issue({
+      url,
+      repoRealPath: repoPath,
+      dryRunContract: structuredContent,
+      dryRunResult: result,
+    });
+    return jsonResult(previewReceipt ? { ...structuredContent, previewReceipt } : structuredContent);
+  }
+  if (name === "shipready.write_safe_crawl_files") {
+    const input = parseWriteInput(args);
+    if (input.confirmation !== WRITE_SAFE_CRAWL_FILES_CONFIRMATION) {
+      throw new ShipReadyMcpError("write_forbidden", "Exact confirmation phrase is required before MCP safe write.", {
+        stage: "input", retryable: false,
+      });
+    }
+    const url = normalizeAuditUrl(input.url);
+    const repoPath = await context.authorizer.authorizeRepoPath(input.repoPath);
+    const currentDryRun = await operations.previewFixes(repoPath, url, { timeoutMs, render: input.rendered });
+    assertDryRunSafety(currentDryRun);
+    const currentDryRunContract = contractJson(formatDryRunFixJsonReport(currentDryRun), DryRunFixJsonContractSchema);
+    const receiptValidation = (context.previewReceipts ?? FALLBACK_PREVIEW_RECEIPTS).validate(input.previewReceipt, {
+      url,
+      repoRealPath: repoPath,
+      dryRunContract: currentDryRunContract,
+      dryRunResult: currentDryRun,
+    });
+    if (!receiptValidation.ok) {
+      throw new ShipReadyMcpError("write_forbidden", receiptValidation.message, {
+        stage: "input", retryable: false,
+      });
+    }
+    const result = operations.writeSafeCrawlFiles(currentDryRun, repoPath);
+    return contractResult(formatWriteFixJsonReport(result), WriteFixJsonContractSchema);
   }
   if (name === "shipready.get_ui_report") {
     const input = parseInput(UiReportInputSchema, args, "invalid_url");
@@ -206,9 +308,40 @@ function parseInput<T extends z.ZodType>(
   );
 }
 
+function parseWriteInput(input: unknown): z.infer<typeof WriteSafeCrawlFilesInputSchema> {
+  const parsed = WriteSafeCrawlFilesInputSchema.safeParse(input);
+  if (parsed.success) return parsed.data;
+
+  const unknownField = parsed.error.issues.some((issue) => issue.code === "unrecognized_keys");
+  if (unknownField) {
+    throw new ShipReadyMcpError("unsupported_command", "Tool input contains unsupported fields.", {
+      stage: "input", retryable: false,
+    });
+  }
+
+  if (parsed.error.issues.some((issue) => issue.path[0] === "repoPath")) {
+    throw new ShipReadyMcpError("invalid_repo_path", "Tool input is missing or invalid.", {
+      stage: "input", retryable: false,
+    });
+  }
+
+  if (parsed.error.issues.some((issue) => issue.path[0] === "url")) {
+    throw new ShipReadyMcpError("invalid_url", "Tool input is missing or invalid.", {
+      stage: "input", retryable: false,
+    });
+  }
+
+  throw new ShipReadyMcpError("write_forbidden", "A valid preview receipt and exact confirmation phrase are required.", {
+    stage: "input", retryable: false,
+  });
+}
+
 function contractResult(text: string, contractSchema: z.ZodType) {
-  const parsed = contractSchema.parse(JSON.parse(text)) as Record<string, unknown>;
-  return jsonResult(parsed);
+  return jsonResult(contractJson(text, contractSchema) as Record<string, unknown>);
+}
+
+function contractJson<T extends z.ZodType>(text: string, contractSchema: T): z.infer<T> {
+  return contractSchema.parse(JSON.parse(text));
 }
 
 function jsonResult(structuredContent: Record<string, unknown>) {
@@ -231,8 +364,17 @@ function timeoutFor(name: ToolName, timeouts: McpTimeouts): number {
   if (name === "shipready.inspect_repo") return timeouts.inspect_repo;
   if (name === "shipready.plan_fixes") return timeouts.plan_fixes;
   if (name === "shipready.preview_fixes") return timeouts.preview_fixes;
+  if (name === "shipready.write_safe_crawl_files") return timeouts.write_safe_crawl_files;
   if (name === "shipready.get_ui_report") return timeouts.get_ui_report;
   return timeouts.canonical_read;
+}
+
+function assertDryRunSafety(result: DryRunFixResult): void {
+  if (result.mode !== "dry_run" || result.wroteFiles !== false) {
+    throw new ShipReadyMcpError("contract_error", "Dry-run safety invariants were not preserved.", {
+      stage: "contract", retryable: false,
+    });
+  }
 }
 
 function tool(name: ToolName, description: string, inputSchema: Record<string, unknown>, annotations: Record<string, boolean>) {

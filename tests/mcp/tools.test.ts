@@ -6,6 +6,7 @@ import { join } from "node:path";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { PathAuthorizer } from "../../src/mcp/pathAuthorization";
 import { resolvePackageRoot } from "../../src/mcp/resources";
+import { createPreviewReceiptManager } from "../../src/mcp/previewReceipts";
 import { callReadOnlyTool, listTools, type McpToolContext } from "../../src/mcp/tools";
 import { NetworkError } from "../../src/utils/http";
 import {
@@ -29,19 +30,20 @@ beforeAll(async () => {
   context = {
     authorizer: await PathAuthorizer.create([fixtureRoot]),
     packageRoot: await resolvePackageRoot(),
+    previewReceipts: createPreviewReceiptManager(),
   };
 });
 afterAll(async () => closeServer());
 
-describe("read-only MCP tools", () => {
-  it("registers exactly seven tools and no write tool", () => {
+describe("MCP tools", () => {
+  it("registers the seven read-only tools and exactly one write tool", () => {
     const names = listTools().map((tool) => tool.name);
     expect(names).toEqual([
       "shipready.audit_site", "shipready.inspect_repo", "shipready.plan_fixes",
-      "shipready.preview_fixes", "shipready.get_ui_report",
+      "shipready.preview_fixes", "shipready.write_safe_crawl_files", "shipready.get_ui_report",
       "shipready.get_contract_fixture", "shipready.get_policy_doc",
     ]);
-    expect(names).not.toContain("shipready.write_safe_crawl_files");
+    expect(names.filter((name) => name.includes("write"))).toEqual(["shipready.write_safe_crawl_files"]);
   });
 
   it("returns the existing audit contract from a deterministic local server", async () => {
@@ -100,7 +102,15 @@ describe("read-only MCP tools", () => {
     const outside = await callReadOnlyTool(context, "shipready.inspect_repo", { repoPath: tmpdir() });
     const timeoutContext: McpToolContext = {
       ...context,
-      timeouts: { audit_site: 20, inspect_repo: 10_000, plan_fixes: 45_000, preview_fixes: 45_000, get_ui_report: 45_000, canonical_read: 5_000 },
+      timeouts: {
+        audit_site: 20,
+        inspect_repo: 10_000,
+        plan_fixes: 45_000,
+        preview_fixes: 45_000,
+        write_safe_crawl_files: 45_000,
+        get_ui_report: 45_000,
+        canonical_read: 5_000,
+      },
       operations: { auditSite: async () => new Promise(() => undefined) },
     };
     const timedOut = await callReadOnlyTool(timeoutContext, "shipready.audit_site", { url, rendered: false });

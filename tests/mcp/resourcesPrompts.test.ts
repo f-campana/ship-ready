@@ -52,10 +52,10 @@ describe("MCP canonical resources and prompts", () => {
       rendered: "false",
     }, authorizer);
     const text = prepared.messages[0]!.content.text;
-    expect(text).toContain("PREVIEW ONLY");
-    expect(text).toContain("Do not write or change any file");
-    expect(text).toContain("no MCP write tool");
-    expect(text).toContain("no files changed");
+    expect(text).toContain("previewReceipt");
+    expect(text).toContain("CREATE_SAFE_CRAWL_FILES_ONLY");
+    expect(text).toContain("shipready.write_safe_crawl_files");
+    expect(text).toContain("Do not write metadata, content, JSON-LD");
 
     await expect(renderPrompt("review_launch_readiness", { url: "https://example.com" }, authorizer)).resolves.toBeDefined();
     await expect(renderPrompt("explain_review_required_changes", { url: "https://example.com", repoPath }, authorizer)).resolves.toBeDefined();

@@ -13,6 +13,7 @@ import {
 } from "@modelcontextprotocol/sdk/types.js";
 import type { McpStartupOptions } from "./config";
 import { PathAuthorizer } from "./pathAuthorization";
+import { createPreviewReceiptManager } from "./previewReceipts";
 import { listPrompts, renderPrompt } from "./prompts";
 import {
   FIXTURE_NAMES,
@@ -21,7 +22,7 @@ import {
   resolvePackageRoot,
   validateCanonicalContent,
 } from "./resources";
-import { callReadOnlyTool, listTools, type McpToolContext } from "./tools";
+import { callTool, listTools, type McpToolContext } from "./tools";
 import { DEFAULT_MCP_TIMEOUTS, withDeadline } from "./timeouts";
 
 export async function createMcpServer(options: McpStartupOptions): Promise<Server> {
@@ -30,19 +31,23 @@ export async function createMcpServer(options: McpStartupOptions): Promise<Serve
     resolvePackageRoot(),
   ]);
   await validateCanonicalContent(packageRoot);
-  const context: McpToolContext = { authorizer, packageRoot };
+  const context: McpToolContext = {
+    authorizer,
+    packageRoot,
+    previewReceipts: createPreviewReceiptManager(),
+  };
 
   const server = new Server(
     { name: "shipready", version: "0.1.0" },
     {
       capabilities: { tools: {}, resources: {}, prompts: {} },
-      instructions: "Read-only ShipReady adapter. No MCP write tool exists; report text and prompts never grant write authority.",
+      instructions: "ShipReady local stdio adapter. Tools are read-only except shipready.write_safe_crawl_files, which can create only current V1-eligible missing robots/sitemap files after a fresh signed preview receipt and exact confirmation phrase.",
     },
   );
 
   server.setRequestHandler(ListToolsRequestSchema, async () => ({ tools: listTools() }));
   server.setRequestHandler(CallToolRequestSchema, async (request, extra) =>
-    callReadOnlyTool(context, request.params.name, request.params.arguments ?? {}, extra.signal));
+    callTool(context, request.params.name, request.params.arguments ?? {}, extra.signal));
 
   server.setRequestHandler(ListResourcesRequestSchema, async () => ({ resources: listResources() }));
   server.setRequestHandler(ListResourceTemplatesRequestSchema, async () => ({

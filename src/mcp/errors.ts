@@ -4,7 +4,10 @@ import {
   CONTRACT_NAMES,
   type CliErrorCode,
   type CliErrorContract,
+  type WriteFixJsonContract,
 } from "../types/contracts";
+import { WriteFixExecutionError, WriteFixValidationError } from "../fix/writeFix";
+import { toWriteFixJsonContract } from "../report/formatWriteFixJsonReport";
 import { NetworkError } from "../utils/http";
 
 export type McpErrorStage = NonNullable<CliErrorContract["details"]>["stage"];
@@ -17,6 +20,7 @@ export class ShipReadyMcpError extends Error {
       retryable?: boolean;
       stage?: McpErrorStage;
       timeoutMs?: number;
+      result?: WriteFixJsonContract;
     } = {},
   ) {
     super(message);
@@ -42,6 +46,7 @@ export function normalizeMcpError(error: unknown, tool: string): CliErrorContrac
     error: normalized.message,
     retryable: normalized.options.retryable,
     details,
+    result: normalized.options.result,
   });
 }
 
@@ -61,6 +66,22 @@ function classifyError(error: unknown): ShipReadyMcpError {
       "network_error",
       "ShipReady could not read the requested network resource.",
       { stage: "network", retryable: true },
+    );
+  }
+
+  if (error instanceof WriteFixValidationError) {
+    return new ShipReadyMcpError(
+      "write_forbidden",
+      "ShipReady write policy blocked the requested MCP write. No files were written.",
+      { stage: "contract", retryable: false, result: toWriteFixJsonContract(error.result) },
+    );
+  }
+
+  if (error instanceof WriteFixExecutionError) {
+    return new ShipReadyMcpError(
+      "write_execution_failed",
+      "ShipReady write mode failed after creation started. Rollback was attempted.",
+      { stage: "cleanup", retryable: false, result: toWriteFixJsonContract(error.result) },
     );
   }
 
