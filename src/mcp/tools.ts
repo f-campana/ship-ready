@@ -35,22 +35,12 @@ import {
   readPolicyDoc,
 } from "./resources";
 import { DEFAULT_MCP_TIMEOUTS, type McpTimeouts, withDeadline } from "./timeouts";
+import { TOOL_NAMES, type ToolName } from "./toolNames";
 
 const MAX_TOOL_RESULT_BYTES = 4 * 1024 * 1024;
 export const WRITE_SAFE_CRAWL_FILES_CONFIRMATION = "CREATE_SAFE_CRAWL_FILES_ONLY" as const;
 
-export const TOOL_NAMES = [
-  "shipready.audit_site",
-  "shipready.inspect_repo",
-  "shipready.plan_fixes",
-  "shipready.preview_fixes",
-  "shipready.write_safe_crawl_files",
-  "shipready.get_ui_report",
-  "shipready.get_contract_fixture",
-  "shipready.get_policy_doc",
-] as const;
-
-export type ToolName = (typeof TOOL_NAMES)[number];
+export { TOOL_NAMES } from "./toolNames";
 
 const UrlInputSchema = z.object({
   url: z.string().trim().min(1).max(2048),

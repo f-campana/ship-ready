@@ -1,0 +1,296 @@
+import { spawnSync } from "node:child_process";
+import { createRequire } from "node:module";
+import { readFile } from "node:fs/promises";
+import { existsSync } from "node:fs";
+import { join } from "node:path";
+import { chromium } from "playwright";
+import {
+  DoctorJsonContractSchema,
+  type DoctorCheck,
+  type DoctorJsonContract,
+  CONTRACT_NAMES,
+} from "../types/contracts";
+import { WRITE_POLICY_V1 } from "../types/writeFix";
+import {
+  DOC_RESOURCES,
+  FIXTURE_NAMES,
+  readContractFixture,
+  resolvePackageRoot,
+} from "../mcp/resources";
+import { resolveAllowedRoots } from "../mcp/config";
+
+const MINIMUM_NODE_MAJOR = 20;
+const REQUIRED_DEMO_ARTIFACTS = [
+  "validation/demo-fodmapp-share/final-demo.mp4",
+  "validation/demo-fodmapp-share/thumbnail.png",
+  "validation/demo-fodmapp-voiceover-final/final-demo-silent.mp4",
+  "validation/demo-fodmapp-voiceover-final/final-demo-with-voice.mp4",
+] as const;
+
+type DoctorDependencies = {
+  resolvePackageRoot: () => Promise<string>;
+  nodeVersion: string;
+  commandVersion: (command: string, args: string[]) => string | undefined;
+  pathExists: (path: string) => boolean;
+  readText: (path: string) => Promise<string>;
+  dependencyAvailable: (packageRoot: string, specifier: string) => boolean;
+  validateFixtures: (packageRoot: string) => Promise<void>;
+  playwrightExecutablePath: () => string;
+};
+
+const DEFAULT_DEPENDENCIES: DoctorDependencies = {
+  resolvePackageRoot,
+  nodeVersion: process.versions.node,
+  commandVersion,
+  pathExists: existsSync,
+  readText: (path) => readFile(path, "utf8"),
+  dependencyAvailable,
+  validateFixtures: async (packageRoot) => {
+    await Promise.all(FIXTURE_NAMES.map((name) => readContractFixture(packageRoot, name)));
+  },
+  playwrightExecutablePath: () => chromium.executablePath(),
+};
+
+export async function runDoctor(
+  overrides: Partial<DoctorDependencies> = {},
+): Promise<DoctorJsonContract> {
+  const dependencies = { ...DEFAULT_DEPENDENCIES, ...overrides };
+  const checks: DoctorCheck[] = [];
+
+  const nodeMajor = Number(dependencies.nodeVersion.split(".")[0]);
+  checks.push({
+    id: "node-version",
+    label: "Node.js",
+    status: Number.isInteger(nodeMajor) && nodeMajor >= MINIMUM_NODE_MAJOR ? "pass" : "fail",
+    message: Number.isInteger(nodeMajor) && nodeMajor >= MINIMUM_NODE_MAJOR
+      ? `Node.js ${dependencies.nodeVersion} is supported.`
+      : `Node.js ${MINIMUM_NODE_MAJOR}+ is required; install a supported Node.js release.`,
+    details: { version: dependencies.nodeVersion, minimumMajor: MINIMUM_NODE_MAJOR },
+  });
+
+  const pnpmVersion = dependencies.commandVersion("pnpm", ["--version"]);
+  checks.push({
+    id: "pnpm",
+    label: "pnpm",
+    status: pnpmVersion ? "pass" : "fail",
+    message: pnpmVersion
+      ? `pnpm ${pnpmVersion} is available.`
+      : "pnpm is unavailable; enable Corepack or install the package manager declared by ShipReady.",
+    ...(pnpmVersion ? { details: { version: pnpmVersion } } : {}),
+  });
+
+  let browserPath = "";
+  try {
+    browserPath = dependencies.playwrightExecutablePath();
+  } catch {
+    browserPath = "";
+  }
+  const browserInstalled = Boolean(browserPath) && dependencies.pathExists(browserPath);
+  checks.push({
+    id: "playwright-browser",
+    label: "Playwright Chromium",
+    status: browserInstalled ? "pass" : "fail",
+    message: browserInstalled
+      ? "The Playwright Chromium executable is installed."
+      : "The Playwright Chromium executable is missing; run `pnpm playwright:install`.",
+  });
+
+  const ffmpegVersion = dependencies.commandVersion("ffmpeg", ["-version"]);
+  checks.push({
+    id: "ffmpeg",
+    label: "FFmpeg",
+    status: ffmpegVersion ? "pass" : "warn",
+    message: ffmpegVersion
+      ? `FFmpeg is available (${ffmpegVersion}).`
+      : "FFmpeg is optional and only needed for demo composition.",
+  });
+
+  let packageRoot: string | undefined;
+  try {
+    packageRoot = await dependencies.resolvePackageRoot();
+    checks.push({
+      id: "package-root",
+      label: "Package content",
+      status: "pass",
+      message: "The ShipReady package content root is available.",
+    });
+  } catch {
+    checks.push({
+      id: "package-root",
+      label: "Package content",
+      status: "fail",
+      message: "ShipReady could not locate package.json; reinstall or run from a complete checkout.",
+    });
+  }
+
+  if (!packageRoot) {
+    for (const [id, label] of [
+      ["mcp-sdk", "MCP SDK"],
+      ["mcp-configuration", "MCP configuration"],
+      ["contract-fixtures", "Contract fixtures"],
+      ["canonical-docs", "Canonical docs"],
+      ["write-policy", "WRITE_POLICY_V1"],
+      ["local-gui-spec", "LOCAL_FIRST_GUI_SPEC"],
+      ["demo-artifacts", "Demo artifacts"],
+    ] as const) {
+      checks.push({
+        id,
+        label,
+        status: "skip",
+        message: "Skipped because the ShipReady package content root is unavailable.",
+      });
+    }
+    return createDoctorReport(checks);
+  }
+
+  const mcpSdkInstalled = dependencies.dependencyAvailable(
+    packageRoot,
+    "@modelcontextprotocol/sdk/server/index.js",
+  );
+  checks.push({
+    id: "mcp-sdk",
+    label: "MCP SDK",
+    status: mcpSdkInstalled ? "pass" : "fail",
+    message: mcpSdkInstalled
+      ? "The MCP SDK dependency is installed."
+      : "The MCP SDK dependency is missing; run `pnpm install`.",
+  });
+
+  let mcpConfigurationValid = false;
+  try {
+    mcpConfigurationValid = resolveAllowedRoots([packageRoot]).length === 1;
+  } catch {
+    mcpConfigurationValid = false;
+  }
+  checks.push({
+    id: "mcp-configuration",
+    label: "MCP configuration",
+    status: mcpConfigurationValid ? "pass" : "fail",
+    message: mcpConfigurationValid
+      ? "The local stdio MCP command can accept an explicit allowed root; no server was started."
+      : "The MCP allowed-root configuration could not be validated.",
+  });
+
+  try {
+    await dependencies.validateFixtures(packageRoot);
+    checks.push({
+      id: "contract-fixtures",
+      label: "Contract fixtures",
+      status: "pass",
+      message: `${FIXTURE_NAMES.length} canonical contract fixtures exist and parse.`,
+      details: { count: FIXTURE_NAMES.length },
+    });
+  } catch {
+    checks.push({
+      id: "contract-fixtures",
+      label: "Contract fixtures",
+      status: "fail",
+      message: "Canonical contract fixtures are missing or invalid; run `pnpm contracts:fixtures` and reinstall if needed.",
+    });
+  }
+
+  const canonicalDocPaths = [...new Set(Object.values(DOC_RESOURCES))];
+  const missingDocs = canonicalDocPaths.filter((path) => !dependencies.pathExists(join(packageRoot, path)));
+  checks.push({
+    id: "canonical-docs",
+    label: "Canonical docs",
+    status: missingDocs.length === 0 ? "pass" : "fail",
+    message: missingDocs.length === 0
+      ? `${canonicalDocPaths.length} canonical documentation files are present.`
+      : `Canonical documentation is incomplete; missing: ${missingDocs.join(", ")}.`,
+    details: { checked: canonicalDocPaths.length, missing: missingDocs },
+  });
+
+  const writePolicyPath = join(packageRoot, "docs/WRITE_POLICY_V1.md");
+  let writePolicyValid = false;
+  if (dependencies.pathExists(writePolicyPath)) {
+    try {
+      const text = await dependencies.readText(writePolicyPath);
+      writePolicyValid = text.includes("# ShipReady Write Policy V1") && text.includes(WRITE_POLICY_V1);
+    } catch {
+      writePolicyValid = false;
+    }
+  }
+  checks.push({
+    id: "write-policy",
+    label: "WRITE_POLICY_V1",
+    status: writePolicyValid ? "pass" : "fail",
+    message: writePolicyValid
+      ? `The canonical ${WRITE_POLICY_V1} policy document is present.`
+      : "The canonical WRITE_POLICY_V1 document is missing or inconsistent; restore docs/WRITE_POLICY_V1.md.",
+  });
+
+  const guiSpecPresent = dependencies.pathExists(join(packageRoot, "docs/LOCAL_FIRST_GUI_SPEC.md"));
+  checks.push({
+    id: "local-gui-spec",
+    label: "LOCAL_FIRST_GUI_SPEC",
+    status: guiSpecPresent ? "pass" : "fail",
+    message: guiSpecPresent
+      ? "The canonical local-first GUI specification is present."
+      : "The canonical LOCAL_FIRST_GUI_SPEC is missing; restore docs/LOCAL_FIRST_GUI_SPEC.md.",
+  });
+
+  const missingDemoArtifacts = REQUIRED_DEMO_ARTIFACTS.filter(
+    (path) => !dependencies.pathExists(join(packageRoot, path)),
+  );
+  checks.push({
+    id: "demo-artifacts",
+    label: "Demo artifacts",
+    status: missingDemoArtifacts.length === 0 ? "pass" : "warn",
+    message: missingDemoArtifacts.length === 0
+      ? "The expected Fodmapp share and voiceover artifacts are present."
+      : "Optional demo artifacts are incomplete; core CLI operation is unaffected.",
+    details: { missing: missingDemoArtifacts },
+  });
+
+  return createDoctorReport(checks);
+}
+
+export function createDoctorReport(checks: DoctorCheck[]): DoctorJsonContract {
+  const summary = { pass: 0, warn: 0, fail: 0, skip: 0 };
+  for (const check of checks) summary[check.status] += 1;
+  return DoctorJsonContractSchema.parse({
+    contract: CONTRACT_NAMES.doctor,
+    ok: summary.fail === 0,
+    checks,
+    summary,
+  });
+}
+
+export function formatDoctorJson(report: DoctorJsonContract): string {
+  return `${JSON.stringify(DoctorJsonContractSchema.parse(report), null, 2)}\n`;
+}
+
+export function formatDoctorHuman(report: DoctorJsonContract): string {
+  const lines = ["ShipReady doctor"];
+  for (const check of report.checks) {
+    lines.push(`[${check.status.toUpperCase()}] ${check.label}: ${check.message}`);
+  }
+  lines.push(
+    "",
+    `Summary: ${report.summary.pass} pass, ${report.summary.warn} warn, ${report.summary.fail} fail, ${report.summary.skip} skip`,
+    report.ok ? "Ready: yes" : "Ready: no; resolve failed checks and run `pnpm shipready doctor` again.",
+    "",
+  );
+  return lines.join("\n");
+}
+
+function commandVersion(command: string, args: string[]): string | undefined {
+  const result = spawnSync(command, args, {
+    encoding: "utf8",
+    timeout: 2_000,
+    stdio: ["ignore", "pipe", "ignore"],
+  });
+  if (result.error || result.status !== 0) return undefined;
+  const firstLine = result.stdout.trim().split(/\r?\n/, 1)[0];
+  return firstLine || undefined;
+}
+
+function dependencyAvailable(packageRoot: string, specifier: string): boolean {
+  try {
+    createRequire(join(packageRoot, "package.json")).resolve(specifier);
+    return true;
+  } catch {
+    return false;
+  }
+}

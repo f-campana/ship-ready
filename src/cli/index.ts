@@ -23,17 +23,39 @@ import { createUiReport } from "../ui/createUiReport";
 import type { CliErrorCode } from "../types/contracts";
 import { resolveAllowedRoots } from "../mcp/config";
 import { startMcpServer } from "../mcp/server";
+import { createStatus, formatStatusHuman, formatStatusJson } from "../status/status";
+import { formatDoctorHuman, formatDoctorJson, runDoctor } from "../doctor/doctor";
+import { SHIPREADY_VERSION } from "../version";
 
 const program = new Command();
 
 program
   .name("shipready")
   .description("Production-readiness hygiene checks for generated websites.")
-  .version("0.1.0");
+  .version(SHIPREADY_VERSION);
+
+program
+  .command("status")
+  .description("Show the current ShipReady capabilities and safety posture.")
+  .option("--json", "Output structured JSON")
+  .action((options: StatusCommandOptions) => {
+    const status = createStatus();
+    process.stdout.write(options.json ? formatStatusJson(status) : formatStatusHuman(status));
+  });
+
+program
+  .command("doctor")
+  .description("Check local ShipReady runtime readiness without network access or writes.")
+  .option("--json", "Output structured JSON")
+  .action(async (options: DoctorCommandOptions) => {
+    const report = await runDoctor();
+    process.stdout.write(options.json ? formatDoctorJson(report) : formatDoctorHuman(report));
+    if (!report.ok) process.exitCode = 1;
+  });
 
 program
   .command("mcp")
-  .description("Start the read-only ShipReady MCP stdio server.")
+  .description("Start the local ShipReady MCP stdio server (seven read-only tools, one guarded V1 write tool).")
   .option(
     "--allow-root <absolute-path>",
     "Authorize one repository root (repeatable)",
@@ -320,6 +342,14 @@ type AuditCommandOptions = {
 
 type McpCommandOptions = {
   allowRoot: string[];
+};
+
+type StatusCommandOptions = {
+  json?: boolean;
+};
+
+type DoctorCommandOptions = {
+  json?: boolean;
 };
 
 function collectOption(value: string, previous: string[]): string[] {

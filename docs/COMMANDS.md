@@ -2,6 +2,36 @@
 
 Run source commands from the repository with `pnpm shipready`. The built binary name is `shipready`. `--timeout` defaults to `15000` milliseconds. `--no-render` skips Playwright rendering; `--user-agent <ua>` overrides the default user agent.
 
+## `status`
+
+```bash
+pnpm shipready status
+pnpm shipready status --json
+```
+
+- Purpose: report the installed version, CLI/MCP/GUI ordering, implemented command/tool surfaces, write-policy posture, absent integrations, demo artifact locations, and a copyable next command.
+- Behavior: reads no target repository, makes no network request, starts no server, and writes nothing.
+- JSON contract: `shipready.status.v1`; fixture: [`status.default.json`](../validation/contracts/status.default.json).
+- Exit behavior: `0` after the status report is emitted.
+- Agent use: run before selecting a ShipReady workflow or assuming an integration exists; follow with `pnpm shipready doctor` when local readiness matters.
+- Boundary: status does not verify a live URL, Google indexing, DNS, Search Console, GitHub, or deployment state.
+
+## `doctor`
+
+```bash
+pnpm shipready doctor
+pnpm shipready doctor --json
+```
+
+- Purpose: check local runtime readiness without requiring a URL or repository path.
+- Checks: Node.js, pnpm, the Playwright Chromium executable, optional FFmpeg, package content, MCP SDK/configurability, parsed contract fixtures, canonical docs, `WRITE_POLICY_V1`, `LOCAL_FIRST_GUI_SPEC`, and expected demo artifacts.
+- Behavior: uses bounded local executable/file/dependency probes only. It does not access the network, inspect an arbitrary repository, start the MCP/GUI server, or mutate files.
+- Classification: every check is `pass`, `warn`, `fail`, or `skip`. Missing optional FFmpeg/demo artifacts warn rather than fail. `ok` is true exactly when no required check fails.
+- JSON contract: `shipready.doctor.v1`; normalized fixture: [`doctor.default.json`](../validation/contracts/doctor.default.json).
+- Exit behavior: `0` when required checks pass, including warning-only reports; `1` when one or more required checks fail. A valid doctor report is still emitted.
+- Agent use: run after `status`, after installation, and before rendered audit/MCP work. Resolve failed checks using their messages.
+- Boundary: doctor does not prove live-site readiness, crawler behavior, indexing, DNS, Search Console, GitHub, or deployment state.
+
 ## `audit`
 
 ```bash

@@ -1,0 +1,103 @@
+{
+  "contract": "shipready.doctor.v1",
+  "ok": true,
+  "checks": [
+    {
+      "id": "node-version",
+      "label": "Node.js",
+      "status": "pass",
+      "message": "Node.js 22.0.0 is supported.",
+      "details": {
+        "version": "22.0.0",
+        "minimumMajor": 20
+      }
+    },
+    {
+      "id": "pnpm",
+      "label": "pnpm",
+      "status": "pass",
+      "message": "pnpm 10.28.2 is available.",
+      "details": {
+        "version": "10.28.2"
+      }
+    },
+    {
+      "id": "playwright-browser",
+      "label": "Playwright Chromium",
+      "status": "pass",
+      "message": "The Playwright Chromium executable is installed."
+    },
+    {
+      "id": "ffmpeg",
+      "label": "FFmpeg",
+      "status": "warn",
+      "message": "FFmpeg is optional and only needed for demo composition."
+    },
+    {
+      "id": "package-root",
+      "label": "Package content",
+      "status": "pass",
+      "message": "The ShipReady package content root is available."
+    },
+    {
+      "id": "mcp-sdk",
+      "label": "MCP SDK",
+      "status": "pass",
+      "message": "The MCP SDK dependency is installed."
+    },
+    {
+      "id": "mcp-configuration",
+      "label": "MCP configuration",
+      "status": "pass",
+      "message": "The local stdio MCP command can accept an explicit allowed root; no server was started."
+    },
+    {
+      "id": "contract-fixtures",
+      "label": "Contract fixtures",
+      "status": "pass",
+      "message": "17 canonical contract fixtures exist and parse.",
+      "details": {
+        "count": 17
+      }
+    },
+    {
+      "id": "canonical-docs",
+      "label": "Canonical docs",
+      "status": "pass",
+      "message": "9 canonical documentation files are present.",
+      "details": {
+        "checked": 9,
+        "missing": []
+      }
+    },
+    {
+      "id": "write-policy",
+      "label": "WRITE_POLICY_V1",
+      "status": "pass",
+      "message": "The canonical creation_only_robots_sitemap_v1 policy document is present."
+    },
+    {
+      "id": "local-gui-spec",
+      "label": "LOCAL_FIRST_GUI_SPEC",
+      "status": "pass",
+      "message": "The canonical local-first GUI specification is present."
+    },
+    {
+      "id": "demo-artifacts",
+      "label": "Demo artifacts",
+      "status": "warn",
+      "message": "Optional demo artifacts are incomplete; core CLI operation is unaffected.",
+      "details": {
+        "missing": [
+          "validation/example.mp4"
+        ]
+      }
+    }
+  ],
+  "summary": {
+    "pass": 10,
+    "warn": 2,
+    "fail": 0,
+    "skip": 0
+  }
+}

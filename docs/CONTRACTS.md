@@ -14,6 +14,8 @@ This was low risk because CLI JSON formatting already had a dedicated Zod-valida
 
 | CLI surface | `--json` | Named contract | Stability | Read/write |
 |---|---:|---|---|---|
+| `status --json` | Yes | `shipready.status.v1` | V1 CLI boundary | Static/local read only |
+| `doctor --json` | Yes | `shipready.doctor.v1` | V1 CLI boundary | Bounded local read only |
 | `audit <url> --json` | Yes | `shipready.audit.v1` | V1 CLI boundary | Network read only |
 | `inspect-repo <path> --json` | Yes | `shipready.repoInspection.v1` | V1 CLI boundary | Local read only |
 | `plan-fixes <path> --url <url> --json` | Yes | `shipready.fixPlan.v1` | V1 CLI boundary | Network/local read only |
@@ -26,7 +28,21 @@ The authoritative mapping and CLI contract schemas are in `src/types/contracts.t
 
 ## Exact success shapes
 
-All success outputs are one JSON object followed by a newline. They do not contain `ok: true` and do not wrap data.
+All outputs are one JSON object followed by a newline and do not use a generic success envelope. `shipready.doctor.v1` has an `ok` readiness boolean because failed local checks are part of its valid report model; that field is not a data wrapper.
+
+### `shipready.status.v1`
+
+Top-level keys: `contract`, `version`, `mode`, `capabilities`, `writePolicy`, `integrations`, `demos`, `nextRecommendedCommand`, and `nextRecommendedPass`.
+
+Stable posture fields report `cliFirst: true`, `mcpSecond: true`, `guiThird: true`, local stdio MCP with `remoteTransport: false`, exactly one MCP write tool (`shipready.write_safe_crawl_files`), and a local GUI with `writeEndpoint: false`. Search Console, DNS, GitHub, and deployment are explicitly `not_implemented`. `writePolicy.id` remains `creation_only_robots_sitemap_v1`; this report does not redefine policy semantics.
+
+Internal source and formatter: `src/status/status.ts`. Exit behavior: `0`. The command is static/read-only, makes no network request, and does not inspect a target repository.
+
+### `shipready.doctor.v1`
+
+Top-level keys: `contract`, `ok`, `checks`, and `summary`. Every check has `id`, `label`, `status`, and `message`, with optional machine-readable `details`. Status is one of `pass`, `warn`, `fail`, or `skip`. Summary counts must exactly match checks, and `ok` is true exactly when `fail` is zero.
+
+Internal source and formatter: `src/doctor/doctor.ts`. Exit behavior: `0` with no failed required check and `1` otherwise; both paths emit the valid report. Runtime version and optional-tool results are machine-specific. The fixture is therefore a normalized deterministic example, while runtime tests use targeted assertions.
 
 ### `shipready.audit.v1`
 
@@ -149,6 +165,8 @@ Deterministic fixtures live in `validation/contracts/`:
 - `ui-report.safe-apply.json`
 - `ui-report.url-only.json`
 - `error.invalid-url.json`
+- `status.default.json`
+- `doctor.default.json`
 
 Regenerate them from local test repositories and deterministic in-memory audit results:
 
@@ -158,7 +176,7 @@ pnpm contracts:fixtures
 
 The generator is `scripts/validation/generateContractFixtures.ts`. It makes no external requests. The write fixtures run `writeFixFromDryRun` only against temporary copies under the operating-system temp directory, record the returned results, and remove the copies. They never target a real repository. Fixed timestamps and repository display paths keep fixtures reproducible.
 
-Focused drift coverage is in `tests/contracts.test.ts`. Tests validate every fixture, every formatter discriminator, error code/message compatibility, UI report dual discriminators, dry-run state separation, write effect fields, the command mapping, and an invalid-URL CLI exit.
+Focused drift coverage is in `tests/contracts.test.ts`, `tests/status.test.ts`, and `tests/doctor.test.ts`. Tests validate every fixture, every formatter discriminator, status/doctor posture and summaries, error code/message compatibility, UI report dual discriminators, dry-run state separation, write effect fields, the command mapping, and an invalid-URL CLI exit.
 
 ## Downstream consumers
 
@@ -180,7 +198,7 @@ The MCP write call must supply the same URL and repo path, the fresh receipt, an
 
 Ready now:
 
-- Six implemented JSON-capable command surfaces have explicit V1 contract names.
+- Eight implemented JSON-capable command surfaces have explicit V1 contract names.
 - Success outputs retain their existing fields and add stable discriminators.
 - Action-level JSON errors have stable codes/messages and preserve the legacy `error` field.
 - Deterministic local fixtures and focused drift tests cover success, failure, dry-run, write, and UI states.

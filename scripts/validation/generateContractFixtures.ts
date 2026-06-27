@@ -13,7 +13,11 @@ import { formatJsonReport } from "../../src/report/formatJsonReport";
 import { formatRepoInspectionJsonReport } from "../../src/report/formatRepoInspectionJsonReport";
 import { formatUiReportJsonReport } from "../../src/report/formatUiReportJsonReport";
 import { formatWriteFixJsonReport } from "../../src/report/formatWriteFixJsonReport";
+import { createStatus, formatStatusJson } from "../../src/status/status";
+import { createDoctorReport, formatDoctorJson } from "../../src/doctor/doctor";
+import type { DoctorCheck } from "../../src/types/contracts";
 import type { AuditCheck, AuditResult, ExtractedPageMetadata } from "../../src/types/audit";
+import { DOC_RESOURCES, FIXTURE_NAMES } from "../../src/mcp/resources";
 
 const ROOT = resolve(import.meta.dirname, "../..");
 const OUTPUT = join(ROOT, "validation", "contracts");
@@ -114,6 +118,22 @@ write("error.invalid-url.json", formatCliErrorJson({
   message: "Invalid URL. Provide an absolute http:// or https:// URL.",
 }));
 
+write("status.default.json", formatStatusJson(createStatus()));
+write("doctor.default.json", formatDoctorJson(createDoctorReport([
+  doctorCheck("node-version", "Node.js", "pass", "Node.js 22.0.0 is supported.", { version: "22.0.0", minimumMajor: 20 }),
+  doctorCheck("pnpm", "pnpm", "pass", "pnpm 10.28.2 is available.", { version: "10.28.2" }),
+  doctorCheck("playwright-browser", "Playwright Chromium", "pass", "The Playwright Chromium executable is installed."),
+  doctorCheck("ffmpeg", "FFmpeg", "warn", "FFmpeg is optional and only needed for demo composition."),
+  doctorCheck("package-root", "Package content", "pass", "The ShipReady package content root is available."),
+  doctorCheck("mcp-sdk", "MCP SDK", "pass", "The MCP SDK dependency is installed."),
+  doctorCheck("mcp-configuration", "MCP configuration", "pass", "The local stdio MCP command can accept an explicit allowed root; no server was started."),
+  doctorCheck("contract-fixtures", "Contract fixtures", "pass", `${FIXTURE_NAMES.length} canonical contract fixtures exist and parse.`, { count: FIXTURE_NAMES.length }),
+  doctorCheck("canonical-docs", "Canonical docs", "pass", `${new Set(Object.values(DOC_RESOURCES)).size} canonical documentation files are present.`, { checked: new Set(Object.values(DOC_RESOURCES)).size, missing: [] }),
+  doctorCheck("write-policy", "WRITE_POLICY_V1", "pass", "The canonical creation_only_robots_sitemap_v1 policy document is present."),
+  doctorCheck("local-gui-spec", "LOCAL_FIRST_GUI_SPEC", "pass", "The canonical local-first GUI specification is present."),
+  doctorCheck("demo-artifacts", "Demo artifacts", "warn", "Optional demo artifacts are incomplete; core CLI operation is unaffected.", { missing: ["validation/example.mp4"] }),
+])));
+
 function deterministicInspection(fixture: string, displayPath: string) {
   return {
     ...inspectRepo(join(REPOS, fixture)),
@@ -190,6 +210,16 @@ function resource(url: string, exists: boolean) {
     ok: exists,
     statusCode: exists ? 200 : 404,
   };
+}
+
+function doctorCheck(
+  id: string,
+  label: string,
+  status: DoctorCheck["status"],
+  message: string,
+  details?: Record<string, unknown>,
+): DoctorCheck {
+  return { id, label, status, message, ...(details ? { details } : {}) };
 }
 
 function write(name: string, contents: string): void {

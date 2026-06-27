@@ -629,4 +629,6 @@ Use temporary fixture copies only. Never execute guarded write mode against `/Us
 
 Pass 6 does not implement or add secrets, authentication, accounts, billing, hosted SaaS, remote MCP transport, Search Console, DNS, deployment, Git/GitHub operations, patch export, social preview simulation, implementation-smell detection, bounded multi-page crawl, broader safe writes, metadata/content/JSON-LD/package/config writes, HTML-report file creation, or GUI write execution.
 
-The recommended next pass is exactly: **Pass 7 — CLI UX polish / doctor / status**, limited to operability and status surfaces without new mutation scope.
+Pass 7 added CLI-only `status` and `doctor` commands and their deterministic contract fixtures. Those fixtures are available through the existing exact allowlisted canonical-read surface; no MCP tool, transport, authorization, or write behavior changed.
+
+The recommended next pass is exactly: **Pass 8 — Search Console readiness research/spec**, limited to research and specification. No Search Console integration is implemented by this plan.

@@ -7,6 +7,7 @@ ShipReady is a CLI-first, agent-friendly launch-readiness engine for generated w
 ## What exists
 
 - Public single-page audit with raw and Playwright-rendered metadata comparison.
+- Read-only `status` capability inventory and bounded local `doctor` readiness checks, each with stable human and JSON output.
 - Crawl-resource, metadata, social-preview, structure, accessibility, and launch-hygiene checks.
 - Bounded read-only repository inspection.
 - Read-only fix planning and exact dry-run previews.
@@ -42,4 +43,4 @@ Read-only inspection and preview are the default. CLI write mode requires `fix -
 
 ## Next pass
 
-**Pass 7: CLI UX polish / doctor / status.** Improve operability around the now-stable CLI and MCP surfaces without adding new mutation scope.
+**Pass 8: Search Console readiness research/spec.** Define evidence, claims, authentication, privacy, error, and read-only boundaries before any integration work.

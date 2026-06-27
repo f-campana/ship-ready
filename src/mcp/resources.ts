@@ -10,6 +10,8 @@ import {
   RepoInspectionJsonContractSchema,
   UiReportJsonContractSchema,
   WriteFixJsonContractSchema,
+  StatusJsonContractSchema,
+  DoctorJsonContractSchema,
 } from "../types/contracts";
 import { ShipReadyMcpError } from "./errors";
 
@@ -31,6 +33,8 @@ export const FIXTURE_NAMES = [
   "plan-fixes.safe-apply.json",
   "ui-report.safe-apply.json",
   "ui-report.url-only.json",
+  "status.default.json",
+  "doctor.default.json",
 ] as const;
 
 export type FixtureName = (typeof FIXTURE_NAMES)[number];
@@ -213,6 +217,8 @@ const FIXTURE_SCHEMAS: Readonly<Record<string, ZodType>> = {
   "shipready.writeFix.v1": WriteFixJsonContractSchema,
   "shipready.uiReport.v1": UiReportJsonContractSchema,
   "shipready.error.v1": CliErrorContractSchema,
+  "shipready.status.v1": StatusJsonContractSchema,
+  "shipready.doctor.v1": DoctorJsonContractSchema,
 };
 
 async function readCanonicalFile(packageRoot: string, relativePath: string): Promise<string> {

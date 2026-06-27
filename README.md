@@ -1,15 +1,17 @@
 # ShipReady
 
-ShipReady is a CLI-first, agent-friendly launch-readiness engine for generated websites. It audits a public URL, inspects a local repository, plans fixes, previews file changes, and can create a narrow set of missing crawl files under an explicit V1 policy. **CLI first. MCP second. GUI third.** The CLI is the source of truth; the read-only MCP server wraps stable CLI contracts, while the GUI explains the engine to humans.
+ShipReady is a CLI-first, agent-friendly launch-readiness engine for generated websites. It audits a public URL, inspects a local repository, plans fixes, previews file changes, and can create a narrow set of missing crawl files under an explicit V1 policy. **CLI first. MCP second. GUI third.** The CLI is the source of truth; the local stdio MCP server wraps stable CLI contracts and exposes exactly one guarded V1 write tool, while the GUI explains the engine to humans.
 
 ## Current status
 
-Implemented: CLI audit and repo inspection, fix planning, dry-run previews, guarded creation-only writes, UI and static HTML reports, a local preview/copy-only GUI, a read-only stdio MCP server, and Fodmapp demo tooling. MCP writes, Search Console, DNS, GitHub, deployment, accounts, billing, and hosted SaaS integrations are not built.
+Implemented: read-only `status` and `doctor` diagnostics, CLI audit and repo inspection, fix planning, dry-run previews, guarded creation-only writes, UI and static HTML reports, a local preview/copy-only GUI, a local stdio MCP server, and Fodmapp demo tooling. MCP exposes exactly one guarded write tool for the same creation-only crawl-file policy. Search Console, DNS, GitHub, deployment, accounts, billing, hosted SaaS, and remote MCP are not built.
 
 ## Core commands
 
 ```bash
 pnpm install
+pnpm shipready status
+pnpm shipready doctor
 pnpm shipready audit https://example.com
 pnpm shipready inspect-repo .
 pnpm shipready plan-fixes . --url https://example.com
@@ -19,7 +21,7 @@ pnpm shipready html-report . --url https://example.com --output validation/examp
 pnpm shipready gui
 ```
 
-Use `--json` with `audit`, `inspect-repo`, `plan-fixes`, `fix`, and `ui-report` for structured output. See [docs/COMMANDS.md](docs/COMMANDS.md) for exact flags and behavior.
+Use `--json` with `status`, `doctor`, `audit`, `inspect-repo`, `plan-fixes`, `fix`, and `ui-report` for structured output. `status` is a static capability/safety inventory. `doctor` performs bounded local runtime, dependency, canonical-content, and optional demo-tool checks. Neither command accesses the network, inspects a target repository, mutates files, starts a server, deploys, or proves indexing. See [docs/COMMANDS.md](docs/COMMANDS.md) for exact flags and behavior.
 
 ## Safe-write boundary
 

@@ -1,0 +1,70 @@
+{
+  "contract": "shipready.status.v1",
+  "version": "0.1.0",
+  "mode": {
+    "cliFirst": true,
+    "mcpSecond": true,
+    "guiThird": true
+  },
+  "capabilities": {
+    "cli": [
+      "status",
+      "doctor",
+      "audit",
+      "inspect-repo",
+      "plan-fixes",
+      "fix --dry-run",
+      "fix --write --allow-create",
+      "ui-report",
+      "html-report",
+      "gui",
+      "mcp"
+    ],
+    "mcp": {
+      "stdio": true,
+      "readOnlyTools": [
+        "shipready.audit_site",
+        "shipready.inspect_repo",
+        "shipready.plan_fixes",
+        "shipready.preview_fixes",
+        "shipready.get_ui_report",
+        "shipready.get_contract_fixture",
+        "shipready.get_policy_doc"
+      ],
+      "writeTools": [
+        "shipready.write_safe_crawl_files"
+      ],
+      "remoteTransport": false
+    },
+    "gui": {
+      "local": true,
+      "writeEndpoint": false
+    }
+  },
+  "writePolicy": {
+    "name": "WRITE_POLICY_V1",
+    "id": "creation_only_robots_sitemap_v1",
+    "summary": "Creation-only, all-or-nothing writes for eligible missing robots and sitemap files.",
+    "allowed": [
+      "Create eligible missing robots files at framework-allowlisted paths",
+      "Create eligible missing sitemap files at framework-allowlisted paths"
+    ],
+    "forbidden": [
+      "Overwrite, delete, rename, or format existing files",
+      "Write metadata, content, JSON-LD, packages, or configuration",
+      "Run Git, GitHub, deployment, DNS, or Search Console mutations"
+    ]
+  },
+  "integrations": {
+    "searchConsole": "not_implemented",
+    "dns": "not_implemented",
+    "github": "not_implemented",
+    "deployment": "not_implemented"
+  },
+  "demos": {
+    "fodmappShare": "validation/demo-fodmapp-share/",
+    "fodmappVoiceover": "validation/demo-fodmapp-voiceover-final/"
+  },
+  "nextRecommendedCommand": "pnpm shipready doctor",
+  "nextRecommendedPass": "Search Console readiness research/spec"
+}

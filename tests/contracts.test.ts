@@ -21,6 +21,8 @@ import {
   RepoInspectionJsonContractSchema,
   UiReportJsonContractSchema,
   WriteFixJsonContractSchema,
+  StatusJsonContractSchema,
+  DoctorJsonContractSchema,
 } from "../src/types/contracts";
 import { DryRunFixResultSchema } from "../src/types/dryRunFix";
 import { FixPlanResultSchema } from "../src/types/fixPlan";
@@ -49,6 +51,8 @@ describe("CLI JSON contracts", () => {
     ["ui-report.safe-apply.json", UiReportJsonContractSchema, CONTRACT_NAMES.uiReport],
     ["ui-report.url-only.json", UiReportJsonContractSchema, CONTRACT_NAMES.uiReport],
     ["error.invalid-url.json", CliErrorContractSchema, CONTRACT_NAMES.error],
+    ["status.default.json", StatusJsonContractSchema, CONTRACT_NAMES.status],
+    ["doctor.default.json", DoctorJsonContractSchema, CONTRACT_NAMES.doctor],
   ] as const)("parses %s and preserves its discriminator", (name, schema, contract) => {
     const fixture = readFixture(name);
 
@@ -64,6 +68,8 @@ describe("CLI JSON contracts", () => {
       "fix --dry-run --json": "shipready.dryRunFix.v1",
       "fix --write --allow-create --json": "shipready.writeFix.v1",
       "ui-report --json": "shipready.uiReport.v1",
+      "status --json": "shipready.status.v1",
+      "doctor --json": "shipready.doctor.v1",
     });
   });
 

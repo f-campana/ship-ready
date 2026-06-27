@@ -4,7 +4,7 @@
 
 ShipReady is **a CLI-first, agent-friendly launch-readiness engine for generated websites**.
 
-Operating hierarchy: **CLI first. MCP second. GUI third. The CLI is the source of truth. MCP will wrap stable CLI contracts. The GUI makes the engine understandable to humans.**
+Operating hierarchy: **CLI first. MCP second. GUI third. The CLI is the source of truth. MCP wraps stable CLI contracts. The GUI makes the engine understandable to humans.**
 
 Primary readers are Codex, Claude Code, Cursor, and future MCP clients; human developers and product reviewers follow. Keep changes operational, bounded, testable, and compatible with limited agent context.
 
@@ -20,6 +20,7 @@ Primary readers are Codex, Claude Code, Cursor, and future MCP clients; human de
 - `src/ui/`: normalized `ui-report-v1` creation.
 - `src/gui/`: local server and preview/copy-only browser UI.
 - `src/mcp/`: local stdio adapter, seven read-only tools, one guarded safe-write tool, preview receipts, canonical reads, prompts, authorization, errors, and deadlines.
+- `src/status/` and `src/doctor/`: static capability posture and bounded local readiness diagnostics.
 - `scripts/demo/`: Fodmapp recording, captions, optional voice, and composition.
 - `validation/`: contract fixtures, reports, reviews, and approved demo artifacts.
 
@@ -52,6 +53,8 @@ For MCP work, read [MCP_PLAN.md](MCP_PLAN.md) first. The implemented Pass 6 serv
 ## Main commands
 
 ```bash
+pnpm shipready status --json
+pnpm shipready doctor --json
 pnpm shipready audit <url> --json
 pnpm shipready inspect-repo <path> --json
 pnpm shipready plan-fixes <path> --url <url> --json
@@ -61,6 +64,8 @@ pnpm shipready html-report [path] --url <url> --output <file>
 pnpm shipready gui
 pnpm shipready mcp --allow-root /absolute/workspace
 ```
+
+Use `status` before assuming a capability or integration exists. Use `doctor` after installation and before workflows that require Playwright or MCP canonical content. Both are read-only, non-networked, require no target path, and must not be treated as evidence of indexing, DNS/Search Console state, deployment state, or live-site readiness.
 
 The guarded write command exists but is not a routine validation command. Use it only with explicit instruction and the checks in the canonical write policy.
 
