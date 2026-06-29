@@ -10,6 +10,7 @@
     "cli": [
       "status",
       "doctor",
+      "search-console status",
       "audit",
       "inspect-repo",
       "plan-fixes",
@@ -24,6 +25,7 @@
       "stdio": true,
       "readOnlyTools": [
         "shipready.audit_site",
+        "shipready.search_console_status",
         "shipready.inspect_repo",
         "shipready.plan_fixes",
         "shipready.preview_fixes",
@@ -56,7 +58,7 @@
     ]
   },
   "integrations": {
-    "searchConsole": "not_implemented",
+    "searchConsole": "mock_prototype",
     "dns": "not_implemented",
     "github": "not_implemented",
     "deployment": "not_implemented"
@@ -66,5 +68,5 @@
     "fodmappVoiceover": "validation/demo-fodmapp-voiceover-final/"
   },
   "nextRecommendedCommand": "pnpm shipready doctor",
-  "nextRecommendedPass": "Search Console readiness research/spec"
+  "nextRecommendedPass": "DNS readiness checks spec"
 }

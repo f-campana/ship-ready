@@ -22,17 +22,22 @@ This was low risk because CLI JSON formatting already had a dedicated Zod-valida
 | `fix <path> --url <url> --dry-run --json` | Yes | `shipready.dryRunFix.v1` | V1 CLI boundary | Network/local read only |
 | `fix <path> --url <url> --write --allow-create --json` | Yes | `shipready.writeFix.v1` | V1 CLI boundary, policy-bound mutation | Creation-only crawl-file write |
 | `ui-report [path] --url <url> --json` | Yes | `shipready.uiReport.v1` | V1 CLI boundary plus `ui-report-v1` model | Network/optional local read only |
+| `search-console status --url <url> --json` | Yes | `shipready.searchConsoleStatus.v1` | V1 mock prototype boundary | Deterministic local read only |
 | JSON command failure | When the invoked command accepted `--json` | `shipready.error.v1` | V1 error boundary; Commander parse gaps remain | No additional effects |
 
 The authoritative mapping and CLI contract schemas are in `src/types/contracts.ts`.
 
-## Planned Search Console contract (not implemented)
+## `shipready.searchConsoleStatus.v1`
 
-Pass 8 proposes `shipready.searchConsoleStatus.v1` for a future `search-console status --json` command. It is intentionally absent from the implemented command map, runtime schemas, fixtures, and MCP registrations.
+Pass 9 implements this contract for `search-console status --json` and the read-only MCP tool `shipready.search_console_status`. The current provider emits only `mode: "mock"`; `mode: "live"` is reserved for a future separately reviewed provider and is never emitted in Pass 9.
 
-The proposed contract keeps authorization, accessible-property matching, submitted sitemaps, and optional indexed-version URL inspection as separate state machines. It uses only Google's documented [Sites](https://developers.google.com/webmaster-tools/v1/sites), [Sitemaps](https://developers.google.com/webmaster-tools/v1/sitemaps), and [URL Inspection](https://developers.google.com/webmaster-tools/v1/urlInspection.index/UrlInspectionResult) fields, preserves absent API values, excludes tokens/account identity/referring URLs/raw payloads, and labels ShipReady-derived property matching separately from Google-reported evidence. See [SEARCH_CONSOLE_READINESS_SPEC.md](SEARCH_CONSOLE_READINESS_SPEC.md) for the full sketch and Pass 9 compatibility/test decisions.
+Top-level keys are `contract`, `generatedAt`, `mode`, `requestedUrl`, `authorization`, `propertyMatch`, `sitemaps`, `inspection`, `limitations`, and `nextActions`. Authorization, property matching, sitemap records, and optional indexed-version inspection remain separate state machines. Optional Google-shaped fields remain absent when not reported; they are not converted to negative results. The schema excludes tokens, account identity, referring URLs, request headers, verification data, and raw provider payloads.
 
-The future read-only MCP tool `shipready.search_console_status` may return this exact CLI contract only after the CLI boundary and local credential isolation are implemented. It must not alter the sole current MCP write tool, stdio-only transport, `WRITE_POLICY_V1`, GUI behavior, or `POST /api/fix = 404` boundary.
+`propertyMatch.strategy` and property `type` are ShipReady-derived. Documented Google enum fields use the Pass 8 values plus an explicit `UNKNOWN` fallback reserved for a future adapter, so unrecognized future values do not become invented semantics. Sitemap `contents[].indexed` is intentionally rejected because Google deprecated it. Mock inspection exists only when `--inspect` is explicit; it is mock indexed-version evidence, never a live-page test.
+
+Canonical fixtures cover `not_configured`, `unauthorized`, `property_not_found`, `ready_sitemap_ok`, `ready_sitemap_warning`, `inspection_canonical_mismatch`, and `inspection_not_indexed`. All use a fixed timestamp and synthetic `example.com` values. The mock provider makes no network request and has no credential interface.
+
+The MCP tool accepts only `{ url, mock?, inspect? }`, needs no repository path, and returns this exact contract. It does not alter the sole MCP write tool, stdio-only transport, `WRITE_POLICY_V1`, GUI behavior, or `POST /api/fix = 404` boundary.
 
 ## Exact success shapes
 
@@ -42,7 +47,7 @@ All outputs are one JSON object followed by a newline and do not use a generic s
 
 Top-level keys: `contract`, `version`, `mode`, `capabilities`, `writePolicy`, `integrations`, `demos`, `nextRecommendedCommand`, and `nextRecommendedPass`.
 
-Stable posture fields report `cliFirst: true`, `mcpSecond: true`, `guiThird: true`, local stdio MCP with `remoteTransport: false`, exactly one MCP write tool (`shipready.write_safe_crawl_files`), and a local GUI with `writeEndpoint: false`. Search Console, DNS, GitHub, and deployment are explicitly `not_implemented`. `writePolicy.id` remains `creation_only_robots_sitemap_v1`; this report does not redefine policy semantics.
+Stable posture fields report `cliFirst: true`, `mcpSecond: true`, `guiThird: true`, local stdio MCP with `remoteTransport: false`, exactly one MCP write tool (`shipready.write_safe_crawl_files`), and a local GUI with `writeEndpoint: false`. Search Console is `mock_prototype`; DNS, GitHub, and deployment remain `not_implemented`. `writePolicy.id` remains `creation_only_robots_sitemap_v1`; this report does not redefine policy semantics.
 
 Internal source and formatter: `src/status/status.ts`. Exit behavior: `0`. The command is static/read-only, makes no network request, and does not inspect a target repository.
 

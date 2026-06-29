@@ -10,6 +10,7 @@ import { SHIPREADY_VERSION } from "../version";
 export const STATUS_CLI_COMMANDS = [
   "status",
   "doctor",
+  "search-console status",
   "audit",
   "inspect-repo",
   "plan-fixes",
@@ -58,7 +59,7 @@ export function createStatus(): StatusJsonContract {
       ],
     },
     integrations: {
-      searchConsole: "not_implemented",
+      searchConsole: "mock_prototype",
       dns: "not_implemented",
       github: "not_implemented",
       deployment: "not_implemented",
@@ -68,7 +69,7 @@ export function createStatus(): StatusJsonContract {
       fodmappVoiceover: "validation/demo-fodmapp-voiceover-final/",
     },
     nextRecommendedCommand: "pnpm shipready doctor",
-    nextRecommendedPass: "Search Console readiness research/spec",
+    nextRecommendedPass: "DNS readiness checks spec",
   });
 }
 
@@ -88,7 +89,8 @@ export function formatStatusHuman(status = createStatus()): string {
     "",
     "Safety",
     `  ${status.writePolicy.name}: ${status.writePolicy.summary}`,
-    "  Remote MCP, Search Console, DNS, GitHub, and deployment integrations: not implemented",
+    "  Search Console: spec exists, mock prototype available, live integration not implemented",
+    "  Remote MCP, DNS, GitHub, and deployment integrations: not implemented",
     "",
     "Demo artifacts",
     `  ${status.demos.fodmappShare}`,

@@ -129,6 +129,7 @@ export async function runDoctor(
       ["mcp-configuration", "MCP configuration"],
       ["contract-fixtures", "Contract fixtures"],
       ["canonical-docs", "Canonical docs"],
+      ["search-console-prototype", "Search Console mock prototype"],
       ["write-policy", "WRITE_POLICY_V1"],
       ["local-gui-spec", "LOCAL_FIRST_GUI_SPEC"],
       ["demo-artifacts", "Demo artifacts"],
@@ -199,6 +200,29 @@ export async function runDoctor(
       ? `${canonicalDocPaths.length} canonical documentation files are present.`
       : `Canonical documentation is incomplete; missing: ${missingDocs.join(", ")}.`,
     details: { checked: canonicalDocPaths.length, missing: missingDocs },
+  });
+
+  const searchConsoleSpec = "docs/SEARCH_CONSOLE_READINESS_SPEC.md";
+  const searchConsoleFixtures = FIXTURE_NAMES.filter((name) => name.startsWith("search-console."));
+  const missingSearchConsoleContent = [
+    ...(!dependencies.pathExists(join(packageRoot, searchConsoleSpec)) ? [searchConsoleSpec] : []),
+    ...searchConsoleFixtures
+      .map((name) => `validation/contracts/${name}`)
+      .filter((path) => !dependencies.pathExists(join(packageRoot, path))),
+  ];
+  checks.push({
+    id: "search-console-prototype",
+    label: "Search Console mock prototype",
+    status: missingSearchConsoleContent.length === 0 ? "pass" : "fail",
+    message: missingSearchConsoleContent.length === 0
+      ? `The Search Console specification and ${searchConsoleFixtures.length} deterministic mock fixtures are present; no Google credentials are required.`
+      : `Search Console prototype content is incomplete; missing: ${missingSearchConsoleContent.join(", ")}.`,
+    details: {
+      liveIntegration: false,
+      oauthRequired: false,
+      fixtures: searchConsoleFixtures.length,
+      missing: missingSearchConsoleContent,
+    },
   });
 
   const writePolicyPath = join(packageRoot, "docs/WRITE_POLICY_V1.md");

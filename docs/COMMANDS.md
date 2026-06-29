@@ -162,16 +162,26 @@ The GUI client fetches only `/api/ui-report`. `POST /api/fix` is not implemented
 
 Command-action failures under `--json` use `shipready.error.v1`. See [`error.invalid-url.json`](../validation/contracts/error.invalid-url.json). The stable fields are `contract`, `ok: false`, `code`, `message`, and the legacy compatibility alias `error`. Commander failures that occur before the command action starts, such as missing required arguments, remain a documented normalization gap.
 
-## Planned Search Console command (not implemented)
+## `search-console status`
 
-Pass 8 specifies a future read-only surface:
+Pass 9 implements a deterministic, mock-backed, read-only surface:
 
 ```bash
-# Planned; this command does not exist yet
+pnpm shipready search-console status --url https://example.com
 pnpm shipready search-console status --url https://example.com --json
+pnpm shipready search-console status --url https://example.com --mock ready_sitemap_ok --json
+pnpm shipready search-console status --url https://example.com --mock inspection_canonical_mismatch --inspect --json
 ```
 
-The proposal uses Google's documented [`webmasters.readonly` scope](https://developers.google.com/webmaster-tools/v1/how-tos/authorizing) to match one accessible property, [list submitted sitemap status](https://developers.google.com/webmaster-tools/v1/sitemaps/list), and optionally [inspect one URL's indexed version](https://developers.google.com/webmaster-tools/v1/urlInspection.index/inspect). It does not create properties, verify ownership, write DNS, submit sitemaps, request indexing, expose tokens, or change files. The proposed `shipready.searchConsoleStatus.v1` fields, flags, safety model, and Pass 9 tests are in [SEARCH_CONSOLE_READINESS_SPEC.md](SEARCH_CONSOLE_READINESS_SPEC.md).
+- Required: `--url <http-or-https-url>`.
+- Optional: `--mock <scenario>`, `--provider mock`, `--inspect`, and `--json`.
+- Scenarios: `not_configured`, `unauthorized`, `property_not_found`, `ready_sitemap_ok`, `ready_sitemap_warning`, `inspection_canonical_mismatch`, and `inspection_not_indexed`.
+- Default: without `--mock`, returns a valid `not_configured` mock status and clearly states that live integration is unavailable.
+- Output: concise human sections or one `shipready.searchConsoleStatus.v1` object. Invalid URL, scenario, or provider input returns `shipready.error.v1`; unsupported providers fail rather than pretending to connect.
+- Safety: no network is needed for these scenarios. The command does not implement Google OAuth, read/store tokens, call Google, create/verify properties, submit sitemaps, request indexing, change DNS, or write files.
+- `--inspect`: includes one deterministic mock indexed-version section only; it never calls the live URL Inspection API.
+
+The future live provider remains deferred. It would require a separately reviewed local OAuth/token-custody boundary and only Google's documented [`webmasters.readonly` scope](https://developers.google.com/webmaster-tools/v1/how-tos/authorizing). See [SEARCH_CONSOLE_READINESS_SPEC.md](SEARCH_CONSOLE_READINESS_SPEC.md).
 
 ## Demo package scripts
 
@@ -203,9 +213,9 @@ SHIPREADY_MCP_ALLOWED_ROOTS='["/absolute/workspace-a","/absolute/workspace-b"]' 
 
 - Purpose: start the local MCP stdio server. Stdout is reserved for MCP protocol frames.
 - Authorization: at least one explicit root is required. Repeat `--allow-root` for multiple roots; CLI roots replace the JSON-array environment fallback. Relative, missing, home, filesystem-root, traversal, and symlink-escape paths fail closed.
-- Surface: seven read-only tools, one guarded write tool, nine canonical documentation resources plus allowlisted contract fixtures, and five prompt templates. See [MCP_PLAN.md](MCP_PLAN.md) for the exact lists.
+- Surface: eight read-only tools, one guarded write tool, ten canonical documentation resources plus allowlisted contract fixtures, and five prompt templates. `shipready.search_console_status` wraps the same deterministic mock boundary, accepts no repository-path input, and performs no repository-path authorization; the server's existing allowed-root startup requirement remains unchanged. See [MCP_PLAN.md](MCP_PLAN.md) for the exact lists.
 - Safe write tool: `shipready.write_safe_crawl_files` can create only current V1-eligible missing robots/sitemap files. Required flow: call `shipready.preview_fixes`, review `shipready.dryRunFix.v1` and its fresh `previewReceipt`, then call the write tool with the same URL, same authorized repo path, that receipt, and `confirmation: "CREATE_SAFE_CRAWL_FILES_ONLY"`.
 - Safety: the write tool re-authorizes the path, validates the receipt signature/expiry/bindings, regenerates the current dry-run, revalidates `WRITE_POLICY_V1`, and returns `shipready.writeFix.v1`. It never accepts arbitrary file paths or client-supplied file lists as authority. The server does not start the GUI or write an HTML report.
 - Limitation: request deadlines and client cancellation are bounded at the MCP boundary. Existing synchronous repository scans and application operations do not yet accept `AbortSignal`, so already-started underlying work may finish its own bounded cleanup after the MCP response.
 
-HTTP, SSE, remote auth, timeout overrides, broader MCP writes, GUI write execution, Git/GitHub, deploy, DNS, and Search Console integrations are not implemented.
+HTTP, SSE, remote auth, live Search Console/OAuth, timeout overrides, broader MCP writes, GUI write execution, Git/GitHub, deploy, and DNS are not implemented.

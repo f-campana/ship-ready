@@ -199,6 +199,14 @@ describe("ShipReady local GUI", () => {
     });
   });
 
+  it("keeps the GUI client fetch surface limited to /api/ui-report", async () => {
+    await withServer(async (server) => {
+      const js = await fetchText(`${server.url}/assets/gui.js`);
+      const paths = [...js.matchAll(/fetch\(["']([^"']+)["']/g)].map((match) => match[1]);
+      expect(paths).toEqual(["/api/ui-report"]);
+    });
+  });
+
   it("keeps POST /api/fix unavailable", async () => {
     await withServer(async (server) => {
       const response = await fetch(`${server.url}/api/fix`, {

@@ -25,6 +25,12 @@ import { resolveAllowedRoots } from "../mcp/config";
 import { startMcpServer } from "../mcp/server";
 import { createStatus, formatStatusHuman, formatStatusJson } from "../status/status";
 import { formatDoctorHuman, formatDoctorJson, runDoctor } from "../doctor/doctor";
+import { SearchConsoleStatusError } from "../searchConsole/searchConsoleErrors";
+import {
+  formatSearchConsoleStatusHuman,
+  formatSearchConsoleStatusJson,
+  getSearchConsoleStatus,
+} from "../searchConsole/searchConsoleStatus";
 import { SHIPREADY_VERSION } from "../version";
 
 const program = new Command();
@@ -53,9 +59,53 @@ program
     if (!report.ok) process.exitCode = 1;
   });
 
+const searchConsole = program
+  .command("search-console")
+  .description("Read mock-backed Search Console status without Google API access or writes.");
+
+searchConsole
+  .command("status")
+  .description("Show deterministic read-only Search Console prototype status.")
+  .requiredOption("--url <url>", "Public HTTP(S) URL represented by the mock status")
+  .option("--mock <scenario>", "Deterministic mock scenario")
+  .option("--provider <provider>", "Provider selection; only mock is available")
+  .option("--inspect", "Include one mock indexed-version URL inspection when the scenario supports it")
+  .option("--json", "Output structured JSON")
+  .action(async (options: SearchConsoleStatusCommandOptions) => {
+    if (options.provider && options.provider !== "mock") {
+      writeTypedCommandError(
+        "search-console status",
+        "invalid_mode",
+        `Unsupported Search Console provider: ${options.provider}. Only mock is available in Pass 9.`,
+        options.json,
+        1,
+      );
+      return;
+    }
+
+    try {
+      const status = await getSearchConsoleStatus({
+        url: options.url,
+        mock: options.mock,
+        inspect: options.inspect,
+      });
+      process.stdout.write(
+        options.json
+          ? formatSearchConsoleStatusJson(status)
+          : formatSearchConsoleStatusHuman(status),
+      );
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Unexpected Search Console prototype failure.";
+      const code = error instanceof SearchConsoleStatusError
+        ? error.code
+        : classifyCommandError(message);
+      writeTypedCommandError("search-console status", code, message, options.json, code === "invalid_url" || code === "invalid_mode" ? 1 : 2);
+    }
+  });
+
 program
   .command("mcp")
-  .description("Start the local ShipReady MCP stdio server (seven read-only tools, one guarded V1 write tool).")
+  .description("Start the local ShipReady MCP stdio server (eight read-only tools, one guarded V1 write tool).")
   .option(
     "--allow-root <absolute-path>",
     "Authorize one repository root (repeatable)",
@@ -352,6 +402,14 @@ type DoctorCommandOptions = {
   json?: boolean;
 };
 
+type SearchConsoleStatusCommandOptions = {
+  url: string;
+  mock?: string;
+  provider?: string;
+  inspect?: boolean;
+  json?: boolean;
+};
+
 function collectOption(value: string, previous: string[]): string[] {
   return [...previous, value];
 }
@@ -415,6 +473,21 @@ function writeCommandError(
     process.stderr.write(`ShipReady ${command} failed: ${message}\n`);
   }
 
+  process.exitCode = exitCode;
+}
+
+function writeTypedCommandError(
+  command: string,
+  code: CliErrorCode,
+  message: string,
+  asJson: boolean | undefined,
+  exitCode: number,
+): void {
+  if (asJson) {
+    process.stdout.write(formatCliErrorJson({ code, message }));
+  } else {
+    process.stderr.write(`ShipReady ${command} failed: ${message}\n`);
+  }
   process.exitCode = exitCode;
 }
 

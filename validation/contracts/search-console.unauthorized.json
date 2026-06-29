@@ -1,0 +1,30 @@
+{
+  "contract": "shipready.searchConsoleStatus.v1",
+  "generatedAt": "2026-06-29T12:00:00.000Z",
+  "mode": "mock",
+  "requestedUrl": "https://example.com/",
+  "authorization": {
+    "status": "authorization_required"
+  },
+  "propertyMatch": {
+    "status": "not_checked",
+    "strategy": "most_specific_accessible"
+  },
+  "sitemaps": {
+    "status": "not_checked",
+    "entries": []
+  },
+  "inspection": {
+    "requested": false,
+    "status": "not_requested",
+    "source": "google_index"
+  },
+  "limitations": [
+    "Deterministic mock data only; no Google account, OAuth token, or live Search Console API was used.",
+    "This read-only prototype does not create properties, verify ownership, submit sitemaps, request indexing, or change DNS.",
+    "Search Console and sitemap evidence cannot guarantee crawling, indexing, ranking, or future Google behavior."
+  ],
+  "nextActions": [
+    "Treat this as mock authorization state; ShipReady does not provide a live sign-in flow in Pass 9."
+  ]
+}

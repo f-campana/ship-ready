@@ -14,6 +14,10 @@ import { formatRepoInspectionJsonReport } from "../../src/report/formatRepoInspe
 import { formatUiReportJsonReport } from "../../src/report/formatUiReportJsonReport";
 import { formatWriteFixJsonReport } from "../../src/report/formatWriteFixJsonReport";
 import { createStatus, formatStatusJson } from "../../src/status/status";
+import {
+  formatSearchConsoleStatusJson,
+  getSearchConsoleStatus,
+} from "../../src/searchConsole/searchConsoleStatus";
 import { createDoctorReport, formatDoctorJson } from "../../src/doctor/doctor";
 import type { DoctorCheck } from "../../src/types/contracts";
 import type { AuditCheck, AuditResult, ExtractedPageMetadata } from "../../src/types/audit";
@@ -118,6 +122,22 @@ write("error.invalid-url.json", formatCliErrorJson({
   message: "Invalid URL. Provide an absolute http:// or https:// URL.",
 }));
 
+for (const [fileName, scenario, inspect] of [
+  ["search-console.not-configured.json", "not_configured", false],
+  ["search-console.unauthorized.json", "unauthorized", false],
+  ["search-console.property-not-found.json", "property_not_found", false],
+  ["search-console.ready-sitemap-ok.json", "ready_sitemap_ok", false],
+  ["search-console.ready-sitemap-warning.json", "ready_sitemap_warning", false],
+  ["search-console.inspection-canonical-mismatch.json", "inspection_canonical_mismatch", true],
+  ["search-console.inspection-not-indexed.json", "inspection_not_indexed", true],
+] as const) {
+  write(fileName, formatSearchConsoleStatusJson(await getSearchConsoleStatus({
+    url: "https://example.com/",
+    mock: scenario,
+    inspect,
+  })));
+}
+
 write("status.default.json", formatStatusJson(createStatus()));
 write("doctor.default.json", formatDoctorJson(createDoctorReport([
   doctorCheck("node-version", "Node.js", "pass", "Node.js 22.0.0 is supported.", { version: "22.0.0", minimumMajor: 20 }),
@@ -129,6 +149,7 @@ write("doctor.default.json", formatDoctorJson(createDoctorReport([
   doctorCheck("mcp-configuration", "MCP configuration", "pass", "The local stdio MCP command can accept an explicit allowed root; no server was started."),
   doctorCheck("contract-fixtures", "Contract fixtures", "pass", `${FIXTURE_NAMES.length} canonical contract fixtures exist and parse.`, { count: FIXTURE_NAMES.length }),
   doctorCheck("canonical-docs", "Canonical docs", "pass", `${new Set(Object.values(DOC_RESOURCES)).size} canonical documentation files are present.`, { checked: new Set(Object.values(DOC_RESOURCES)).size, missing: [] }),
+  doctorCheck("search-console-prototype", "Search Console mock prototype", "pass", "The Search Console specification and 7 deterministic mock fixtures are present; no Google credentials are required.", { liveIntegration: false, oauthRequired: false, fixtures: 7, missing: [] }),
   doctorCheck("write-policy", "WRITE_POLICY_V1", "pass", "The canonical creation_only_robots_sitemap_v1 policy document is present."),
   doctorCheck("local-gui-spec", "LOCAL_FIRST_GUI_SPEC", "pass", "The canonical local-first GUI specification is present."),
   doctorCheck("demo-artifacts", "Demo artifacts", "warn", "Optional demo artifacts are incomplete; core CLI operation is unaffected.", { missing: ["validation/example.mp4"] }),

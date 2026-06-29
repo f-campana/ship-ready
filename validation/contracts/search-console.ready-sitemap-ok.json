@@ -1,0 +1,52 @@
+{
+  "contract": "shipready.searchConsoleStatus.v1",
+  "generatedAt": "2026-06-29T12:00:00.000Z",
+  "mode": "mock",
+  "requestedUrl": "https://example.com/",
+  "authorization": {
+    "status": "authorized"
+  },
+  "propertyMatch": {
+    "status": "matched",
+    "strategy": "most_specific_accessible",
+    "property": {
+      "siteUrl": "https://example.com/",
+      "type": "url_prefix",
+      "permissionLevel": "siteFullUser"
+    }
+  },
+  "sitemaps": {
+    "status": "available",
+    "entries": [
+      {
+        "path": "https://example.com/sitemap.xml",
+        "lastSubmitted": "2026-06-27T08:00:00.000Z",
+        "lastDownloaded": "2026-06-28T09:30:00.000Z",
+        "isPending": false,
+        "isSitemapsIndex": false,
+        "type": "sitemap",
+        "warnings": 0,
+        "errors": 0,
+        "contents": [
+          {
+            "type": "web",
+            "submitted": 12
+          }
+        ]
+      }
+    ]
+  },
+  "inspection": {
+    "requested": false,
+    "status": "not_requested",
+    "source": "google_index"
+  },
+  "limitations": [
+    "Deterministic mock data only; no Google account, OAuth token, or live Search Console API was used.",
+    "This read-only prototype does not create properties, verify ownership, submit sitemaps, request indexing, or change DNS.",
+    "Search Console and sitemap evidence cannot guarantee crawling, indexing, ranking, or future Google behavior."
+  ],
+  "nextActions": [
+    "Review this mock shape only; a separate pass must design live OAuth and token custody before Google access is possible."
+  ]
+}

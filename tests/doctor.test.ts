@@ -40,6 +40,10 @@ describe("doctor", () => {
     expect(report.checks.some((check) => check.status === "pass")).toBe(true);
     expect(report.checks.every((check) => ["pass", "warn", "fail", "skip"].includes(check.status))).toBe(true);
     expect(Object.values(report.summary).reduce((total, count) => total + count, 0)).toBe(report.checks.length);
+    expect(report.checks.find((check) => check.id === "search-console-prototype")).toMatchObject({
+      status: "pass",
+      details: { liveIntegration: false, oauthRequired: false, fixtures: 7 },
+    });
   });
 
   it("reports a missing optional FFmpeg tool as a warning", async () => {

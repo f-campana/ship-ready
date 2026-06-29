@@ -19,8 +19,9 @@ Primary readers are Codex, Claude Code, Cursor, and future MCP clients; human de
 - `src/report/`: human, JSON, UI, and static HTML formatting.
 - `src/ui/`: normalized `ui-report-v1` creation.
 - `src/gui/`: local server and preview/copy-only browser UI.
-- `src/mcp/`: local stdio adapter, seven read-only tools, one guarded safe-write tool, preview receipts, canonical reads, prompts, authorization, errors, and deadlines.
+- `src/mcp/`: local stdio adapter, eight read-only tools, one guarded safe-write tool, preview receipts, canonical reads, prompts, authorization, errors, and deadlines.
 - `src/status/` and `src/doctor/`: static capability posture and bounded local readiness diagnostics.
+- `src/searchConsole/`: stable read-only status boundary and deterministic mock provider; no OAuth, tokens, or live Google client.
 - `scripts/demo/`: Fodmapp recording, captions, optional voice, and composition.
 - `validation/`: contract fixtures, reports, reviews, and approved demo artifacts.
 
@@ -51,13 +52,14 @@ Primary readers are Codex, Claude Code, Cursor, and future MCP clients; human de
 
 For MCP work, read [MCP_PLAN.md](MCP_PLAN.md) first. The implemented Pass 6 server has exactly one write tool, `shipready.write_safe_crawl_files`. It may create only current V1-eligible missing robots/sitemap files after `shipready.preview_fixes` returns a fresh signed preview receipt, the repository path is re-authorized, and the caller supplies the exact confirmation phrase `CREATE_SAFE_CRAWL_FILES_ONLY`. Do not add any other MCP write tool or broaden this wrapper.
 
-For future Search Console work, read [SEARCH_CONSOLE_READINESS_SPEC.md](SEARCH_CONSOLE_READINESS_SPEC.md) first. Keep live unauthenticated evidence, authorized Search Console evidence, and ownership verification separate. Pass 9 must start with the auth-design gate, use only Google's documented [`webmasters.readonly` scope](https://developers.google.com/webmaster-tools/v1/how-tos/authorizing), keep URL inspection opt-in and single-URL, and use mock Google clients in automated tests. Property creation, verification, DNS, sitemap submission, indexing requests, token exposure, and remote account custody are outside the prototype.
+For Search Console work, read [SEARCH_CONSOLE_READINESS_SPEC.md](SEARCH_CONSOLE_READINESS_SPEC.md) first. Pass 9 implements only a deterministic mock provider behind `shipready.searchConsoleStatus.v1`; it does not implement live OAuth, token custody, or Google API calls. Keep live unauthenticated evidence, future authorized Search Console evidence, and ownership verification separate. Mock URL inspection is opt-in and single-URL. Property creation, verification, DNS, sitemap submission, indexing requests, token exposure, and remote account custody remain outside the prototype.
 
 ## Main commands
 
 ```bash
 pnpm shipready status --json
 pnpm shipready doctor --json
+pnpm shipready search-console status --url https://example.com --mock ready_sitemap_ok --json
 pnpm shipready audit <url> --json
 pnpm shipready inspect-repo <path> --json
 pnpm shipready plan-fixes <path> --url <url> --json
@@ -166,4 +168,4 @@ Even with explicit instruction, work must remain within the active policy, repos
 - Expand writable file types or convert review-required previews into writable changes.
 - Present a planned interface as implemented.
 
-The planned `search-console status` CLI contract and `shipready.search_console_status` MCP tool are specification examples only. They must not be invoked, advertised as available, or added around internal helpers before the CLI contract and credential boundary are implemented and tested.
+`search-console status` and `shipready.search_console_status` are implemented only through deterministic mock scenarios. Do not describe them as live Google support, pass credentials to them, or add a live provider before a separate OAuth/token-custody design and security review.

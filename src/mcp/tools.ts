@@ -11,10 +11,16 @@ import { formatRepoInspectionJsonReport } from "../report/formatRepoInspectionJs
 import { formatUiReportJsonReport } from "../report/formatUiReportJsonReport";
 import { formatWriteFixJsonReport } from "../report/formatWriteFixJsonReport";
 import {
+  formatSearchConsoleStatusJson,
+  getSearchConsoleStatus,
+} from "../searchConsole/searchConsoleStatus";
+import { SEARCH_CONSOLE_MOCK_SCENARIOS } from "../searchConsole/searchConsoleTypes";
+import {
   AuditJsonContractSchema,
   DryRunFixJsonContractSchema,
   FixPlanJsonContractSchema,
   RepoInspectionJsonContractSchema,
+  SearchConsoleStatusJsonContractSchema,
   UiReportJsonContractSchema,
   WriteFixJsonContractSchema,
 } from "../types/contracts";
@@ -46,6 +52,11 @@ const UrlInputSchema = z.object({
   url: z.string().trim().min(1).max(2048),
   rendered: z.boolean().optional().default(true),
 }).strict();
+const SearchConsoleInputSchema = z.object({
+  url: z.string().trim().min(1).max(2048),
+  mock: z.enum(SEARCH_CONSOLE_MOCK_SCENARIOS).optional(),
+  inspect: z.boolean().optional().default(false),
+}).strict();
 const RepoInputSchema = z.object({ repoPath: z.string().trim().min(1).max(4096) }).strict();
 const UrlRepoInputSchema = UrlInputSchema.extend({ repoPath: z.string().trim().min(1).max(4096) }).strict();
 const WriteSafeCrawlFilesInputSchema = UrlRepoInputSchema.extend({
@@ -58,6 +69,7 @@ const PolicyInputSchema = z.object({ name: z.enum(Object.keys(POLICY_DOCS) as [k
 
 export type McpOperations = {
   auditSite: typeof auditUrl;
+  searchConsoleStatus: typeof getSearchConsoleStatus;
   inspectRepo: typeof inspectRepo;
   planFixes: typeof planFixes;
   previewFixes: typeof dryRunFix;
@@ -75,6 +87,7 @@ export type McpToolContext = {
 
 const DEFAULT_OPERATIONS: McpOperations = {
   auditSite: auditUrl,
+  searchConsoleStatus: getSearchConsoleStatus,
   inspectRepo,
   planFixes,
   previewFixes: dryRunFix,
@@ -94,6 +107,11 @@ export function listTools() {
     tool("shipready.audit_site", "Audit one public HTTP(S) page without local writes.", schema({
       url: stringSchema(2048), rendered: { type: "boolean", default: true },
     }, ["url"]), { ...readOnly, openWorldHint: true }),
+    tool("shipready.search_console_status", "Return deterministic mock-backed Search Console status without OAuth, Google API access, repository access, or writes.", schema({
+      url: stringSchema(2048),
+      mock: { type: "string", enum: [...SEARCH_CONSOLE_MOCK_SCENARIOS] },
+      inspect: { type: "boolean", default: false },
+    }, ["url"]), { ...readOnly, openWorldHint: false }),
     tool("shipready.inspect_repo", "Inspect one explicitly authorized repository without writes.", schema({
       repoPath: stringSchema(4096),
     }, ["repoPath"]), { ...readOnly, openWorldHint: false }),
@@ -201,6 +219,15 @@ async function executeTool(
     const result = await operations.auditSite(url, { timeoutMs, render: input.rendered });
     return contractResult(formatJsonReport(result), AuditJsonContractSchema);
   }
+  if (name === "shipready.search_console_status") {
+    const input = parseInput(SearchConsoleInputSchema, args, "invalid_mode");
+    const result = await operations.searchConsoleStatus({
+      url: input.url,
+      mock: input.mock,
+      inspect: input.inspect,
+    });
+    return contractResult(formatSearchConsoleStatusJson(result), SearchConsoleStatusJsonContractSchema);
+  }
   if (name === "shipready.inspect_repo") {
     const input = parseInput(RepoInputSchema, args, "invalid_repo_path");
     const repoPath = await context.authorizer.authorizeRepoPath(input.repoPath);
@@ -285,15 +312,20 @@ async function executeTool(
 function parseInput<T extends z.ZodType>(
   schema: T,
   input: unknown,
-  code: "invalid_url" | "invalid_repo_path" | "fixture_not_found" | "doc_not_found",
+  code: "invalid_url" | "invalid_mode" | "invalid_repo_path" | "fixture_not_found" | "doc_not_found",
 ): z.infer<T> {
   const parsed = schema.safeParse(input);
   if (parsed.success) return parsed.data;
   const unknownField = parsed.error.issues.some((issue) => issue.code === "unrecognized_keys");
   const invalidRepoPath = parsed.error.issues.some((issue) => issue.path[0] === "repoPath");
+  const invalidMode = parsed.error.issues.some((issue) => issue.path[0] === "mock");
   throw new ShipReadyMcpError(
-    unknownField ? "unsupported_command" : invalidRepoPath ? "invalid_repo_path" : code,
-    unknownField ? "Tool input contains unsupported fields." : "Tool input is missing or invalid.",
+    unknownField ? "unsupported_command" : invalidRepoPath ? "invalid_repo_path" : invalidMode ? "invalid_mode" : code,
+    unknownField
+      ? "Tool input contains unsupported fields."
+      : invalidMode
+        ? `Unsupported Search Console mock scenario. Use one of: ${SEARCH_CONSOLE_MOCK_SCENARIOS.join(", ")}.`
+        : "Tool input is missing or invalid.",
     { stage: "input", retryable: false },
   );
 }
@@ -351,6 +383,7 @@ function assertResultSize(result: unknown): void {
 
 function timeoutFor(name: ToolName, timeouts: McpTimeouts): number {
   if (name === "shipready.audit_site") return timeouts.audit_site;
+  if (name === "shipready.search_console_status") return timeouts.canonical_read;
   if (name === "shipready.inspect_repo") return timeouts.inspect_repo;
   if (name === "shipready.plan_fixes") return timeouts.plan_fixes;
   if (name === "shipready.preview_fixes") return timeouts.preview_fixes;

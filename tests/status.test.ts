@@ -26,6 +26,7 @@ describe("status", () => {
     expect(output).toContain("shipready.write_safe_crawl_files");
     expect(output).toContain("no write endpoint");
     expect(output).toContain("pnpm shipready doctor");
+    expect(output).toContain("mock prototype available, live integration not implemented");
   });
 
   it("emits the stable JSON capability and safety contract", async () => {
@@ -40,7 +41,7 @@ describe("status", () => {
     expect(status.capabilities.mcp.writeTools).toEqual(["shipready.write_safe_crawl_files"]);
     expect(status.capabilities.gui).toEqual({ local: true, writeEndpoint: false });
     expect(status.integrations).toEqual({
-      searchConsole: "not_implemented",
+      searchConsole: "mock_prototype",
       dns: "not_implemented",
       github: "not_implemented",
       deployment: "not_implemented",

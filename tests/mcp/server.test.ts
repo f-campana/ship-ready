@@ -35,7 +35,7 @@ describe("MCP startup and stdio transport", () => {
       const resources = await client.listResources();
       const templates = await client.listResourceTemplates();
       const prompts = await client.listPrompts();
-      expect(tools.tools).toHaveLength(8);
+      expect(tools.tools).toHaveLength(9);
       expect(tools.tools.map((tool) => tool.name).filter((name) => name.includes("write"))).toEqual([
         "shipready.write_safe_crawl_files",
       ]);
@@ -50,6 +50,15 @@ describe("MCP startup and stdio transport", () => {
         arguments: { fixtureName: "audit.clean.json" },
       });
       expect(fixture.structuredContent).toMatchObject({ contract: "shipready.audit.v1" });
+      const searchConsole = await client.callTool({
+        name: "shipready.search_console_status",
+        arguments: { url: "https://example.com", mock: "ready_sitemap_ok" },
+      });
+      expect(searchConsole.structuredContent).toMatchObject({
+        contract: "shipready.searchConsoleStatus.v1",
+        mode: "mock",
+        sitemaps: { status: "available" },
+      });
       const resource = await client.readResource({ uri: "shipready://docs/contracts" });
       expect(resource.contents[0]).toMatchObject({ mimeType: "text/markdown" });
       const prompt = await client.getPrompt({ name: "write_policy_summary" });

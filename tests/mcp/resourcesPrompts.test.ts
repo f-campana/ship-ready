@@ -26,6 +26,7 @@ describe("MCP canonical resources and prompts", () => {
       "shipready://docs/status",
       "shipready://docs/roadmap",
       "shipready://docs/mcp-plan",
+      "shipready://docs/search-console-readiness-spec",
     ]) {
       expect(uris).toContain(uri);
       const resource = await readResource(packageRoot, uri);

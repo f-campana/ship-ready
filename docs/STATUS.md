@@ -15,14 +15,15 @@ ShipReady is a CLI-first, agent-friendly launch-readiness engine for generated w
 - Human and Zod-validated JSON outputs.
 - Versioned `ui-report-v1` normalization and self-contained HTML reports.
 - Local GUI with `POST /api/ui-report`; safe apply is preview/copy-only and no write endpoint exists.
-- Local MCP stdio server with seven read-only tools, one guarded safe-write tool for V1 crawl-file creations, canonical docs/fixtures, five prompts, explicit allowed roots, stable errors, preview receipts, and bounded deadlines.
+- Local MCP stdio server with eight read-only tools, one guarded safe-write tool for V1 crawl-file creations, canonical docs/fixtures, five prompts, explicit allowed roots, stable errors, preview receipts, and bounded deadlines.
 - Fodmapp demo scripts, approved silent/captioned media, optional approved voiced media, thumbnail, captions, and review evidence.
-- Official-source-backed [Search Console readiness specification](SEARCH_CONSOLE_READINESS_SPEC.md) defining future read-only evidence, OAuth/privacy boundaries, interfaces, and tests. It is documentation only.
+- Stable `shipready.searchConsoleStatus.v1`, `search-console status`, seven deterministic mock scenarios, opt-in mock indexed-version inspection, and the read-only `shipready.search_console_status` MCP tool.
+- Official-source-backed [Search Console readiness specification](SEARCH_CONSOLE_READINESS_SPEC.md) defining claim boundaries and the future live provider/OAuth boundary.
 
 ## What is not built
 
 - Any MCP write tool beyond `shipready.write_safe_crawl_files`, or any remote MCP transport.
-- Search Console or DNS integration.
+- Live Google Search Console/OAuth/token custody or DNS integration. Only the local deterministic Search Console mock prototype exists.
 - GitHub/PR integration or deployment workflow.
 - GUI write execution.
 - Broader safe apply or writes to metadata, content, JSON-LD, packages, configuration, or existing files.
@@ -44,4 +45,4 @@ Read-only inspection and preview are the default. CLI write mode requires `fix -
 
 ## Next pass
 
-**Pass 9: read-only Search Console status prototype.** Begin with the local auth-design gate in [SEARCH_CONSOLE_READINESS_SPEC.md](SEARCH_CONSOLE_READINESS_SPEC.md), then implement only property/sitemap status and optional one-URL indexed-version inspection behind Google's documented [`webmasters.readonly` scope](https://developers.google.com/webmaster-tools/v1/how-tos/authorizing). Search Console, OAuth, and the proposed interfaces are not implemented yet.
+**Pass 10: DNS readiness checks spec.** Define provider-neutral, read-only DNS evidence and claim boundaries before implementing checks. Do not add DNS mutation or deployment behavior.

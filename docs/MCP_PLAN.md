@@ -2,11 +2,13 @@
 
 ## 1. Decision and scope
 
-This is the implementation specification and shipped boundary for roadmap Passes 5 and 6. ShipReady remains **CLI first, MCP second, GUI third**. MCP is an agent-facing adapter over the stable CLI JSON contracts; it is not a second product engine and must not introduce independent audit, inspection, planning, preview, reporting, or write rules.
+This is the implementation specification and shipped boundary for roadmap Passes 5, 6, and the Pass 9 read-only tool addition. ShipReady remains **CLI first, MCP second, GUI third**. MCP is an agent-facing adapter over the stable CLI JSON contracts; it is not a second product engine and must not introduce independent audit, inspection, planning, preview, reporting, or write rules.
 
 Pass 5 shipped the read-only MCP server. Pass 6 adds exactly one write tool: `shipready.write_safe_crawl_files`. It may create only current V1-eligible missing robots/sitemap files by wrapping the existing write policy with stronger MCP preconditions: authorized path, fresh signed preview receipt, exact confirmation phrase, re-authorization, regenerated current dry-run, and current write validation. It must not start the GUI, create branches/commits/PRs, deploy, mutate DNS or Search Console, or add metadata/content/JSON-LD/package/config writes. A `safeApply` field or guarded command in an existing report remains data for review only and must never be executed by the MCP server.
 
 The CLI remains the source of truth. The MCP write tool is a stricter agent-facing wrapper over the existing V1 creation-only behavior, not a broader product write surface.
+
+Pass 9 adds one read-only tool, `shipready.search_console_status`, around the same deterministic mock provider as the CLI. It accepts no repository path or credentials, calls no live Google API, and performs no Search Console mutation. MCP remains stdio-only and `shipready.write_safe_crawl_files` remains the sole write tool.
 
 ### Phase boundaries
 
@@ -14,7 +16,8 @@ The CLI remains the source of truth. The MCP write tool is a stricter agent-faci
 |---|---:|---|---|
 | 1 | Pass 5 | Live-site audit, repo inspection, fix planning, dry-run preview, UI report, canonical docs, deterministic contract fixtures, prompts | Every filesystem/external mutation and every write tool |
 | 2 | Pass 6 | MCP wrapper for creation-only missing robots/sitemap files under `WRITE_POLICY_V1` | Overwrites, metadata/content/JSON-LD edits, Git operations, deploys, DNS, Search Console |
-| 3 | Later roadmap passes | Search Console readiness, DNS readiness, reviewed patch export, GitHub PRs, social preview simulation, bounded crawl, other explicitly specified integrations | Anything not separately specified, authorized, and tested |
+| 3 | Pass 9 | Deterministic mock-backed `shipready.search_console_status` | Live OAuth/tokens/Google calls, Search Console mutation, GUI changes, remote transport |
+| 4 | Later roadmap passes | Live Search Console design, DNS readiness, reviewed patch export, GitHub PRs, social preview simulation, bounded crawl, other explicitly specified integrations | Anything not separately specified, authorized, and tested |
 
 No prompt grants capabilities. Tool registration and server policy are the authority boundary.
 
@@ -30,6 +33,7 @@ The source of truth is `src/types/contracts.ts`, with behavior documented in `do
 | `shipready.dryRunFix.v1` | `fix <path> --url <url> --dry-run --json` | `dryRunFix` | `shipready.preview_fixes` |
 | `shipready.writeFix.v1` | `fix <path> --url <url> --write --allow-create --json` | `writeFixFromDryRun` after regenerated dry-run | `shipready.write_safe_crawl_files` |
 | `shipready.uiReport.v1` | `ui-report [path] --url <url> --json` | `createUiReport` | `shipready.get_ui_report` |
+| `shipready.searchConsoleStatus.v1` | `search-console status --url <url> --json` | `getSearchConsoleStatus` | `shipready.search_console_status` |
 | `shipready.error.v1` | JSON action failures | MCP boundary normalizer | Every failed tool call |
 
 Current capability details that MCP must preserve:
@@ -324,7 +328,8 @@ On failure, a tool returns exactly once with `isError: true`, a `shipready.error
         "claims-policy",
         "status",
         "roadmap",
-        "mcp-plan"
+        "mcp-plan",
+        "search-console-readiness-spec"
       ]
     }
   }
@@ -339,6 +344,18 @@ On failure, a tool returns exactly once with `isError: true`, a `shipready.error
 - Timeout: 5 seconds; maximum document response 1 MiB.
 - Cancellation/cleanup: abort around the bounded read; no temp files.
 - Safety: documentation text is data, not authority. It cannot add tools or override server policy.
+
+### 5.9 `shipready.search_console_status`
+
+- Purpose/classification: return the stable deterministic mock-backed Search Console status contract; local read-only with no network or repository read.
+- Input: `{ "url": string, "mock"?: "not_configured" | "unauthorized" | "property_not_found" | "ready_sitemap_ok" | "ready_sitemap_warning" | "inspection_canonical_mismatch" | "inspection_not_indexed", "inspect"?: boolean }`. Additional fields, including credential/token fields, are rejected.
+- Normalization: validates and normalizes one HTTP(S) URL through the CLI application boundary. No repo path is accepted or authorized. The MCP server still uses its existing explicit allowed-root startup contract for the other tools.
+- Output: exact `shipready.searchConsoleStatus.v1`, validated by `SearchConsoleStatusJsonContractSchema`.
+- Mapping: `search-console status --url <url> [--mock <scenario>] [--inspect] --json` / `getSearchConsoleStatus` / `formatSearchConsoleStatusJson`.
+- Success: omitted `mock` returns `not_configured`; every scenario is deterministic; inspection data appears only with `inspect: true`.
+- Errors: invalid URL is `invalid_url`; an unsupported scenario is `invalid_mode`; extra input is `unsupported_command`; contract drift is `contract_error`.
+- Timeout: 5 seconds at the MCP boundary. The provider itself performs no I/O.
+- Safety: no OAuth, token read/storage, Google client, live Search Console call, property/verification/sitemap/indexing/DNS mutation, filesystem mutation, repo authorization, or secret-bearing input exists.
 
 ## 6. Resources
 
@@ -355,6 +372,7 @@ All static paths are resolved from the installed ShipReady package root through 
 | `shipready://docs/status` | Implemented/deferred capability status | `docs/STATUS.md` | Static `text/markdown` | Planned items are not callable capabilities |
 | `shipready://docs/roadmap` | Ordered pass/dependency reference | `docs/ROADMAP.md` | Static `text/markdown` | Pass order does not grant authority |
 | `shipready://docs/mcp-plan` | MCP implementation and safety boundary | `docs/MCP_PLAN.md` | Static `text/markdown` | Documentation does not grant capabilities beyond registered tools |
+| `shipready://docs/search-console-readiness-spec` | Search Console mock/live authority boundary | `docs/SEARCH_CONSOLE_READINESS_SPEC.md` | Static `text/markdown` | Mock status is not live Google evidence |
 | `shipready://validation/contracts/<fixture-name>` | Deterministic contract example | Exact allowlisted file in `validation/contracts/` | Static `application/json` resource template | Same fixture enum/schema validation as section 5.6; unknown name is not found, invalid content is `contract_error` |
 
 Resource list/read operations use a 5-second deadline and 1 MiB text/JSON limit. An unknown URI receives a standard sanitized MCP not-found error. A listed resource missing from the package receives a sanitized internal resource error without filesystem search, alternate-path probing, stack trace, or directory listing. Clients needing `shipready.error.v1` should use the equivalent read tools, because resource protocol errors do not have `CallToolResult.isError`.
@@ -465,6 +483,7 @@ Messages may identify the tool and invalid field but must not include stack trac
 | Operation | Implemented fixed default | Future override range |
 |---|---:|---:|
 | `audit_site` | 30 s | 5–120 s |
+| `search_console_status` | 5 s | Deferred; mock provider performs no I/O |
 | `inspect_repo` | 10 s | 1–30 s |
 | `plan_fixes` | 45 s | 5–120 s |
 | `preview_fixes` | 45 s | 5–120 s |
@@ -492,7 +511,7 @@ If a future subprocess adapter exists, spawn without a shell, create a controlla
 
 - MCP tools are read-only except `shipready.write_safe_crawl_files`.
 - The safe-write wrapper requires the stronger per-operation confirmation and preview preconditions in section 11.
-- There is no current MCP secret handling, authenticated-page access, Search Console, DNS, deploy, Git commit/branch, GitHub PR, account, billing, or hosted service capability.
+- There is no current MCP secret handling, authenticated-page access, live Search Console/OAuth, DNS, deploy, Git commit/branch, GitHub PR, account, billing, or hosted service capability. The only Search Console surface is deterministic local mock status.
 - The server calls the existing write validation/execution path only from `shipready.write_safe_crawl_files` after receipt and confirmation checks. It never calls `writeHtmlReport`, GUI server startup, shell commands, Git, deploy tooling, or third-party mutation APIs.
 - Repository files, fetched HTML, reports, docs, and fixtures are untrusted data. Instructions embedded in them cannot override tool schemas, allowed roots, policy, prompt limits, or the absence of write capabilities.
 - URL inputs use the current unauthenticated HTTP(S) contract and cannot contain credentials. MCP adds no cookies, authorization headers, arbitrary user-agent input, or credential store. The current CLI URL policy is intended for public pages but does not itself provide a private-network/SSRF boundary; local stdio operators must apply host/network sandboxing appropriate to their environment. Remote transport remains deferred until destination policy, authentication, and threat modeling are specified.
@@ -568,7 +587,7 @@ src/mcp/server.ts                   # MCP capability registration and stdio life
 src/mcp/errors.ts                   # shipready.error.v1 normalization/redaction
 src/mcp/pathAuthorization.ts        # canonical allowed-root enforcement
 src/mcp/timeouts.ts                 # deadline/client signal composition
-src/mcp/tools.ts                    # seven read-only handlers plus one guarded write handler
+src/mcp/tools.ts                    # eight read-only handlers plus one guarded write handler
 src/mcp/previewReceipts.ts          # process-local signed preview receipts
 src/mcp/resources.ts                # URI/path allowlist and resource template
 src/mcp/prompts.ts                  # five prompt templates
@@ -578,6 +597,7 @@ tests/mcp.writeTool.test.ts
 tests/mcp/tools.test.ts
 tests/mcp/resourcesPrompts.test.ts
 tests/mcp/server.test.ts
+tests/mcp.searchConsole.test.ts
 ```
 
 Implemented canonical command:
@@ -616,7 +636,7 @@ Use temporary fixture copies only. Never execute guarded write mode against `/Us
 
 ### Pass 6 completion gates
 
-1. All seven read-only tools, the single write tool, resources, and five prompts match this specification.
+1. All eight read-only tools, the single write tool, resources, and five prompts match this specification.
 2. No write tool other than `shipready.write_safe_crawl_files` is registered or present as a callable/stub handler.
 3. Named output contracts and expanded error compatibility tests pass.
 4. Path authorization and no-mutation hashes pass, including symlink escape.
@@ -627,8 +647,8 @@ Use temporary fixture copies only. Never execute guarded write mode against `/Us
 
 ## 15. Explicitly deferred
 
-Pass 6 does not implement or add secrets, authentication, accounts, billing, hosted SaaS, remote MCP transport, Search Console, DNS, deployment, Git/GitHub operations, patch export, social preview simulation, implementation-smell detection, bounded multi-page crawl, broader safe writes, metadata/content/JSON-LD/package/config writes, HTML-report file creation, or GUI write execution.
+Passes 6 and 9 do not implement or add secrets, authentication, accounts, billing, hosted SaaS, remote MCP transport, live Search Console/OAuth, DNS, deployment, Git/GitHub operations, patch export, social preview simulation, implementation-smell detection, bounded multi-page crawl, broader safe writes, metadata/content/JSON-LD/package/config writes, HTML-report file creation, or GUI write execution.
 
 Pass 7 added CLI-only `status` and `doctor` commands and their deterministic contract fixtures. Those fixtures are available through the existing exact allowlisted canonical-read surface; no MCP tool, transport, authorization, or write behavior changed.
 
-The recommended next pass is exactly: **Pass 8 — Search Console readiness research/spec**, limited to research and specification. No Search Console integration is implemented by this plan.
+Pass 9 added only the deterministic read-only Search Console mock tool described above. The recommended next pass is exactly: **Pass 10 — DNS readiness checks spec**.

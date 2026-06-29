@@ -13,6 +13,7 @@ export const CONTRACT_NAMES = {
   dryRunFix: "shipready.dryRunFix.v1",
   writeFix: "shipready.writeFix.v1",
   uiReport: "shipready.uiReport.v1",
+  searchConsoleStatus: "shipready.searchConsoleStatus.v1",
   status: "shipready.status.v1",
   doctor: "shipready.doctor.v1",
   error: "shipready.error.v1",
@@ -25,6 +26,7 @@ export const CLI_JSON_CONTRACT_BY_COMMAND = {
   "fix --dry-run --json": CONTRACT_NAMES.dryRunFix,
   "fix --write --allow-create --json": CONTRACT_NAMES.writeFix,
   "ui-report --json": CONTRACT_NAMES.uiReport,
+  "search-console status --json": CONTRACT_NAMES.searchConsoleStatus,
   "status --json": CONTRACT_NAMES.status,
   "doctor --json": CONTRACT_NAMES.doctor,
 } as const;
@@ -51,6 +53,169 @@ export const WriteFixJsonContractSchema = WriteFixResultSchema.extend({
 
 export const UiReportJsonContractSchema = UiReportSchema.extend({
   contract: z.literal(CONTRACT_NAMES.uiReport),
+});
+
+const SearchConsolePermissionLevelSchema = z.enum([
+  "siteOwner",
+  "siteFullUser",
+  "siteRestrictedUser",
+  "siteUnverifiedUser",
+  "UNKNOWN",
+]);
+
+const SearchConsolePropertySchema = z.object({
+  siteUrl: z.string().min(1),
+  type: z.enum(["domain", "url_prefix"]),
+  permissionLevel: SearchConsolePermissionLevelSchema,
+}).strict();
+
+const SearchConsoleSitemapEntrySchema = z.object({
+  path: z.string().min(1),
+  lastSubmitted: z.string().min(1).optional(),
+  lastDownloaded: z.string().min(1).optional(),
+  isPending: z.boolean().optional(),
+  isSitemapsIndex: z.boolean().optional(),
+  type: z.enum([
+    "atomFeed",
+    "notSitemap",
+    "patternSitemap",
+    "rssFeed",
+    "sitemap",
+    "urlList",
+    "UNKNOWN",
+  ]).optional(),
+  warnings: z.number().int().nonnegative().optional(),
+  errors: z.number().int().nonnegative().optional(),
+  contents: z.array(z.object({
+    type: z.enum([
+      "androidApp",
+      "image",
+      "iosApp",
+      "mobile",
+      "news",
+      "pattern",
+      "video",
+      "web",
+      "UNKNOWN",
+    ]),
+    submitted: z.number().int().nonnegative().optional(),
+  }).strict()).optional(),
+}).strict();
+
+const SearchConsoleInspectionResultSchema = z.object({
+  verdict: z.enum(["VERDICT_UNSPECIFIED", "PASS", "PARTIAL", "FAIL", "NEUTRAL", "UNKNOWN"]).optional(),
+  coverageState: z.string().min(1).optional(),
+  robotsTxtState: z.enum([
+    "ROBOTS_TXT_STATE_UNSPECIFIED",
+    "ALLOWED",
+    "DISALLOWED",
+    "UNKNOWN",
+  ]).optional(),
+  indexingState: z.enum([
+    "INDEXING_STATE_UNSPECIFIED",
+    "INDEXING_ALLOWED",
+    "BLOCKED_BY_META_TAG",
+    "BLOCKED_BY_HTTP_HEADER",
+    "BLOCKED_BY_ROBOTS_TXT",
+    "UNKNOWN",
+  ]).optional(),
+  lastCrawlTime: z.string().min(1).optional(),
+  pageFetchState: z.enum([
+    "PAGE_FETCH_STATE_UNSPECIFIED",
+    "SUCCESSFUL",
+    "SOFT_404",
+    "BLOCKED_ROBOTS_TXT",
+    "NOT_FOUND",
+    "ACCESS_DENIED",
+    "SERVER_ERROR",
+    "REDIRECT_ERROR",
+    "ACCESS_FORBIDDEN",
+    "BLOCKED_4XX",
+    "INTERNAL_CRAWL_ERROR",
+    "INVALID_URL",
+    "UNKNOWN",
+  ]).optional(),
+  googleCanonical: z.string().min(1).optional(),
+  userCanonical: z.string().min(1).optional(),
+  crawledAs: z.enum(["CRAWLING_USER_AGENT_UNSPECIFIED", "DESKTOP", "MOBILE", "UNKNOWN"]).optional(),
+  sitemaps: z.array(z.string().min(1)).optional(),
+}).strict();
+
+export const SearchConsoleStatusJsonContractSchema = z.object({
+  contract: z.literal(CONTRACT_NAMES.searchConsoleStatus),
+  generatedAt: z.string().min(1),
+  mode: z.enum(["mock", "live"]),
+  requestedUrl: z.string().min(1),
+  authorization: z.object({
+    status: z.enum([
+      "not_configured",
+      "authorization_required",
+      "authorized",
+      "expired",
+      "revoked",
+    ]),
+    scope: z.literal("https://www.googleapis.com/auth/webmasters.readonly").optional(),
+  }).strict(),
+  propertyMatch: z.object({
+    status: z.enum(["not_checked", "matched", "not_accessible", "ambiguous"]),
+    strategy: z.enum(["explicit", "most_specific_accessible"]),
+    property: SearchConsolePropertySchema.optional(),
+  }).strict(),
+  sitemaps: z.object({
+    status: z.enum(["not_checked", "none_submitted", "available", "error"]),
+    entries: z.array(SearchConsoleSitemapEntrySchema),
+  }).strict(),
+  inspection: z.object({
+    requested: z.boolean(),
+    status: z.enum(["not_requested", "not_checked", "available", "quota_exceeded", "error"]),
+    source: z.literal("google_index"),
+    result: SearchConsoleInspectionResultSchema.optional(),
+  }).strict(),
+  limitations: z.array(z.string().min(1)).min(1),
+  nextActions: z.array(z.string().min(1)).min(1),
+}).strict().superRefine((status, context) => {
+  if (status.mode === "mock" && status.authorization.scope) {
+    context.addIssue({
+      code: "custom",
+      path: ["authorization", "scope"],
+      message: "Mock mode must not claim an active OAuth scope.",
+    });
+  }
+  if (status.propertyMatch.status === "matched" && !status.propertyMatch.property) {
+    context.addIssue({
+      code: "custom",
+      path: ["propertyMatch", "property"],
+      message: "A matched property status requires property evidence.",
+    });
+  }
+  if (status.propertyMatch.status !== "matched" && status.propertyMatch.property) {
+    context.addIssue({
+      code: "custom",
+      path: ["propertyMatch", "property"],
+      message: "Property evidence is allowed only for a matched status.",
+    });
+  }
+  if (status.sitemaps.status !== "available" && status.sitemaps.entries.length > 0) {
+    context.addIssue({
+      code: "custom",
+      path: ["sitemaps", "entries"],
+      message: "Sitemap entries are allowed only when sitemap status is available.",
+    });
+  }
+  if (!status.inspection.requested && status.inspection.status !== "not_requested") {
+    context.addIssue({
+      code: "custom",
+      path: ["inspection", "status"],
+      message: "An inspection that was not requested must use not_requested.",
+    });
+  }
+  if (status.inspection.status === "available" && !status.inspection.result) {
+    context.addIssue({
+      code: "custom",
+      path: ["inspection", "result"],
+      message: "Available inspection status requires a result.",
+    });
+  }
 });
 
 const NotImplementedSchema = z.literal("not_implemented");
@@ -84,7 +249,7 @@ export const StatusJsonContractSchema = z.object({
     forbidden: z.array(z.string().min(1)),
   }).strict(),
   integrations: z.object({
-    searchConsole: NotImplementedSchema,
+    searchConsole: z.enum(["not_implemented", "mock_prototype"]),
     dns: NotImplementedSchema,
     github: NotImplementedSchema,
     deployment: NotImplementedSchema,
@@ -190,6 +355,7 @@ export type FixPlanJsonContract = z.infer<typeof FixPlanJsonContractSchema>;
 export type DryRunFixJsonContract = z.infer<typeof DryRunFixJsonContractSchema>;
 export type WriteFixJsonContract = z.infer<typeof WriteFixJsonContractSchema>;
 export type UiReportJsonContract = z.infer<typeof UiReportJsonContractSchema>;
+export type SearchConsoleStatusJsonContract = z.infer<typeof SearchConsoleStatusJsonContractSchema>;
 export type StatusJsonContract = z.infer<typeof StatusJsonContractSchema>;
 export type DoctorCheckStatus = z.infer<typeof DoctorCheckStatusSchema>;
 export type DoctorCheck = z.infer<typeof DoctorCheckSchema>;

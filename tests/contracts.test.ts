@@ -10,6 +10,7 @@ import { formatJsonReport } from "../src/report/formatJsonReport";
 import { formatRepoInspectionJsonReport } from "../src/report/formatRepoInspectionJsonReport";
 import { formatUiReportJsonReport } from "../src/report/formatUiReportJsonReport";
 import { formatWriteFixJsonReport } from "../src/report/formatWriteFixJsonReport";
+import { formatSearchConsoleStatusJson } from "../src/searchConsole/searchConsoleStatus";
 import { AuditResultSchema } from "../src/types/audit";
 import {
   AuditJsonContractSchema,
@@ -19,6 +20,7 @@ import {
   DryRunFixJsonContractSchema,
   FixPlanJsonContractSchema,
   RepoInspectionJsonContractSchema,
+  SearchConsoleStatusJsonContractSchema,
   UiReportJsonContractSchema,
   WriteFixJsonContractSchema,
   StatusJsonContractSchema,
@@ -50,6 +52,13 @@ describe("CLI JSON contracts", () => {
     ["fix-write.skipped.json", WriteFixJsonContractSchema, CONTRACT_NAMES.writeFix],
     ["ui-report.safe-apply.json", UiReportJsonContractSchema, CONTRACT_NAMES.uiReport],
     ["ui-report.url-only.json", UiReportJsonContractSchema, CONTRACT_NAMES.uiReport],
+    ["search-console.not-configured.json", SearchConsoleStatusJsonContractSchema, CONTRACT_NAMES.searchConsoleStatus],
+    ["search-console.unauthorized.json", SearchConsoleStatusJsonContractSchema, CONTRACT_NAMES.searchConsoleStatus],
+    ["search-console.property-not-found.json", SearchConsoleStatusJsonContractSchema, CONTRACT_NAMES.searchConsoleStatus],
+    ["search-console.ready-sitemap-ok.json", SearchConsoleStatusJsonContractSchema, CONTRACT_NAMES.searchConsoleStatus],
+    ["search-console.ready-sitemap-warning.json", SearchConsoleStatusJsonContractSchema, CONTRACT_NAMES.searchConsoleStatus],
+    ["search-console.inspection-canonical-mismatch.json", SearchConsoleStatusJsonContractSchema, CONTRACT_NAMES.searchConsoleStatus],
+    ["search-console.inspection-not-indexed.json", SearchConsoleStatusJsonContractSchema, CONTRACT_NAMES.searchConsoleStatus],
     ["error.invalid-url.json", CliErrorContractSchema, CONTRACT_NAMES.error],
     ["status.default.json", StatusJsonContractSchema, CONTRACT_NAMES.status],
     ["doctor.default.json", DoctorJsonContractSchema, CONTRACT_NAMES.doctor],
@@ -68,6 +77,7 @@ describe("CLI JSON contracts", () => {
       "fix --dry-run --json": "shipready.dryRunFix.v1",
       "fix --write --allow-create --json": "shipready.writeFix.v1",
       "ui-report --json": "shipready.uiReport.v1",
+      "search-console status --json": "shipready.searchConsoleStatus.v1",
       "status --json": "shipready.status.v1",
       "doctor --json": "shipready.doctor.v1",
     });
@@ -92,6 +102,9 @@ describe("CLI JSON contracts", () => {
     expect(contractOf(formatUiReportJsonReport(
       UiReportSchema.parse(readFixture("ui-report.url-only.json")),
     ))).toBe(CONTRACT_NAMES.uiReport);
+    expect(contractOf(formatSearchConsoleStatusJson(
+      SearchConsoleStatusJsonContractSchema.parse(readFixture("search-console.ready-sitemap-ok.json")),
+    ))).toBe(CONTRACT_NAMES.searchConsoleStatus);
   });
 
   it("keeps dry-run preview, skipped, and review-required states distinct", () => {

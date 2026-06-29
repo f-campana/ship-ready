@@ -1,6 +1,6 @@
 # Search Console Readiness Specification
 
-Status: **Pass 8 specification only. Nothing in this document is implemented.**
+Status: **Pass 9 mock-backed read-only prototype implemented. Live Google integration remains deferred.**
 
 Research date: 2026-06-27. Factual claims below use Google-owned documentation only.
 
@@ -11,6 +11,12 @@ ShipReady should eventually answer a bounded question:
 > Is this site accessible through the authorized user's Google Search Console account, what sitemap and selected-URL status does Google report, and what is the next safe action?
 
 This is evidence and readiness reporting. It is not an indexing fix, ranking product, ownership automation service, or Search Console replacement. The operating order remains **CLI first, MCP second, GUI third**.
+
+## Pass 9 local prototype decision
+
+Pass 9 does not implement live Google OAuth. Pass 9 does not store or read tokens. Pass 9 does not call live Google APIs. It uses a provider boundary and deterministic mock fixtures for the CLI and read-only MCP tool. Live OAuth and token custody are deferred to a separate pass.
+
+This boundary is required because Search Console access involves Google account identity, site ownership, property permissions, and OAuth token custody. The shipped prototype therefore exposes no credential input, Google client dependency, account identity, live property inventory, or mutation path.
 
 ## Non-goals and preserved boundaries
 
@@ -163,15 +169,14 @@ Google explicitly says a sitemap does not guarantee crawling/indexing and a recr
 - The MCP server must obtain authorization through a reviewed local credential broker; a model/client must never receive or supply the token.
 - Stdio transport and allowed-root rules remain unchanged. Search Console status needs no repository root and grants no file authority.
 
-## Future CLI proposal
+## Implemented mock CLI and future live boundary
 
 Recommended name: `search-console`, not the less discoverable `gsc` abbreviation.
 
 ```bash
-# Planned; not implemented
 pnpm shipready search-console status --url https://example.com --json
-pnpm shipready search-console status --url https://example.com --property sc-domain:example.com --json
-pnpm shipready search-console status --url https://example.com/page --inspect --json
+pnpm shipready search-console status --url https://example.com --mock ready_sitemap_ok --json
+pnpm shipready search-console status --url https://example.com/page --mock inspection_canonical_mismatch --inspect --json
 ```
 
 Proposed flags:
@@ -179,23 +184,24 @@ Proposed flags:
 | Flag | Meaning |
 |---|---|
 | `--url <url>` | Required public HTTP(S) URL to match; also the single inspected URL when `--inspect` is present |
-| `--property <siteUrl>` | Optional exact Search Console property selector; must be accessible and contain the URL |
-| `--inspect` | Opt in to one indexed-version URL Inspection API call |
+| `--mock <scenario>` | Optional deterministic fixture scenario; omission returns `not_configured` |
+| `--provider mock` | Optional explicit provider selection; all other values are rejected |
+| `--inspect` | Opt in to one mock indexed-version section; no URL Inspection API call occurs |
 | `--json` | Emit one `shipready.searchConsoleStatus.v1` object |
 
 No token, client secret, verification token, sitemap submission, property-add, or indexing flags are permitted.
 
 Expected state outcomes such as unconfigured auth, authorization required, expired/revoked authorization, no accessible property, ambiguous match, no submitted sitemap, or unavailable inspection should remain valid status results with safe next actions. Invalid CLI input should use `shipready.error.v1` and exit `1`. A total network/Google API failure that prevents a report should use `shipready.error.v1` and exit `2`. A section-specific failure or quota response may remain in the status contract with that section marked `error` or `quota_exceeded` and no invented data.
 
-## Future JSON contract sketch
+## Implemented JSON contract
 
-This is a proposed V1 boundary for Pass 9, not a runtime type. Optional API fields remain optional; missing is not converted to false, zero, or an empty verdict. Google-named fields and enums come from the official [Sites](https://developers.google.com/webmaster-tools/v1/sites), [Sitemaps](https://developers.google.com/webmaster-tools/v1/sitemaps), and [URL Inspection](https://developers.google.com/webmaster-tools/v1/urlInspection.index/UrlInspectionResult) resources.
+This is the shipped `shipready.searchConsoleStatus.v1` boundary. The code uses `mode: "mock" | "live"` instead of the earlier `mode: "read_only"` sketch: Pass 9 emits only `mock`, while both current and future modes remain read-only. Optional API-shaped fields remain optional; missing is not converted to false, zero, or an empty verdict. Google-named fields and enums come from the official [Sites](https://developers.google.com/webmaster-tools/v1/sites), [Sitemaps](https://developers.google.com/webmaster-tools/v1/sitemaps), and [URL Inspection](https://developers.google.com/webmaster-tools/v1/urlInspection.index/UrlInspectionResult) resources.
 
 ```ts
 type SearchConsoleStatus = {
   contract: "shipready.searchConsoleStatus.v1";
   generatedAt: string;
-  mode: "read_only";
+  mode: "mock" | "live";
   requestedUrl: string;
   authorization: {
     status:
@@ -279,24 +285,24 @@ Contract rules:
 
 - `authorization`, `propertyMatch`, `sitemaps`, and `inspection` are separate state machines; no top-level “connected” boolean obscures them.
 - `strategy` and property `type` are ShipReady-derived. All other Google-named values above map to documented API fields/enums.
-- Preserve unknown future Google enum values safely at the adapter boundary rather than crashing or silently coercing. Pass 9 must decide whether the public V1 schema uses a documented fallback string or an explicit `unknown` value before freezing fixtures.
+- Preserve unknown future Google enum values safely at the adapter boundary rather than crashing or silently coercing. V1 reserves the explicit `UNKNOWN` fallback for Google enum fields; the mock fixtures use only documented values.
 - Never include tokens, account email, full property inventory, referring URLs, raw Google responses, request headers, or verification details.
 - Compare `userCanonical` and `googleCanonical` only when both exist. Absence is “not reported,” not mismatch.
 - A separate `shipready.searchConsoleAuthStatus.v1` is not recommended initially; it would duplicate authorization state. Revisit only if auth becomes an independently useful CLI surface.
 
-## Future MCP proposal
+## Implemented mock MCP tool and future live boundary
 
-Planned read-only tool: `shipready.search_console_status`.
+Implemented read-only tool: `shipready.search_console_status`.
 
 ```ts
 type SearchConsoleStatusInput = {
   url: string;
-  property?: string;
+  mock?: string;
   inspect?: boolean;
 };
 ```
 
-It should return the exact `shipready.searchConsoleStatus.v1` object produced by the CLI application boundary. It must not accept OAuth material, verification material, arbitrary Google API methods, sitemap URLs to submit, or mutation confirmation. It must not register until the CLI contract, local credential broker, redaction, cancellation/deadline behavior, and mock-backed tests are complete.
+It returns the exact `shipready.searchConsoleStatus.v1` object produced by the CLI application boundary. It accepts no repo path and performs no path authorization because it reads no repository. It rejects OAuth material, verification material, arbitrary Google API methods, sitemap URLs to submit, and mutation confirmation. A future live adapter must not be registered until a local credential broker, redaction, cancellation/deadline behavior, and separate security review are complete.
 
 This tool would be read-only and would not change the existing sole MCP write tool. MCP stays stdio-only; no HTTP/SSE transport, hosted account proxy, or remote token custody is introduced.
 
@@ -321,20 +327,20 @@ It must never render tokens, raw API payloads, account identity, referring URLs,
 - Record official API facts, claims, authority boundaries, proposed interfaces, privacy posture, and tests.
 - Make no product or external-state change.
 
-### Phase B — local auth design gate (future, first part of Pass 9)
+### Phase B — local auth design gate (deferred beyond Pass 9)
 
 - Confirm current OAuth scope classification, consent-screen requirements, installed-app flow, PKCE/loopback behavior, secure-store support, revocation, expiry, account switching, and redaction.
-- Decide whether Pass 9 uses an ephemeral token with no persistence or reviewed OS credential storage.
+- Decide whether a future live pass uses an ephemeral token with no persistence or reviewed OS credential storage.
 - Define a credential-provider interface so tests never depend on a live account.
 - Do not proceed to live integration until a threat review accepts token custody and disconnect behavior.
 
-### Phase C — read-only prototype (future Pass 9)
+### Phase C — mock-backed read-only prototype (complete in Pass 9)
 
 - Implement the CLI boundary and stable V1 contract.
-- List accessible properties, match one URL, report permission, and list submitted sitemap records.
-- Add one opt-in indexed-version inspection.
-- Use `webmasters.readonly` only; no mutation and no Site Verification API.
-- Add MCP only after the CLI is stable and credential isolation is proven. GUI remains unchanged.
+- Emit deterministic property, sitemap, and optional one-URL indexed-version mock states through a provider interface.
+- Keep all fixtures synthetic and timestamps fixed.
+- Add the MCP tool only around the same mock application boundary. GUI remains unchanged.
+- Make no OAuth request, token read/storage, Google API call, Site Verification call, or mutation.
 
 ### Phase D — optional mutation-bearing work (future, not near-term)
 
@@ -342,9 +348,9 @@ It must never render tokens, raw API payloads, account identity, referring URLs,
 - Require a new write policy, read/write scope, explicit authorization, preview/confirmation, replay controls, security review, contract/tests, and roadmap pass.
 - URL Inspection does not request indexing. Do not invent a “request inspection” write action.
 
-## Pass 9 test strategy
+## Pass 9 shipped test strategy
 
-Pass 9 should ship only with deterministic tests and synthetic fixtures:
+Pass 9 ships only with deterministic tests and synthetic fixtures. The broader list below remains the gate for any future live provider:
 
 - Inject a fake credential provider and fake Google client; unit/contract tests make no live Google API or OAuth calls.
 - Contract fixtures: `not_configured`, `authorization_required`, `authorized_no_property`, `ambiguous_property`, `matched_domain`, `matched_url_prefix`, `siteUnverifiedUser`, `no_sitemaps`, `sitemap_ok`, `sitemap_pending`, `sitemap_warning_error`, `inspection_not_requested`, `inspection_indexed`, `inspection_canonical_mismatch`, `inspection_absent_fields`, `inspection_quota_exceeded`, `token_expired`, `token_revoked`, and operational error.
@@ -360,9 +366,9 @@ Pass 9 should ship only with deterministic tests and synthetic fixtures:
 
 A manually authorized smoke test may be designed only after Phase B, must use a dedicated test property/account, make no mutation, record no credentials or real payloads, and remain outside automated CI.
 
-## Open questions for Pass 9
+## Open questions for a future live provider
 
-1. Can Pass 9 provide useful authenticated behavior without persistent refresh-token storage, or is reviewed OS keychain support required?
+1. Can a future live provider be useful without persistent refresh-token storage, or is reviewed OS keychain support required?
 2. Should `--inspect` be excluded from the first prototype until property/sitemap status is stable?
 3. How should the public schema preserve future unknown Google enum values without weakening V1 validation?
 4. What maximum sitemap-entry count and string lengths balance usefulness with account-data minimization?

@@ -8,6 +8,7 @@ import {
   DryRunFixJsonContractSchema,
   FixPlanJsonContractSchema,
   RepoInspectionJsonContractSchema,
+  SearchConsoleStatusJsonContractSchema,
   UiReportJsonContractSchema,
   WriteFixJsonContractSchema,
   StatusJsonContractSchema,
@@ -31,6 +32,13 @@ export const FIXTURE_NAMES = [
   "inspect-repo.vite.json",
   "plan-fixes.review-required.json",
   "plan-fixes.safe-apply.json",
+  "search-console.not-configured.json",
+  "search-console.unauthorized.json",
+  "search-console.property-not-found.json",
+  "search-console.ready-sitemap-ok.json",
+  "search-console.ready-sitemap-warning.json",
+  "search-console.inspection-canonical-mismatch.json",
+  "search-console.inspection-not-indexed.json",
   "ui-report.safe-apply.json",
   "ui-report.url-only.json",
   "status.default.json",
@@ -48,6 +56,7 @@ export const POLICY_DOCS = {
   status: { uri: "shipready://docs/status", path: "docs/STATUS.md" },
   roadmap: { uri: "shipready://docs/roadmap", path: "docs/ROADMAP.md" },
   "mcp-plan": { uri: "shipready://docs/mcp-plan", path: "docs/MCP_PLAN.md" },
+  "search-console-readiness-spec": { uri: "shipready://docs/search-console-readiness-spec", path: "docs/SEARCH_CONSOLE_READINESS_SPEC.md" },
 } as const;
 
 export type PolicyDocName = keyof typeof POLICY_DOCS;
@@ -216,6 +225,7 @@ const FIXTURE_SCHEMAS: Readonly<Record<string, ZodType>> = {
   "shipready.dryRunFix.v1": DryRunFixJsonContractSchema,
   "shipready.writeFix.v1": WriteFixJsonContractSchema,
   "shipready.uiReport.v1": UiReportJsonContractSchema,
+  "shipready.searchConsoleStatus.v1": SearchConsoleStatusJsonContractSchema,
   "shipready.error.v1": CliErrorContractSchema,
   "shipready.status.v1": StatusJsonContractSchema,
   "shipready.doctor.v1": DoctorJsonContractSchema,

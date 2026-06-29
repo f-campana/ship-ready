@@ -55,18 +55,30 @@
       "id": "contract-fixtures",
       "label": "Contract fixtures",
       "status": "pass",
-      "message": "17 canonical contract fixtures exist and parse.",
+      "message": "24 canonical contract fixtures exist and parse.",
       "details": {
-        "count": 17
+        "count": 24
       }
     },
     {
       "id": "canonical-docs",
       "label": "Canonical docs",
       "status": "pass",
-      "message": "9 canonical documentation files are present.",
+      "message": "10 canonical documentation files are present.",
       "details": {
-        "checked": 9,
+        "checked": 10,
+        "missing": []
+      }
+    },
+    {
+      "id": "search-console-prototype",
+      "label": "Search Console mock prototype",
+      "status": "pass",
+      "message": "The Search Console specification and 7 deterministic mock fixtures are present; no Google credentials are required.",
+      "details": {
+        "liveIntegration": false,
+        "oauthRequired": false,
+        "fixtures": 7,
         "missing": []
       }
     },
@@ -95,7 +107,7 @@
     }
   ],
   "summary": {
-    "pass": 10,
+    "pass": 11,
     "warn": 2,
     "fail": 0,
     "skip": 0

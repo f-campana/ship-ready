@@ -44,7 +44,7 @@ Do not use close paraphrases that imply the same certainty or capability.
 - Metadata and structured data can improve completeness; external systems decide display and eligibility.
 - Indexing and ranking depend on third parties and factors outside ShipReady.
 - A preview is not a write. A local write is not a deployment. A deployment is not proof that live resources changed until re-checked.
-- Search Console and DNS integrations are not implemented. The implemented MCP remains local stdio with one guarded write tool. Future work must remain visibly labeled **Planned** until shipped and validated.
+- Only deterministic mock-backed Search Console status is implemented; live Google Search Console/OAuth and DNS are not implemented. MCP remains local stdio with one guarded write tool. Future live work must remain visibly labeled **Planned** until shipped and validated.
 - Future Search Console output must distinguish live unauthenticated checks, authenticated Google-reported status, and ownership verification. “No accessible property” must be scoped to the authorized account.
 
 See [SEARCH_CONSOLE_READINESS_SPEC.md](SEARCH_CONSOLE_READINESS_SPEC.md) for the Pass 8 source-backed claim and authority boundaries.
