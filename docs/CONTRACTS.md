@@ -26,6 +26,14 @@ This was low risk because CLI JSON formatting already had a dedicated Zod-valida
 
 The authoritative mapping and CLI contract schemas are in `src/types/contracts.ts`.
 
+## Planned Search Console contract (not implemented)
+
+Pass 8 proposes `shipready.searchConsoleStatus.v1` for a future `search-console status --json` command. It is intentionally absent from the implemented command map, runtime schemas, fixtures, and MCP registrations.
+
+The proposed contract keeps authorization, accessible-property matching, submitted sitemaps, and optional indexed-version URL inspection as separate state machines. It uses only Google's documented [Sites](https://developers.google.com/webmaster-tools/v1/sites), [Sitemaps](https://developers.google.com/webmaster-tools/v1/sitemaps), and [URL Inspection](https://developers.google.com/webmaster-tools/v1/urlInspection.index/UrlInspectionResult) fields, preserves absent API values, excludes tokens/account identity/referring URLs/raw payloads, and labels ShipReady-derived property matching separately from Google-reported evidence. See [SEARCH_CONSOLE_READINESS_SPEC.md](SEARCH_CONSOLE_READINESS_SPEC.md) for the full sketch and Pass 9 compatibility/test decisions.
+
+The future read-only MCP tool `shipready.search_console_status` may return this exact CLI contract only after the CLI boundary and local credential isolation are implemented. It must not alter the sole current MCP write tool, stdio-only transport, `WRITE_POLICY_V1`, GUI behavior, or `POST /api/fix = 404` boundary.
+
 ## Exact success shapes
 
 All outputs are one JSON object followed by a newline and do not use a generic success envelope. `shipready.doctor.v1` has an `ok` readiness boolean because failed local checks are part of its valid report model; that field is not a data wrapper.

@@ -11,8 +11,8 @@ Order is contractual: harden CLI interfaces before wrapping them, ship read-only
 | 5 | Complete | Implement the strictly read-only MCP tools, resources, and prompts specified in [MCP_PLAN.md](MCP_PLAN.md). | Validates the wrapper without mutation risk. | Read-only | Pass 4 |
 | 6 | Complete | Wrap the existing guarded V1 write through MCP. | Mutation follows proven read-only transport and explicit authorization. | Write-bearing | Pass 5 |
 | 7 | Complete | Polish CLI UX and define `doctor`/`status` contracts. | Improves operability after core machine contracts stabilize. | Read-only | Pass 3 |
-| 8 | Next | Research and specify Search Console readiness boundaries. | Establishes claims, auth, and data limits before integration. | Read-only/spec | Pass 7 |
-| 9 | Planned | Prototype read-only Search Console status. | Tests useful status retrieval without third-party mutation. | Read-only | Pass 8 |
+| 8 | Complete | Research and specify Search Console readiness boundaries in [SEARCH_CONSOLE_READINESS_SPEC.md](SEARCH_CONSOLE_READINESS_SPEC.md). | Establishes claims, auth, and data limits before integration. | Read-only/spec | Pass 7 |
+| 9 | Next | Prototype read-only Search Console status. | Tests useful status retrieval without third-party mutation. | Read-only | Pass 8 |
 | 10 | Planned | Specify DNS readiness checks and provider-neutral evidence. | Avoids provider coupling and unsafe remediation claims. | Read-only/spec | Pass 7 |
 | 11 | Planned | Implement read-only DNS checks. | Adds evidence only after the check contract is reviewed. | Read-only | Pass 10 |
 | 12 | Planned | Define post-write deployment handoff and live re-check workflow. | Connects local effects to verified live state without hiding boundaries. | Write-bearing | Pass 6 |

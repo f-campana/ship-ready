@@ -34,9 +34,10 @@ Primary readers are Codex, Claude Code, Cursor, and future MCP clients; human de
 6. `docs/MCP_PLAN.md` before any MCP work
 7. `docs/WRITE_POLICY_V1.md` for any fix or write work
 8. `docs/CLAIMS_POLICY.md` for UI, demo, report, or public copy
-9. `docs/LOCAL_FIRST_GUI_SPEC.md` for GUI direction
-10. `docs/DEMO.md` for demo work
-11. `docs/ROADMAP.md` for sequencing
+9. `docs/SEARCH_CONSOLE_READINESS_SPEC.md` before any Search Console or Google OAuth work
+10. `docs/LOCAL_FIRST_GUI_SPEC.md` for GUI direction
+11. `docs/DEMO.md` for demo work
+12. `docs/ROADMAP.md` for sequencing
 
 ## Before any implementation
 
@@ -49,6 +50,8 @@ Primary readers are Codex, Claude Code, Cursor, and future MCP clients; human de
 7. Do not broaden safe writes without updating policy and tests.
 
 For MCP work, read [MCP_PLAN.md](MCP_PLAN.md) first. The implemented Pass 6 server has exactly one write tool, `shipready.write_safe_crawl_files`. It may create only current V1-eligible missing robots/sitemap files after `shipready.preview_fixes` returns a fresh signed preview receipt, the repository path is re-authorized, and the caller supplies the exact confirmation phrase `CREATE_SAFE_CRAWL_FILES_ONLY`. Do not add any other MCP write tool or broaden this wrapper.
+
+For future Search Console work, read [SEARCH_CONSOLE_READINESS_SPEC.md](SEARCH_CONSOLE_READINESS_SPEC.md) first. Keep live unauthenticated evidence, authorized Search Console evidence, and ownership verification separate. Pass 9 must start with the auth-design gate, use only Google's documented [`webmasters.readonly` scope](https://developers.google.com/webmaster-tools/v1/how-tos/authorizing), keep URL inspection opt-in and single-URL, and use mock Google clients in automated tests. Property creation, verification, DNS, sitemap submission, indexing requests, token exposure, and remote account custody are outside the prototype.
 
 ## Main commands
 
@@ -162,3 +165,5 @@ Even with explicit instruction, work must remain within the active policy, repos
 - Add or expose credentials.
 - Expand writable file types or convert review-required previews into writable changes.
 - Present a planned interface as implemented.
+
+The planned `search-console status` CLI contract and `shipready.search_console_status` MCP tool are specification examples only. They must not be invoked, advertised as available, or added around internal helpers before the CLI contract and credential boundary are implemented and tested.

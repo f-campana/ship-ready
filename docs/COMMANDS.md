@@ -162,6 +162,17 @@ The GUI client fetches only `/api/ui-report`. `POST /api/fix` is not implemented
 
 Command-action failures under `--json` use `shipready.error.v1`. See [`error.invalid-url.json`](../validation/contracts/error.invalid-url.json). The stable fields are `contract`, `ok: false`, `code`, `message`, and the legacy compatibility alias `error`. Commander failures that occur before the command action starts, such as missing required arguments, remain a documented normalization gap.
 
+## Planned Search Console command (not implemented)
+
+Pass 8 specifies a future read-only surface:
+
+```bash
+# Planned; this command does not exist yet
+pnpm shipready search-console status --url https://example.com --json
+```
+
+The proposal uses Google's documented [`webmasters.readonly` scope](https://developers.google.com/webmaster-tools/v1/how-tos/authorizing) to match one accessible property, [list submitted sitemap status](https://developers.google.com/webmaster-tools/v1/sitemaps/list), and optionally [inspect one URL's indexed version](https://developers.google.com/webmaster-tools/v1/urlInspection.index/inspect). It does not create properties, verify ownership, write DNS, submit sitemaps, request indexing, expose tokens, or change files. The proposed `shipready.searchConsoleStatus.v1` fields, flags, safety model, and Pass 9 tests are in [SEARCH_CONSOLE_READINESS_SPEC.md](SEARCH_CONSOLE_READINESS_SPEC.md).
+
 ## Demo package scripts
 
 These scripts create recording artifacts under `validation/demo-fodmapp-recording-v2/`; they are tooling, not product interfaces.

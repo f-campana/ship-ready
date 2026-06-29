@@ -14,6 +14,9 @@ ShipReady reports evidence and prepares bounded local work. It can detect launch
 - **preview first** — inspect proposed effects before any authorized action.
 - **guarded command** — an explicit CLI command with policy gates.
 - **local changes require deployment** — local files do not alter the live site by themselves.
+- **reported by Search Console** — future authenticated evidence attributed to the matched property and authorized account.
+- **indexed-version inspection** — future URL Inspection API evidence; Google documents that the API does not test the live URL. [Google URL Inspection API](https://developers.google.com/webmaster-tools/v1/urlInspection.index/inspect)
+- **accessible property** — a property returned for the authorized account; not proof that no other property or owner exists.
 
 Prefer measurable wording: “detected,” “missing,” “present in raw HTML,” “appears after rendering,” “previewed,” “eligible under V1,” and “requires review.”
 
@@ -30,6 +33,8 @@ The following are forbidden claims, except when quoted here or clearly labeled a
 - “automatic deploy”
 - “automatic Search Console registration”
 - “automatic DNS fix”
+- “Google approval”
+- “URL Inspection tested the live page”
 
 Do not use close paraphrases that imply the same certainty or capability.
 
@@ -39,6 +44,9 @@ Do not use close paraphrases that imply the same certainty or capability.
 - Metadata and structured data can improve completeness; external systems decide display and eligibility.
 - Indexing and ranking depend on third parties and factors outside ShipReady.
 - A preview is not a write. A local write is not a deployment. A deployment is not proof that live resources changed until re-checked.
-- Search Console, DNS, GitHub, and MCP integrations are not implemented. Future work must remain visibly labeled **Planned** until shipped and validated.
+- Search Console and DNS integrations are not implemented. The implemented MCP remains local stdio with one guarded write tool. Future work must remain visibly labeled **Planned** until shipped and validated.
+- Future Search Console output must distinguish live unauthenticated checks, authenticated Google-reported status, and ownership verification. “No accessible property” must be scoped to the authorized account.
+
+See [SEARCH_CONSOLE_READINESS_SPEC.md](SEARCH_CONSOLE_READINESS_SPEC.md) for the Pass 8 source-backed claim and authority boundaries.
 
 Apply this policy to CLI copy, GUI copy, generated reports, demos, documentation, issue text, and release notes.
