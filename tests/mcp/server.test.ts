@@ -21,7 +21,7 @@ describe("MCP startup and stdio transport", () => {
   it("initializes and lists tools, resources, templates, and prompts over protocol-clean stdio", async () => {
     const transport = new StdioClientTransport({
       command: "pnpm",
-      args: ["shipready", "mcp", "--allow-root", fixtureRoot],
+      args: ["--silent", "shipready", "mcp", "--allow-root", fixtureRoot],
       cwd: root,
       stderr: "pipe",
     });
@@ -35,7 +35,7 @@ describe("MCP startup and stdio transport", () => {
       const resources = await client.listResources();
       const templates = await client.listResourceTemplates();
       const prompts = await client.listPrompts();
-      expect(tools.tools).toHaveLength(9);
+      expect(tools.tools).toHaveLength(10);
       expect(tools.tools.map((tool) => tool.name).filter((name) => name.includes("write"))).toEqual([
         "shipready.write_safe_crawl_files",
       ]);
@@ -59,6 +59,15 @@ describe("MCP startup and stdio transport", () => {
         mode: "mock",
         sitemaps: { status: "available" },
       });
+      const dns = await client.callTool({
+        name: "shipready.dns_status",
+        arguments: { url: "https://example.com", mock: "ready" },
+      });
+      expect(dns.structuredContent).toMatchObject({
+        contract: "shipready.dnsStatus.v1",
+        mode: "mock",
+        verdict: { status: "ready" },
+      });
       const resource = await client.readResource({ uri: "shipready://docs/contracts" });
       expect(resource.contents[0]).toMatchObject({ mimeType: "text/markdown" });
       const prompt = await client.getPrompt({ name: "write_policy_summary" });
@@ -71,7 +80,7 @@ describe("MCP startup and stdio transport", () => {
 
   it("fails startup without allowed roots before writing protocol bytes to stdout", async () => {
     try {
-      await execFileAsync("pnpm", ["shipready", "mcp"], { cwd: root, timeout: 10_000 });
+      await execFileAsync("pnpm", ["--silent", "shipready", "mcp"], { cwd: root, timeout: 10_000 });
       throw new Error("Expected MCP startup to fail.");
     } catch (error) {
       const result = error as { code?: number; stdout?: string; stderr?: string };

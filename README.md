@@ -4,7 +4,7 @@ ShipReady is a CLI-first, agent-friendly launch-readiness engine for generated w
 
 ## Current status
 
-Implemented: read-only `status` and `doctor` diagnostics, CLI audit and repo inspection, fix planning, dry-run previews, guarded creation-only writes, UI and static HTML reports, a local preview/copy-only GUI, a local stdio MCP server, Fodmapp demo tooling, and a deterministic mock-backed Search Console status prototype. MCP exposes eight read-only tools and exactly one guarded write tool for the same creation-only crawl-file policy. Live Search Console/OAuth, DNS, GitHub, deployment, accounts, billing, hosted SaaS, and remote MCP are not built.
+Implemented: read-only `status` and `doctor` diagnostics, CLI audit and repo inspection, fix planning, dry-run previews, guarded creation-only writes, UI and static HTML reports, a local preview/copy-only GUI, a local stdio MCP server, Fodmapp demo tooling, a deterministic mock-backed Search Console status prototype, and read-only DNS readiness status. MCP exposes nine read-only tools and exactly one guarded write tool for the same creation-only crawl-file policy. Live Search Console/OAuth, DNS provider writes/integrations, GitHub, deployment, accounts, billing, hosted SaaS, and remote MCP are not built.
 
 ## Core commands
 
@@ -13,6 +13,7 @@ pnpm install
 pnpm shipready status
 pnpm shipready doctor
 pnpm shipready search-console status --url https://example.com --mock ready_sitemap_ok --json
+pnpm shipready dns status --url https://example.com --mock ready --json
 pnpm shipready audit https://example.com
 pnpm shipready inspect-repo .
 pnpm shipready plan-fixes . --url https://example.com
@@ -22,7 +23,7 @@ pnpm shipready html-report . --url https://example.com --output validation/examp
 pnpm shipready gui
 ```
 
-Use `--json` with `status`, `doctor`, `search-console status`, `audit`, `inspect-repo`, `plan-fixes`, `fix`, and `ui-report` for structured output. `search-console status` is mock-backed, deterministic, read-only, and makes no Google API or OAuth call. `status` is a static capability/safety inventory. `doctor` performs bounded local runtime, dependency, canonical-content, optional demo-tool, and Search Console fixture checks. Neither status/doctor command accesses the network, inspects a target repository, mutates files, starts a server, deploys, or proves indexing. See [docs/COMMANDS.md](docs/COMMANDS.md) for exact flags and behavior.
+Use `--json` with `status`, `doctor`, `search-console status`, `dns status`, `audit`, `inspect-repo`, `plan-fixes`, `fix`, and `ui-report` for structured output. `search-console status` is mock-backed, deterministic, read-only, and makes no Google API or OAuth call. `dns status` uses read-only DNS lookups by default and deterministic mocks for CI/tests; it never writes DNS records or calls provider APIs. `status` is a static capability/safety inventory. `doctor` performs bounded local runtime, dependency, canonical-content, optional demo-tool, Search Console fixture, and DNS fixture/API checks. Neither status/doctor command accesses the network, inspects a target repository, mutates files, starts a server, deploys, or proves indexing/DNS outcomes. See [docs/COMMANDS.md](docs/COMMANDS.md) for exact flags and behavior.
 
 ## Safe-write boundary
 
@@ -63,6 +64,7 @@ See [docs/DEMO.md](docs/DEMO.md) for provenance, reproduction commands, and reco
 8. [Roadmap](docs/ROADMAP.md) — ordered 18-pass sequence.
 9. [Local-first GUI spec](docs/LOCAL_FIRST_GUI_SPEC.md) — canonical GUI direction.
 10. [Search Console readiness spec](docs/SEARCH_CONSOLE_READINESS_SPEC.md) — mock prototype contract and deferred live OAuth/provider boundary.
+11. [DNS readiness spec](docs/DNS_READINESS_SPEC.md) — read-only DNS status checks and DNS claim boundaries.
 
 ## What ShipReady is not
 

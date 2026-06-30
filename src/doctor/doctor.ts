@@ -1,4 +1,5 @@
 import { spawnSync } from "node:child_process";
+import * as dns from "node:dns/promises";
 import { createRequire } from "node:module";
 import { readFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
@@ -34,6 +35,7 @@ type DoctorDependencies = {
   pathExists: (path: string) => boolean;
   readText: (path: string) => Promise<string>;
   dependencyAvailable: (packageRoot: string, specifier: string) => boolean;
+  nodeDnsApisAvailable: () => boolean;
   validateFixtures: (packageRoot: string) => Promise<void>;
   playwrightExecutablePath: () => string;
 };
@@ -45,6 +47,13 @@ const DEFAULT_DEPENDENCIES: DoctorDependencies = {
   pathExists: existsSync,
   readText: (path) => readFile(path, "utf8"),
   dependencyAvailable,
+  nodeDnsApisAvailable: () =>
+    typeof dns.resolve4 === "function" &&
+    typeof dns.resolve6 === "function" &&
+    typeof dns.resolveCname === "function" &&
+    typeof dns.resolveTxt === "function" &&
+    typeof dns.resolveNs === "function" &&
+    typeof dns.resolveCaa === "function",
   validateFixtures: async (packageRoot) => {
     await Promise.all(FIXTURE_NAMES.map((name) => readContractFixture(packageRoot, name)));
   },
@@ -130,6 +139,7 @@ export async function runDoctor(
       ["contract-fixtures", "Contract fixtures"],
       ["canonical-docs", "Canonical docs"],
       ["search-console-prototype", "Search Console mock prototype"],
+      ["dns-readiness", "DNS readiness"],
       ["write-policy", "WRITE_POLICY_V1"],
       ["local-gui-spec", "LOCAL_FIRST_GUI_SPEC"],
       ["demo-artifacts", "Demo artifacts"],
@@ -222,6 +232,32 @@ export async function runDoctor(
       oauthRequired: false,
       fixtures: searchConsoleFixtures.length,
       missing: missingSearchConsoleContent,
+    },
+  });
+
+  const dnsSpec = "docs/DNS_READINESS_SPEC.md";
+  const dnsFixtures = FIXTURE_NAMES.filter((name) => name.startsWith("dns."));
+  const missingDnsContent = [
+    ...(!dependencies.pathExists(join(packageRoot, dnsSpec)) ? [dnsSpec] : []),
+    ...dnsFixtures
+      .map((name) => `validation/contracts/${name}`)
+      .filter((path) => !dependencies.pathExists(join(packageRoot, path))),
+  ];
+  const dnsApisAvailable = dependencies.nodeDnsApisAvailable();
+  checks.push({
+    id: "dns-readiness",
+    label: "DNS readiness",
+    status: missingDnsContent.length === 0 && dnsApisAvailable ? "pass" : "fail",
+    message: missingDnsContent.length === 0 && dnsApisAvailable
+      ? `The DNS specification, Node DNS APIs, and ${dnsFixtures.length} deterministic mock fixtures are present; no DNS provider credentials are required.`
+      : `DNS readiness content is incomplete or Node DNS APIs are unavailable; missing: ${missingDnsContent.join(", ") || "Node DNS API support"}.`,
+    details: {
+      readOnly: true,
+      providerWrites: false,
+      providerIntegrations: false,
+      fixtures: dnsFixtures.length,
+      nodeDnsApisAvailable: dnsApisAvailable,
+      missing: missingDnsContent,
     },
   });
 

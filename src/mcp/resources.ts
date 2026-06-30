@@ -5,6 +5,7 @@ import type { ZodType } from "zod";
 import {
   AuditJsonContractSchema,
   CliErrorContractSchema,
+  DnsStatusJsonContractSchema,
   DryRunFixJsonContractSchema,
   FixPlanJsonContractSchema,
   RepoInspectionJsonContractSchema,
@@ -39,6 +40,17 @@ export const FIXTURE_NAMES = [
   "search-console.ready-sitemap-warning.json",
   "search-console.inspection-canonical-mismatch.json",
   "search-console.inspection-not-indexed.json",
+  "dns.ready.json",
+  "dns.apex-ok-www-missing.json",
+  "dns.www-cname-ok.json",
+  "dns.nxdomain.json",
+  "dns.nodata.json",
+  "dns.timeout.json",
+  "dns.cname-chain-issue.json",
+  "dns.caa-present.json",
+  "dns.txt-found.json",
+  "dns.txt-missing.json",
+  "dns.canonical-mismatch.json",
   "ui-report.safe-apply.json",
   "ui-report.url-only.json",
   "status.default.json",
@@ -57,6 +69,7 @@ export const POLICY_DOCS = {
   roadmap: { uri: "shipready://docs/roadmap", path: "docs/ROADMAP.md" },
   "mcp-plan": { uri: "shipready://docs/mcp-plan", path: "docs/MCP_PLAN.md" },
   "search-console-readiness-spec": { uri: "shipready://docs/search-console-readiness-spec", path: "docs/SEARCH_CONSOLE_READINESS_SPEC.md" },
+  "dns-readiness-spec": { uri: "shipready://docs/dns-readiness-spec", path: "docs/DNS_READINESS_SPEC.md" },
 } as const;
 
 export type PolicyDocName = keyof typeof POLICY_DOCS;
@@ -226,6 +239,7 @@ const FIXTURE_SCHEMAS: Readonly<Record<string, ZodType>> = {
   "shipready.writeFix.v1": WriteFixJsonContractSchema,
   "shipready.uiReport.v1": UiReportJsonContractSchema,
   "shipready.searchConsoleStatus.v1": SearchConsoleStatusJsonContractSchema,
+  "shipready.dnsStatus.v1": DnsStatusJsonContractSchema,
   "shipready.error.v1": CliErrorContractSchema,
   "shipready.status.v1": StatusJsonContractSchema,
   "shipready.doctor.v1": DoctorJsonContractSchema,

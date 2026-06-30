@@ -11,6 +11,7 @@
       "status",
       "doctor",
       "search-console status",
+      "dns status",
       "audit",
       "inspect-repo",
       "plan-fixes",
@@ -26,6 +27,7 @@
       "readOnlyTools": [
         "shipready.audit_site",
         "shipready.search_console_status",
+        "shipready.dns_status",
         "shipready.inspect_repo",
         "shipready.plan_fixes",
         "shipready.preview_fixes",
@@ -59,7 +61,9 @@
   },
   "integrations": {
     "searchConsole": "mock_prototype",
-    "dns": "not_implemented",
+    "dns": "read_only_status",
+    "dnsProviderWrites": "not_implemented",
+    "dnsProviderIntegrations": "not_implemented",
     "github": "not_implemented",
     "deployment": "not_implemented"
   },
@@ -68,5 +72,5 @@
     "fodmappVoiceover": "validation/demo-fodmapp-voiceover-final/"
   },
   "nextRecommendedCommand": "pnpm shipready doctor",
-  "nextRecommendedPass": "DNS readiness checks spec"
+  "nextRecommendedPass": "Post-write deploy/re-check workflow"
 }

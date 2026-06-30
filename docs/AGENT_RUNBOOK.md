@@ -19,10 +19,10 @@ Primary readers are Codex, Claude Code, Cursor, and future MCP clients; human de
 - `src/report/`: human, JSON, UI, and static HTML formatting.
 - `src/ui/`: normalized `ui-report-v1` creation.
 - `src/gui/`: local server and preview/copy-only browser UI.
-- `src/mcp/`: local stdio adapter, eight read-only tools, one guarded safe-write tool, preview receipts, canonical reads, prompts, authorization, errors, and deadlines.
+- `src/mcp/`: local stdio adapter, nine read-only tools, one guarded safe-write tool, preview receipts, canonical reads, prompts, authorization, errors, and deadlines.
 - `src/status/` and `src/doctor/`: static capability posture and bounded local readiness diagnostics.
 - `src/searchConsole/`: stable read-only status boundary and deterministic mock provider; no OAuth, tokens, or live Google client.
-- Planned DNS readiness lives in `docs/DNS_READINESS_SPEC.md`; no resolver, DNS dependency, provider integration, CLI command, MCP tool, or GUI behavior is implemented yet.
+- `src/dns/`: read-only DNS readiness status, live Node DNS resolver, deterministic mock scenarios, redacted TXT evidence, and no provider integration or DNS writes.
 - `scripts/demo/`: Fodmapp recording, captions, optional voice, and composition.
 - `validation/`: contract fixtures, reports, reviews, and approved demo artifacts.
 
@@ -56,7 +56,7 @@ For MCP work, read [MCP_PLAN.md](MCP_PLAN.md) first. The implemented Pass 6 serv
 
 For Search Console work, read [SEARCH_CONSOLE_READINESS_SPEC.md](SEARCH_CONSOLE_READINESS_SPEC.md) first. Pass 9 implements only a deterministic mock provider behind `shipready.searchConsoleStatus.v1`; it does not implement live OAuth, token custody, or Google API calls. Keep live unauthenticated evidence, future authorized Search Console evidence, and ownership verification separate. Mock URL inspection is opt-in and single-URL. Property creation, verification, DNS, sitemap submission, indexing requests, token exposure, and remote account custody remain outside the prototype.
 
-For DNS readiness work, read [DNS_READINESS_SPEC.md](DNS_READINESS_SPEC.md) first. Pass 10 is specification only. The recommended future shape is `pnpm shipready dns status --url <url> --json`, `shipready.dnsStatus.v1`, and read-only MCP tool `shipready.dns_status`. Do not add DNS writes, provider credentials, registrar/nameserver APIs, Search Console live behavior, OAuth, remote MCP, or GUI changes as part of DNS status work.
+For DNS readiness work, read [DNS_READINESS_SPEC.md](DNS_READINESS_SPEC.md) first. Pass 11 implements `pnpm shipready dns status --url <url> --json`, `shipready.dnsStatus.v1`, and read-only MCP tool `shipready.dns_status`. It uses Node DNS APIs and deterministic mocks; it does not add DNS writes, provider credentials, registrar/nameserver APIs, Search Console live behavior, OAuth, remote MCP, or GUI changes.
 
 ## Main commands
 
@@ -64,6 +64,7 @@ For DNS readiness work, read [DNS_READINESS_SPEC.md](DNS_READINESS_SPEC.md) firs
 pnpm shipready status --json
 pnpm shipready doctor --json
 pnpm shipready search-console status --url https://example.com --mock ready_sitemap_ok --json
+pnpm shipready dns status --url https://example.com --mock ready --json
 pnpm shipready audit <url> --json
 pnpm shipready inspect-repo <path> --json
 pnpm shipready plan-fixes <path> --url <url> --json
@@ -71,12 +72,12 @@ pnpm shipready fix <path> --url <url> --dry-run --json
 pnpm shipready ui-report [path] --url <url> --json
 pnpm shipready html-report [path] --url <url> --output <file>
 pnpm shipready gui
-pnpm shipready mcp --allow-root /absolute/workspace
+pnpm --silent shipready mcp --allow-root /absolute/workspace
 ```
 
 Use `status` before assuming a capability or integration exists. Use `doctor` after installation and before workflows that require Playwright or MCP canonical content. Both are read-only, non-networked, require no target path, and must not be treated as evidence of indexing, DNS/Search Console state, deployment state, or live-site readiness.
 
-`dns status` is planned but not implemented. Do not present it as available until Pass 11 ships code, contracts, fixtures, and tests.
+`dns status` is implemented as read-only advisory evidence. Use `--mock <scenario>` for deterministic tests and fixtures. Live mode reads DNS through Node built-ins; it does not write records, call provider APIs, use provider credentials, verify Search Console ownership, deploy, or mutate repositories.
 
 The guarded write command exists but is not a routine validation command. Use it only with explicit instruction and the checks in the canonical write policy.
 

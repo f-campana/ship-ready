@@ -17,7 +17,7 @@ ShipReady reports evidence and prepares bounded local work. It can detect launch
 - **reported by Search Console** — future authenticated evidence attributed to the matched property and authorized account.
 - **indexed-version inspection** — future URL Inspection API evidence; Google documents that the API does not test the live URL. [Google URL Inspection API](https://developers.google.com/webmaster-tools/v1/urlInspection.index/inspect)
 - **accessible property** — a property returned for the authorized account; not proof that no other property or owner exists.
-- **DNS readiness** — planned read-only reporting about observed DNS responses and adjacent reachability evidence, not provider repair or third-party outcome prediction.
+- **DNS readiness** — read-only reporting about observed DNS responses and adjacent reachability evidence, not provider repair or third-party outcome prediction.
 - **observed DNS response** — the answer, negative answer, timeout, or error returned by a resolver for the checked name/type.
 
 Prefer measurable wording: “detected,” “missing,” “present in raw HTML,” “appears after rendering,” “previewed,” “eligible under V1,” and “requires review.”
@@ -48,11 +48,11 @@ Do not use close paraphrases that imply the same certainty or capability.
 - Metadata and structured data can improve completeness; external systems decide display and eligibility.
 - Indexing and ranking depend on third parties and factors outside ShipReady.
 - A preview is not a write. A local write is not a deployment. A deployment is not proof that live resources changed until re-checked.
-- Only deterministic mock-backed Search Console status is implemented; live Google Search Console/OAuth and DNS are not implemented. MCP remains local stdio with one guarded write tool. Future live work must remain visibly labeled **Planned** until shipped and validated.
+- Only deterministic mock-backed Search Console status is implemented; live Google Search Console/OAuth is not implemented. DNS readiness is implemented as read-only resolver evidence; DNS provider writes and provider integrations are not implemented. MCP remains local stdio with one guarded write tool. Future live Search Console or mutation-bearing work must remain visibly labeled **Planned** until shipped and validated.
 - Future Search Console output must distinguish live unauthenticated checks, authenticated Google-reported status, and ownership verification. “No accessible property” must be scoped to the authorized account.
-- Future DNS readiness output must distinguish DNS-only evidence, HTTP/TLS-adjacent evidence, and Search Console verification-readiness. TTLs and visible records are observations, not propagation, certificate, crawling, indexing, or approval guarantees.
+- DNS readiness output must distinguish DNS-only evidence, HTTP-adjacent evidence, and Search Console verification-readiness. Visible records are observations, not propagation, certificate, crawling, indexing, or approval guarantees.
 
 See [SEARCH_CONSOLE_READINESS_SPEC.md](SEARCH_CONSOLE_READINESS_SPEC.md) for the Pass 8 source-backed claim and authority boundaries.
-See [DNS_READINESS_SPEC.md](DNS_READINESS_SPEC.md) for the Pass 10 source-backed DNS claim and authority boundaries.
+See [DNS_READINESS_SPEC.md](DNS_READINESS_SPEC.md) for the Pass 10/11 source-backed DNS claim and authority boundaries.
 
 Apply this policy to CLI copy, GUI copy, generated reports, demos, documentation, issue text, and release notes.

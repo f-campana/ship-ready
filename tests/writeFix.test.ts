@@ -36,7 +36,7 @@ const finalUrl = "https://example.com/";
 describe("write fix mode", () => {
   it("fails when --write is used without --allow-create", async () => {
     try {
-      await execFileAsync("pnpm", ["shipready", "fix", ".", "--url", finalUrl, "--write"], {
+      await execFileAsync("pnpm", ["--silent", "shipready", "fix", ".", "--url", finalUrl, "--write"], {
         cwd: projectRoot,
         timeout: 10000,
       });
@@ -52,7 +52,7 @@ describe("write fix mode", () => {
 
   it("fails when --write and --dry-run are used together", async () => {
     try {
-      await execFileAsync("pnpm", ["shipready", "fix", ".", "--url", finalUrl, "--write", "--dry-run"], {
+      await execFileAsync("pnpm", ["--silent", "shipready", "fix", ".", "--url", finalUrl, "--write", "--dry-run"], {
         cwd: projectRoot,
         timeout: 10000,
       });
@@ -66,7 +66,7 @@ describe("write fix mode", () => {
 
   it("fails safely when no fix mode is provided", async () => {
     try {
-      await execFileAsync("pnpm", ["shipready", "fix", ".", "--url", finalUrl], {
+      await execFileAsync("pnpm", ["--silent", "shipready", "fix", ".", "--url", finalUrl], {
         cwd: projectRoot,
         timeout: 10000,
       });

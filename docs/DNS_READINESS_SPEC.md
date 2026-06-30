@@ -1,20 +1,22 @@
 # DNS Readiness Specification
 
-Status: **Pass 10 specification only. DNS checks are not implemented.**
+Status: **Pass 11 implemented read-only DNS readiness status.**
 
 Research date: 2026-06-30. Factual DNS claims below use IETF RFCs, IANA registries, CA/Browser Forum material, and Google-owned documentation for Search Console/Search behavior.
 
 ## Purpose
 
-ShipReady should eventually answer a bounded launch question:
+ShipReady answers a bounded launch question:
 
 > Does the domain appear ready for launch from observed DNS responses, HTTP reachability, TLS-adjacent evidence, and optional verification-readiness signals?
 
-This is readiness reporting, not DNS repair. The operating order remains **CLI first, MCP second, GUI third**. Pass 10 creates the source-backed specification for a future read-only implementation in Pass 11.
+This is readiness reporting, not DNS repair. The operating order remains **CLI first, MCP second, GUI third**. Pass 11 implements the read-only CLI contract, deterministic mocks, and MCP tool described here.
 
 ## Non-goals and preserved boundaries
 
-Pass 10 adds no DNS resolver, DNS dependency, provider integration, command, MCP tool, GUI view, Search Console live behavior, OAuth, token storage, product write behavior, or external mutation.
+Pass 11 adds a read-only resolver boundary using Node built-ins, the CLI command `dns status`, the stable `shipready.dnsStatus.v1` contract, deterministic mock scenarios, and the read-only MCP tool `shipready.dns_status`.
+
+Pass 11 adds no DNS package, provider integration, provider credential, DNS write behavior, GUI view, Search Console live behavior, OAuth, token storage, product write behavior, or external mutation.
 
 The current boundaries remain unchanged:
 
@@ -46,16 +48,16 @@ The current boundaries remain unchanged:
 
 ## Check categories
 
-| Category | Future examples | V1 posture |
+| Category | Examples | V1 posture |
 |---|---|---|
-| DNS-only | A/AAAA, CNAME chain, NS, TXT token visibility, CAA records, TTLs, NXDOMAIN/NODATA/timeout/error classification | Recommended for Pass 11, with conservative verdicts and explicit limitations. |
-| HTTP/TLS-adjacent | HTTP reachability, apex/www redirect consistency, observed final URL host, TLS handshake/certificate errors surfaced by fetch/browser APIs | Optional in Pass 11 if it reuses existing bounded HTTP behavior; must be labeled non-DNS evidence. |
-| Search Console verification-readiness | Expected DNS TXT/CNAME token is visible when supplied by the user | Deferred within or after Pass 11; never fetch/generate tokens from Google. |
+| DNS-only | A/AAAA, CNAME chain, NS, TXT token visibility, CAA records, NXDOMAIN/NODATA/timeout/error classification | Implemented in Pass 11 with conservative verdicts and explicit limitations. |
+| HTTP/TLS-adjacent | Observed final URL host | Implemented only when `--check-http` is supplied or a deterministic mock scenario includes canonical evidence; labeled non-DNS evidence. |
+| Search Console verification-readiness | Expected DNS TXT token is visible when supplied by the user | Implemented only for caller-supplied tokens; never fetch/generate tokens from Google. |
 | Optional advanced | Full DNSSEC chain validation, resolver EDE diagnostics, authoritative-vs-recursive comparison, CAA issuer-policy compatibility, SVCB/HTTPS, provider-specific hints | Later work only unless explicitly scoped. |
 
-## Recommended V1 checks
+## Implemented V1 checks
 
-The first implementation should be read-only and provider-neutral.
+The implementation is read-only and provider-neutral.
 
 | Check | Classification | Inputs | Result guidance |
 |---|---|---|---|
@@ -64,24 +66,23 @@ The first implementation should be read-only and provider-neutral.
 | Resolve apex and `www` when applicable | DNS-only | `url`, optional `expectedWwwMode` | Report whether both resolve, only one resolves, or the chosen mode is intentional. Do not require both when the user expects only one. |
 | Check CNAME chain | DNS-only | derived host list | Follow a bounded chain, recommended max depth 8. Report loop, too deep, CNAME target NXDOMAIN/NODATA, or coexistence evidence. |
 | Check NS records for domain candidate | DNS-only | optional `domain` or derived registrable domain | Report present/missing/unknown. Avoid registrar or nameserver-authority claims without registry/provider evidence. |
-| Surface TTL values | DNS-only | DNS responses | Include TTLs per answer set where available; explain that cached resolvers may continue serving prior answers until their cache rules expire. |
+| Surface TTL values | DNS-only | DNS responses | Deferred; v1 explains DNS evidence limitations without reporting TTLs. |
 | Classify DNS failures | DNS-only | resolver errors | Preserve `nxdomain`, `nodata`, `timeout`, `servfail`, `refused`, and `error` when available; do not flatten them into one failure string. |
-| Surface CAA records | DNS/TLS-adjacent | optional `expectedCertificateIssuer` | Show present/absent/unknown. If an expected issuer is supplied, classify `possible_issue` only when records appear not to authorize that issuer; otherwise avoid issuer conclusions. |
+| Surface CAA records | DNS/TLS-adjacent | derived domain | Show present/absent/unknown. Issuer compatibility is deferred; avoid issuer conclusions in v1. |
 | DNSSEC basic posture | Advanced DNS-only | resolver capability | In V1, prefer `not_checked` or `unknown`; report `appears_broken` only for explicit resolver DNSSEC failure evidence. |
 | Canonical host redirect | HTTP/TLS-adjacent | optional `expectedCanonicalHost`, optional `expectedWwwMode` | Use a bounded HEAD/GET follow if added. Report observed final URL host; do not call it a DNS failure. |
 | Search Console TXT readiness | Search Console verification-readiness | optional `expectedSearchConsoleVerificationTxt` | Check exact DNS TXT visibility only when supplied. Redact token in logs and public artifacts. Do not claim property verification. |
 
-Minimum Pass 11 input should be:
+Implemented Pass 11 input:
 
 ```ts
 type DnsStatusInputV1 = {
   url: string;
-  domain?: string;
   expectedCanonicalHost?: string;
   expectedWwwMode?: "www" | "apex" | "either";
   expectedSearchConsoleVerificationTxt?: string;
-  expectedCertificateIssuer?: string;
-  timeoutMs?: number;
+  checkHttp?: boolean;
+  mock?: string;
 };
 ```
 
@@ -130,24 +131,27 @@ Do not use close paraphrases that imply the same certainty or capability. DNS re
 - `url` must be an absolute `http://` or `https://` URL.
 - Fragments are irrelevant to DNS and should be stripped.
 - Query strings can contain sensitive campaign, session, or user data. Caller-facing output may echo the requested URL, but logs should redact query values.
-- `domain` is optional because deriving the registrable domain safely may require a reviewed public-suffix strategy. If derivation is uncertain, return `unknown` rather than guessing.
+- v1 derives a conservative domain from the URL host and documents the public-suffix limitation.
 - `expectedWwwMode` controls interpretation only; it must not make ShipReady create redirects or records.
 - `expectedSearchConsoleVerificationTxt` is optional, secret-like, and must not be accepted through URL query parameters.
-- `expectedCertificateIssuer` is optional. Without it, CAA issuer compatibility is `unknown` or `not_checked`, not `ok`.
+- CAA issuer compatibility is not implemented in v1; CAA records are surfaced as present/not-present/unknown evidence.
 
-## Future CLI proposal
+## Current CLI
 
-Recommended name:
+Implemented command:
 
 ```bash
+pnpm shipready dns status --url https://example.com
 pnpm shipready dns status --url https://example.com --json
+pnpm shipready dns status --url https://example.com --mock ready --json
 ```
 
-Optional future examples:
+Optional examples:
 
 ```bash
 pnpm shipready dns status --url https://example.com --expected-www-mode apex --json
-pnpm shipready dns status --url https://example.com --expected-canonical-host example.com --json
+pnpm shipready dns status --url https://example.com --expected-canonical-host example.com --check-http --json
+pnpm --silent shipready dns status --url https://example.com --mock txt-found --expected-search-console-txt <token> --json
 ```
 
 Rationale:
@@ -156,117 +160,30 @@ Rationale:
 - `dns` is more precise than `domain` for V1 because the first implementation should check DNS records plus clearly labeled adjacent evidence.
 - `status` signals read-only reporting, not repair.
 
-No future CLI flag should accept provider credentials, DNS API tokens, OAuth material, DNS write confirmation, arbitrary record payloads, or mutation requests.
+No CLI flag accepts provider credentials, DNS API tokens, OAuth material, DNS write confirmation, arbitrary record payloads, or mutation requests.
 
-## Future JSON contract sketch
+When passing `--expected-search-console-txt`, use the built `shipready` binary or `pnpm --silent shipready ...` in source checkouts so package-manager script echo cannot print command arguments before ShipReady redacts output.
 
-Recommended contract name: `shipready.dnsStatus.v1`.
+## Implemented JSON contract
 
-This is a sketch for Pass 11, not an implemented contract:
+Contract name: `shipready.dnsStatus.v1`.
 
-```ts
-type DnsStatusV1 = {
-  contract: "shipready.dnsStatus.v1";
-  checkedAt: string;
-  mode: "live";
-  requestedUrl: string;
-  normalizedUrl: string;
-  domain?: string;
-  inputs: {
-    expectedCanonicalHost?: string;
-    expectedWwwMode?: "www" | "apex" | "either";
-    expectedCertificateIssuer?: string;
-    searchConsoleVerificationTxtProvided: boolean;
-  };
-  hosts: Array<{
-    host: string;
-    role: "requested" | "apex" | "www" | "other";
-    resolution: {
-      status:
-        | "ok"
-        | "nxdomain"
-        | "nodata"
-        | "timeout"
-        | "servfail"
-        | "refused"
-        | "error"
-        | "unknown";
-      message: string;
-    };
-    records: {
-      a?: Array<{ value: string; ttl?: number }>;
-      aaaa?: Array<{ value: string; ttl?: number }>;
-      cname?: Array<{ value: string; ttl?: number }>;
-      txt?: Array<{ valueRedacted: string; ttl?: number }>;
-      caa?: Array<{
-        flags?: number;
-        tag?: string;
-        valueRedacted: string;
-        ttl?: number;
-      }>;
-      ns?: Array<{ value: string; ttl?: number }>;
-    };
-    cnameChain?: Array<{
-      from: string;
-      to: string;
-      status: "followed" | "loop" | "too_deep" | "target_missing" | "error";
-    }>;
-  }>;
-  canonical?: {
-    expectedHost?: string;
-    observedFinalUrl?: string;
-    status: "ok" | "mismatch" | "unknown" | "not_checked";
-    message: string;
-  };
-  dnssec?: {
-    status: "not_checked" | "appears_ok" | "appears_broken" | "unknown";
-    evidence?: string;
-    message: string;
-  };
-  caa?: {
-    status: "not_checked" | "not_present" | "present" | "possible_issue" | "unknown";
-    expectedIssuer?: string;
-    message: string;
-  };
-  verification?: {
-    searchConsoleTxt?: {
-      status: "not_checked" | "found" | "missing" | "unknown";
-      message: string;
-    };
-  };
-  verdict: {
-    status: "ready" | "needs_attention" | "blocked" | "unknown";
-    summary: string;
-  };
-  limitations: string[];
-  nextActions: string[];
-};
-```
+The authoritative schema is `DnsStatusJsonContractSchema` in `src/types/contracts.ts`; the narrative reference is [CONTRACTS.md](CONTRACTS.md). The contract includes normalized URL, timestamp, mode, conservative domain, host resolution evidence, optional CNAME-chain evidence, canonical-host evidence, DNSSEC posture, CAA posture, optional Search Console TXT readiness, advisory verdict, limitations, and next actions.
 
 Contract rules:
 
-- `mode: "live"` means live DNS/HTTP reads, not provider integration or mutation.
-- `ready` means no configured V1 checks found an actionable issue; it is not a third-party outcome guarantee.
-- Query values, TXT verification tokens, and sensitive CAA values must be redacted in logs and public artifacts.
-- Missing optional evidence remains absent or `not_checked`; it must not be coerced to success.
-- DNS-only, HTTP/TLS-adjacent, and Search Console verification-readiness states should remain separate enough for clients to label them accurately.
+- `mode: "live"` means read-only DNS/optional HTTP reads, not provider integration or mutation.
+- `mode: "mock"` means deterministic local scenario output for tests, fixtures, and CI.
+- `ready` means no configured V1 check found a blocking issue; it is not a third-party outcome guarantee.
+- Query values and TXT verification tokens are redacted from output and fixtures.
+- Missing optional evidence remains `not_checked` or `unknown`; it must not be coerced to success.
+- DNS-only, HTTP-adjacent, and Search Console verification-readiness states remain separate.
 
-## Future MCP proposal
+## Current MCP tool
 
-Recommended read-only tool: `shipready.dns_status`.
+Read-only tool: `shipready.dns_status`.
 
-Input:
-
-```ts
-type DnsStatusToolInput = {
-  url: string;
-  domain?: string;
-  expectedCanonicalHost?: string;
-  expectedWwwMode?: "www" | "apex" | "either";
-  expectedSearchConsoleVerificationTxt?: string;
-  expectedCertificateIssuer?: string;
-};
-```
+Input: `{ url, expectedCanonicalHost?, expectedWwwMode?, expectedSearchConsoleVerificationTxt?, checkHttp?, mock? }`.
 
 Output: exact `shipready.dnsStatus.v1`.
 
@@ -301,7 +218,7 @@ The GUI must not show provider login, provider write controls, DNS patch buttons
 DNS readiness can help answer:
 
 - Can the domain resolve?
-- Is the expected Search Console TXT/CNAME verification record visible, if the user supplied it?
+- Is the expected Search Console TXT verification record visible, if the user supplied it?
 - Does the live URL redirect to the expected canonical host?
 
 DNS readiness must not claim:
@@ -317,7 +234,7 @@ Authenticated Search Console evidence remains governed by [SEARCH_CONSOLE_READIN
 
 - Domain names and hostnames can reveal unreleased launches, customers, or internal projects. Treat DNS status output as user data.
 - Query strings can contain sensitive IDs. Redact query values from logs, errors, telemetry, screenshots, and artifacts.
-- Expected verification TXT/CNAME tokens are secret-like. If accepted later, redact them by default and never store them in fixtures.
+- Expected verification TXT tokens are secret-like. Pass 11 accepts them only as explicit command/tool input, matches them internally, redacts them by default, and stores only redacted evidence in fixtures.
 - Public artifacts should show only redacted token presence, such as `google-site-verification=<redacted>`.
 - Do not accept DNS provider API keys, registrar credentials, Search Console tokens, OAuth codes, or ACME credentials in V1.
 - Do not write provider credentials to logs, stdout/stderr, reports, docs, MCP resources, validation fixtures, screenshots, or crash output.
@@ -328,25 +245,25 @@ Authenticated Search Console evidence remains governed by [SEARCH_CONSOLE_READIN
 
 ## Implementation phases
 
-### Phase A - spec only (Pass 10)
+### Phase A - spec only (Pass 10, complete)
 
 - Record source-backed DNS facts, claim boundaries, proposed CLI/MCP/contract shapes, security posture, and test strategy.
 - Make no product, dependency, resolver, provider, Search Console, GUI, MCP, or write change.
 
-### Phase B - read-only DNS status (Pass 11)
+### Phase B - read-only DNS status (Pass 11, complete)
 
 - Implement `dns status` with a bounded resolver abstraction.
 - Resolve requested host plus apex/`www` candidates.
 - Classify NXDOMAIN, NODATA, timeout, SERVFAIL, REFUSED, generic errors, and unknown states where practical.
 - Check CNAME chains with a fixed depth limit.
-- Surface TTLs and CAA records without over-claiming.
-- Optionally perform bounded HTTP canonical-host checks if reuse of existing audit boundaries is straightforward.
+- Surface CAA records without over-claiming. TTL values remain deferred.
+- Optionally perform bounded HTTP canonical-host checks when `--check-http` is supplied; deterministic mocks also cover canonical mismatch.
 - Return stable `shipready.dnsStatus.v1`.
 - Add no DNS writes, provider integrations, provider credentials, Search Console live behavior, OAuth, GUI changes, or MCP write changes.
 
-### Phase C - verification-readiness checks
+### Phase C - verification-readiness checks (partly complete)
 
-- Check expected Search Console DNS TXT/CNAME token only when the user provides it.
+- Check expected Search Console DNS TXT token only when the user provides it.
 - Do not fetch tokens from Google.
 - Do not generate or place tokens.
 - Do not verify ownership.
@@ -360,31 +277,28 @@ Authenticated Search Console evidence remains governed by [SEARCH_CONSOLE_READIN
 - Email DNS checks only if product scope expands.
 - Any mutation-bearing workflow requires separate policy, confirmation design, threat model, and tests.
 
-## Pass 11 test strategy
+## Pass 11 test coverage
 
-Pass 11 should use deterministic tests by default:
+Pass 11 uses deterministic tests by default:
 
 - Mock DNS resolver responses; no live DNS dependency in unit tests.
-- Fixtures for apex-ok, `www`-ok, one-host-only, NXDOMAIN, NODATA, timeout, SERVFAIL, REFUSED, CNAME chain, CNAME loop, CNAME too deep, CNAME target missing, CAA present, CAA possible issue, DNSSEC unknown, TXT found, and TXT missing.
+- Fixtures for ready, apex-ok with missing `www`, `www` CNAME ok, NXDOMAIN, NODATA, timeout, CNAME target missing, CAA present, TXT found, TXT missing, and canonical mismatch.
 - Contract fixtures for `ready`, `needs_attention`, `blocked`, and `unknown`.
-- URL parsing, fragment stripping, IDN handling decision, and query-string redaction tests.
-- Error mapping tests for invalid URL/domain/input, resolver timeout, malformed response, unsupported resolver state, and contract serialization failure.
-- Claim-policy tests rejecting guarantee, ranking, approval, automatic repair, deployment, and implemented-integration wording.
-- Secret redaction tests for TXT tokens, provider-like keys, query values, nested errors, stdout/stderr, logs, reports, and MCP errors.
+- URL parsing, fragment stripping, and query-string redaction tests.
+- Error mapping tests for invalid URL/input and unsupported scenarios/modes.
+- Secret redaction tests for TXT tokens, provider-like keys, query values, CLI output, contract output, and MCP errors.
 - Read-only tests asserting no DNS/provider/Search Console/Git/deploy/filesystem mutation path exists.
 - MCP tests asserting `shipready.dns_status` accepts no credentials, returns exact `shipready.dnsStatus.v1`, exposes no secrets, keeps stdio-only transport, and leaves `shipready.write_safe_crawl_files` as the sole write tool.
 - GUI regression tests asserting the client still calls only `/api/ui-report`, `POST /api/fix` remains `404`, and preview/copy-only behavior remains unchanged.
 
 Optional live DNS smoke tests may be manually run against dedicated, non-sensitive domains. They must be skipped in CI unless explicitly enabled and must not depend on provider credentials.
 
-## Open questions
+## Remaining future questions
 
-1. Should Pass 11 add a public suffix dependency for registrable-domain derivation, require `domain`, or use a conservative host heuristic?
-2. Should `expectedSearchConsoleVerificationTxt` be included in Pass 11, or deferred to Phase C to simplify initial resolver behavior?
-3. Which resolver API exposes the cleanest distinction among NXDOMAIN, NODATA, timeout, SERVFAIL, REFUSED, TTLs, CAA, and optional DNSSEC/EDE evidence?
-4. Should HTTP canonical-host checks be part of `dns status` V1 or reuse existing `audit` evidence in a later combined report?
-5. How should CAA issuer names be normalized without embedding a provider-specific CA allowlist?
-6. What record-count and string-length limits keep the contract useful without leaking or bloating DNS data?
+1. Should a future pass add a public suffix dependency for registrable-domain derivation, or keep the conservative host heuristic?
+2. Should TTLs, SERVFAIL/REFUSED sub-classification, DNSSEC, and EDE evidence be added to a future contract version or additive V1 fields?
+3. Should CAA issuer names be normalized without embedding a provider-specific CA allowlist?
+4. What record-count and string-length limits keep future expanded DNS data useful without leaking or bloating output?
 
 ## Authoritative sources
 

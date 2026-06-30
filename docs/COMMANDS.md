@@ -24,7 +24,7 @@ pnpm shipready doctor --json
 ```
 
 - Purpose: check local runtime readiness without requiring a URL or repository path.
-- Checks: Node.js, pnpm, the Playwright Chromium executable, optional FFmpeg, package content, MCP SDK/configurability, parsed contract fixtures, canonical docs, `WRITE_POLICY_V1`, `LOCAL_FIRST_GUI_SPEC`, and expected demo artifacts.
+- Checks: Node.js, pnpm, the Playwright Chromium executable, optional FFmpeg, package content, MCP SDK/configurability, parsed contract fixtures, canonical docs, Search Console mock content, DNS readiness content/API availability, `WRITE_POLICY_V1`, `LOCAL_FIRST_GUI_SPEC`, and expected demo artifacts.
 - Behavior: uses bounded local executable/file/dependency probes only. It does not access the network, inspect an arbitrary repository, start the MCP/GUI server, or mutate files.
 - Classification: every check is `pass`, `warn`, `fail`, or `skip`. Missing optional FFmpeg/demo artifacts warn rather than fail. `ok` is true exactly when no required check fails.
 - JSON contract: `shipready.doctor.v1`; normalized fixture: [`doctor.default.json`](../validation/contracts/doctor.default.json).
@@ -183,20 +183,28 @@ pnpm shipready search-console status --url https://example.com --mock inspection
 
 The future live provider remains deferred. It would require a separately reviewed local OAuth/token-custody boundary and only Google's documented [`webmasters.readonly` scope](https://developers.google.com/webmaster-tools/v1/how-tos/authorizing). See [SEARCH_CONSOLE_READINESS_SPEC.md](SEARCH_CONSOLE_READINESS_SPEC.md).
 
-## Planned `dns status`
+## `dns status`
 
-Pass 10 specifies but does not implement this future read-only surface:
+Pass 11 implements a read-only DNS readiness surface:
 
 ```bash
+pnpm shipready dns status --url https://example.com
 pnpm shipready dns status --url https://example.com --json
+pnpm shipready dns status --url https://example.com --mock ready --json
+pnpm shipready dns status --url https://example.com --mock txt-found --expected-search-console-txt <token> --json
+pnpm shipready dns status --url https://example.com --expected-canonical-host example.com --check-http --json
 ```
 
-- Recommended JSON contract: `shipready.dnsStatus.v1`.
-- Recommended MCP tool: `shipready.dns_status`.
-- Purpose: report provider-neutral DNS readiness evidence for a launch domain, with DNS-only checks separated from HTTP/TLS-adjacent checks and optional Search Console verification-readiness.
-- Safety: this planned command must not write DNS records, call provider APIs, accept provider credentials, verify Search Console ownership, submit sitemaps, request indexing, deploy, write files, change GUI behavior, or add any MCP write tool.
+- Required: `--url <http-or-https-url>`.
+- Optional: `--json`, `--mock <scenario>`, `--expected-canonical-host <host>`, `--expected-www-mode apex|www|either`, `--expected-search-console-txt <token>`, and `--check-http`.
+- Scenarios: `ready`, `apex-ok-www-missing`, `www-cname-ok`, `nxdomain`, `nodata`, `timeout`, `cname-chain-issue`, `caa-present`, `txt-found`, `txt-missing`, and `canonical-mismatch`.
+- Default: without `--mock`, performs read-only live DNS lookups through Node built-ins. Tests and CI should use mock scenarios.
+- Output: concise human sections or one `shipready.dnsStatus.v1` object. Invalid URL, unsupported mock, or unsupported expected-www mode returns `shipready.error.v1`.
+- Checks: normalizes the URL without query/fragment output, derives a conservative apex/www host set, checks A/AAAA, CNAME chain evidence, NS, CAA, optional TXT token visibility, optional HTTP final host, and returns advisory verdict/limitations/next actions.
+- Safety: no DNS records are written; no DNS provider, registrar, nameserver, hosting, Search Console, OAuth, token-store, deployment, Git, repository write, or GUI behavior is added. TXT verification tokens are used only for matching and are redacted from output.
+- Token handling: when passing `--expected-search-console-txt`, prefer the built `shipready` binary or `pnpm --silent shipready ...` so package-manager script echo cannot print command arguments before ShipReady redacts output.
 
-Until Pass 11 ships, DNS remains not implemented. See [DNS_READINESS_SPEC.md](DNS_READINESS_SPEC.md).
+MCP exposes the same read-only contract as `shipready.dns_status`. It accepts no repository path, requires no repo-root authorization for the call, and does not change the sole MCP write tool.
 
 ## Demo package scripts
 
@@ -221,16 +229,16 @@ See [DEMO.md](DEMO.md) before recording. None of these scripts executes the disp
 ## `mcp`
 
 ```bash
-pnpm shipready mcp --allow-root /Users/fabiencampana/Documents
-pnpm shipready mcp --allow-root /absolute/workspace-a --allow-root /absolute/workspace-b
-SHIPREADY_MCP_ALLOWED_ROOTS='["/absolute/workspace-a","/absolute/workspace-b"]' pnpm shipready mcp
+pnpm --silent shipready mcp --allow-root /Users/fabiencampana/Documents
+pnpm --silent shipready mcp --allow-root /absolute/workspace-a --allow-root /absolute/workspace-b
+SHIPREADY_MCP_ALLOWED_ROOTS='["/absolute/workspace-a","/absolute/workspace-b"]' pnpm --silent shipready mcp
 ```
 
-- Purpose: start the local MCP stdio server. Stdout is reserved for MCP protocol frames.
+- Purpose: start the local MCP stdio server. Stdout is reserved for MCP protocol frames; use `pnpm --silent` in source checkouts so package-manager script output cannot pollute stdio.
 - Authorization: at least one explicit root is required. Repeat `--allow-root` for multiple roots; CLI roots replace the JSON-array environment fallback. Relative, missing, home, filesystem-root, traversal, and symlink-escape paths fail closed.
-- Surface: eight read-only tools, one guarded write tool, ten canonical documentation resources plus allowlisted contract fixtures, and five prompt templates. `shipready.search_console_status` wraps the same deterministic mock boundary, accepts no repository-path input, and performs no repository-path authorization; the server's existing allowed-root startup requirement remains unchanged. See [MCP_PLAN.md](MCP_PLAN.md) for the exact lists.
+- Surface: nine read-only tools, one guarded write tool, eleven canonical documentation resources plus allowlisted contract fixtures, and five prompt templates. `shipready.search_console_status` and `shipready.dns_status` accept no repository-path input and perform no repository-path authorization; the server's existing allowed-root startup requirement remains unchanged for repo-capable tools. See [MCP_PLAN.md](MCP_PLAN.md) for the exact lists.
 - Safe write tool: `shipready.write_safe_crawl_files` can create only current V1-eligible missing robots/sitemap files. Required flow: call `shipready.preview_fixes`, review `shipready.dryRunFix.v1` and its fresh `previewReceipt`, then call the write tool with the same URL, same authorized repo path, that receipt, and `confirmation: "CREATE_SAFE_CRAWL_FILES_ONLY"`.
 - Safety: the write tool re-authorizes the path, validates the receipt signature/expiry/bindings, regenerates the current dry-run, revalidates `WRITE_POLICY_V1`, and returns `shipready.writeFix.v1`. It never accepts arbitrary file paths or client-supplied file lists as authority. The server does not start the GUI or write an HTML report.
 - Limitation: request deadlines and client cancellation are bounded at the MCP boundary. Existing synchronous repository scans and application operations do not yet accept `AbortSignal`, so already-started underlying work may finish its own bounded cleanup after the MCP response.
 
-HTTP, SSE, remote auth, live Search Console/OAuth, timeout overrides, broader MCP writes, GUI write execution, Git/GitHub, deploy, and DNS are not implemented.
+HTTP, SSE, remote auth, live Search Console/OAuth, timeout overrides, broader MCP writes, GUI write execution, Git/GitHub, deploy, DNS provider integrations, and DNS writes are not implemented.

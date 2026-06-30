@@ -11,6 +11,7 @@ export const STATUS_CLI_COMMANDS = [
   "status",
   "doctor",
   "search-console status",
+  "dns status",
   "audit",
   "inspect-repo",
   "plan-fixes",
@@ -60,7 +61,9 @@ export function createStatus(): StatusJsonContract {
     },
     integrations: {
       searchConsole: "mock_prototype",
-      dns: "not_implemented",
+      dns: "read_only_status",
+      dnsProviderWrites: "not_implemented",
+      dnsProviderIntegrations: "not_implemented",
       github: "not_implemented",
       deployment: "not_implemented",
     },
@@ -69,7 +72,7 @@ export function createStatus(): StatusJsonContract {
       fodmappVoiceover: "validation/demo-fodmapp-voiceover-final/",
     },
     nextRecommendedCommand: "pnpm shipready doctor",
-    nextRecommendedPass: "DNS readiness checks spec",
+    nextRecommendedPass: "Post-write deploy/re-check workflow",
   });
 }
 
@@ -90,7 +93,8 @@ export function formatStatusHuman(status = createStatus()): string {
     "Safety",
     `  ${status.writePolicy.name}: ${status.writePolicy.summary}`,
     "  Search Console: spec exists, mock prototype available, live integration not implemented",
-    "  Remote MCP, DNS, GitHub, and deployment integrations: not implemented",
+    "  DNS readiness: read-only status checks implemented; provider writes/integrations not implemented",
+    "  Remote MCP, GitHub, and deployment integrations: not implemented",
     "",
     "Demo artifacts",
     `  ${status.demos.fodmappShare}`,

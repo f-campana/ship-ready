@@ -18,7 +18,7 @@ const projectRoot = join(import.meta.dirname, "..");
 describe("dry-run fix preview", () => {
   it("fails safely when fix is run without --dry-run", async () => {
     try {
-      await execFileAsync("pnpm", ["shipready", "fix", ".", "--url", "https://example.com"], {
+      await execFileAsync("pnpm", ["--silent", "shipready", "fix", ".", "--url", "https://example.com"], {
         cwd: projectRoot,
         timeout: 10000,
       });

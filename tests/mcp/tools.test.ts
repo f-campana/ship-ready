@@ -37,10 +37,10 @@ beforeAll(async () => {
 afterAll(async () => closeServer());
 
 describe("MCP tools", () => {
-  it("registers the eight read-only tools and exactly one write tool", () => {
+  it("registers the nine read-only tools and exactly one write tool", () => {
     const names = listTools().map((tool) => tool.name);
     expect(names).toEqual([
-      "shipready.audit_site", "shipready.search_console_status", "shipready.inspect_repo", "shipready.plan_fixes",
+      "shipready.audit_site", "shipready.search_console_status", "shipready.dns_status", "shipready.inspect_repo", "shipready.plan_fixes",
       "shipready.preview_fixes", "shipready.write_safe_crawl_files", "shipready.get_ui_report",
       "shipready.get_contract_fixture", "shipready.get_policy_doc",
     ]);

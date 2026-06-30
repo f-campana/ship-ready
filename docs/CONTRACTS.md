@@ -23,6 +23,7 @@ This was low risk because CLI JSON formatting already had a dedicated Zod-valida
 | `fix <path> --url <url> --write --allow-create --json` | Yes | `shipready.writeFix.v1` | V1 CLI boundary, policy-bound mutation | Creation-only crawl-file write |
 | `ui-report [path] --url <url> --json` | Yes | `shipready.uiReport.v1` | V1 CLI boundary plus `ui-report-v1` model | Network/optional local read only |
 | `search-console status --url <url> --json` | Yes | `shipready.searchConsoleStatus.v1` | V1 mock prototype boundary | Deterministic local read only |
+| `dns status --url <url> --json` | Yes | `shipready.dnsStatus.v1` | V1 DNS readiness boundary | Read-only DNS/optional HTTP evidence |
 | JSON command failure | When the invoked command accepted `--json` | `shipready.error.v1` | V1 error boundary; Commander parse gaps remain | No additional effects |
 
 The authoritative mapping and CLI contract schemas are in `src/types/contracts.ts`.
@@ -39,13 +40,21 @@ Canonical fixtures cover `not_configured`, `unauthorized`, `property_not_found`,
 
 The MCP tool accepts only `{ url, mock?, inspect? }`, needs no repository path, and returns this exact contract. It does not alter the sole MCP write tool, stdio-only transport, `WRITE_POLICY_V1`, GUI behavior, or `POST /api/fix = 404` boundary.
 
-## Planned `shipready.dnsStatus.v1`
+## `shipready.dnsStatus.v1`
 
-Pass 10 specifies the future DNS status contract but does not implement it. The recommended CLI surface is `dns status --url <url> --json`, and the recommended read-only MCP tool is `shipready.dns_status`.
+Pass 11 implements this contract for `dns status --json` and the read-only MCP tool `shipready.dns_status`.
 
-The contract should remain provider-neutral and read-only. It should separate DNS-only evidence such as A/AAAA, CNAME chain, NS, TXT, CAA, TTL, NXDOMAIN, NODATA, timeout, and resolver error states from HTTP/TLS-adjacent evidence such as canonical host redirects and TLS fetch failures. Optional Search Console verification-readiness should only check a user-supplied expected TXT/CNAME token and must not verify ownership or call Google.
+Top-level keys are `contract`, `url`, `checkedAt`, `mode`, `domain`, `hosts`, `canonical`, `dnssec`, `caa`, `verification`, `verdict`, `limitations`, and `nextActions`. `mode` is `live` for read-only Node DNS lookups and `mock` for deterministic scenarios. `url` is normalized without query strings or fragments. `domain` is derived conservatively from the URL host; v1 does not use a public suffix list.
 
-This planned contract must not add DNS/provider writes, provider credentials, registrar/nameserver APIs, Search Console live behavior, OAuth, GUI writes, remote MCP transport, or another MCP write tool. See [DNS_READINESS_SPEC.md](DNS_READINESS_SPEC.md) for the provisional shape and Pass 11 test strategy.
+Each host records `host`, role (`apex`, `www`, or `other`), redacted record evidence, resolution status (`ok`, `nxdomain`, `nodata`, `timeout`, `error`, or `not_checked`), and optional bounded CNAME-chain evidence. The records object may include A, AAAA, CNAME, redacted TXT, CAA, and NS arrays. TXT verification tokens are matched internally and redacted from output.
+
+`canonical` is `not_checked` unless `--check-http` is used or a deterministic canonical mock scenario supplies evidence. Canonical evidence is HTTP-adjacent, not a DNS failure. `dnssec` is currently `not_checked`. `caa` reports present/not-present/unknown evidence only; it does not claim certificate issuance. `verification.searchConsoleTxt` checks only a caller-supplied expected TXT token and does not verify Search Console ownership.
+
+The verdict is advisory: `ready`, `needs_attention`, `blocked`, or `unknown`. `ready` means the configured v1 checks did not observe a blocking issue; it does not guarantee propagation, certificate issuance, crawling, indexing, ranking, provider changes, or Google/Search Console state.
+
+Canonical fixtures cover `ready`, `apex-ok-www-missing`, `www-cname-ok`, `nxdomain`, `nodata`, `timeout`, `cname-chain-issue`, `caa-present`, `txt-found`, `txt-missing`, and `canonical-mismatch`. All use a fixed timestamp and synthetic `example.com` values. The live resolver uses Node built-ins only; no DNS package, DNS provider SDK, provider credential, or DNS write interface is added.
+
+The MCP tool accepts `{ url, expectedCanonicalHost?, expectedWwwMode?, expectedSearchConsoleVerificationTxt?, checkHttp?, mock? }`, needs no repository path, and returns this exact contract. It does not alter the sole MCP write tool, stdio-only transport, `WRITE_POLICY_V1`, GUI behavior, or `POST /api/fix = 404` boundary.
 
 ## Exact success shapes
 
@@ -55,7 +64,7 @@ All outputs are one JSON object followed by a newline and do not use a generic s
 
 Top-level keys: `contract`, `version`, `mode`, `capabilities`, `writePolicy`, `integrations`, `demos`, `nextRecommendedCommand`, and `nextRecommendedPass`.
 
-Stable posture fields report `cliFirst: true`, `mcpSecond: true`, `guiThird: true`, local stdio MCP with `remoteTransport: false`, exactly one MCP write tool (`shipready.write_safe_crawl_files`), and a local GUI with `writeEndpoint: false`. Search Console is `mock_prototype`; DNS, GitHub, and deployment remain `not_implemented`. `writePolicy.id` remains `creation_only_robots_sitemap_v1`; this report does not redefine policy semantics.
+Stable posture fields report `cliFirst: true`, `mcpSecond: true`, `guiThird: true`, local stdio MCP with `remoteTransport: false`, exactly one MCP write tool (`shipready.write_safe_crawl_files`), and a local GUI with `writeEndpoint: false`. Search Console is `mock_prototype`; DNS is `read_only_status`; DNS provider writes, DNS provider integrations, GitHub, and deployment remain `not_implemented`. `writePolicy.id` remains `creation_only_robots_sitemap_v1`; this report does not redefine policy semantics.
 
 Internal source and formatter: `src/status/status.ts`. Exit behavior: `0`. The command is static/read-only, makes no network request, and does not inspect a target repository.
 
@@ -185,6 +194,24 @@ Deterministic fixtures live in `validation/contracts/`:
 - `fix-write.skipped.json`
 - `ui-report.safe-apply.json`
 - `ui-report.url-only.json`
+- `search-console.not-configured.json`
+- `search-console.unauthorized.json`
+- `search-console.property-not-found.json`
+- `search-console.ready-sitemap-ok.json`
+- `search-console.ready-sitemap-warning.json`
+- `search-console.inspection-canonical-mismatch.json`
+- `search-console.inspection-not-indexed.json`
+- `dns.ready.json`
+- `dns.apex-ok-www-missing.json`
+- `dns.www-cname-ok.json`
+- `dns.nxdomain.json`
+- `dns.nodata.json`
+- `dns.timeout.json`
+- `dns.cname-chain-issue.json`
+- `dns.caa-present.json`
+- `dns.txt-found.json`
+- `dns.txt-missing.json`
+- `dns.canonical-mismatch.json`
 - `error.invalid-url.json`
 - `status.default.json`
 - `doctor.default.json`
@@ -197,7 +224,7 @@ pnpm contracts:fixtures
 
 The generator is `scripts/validation/generateContractFixtures.ts`. It makes no external requests. The write fixtures run `writeFixFromDryRun` only against temporary copies under the operating-system temp directory, record the returned results, and remove the copies. They never target a real repository. Fixed timestamps and repository display paths keep fixtures reproducible.
 
-Focused drift coverage is in `tests/contracts.test.ts`, `tests/status.test.ts`, and `tests/doctor.test.ts`. Tests validate every fixture, every formatter discriminator, status/doctor posture and summaries, error code/message compatibility, UI report dual discriminators, dry-run state separation, write effect fields, the command mapping, and an invalid-URL CLI exit.
+Focused drift coverage is in `tests/contracts.test.ts`, `tests/status.test.ts`, `tests/doctor.test.ts`, `tests/dnsStatus.test.ts`, and `tests/dnsCli.test.ts`. Tests validate every fixture, every formatter discriminator, status/doctor posture and summaries, error code/message compatibility, DNS verdict/resolution constraints and token redaction, UI report dual discriminators, dry-run state separation, write effect fields, the command mapping, and invalid-URL CLI exits.
 
 ## Downstream consumers
 
@@ -211,7 +238,7 @@ Focused drift coverage is in `tests/contracts.test.ts`, `tests/status.test.ts`, 
 
 ## MCP mapping
 
-The implemented Pass 6 specification is [MCP_PLAN.md](MCP_PLAN.md). Six contract-backed tools preserve their top-level CLI contract objects; two canonical-read tools expose validated fixtures and allowlisted documents. `shipready.write_safe_crawl_files` returns `shipready.writeFix.v1` and is the only MCP write tool.
+The implemented Pass 6 specification is [MCP_PLAN.md](MCP_PLAN.md). Eight contract-backed tools preserve their top-level CLI contract objects; two canonical-read tools expose validated fixtures and allowlisted documents. `shipready.write_safe_crawl_files` returns `shipready.writeFix.v1` and is the only MCP write tool.
 
 `shipready.preview_fixes` still returns `shipready.dryRunFix.v1`; when current V1-eligible crawl-file creations exist, the MCP layer adds an agent-facing `previewReceipt` to the tool payload. The receipt is not a CLI contract field and is not write authority by itself. It is a signed, short-lived MCP precondition binding the normalized URL, authorized canonical repository path, policy, eligible paths, and stable dry-run/candidate digests.
 
@@ -219,10 +246,10 @@ The MCP write call must supply the same URL and repo path, the fresh receipt, an
 
 Ready now:
 
-- Eight implemented JSON-capable command surfaces have explicit V1 contract names.
+- Nine implemented JSON-capable command surfaces have explicit V1 contract names.
 - Success outputs retain their existing fields and add stable discriminators.
 - Action-level JSON errors have stable codes/messages and preserve the legacy `error` field.
-- Deterministic local fixtures and focused drift tests cover success, failure, dry-run, write, and UI states.
+- Deterministic local fixtures and focused drift tests cover success, failure, dry-run, write, UI, Search Console, and DNS states.
 - Creation-only write evidence remains explicit and policy-bound.
 - Human CLI, HTML file, and GUI server surfaces are clearly separated from CLI JSON contracts.
 

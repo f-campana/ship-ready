@@ -14,8 +14,8 @@ Order is contractual: harden CLI interfaces before wrapping them, ship read-only
 | 8 | Complete | Research and specify Search Console readiness boundaries in [SEARCH_CONSOLE_READINESS_SPEC.md](SEARCH_CONSOLE_READINESS_SPEC.md). | Establishes claims, auth, and data limits before integration. | Read-only/spec | Pass 7 |
 | 9 | Complete | Prototype mock-backed read-only Search Console status. | Tests stable CLI/MCP status contracts without OAuth, tokens, live Google calls, or third-party mutation. | Read-only | Pass 8 |
 | 10 | Complete | Specify DNS readiness checks and provider-neutral evidence in [DNS_READINESS_SPEC.md](DNS_READINESS_SPEC.md). | Avoids provider coupling and unsafe remediation claims. | Read-only/spec | Pass 7 |
-| 11 | Next | Implement read-only DNS checks. | Adds evidence only after the check contract is reviewed. | Read-only | Pass 10 |
-| 12 | Planned | Define post-write deployment handoff and live re-check workflow. | Connects local effects to verified live state without hiding boundaries. | Write-bearing | Pass 6 |
+| 11 | Complete | Implement read-only DNS checks. | Adds evidence only after the check contract is reviewed. | Read-only | Pass 10 |
+| 12 | Next | Define post-write deployment handoff and live re-check workflow. | Connects local effects to verified live state without hiding boundaries. | Write-bearing | Pass 6 |
 | 13 | Planned | Add a social preview simulator. | Builds on stable audit/report metadata contracts. | Read-only | Pass 3 |
 | 14 | Planned | Detect generated-site implementation smells. | Adds bounded repository diagnostics after inspection contracts harden. | Read-only | Pass 3 |
 | 15 | Planned | Add a bounded multi-page crawl. | Expands audit scope only after single-page contracts stabilize. | Read-only | Pass 3 |

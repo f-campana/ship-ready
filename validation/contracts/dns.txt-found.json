@@ -1,0 +1,91 @@
+{
+  "contract": "shipready.dnsStatus.v1",
+  "url": "https://example.com/",
+  "checkedAt": "2026-06-30T12:00:00.000Z",
+  "mode": "mock",
+  "domain": "example.com",
+  "hosts": [
+    {
+      "host": "example.com",
+      "role": "apex",
+      "records": {
+        "a": [
+          "203.0.113.10"
+        ],
+        "aaaa": [
+          "2001:db8::10"
+        ],
+        "txt": [
+          "google-site-verification=<redacted>"
+        ],
+        "ns": [
+          "ns1.example.com",
+          "ns2.example.com"
+        ]
+      },
+      "resolution": {
+        "status": "ok",
+        "message": "example.com has observed address records."
+      }
+    },
+    {
+      "host": "www.example.com",
+      "role": "www",
+      "records": {
+        "a": [
+          "203.0.113.10"
+        ],
+        "aaaa": [
+          "2001:db8::10"
+        ],
+        "cname": [
+          "hosting.example.com"
+        ]
+      },
+      "resolution": {
+        "status": "ok",
+        "message": "www.example.com has observed address records."
+      },
+      "cnameChain": [
+        {
+          "from": "www.example.com",
+          "to": "hosting.example.com",
+          "status": "followed"
+        }
+      ]
+    }
+  ],
+  "canonical": {
+    "expectedHost": "example.com",
+    "status": "not_checked",
+    "message": "HTTP canonical host check was not requested."
+  },
+  "dnssec": {
+    "status": "not_checked",
+    "message": "DNSSEC validation is not checked by ShipReady DNS readiness v1."
+  },
+  "caa": {
+    "status": "not_present",
+    "message": "No CAA records were observed by the configured resolver."
+  },
+  "verification": {
+    "searchConsoleTxt": {
+      "status": "found",
+      "message": "The expected Search Console TXT token was observed in redacted TXT output."
+    }
+  },
+  "verdict": {
+    "status": "ready",
+    "summary": "Required DNS address checks returned observed records and no configured V1 check found a blocking issue."
+  },
+  "limitations": [
+    "Deterministic mock DNS data only; no live DNS resolver or provider API was used.",
+    "DNS readiness is advisory evidence only and does not guarantee propagation, certificate issuance, crawling, indexing, ranking, or third-party approval.",
+    "Registrable-domain derivation is conservative and does not use a public suffix list in v1.",
+    "HTTP canonical host checking was not requested.",
+    "Search Console TXT evidence checks only whether a caller-supplied token appears in DNS; it does not verify Search Console ownership."
+  ],
+  "nextActions": [
+    "Review the observed DNS evidence and keep provider-side changes outside ShipReady."
+  ]
+}

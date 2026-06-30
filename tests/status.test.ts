@@ -27,6 +27,7 @@ describe("status", () => {
     expect(output).toContain("no write endpoint");
     expect(output).toContain("pnpm shipready doctor");
     expect(output).toContain("mock prototype available, live integration not implemented");
+    expect(output).toContain("DNS readiness: read-only status checks implemented");
   });
 
   it("emits the stable JSON capability and safety contract", async () => {
@@ -42,7 +43,9 @@ describe("status", () => {
     expect(status.capabilities.gui).toEqual({ local: true, writeEndpoint: false });
     expect(status.integrations).toEqual({
       searchConsole: "mock_prototype",
-      dns: "not_implemented",
+      dns: "read_only_status",
+      dnsProviderWrites: "not_implemented",
+      dnsProviderIntegrations: "not_implemented",
       github: "not_implemented",
       deployment: "not_implemented",
     });

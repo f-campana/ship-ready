@@ -1,6 +1,7 @@
 export const MCP_TOOL_NAMES = {
   auditSite: "shipready.audit_site",
   searchConsoleStatus: "shipready.search_console_status",
+  dnsStatus: "shipready.dns_status",
   inspectRepo: "shipready.inspect_repo",
   planFixes: "shipready.plan_fixes",
   previewFixes: "shipready.preview_fixes",
@@ -13,6 +14,7 @@ export const MCP_TOOL_NAMES = {
 export const MCP_READ_ONLY_TOOL_NAMES = [
   MCP_TOOL_NAMES.auditSite,
   MCP_TOOL_NAMES.searchConsoleStatus,
+  MCP_TOOL_NAMES.dnsStatus,
   MCP_TOOL_NAMES.inspectRepo,
   MCP_TOOL_NAMES.planFixes,
   MCP_TOOL_NAMES.previewFixes,
@@ -26,6 +28,7 @@ export const MCP_WRITE_TOOL_NAMES = [MCP_TOOL_NAMES.writeSafeCrawlFiles] as cons
 export const TOOL_NAMES = [
   MCP_TOOL_NAMES.auditSite,
   MCP_TOOL_NAMES.searchConsoleStatus,
+  MCP_TOOL_NAMES.dnsStatus,
   MCP_TOOL_NAMES.inspectRepo,
   MCP_TOOL_NAMES.planFixes,
   MCP_TOOL_NAMES.previewFixes,

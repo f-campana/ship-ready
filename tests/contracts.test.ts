@@ -11,12 +11,14 @@ import { formatRepoInspectionJsonReport } from "../src/report/formatRepoInspecti
 import { formatUiReportJsonReport } from "../src/report/formatUiReportJsonReport";
 import { formatWriteFixJsonReport } from "../src/report/formatWriteFixJsonReport";
 import { formatSearchConsoleStatusJson } from "../src/searchConsole/searchConsoleStatus";
+import { formatDnsStatusJson } from "../src/dns/dnsStatus";
 import { AuditResultSchema } from "../src/types/audit";
 import {
   AuditJsonContractSchema,
   CLI_JSON_CONTRACT_BY_COMMAND,
   CliErrorContractSchema,
   CONTRACT_NAMES,
+  DnsStatusJsonContractSchema,
   DryRunFixJsonContractSchema,
   FixPlanJsonContractSchema,
   RepoInspectionJsonContractSchema,
@@ -59,6 +61,17 @@ describe("CLI JSON contracts", () => {
     ["search-console.ready-sitemap-warning.json", SearchConsoleStatusJsonContractSchema, CONTRACT_NAMES.searchConsoleStatus],
     ["search-console.inspection-canonical-mismatch.json", SearchConsoleStatusJsonContractSchema, CONTRACT_NAMES.searchConsoleStatus],
     ["search-console.inspection-not-indexed.json", SearchConsoleStatusJsonContractSchema, CONTRACT_NAMES.searchConsoleStatus],
+    ["dns.ready.json", DnsStatusJsonContractSchema, CONTRACT_NAMES.dnsStatus],
+    ["dns.apex-ok-www-missing.json", DnsStatusJsonContractSchema, CONTRACT_NAMES.dnsStatus],
+    ["dns.www-cname-ok.json", DnsStatusJsonContractSchema, CONTRACT_NAMES.dnsStatus],
+    ["dns.nxdomain.json", DnsStatusJsonContractSchema, CONTRACT_NAMES.dnsStatus],
+    ["dns.nodata.json", DnsStatusJsonContractSchema, CONTRACT_NAMES.dnsStatus],
+    ["dns.timeout.json", DnsStatusJsonContractSchema, CONTRACT_NAMES.dnsStatus],
+    ["dns.cname-chain-issue.json", DnsStatusJsonContractSchema, CONTRACT_NAMES.dnsStatus],
+    ["dns.caa-present.json", DnsStatusJsonContractSchema, CONTRACT_NAMES.dnsStatus],
+    ["dns.txt-found.json", DnsStatusJsonContractSchema, CONTRACT_NAMES.dnsStatus],
+    ["dns.txt-missing.json", DnsStatusJsonContractSchema, CONTRACT_NAMES.dnsStatus],
+    ["dns.canonical-mismatch.json", DnsStatusJsonContractSchema, CONTRACT_NAMES.dnsStatus],
     ["error.invalid-url.json", CliErrorContractSchema, CONTRACT_NAMES.error],
     ["status.default.json", StatusJsonContractSchema, CONTRACT_NAMES.status],
     ["doctor.default.json", DoctorJsonContractSchema, CONTRACT_NAMES.doctor],
@@ -78,6 +91,7 @@ describe("CLI JSON contracts", () => {
       "fix --write --allow-create --json": "shipready.writeFix.v1",
       "ui-report --json": "shipready.uiReport.v1",
       "search-console status --json": "shipready.searchConsoleStatus.v1",
+      "dns status --json": "shipready.dnsStatus.v1",
       "status --json": "shipready.status.v1",
       "doctor --json": "shipready.doctor.v1",
     });
@@ -105,6 +119,27 @@ describe("CLI JSON contracts", () => {
     expect(contractOf(formatSearchConsoleStatusJson(
       SearchConsoleStatusJsonContractSchema.parse(readFixture("search-console.ready-sitemap-ok.json")),
     ))).toBe(CONTRACT_NAMES.searchConsoleStatus);
+    expect(contractOf(formatDnsStatusJson(
+      DnsStatusJsonContractSchema.parse(readFixture("dns.ready.json")),
+    ))).toBe(CONTRACT_NAMES.dnsStatus);
+  });
+
+  it("keeps DNS readiness verdicts and host resolution statuses constrained", () => {
+    const fixtures = [
+      "dns.ready.json",
+      "dns.nxdomain.json",
+      "dns.timeout.json",
+      "dns.txt-found.json",
+      "dns.canonical-mismatch.json",
+    ];
+    for (const fixtureName of fixtures) {
+      const status = DnsStatusJsonContractSchema.parse(readFixture(fixtureName));
+      expect(["ready", "needs_attention", "blocked", "unknown"]).toContain(status.verdict.status);
+      for (const host of status.hosts) {
+        expect(["ok", "nxdomain", "nodata", "timeout", "error", "not_checked"]).toContain(host.resolution.status);
+      }
+      expect(JSON.stringify(status)).not.toContain("redacted-example-token");
+    }
   });
 
   it("keeps dry-run preview, skipped, and review-required states distinct", () => {
@@ -186,7 +221,7 @@ describe("CLI JSON contracts", () => {
     ],
   ] as const)("emits error contract code %s with exit code 1", async (code, message, args) => {
     try {
-      await execFileAsync("pnpm", [...args], {
+      await execFileAsync("pnpm", ["--silent", ...args], {
         cwd: root,
         timeout: 10_000,
       });

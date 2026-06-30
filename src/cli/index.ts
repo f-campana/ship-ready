@@ -31,6 +31,12 @@ import {
   formatSearchConsoleStatusJson,
   getSearchConsoleStatus,
 } from "../searchConsole/searchConsoleStatus";
+import { DnsStatusError } from "../dns/dnsErrors";
+import {
+  formatDnsStatusHuman,
+  formatDnsStatusJson,
+  getDnsStatus,
+} from "../dns/dnsStatus";
 import { SHIPREADY_VERSION } from "../version";
 
 const program = new Command();
@@ -103,9 +109,49 @@ searchConsole
     }
   });
 
+const dns = program
+  .command("dns")
+  .description("Read DNS readiness evidence without provider credentials or DNS writes.");
+
+dns
+  .command("status")
+  .description("Show read-only DNS readiness for one HTTP(S) URL.")
+  .requiredOption("--url <url>", "Public HTTP(S) URL whose host should be checked")
+  .option("--expected-canonical-host <host>", "Expected final HTTP canonical host")
+  .option("--expected-www-mode <mode>", "Interpret readiness for apex, www, or either")
+  .option("--expected-search-console-txt <token>", "Expected Search Console DNS TXT verification token")
+  .option("--check-http", "Also read the URL to observe the final canonical host")
+  .option("--mock <scenario>", "Deterministic mock DNS scenario")
+  .option("--json", "Output structured JSON")
+  .action(async (options: DnsStatusCommandOptions) => {
+    try {
+      const status = await getDnsStatus({
+        url: options.url,
+        expectedCanonicalHost: options.expectedCanonicalHost,
+        expectedWwwMode: options.expectedWwwMode,
+        expectedSearchConsoleTxt: options.expectedSearchConsoleTxt,
+        checkHttp: options.checkHttp,
+        mock: options.mock,
+      });
+      process.stdout.write(options.json ? formatDnsStatusJson(status) : formatDnsStatusHuman(status));
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Unexpected DNS status failure.";
+      const code = error instanceof DnsStatusError
+        ? error.code
+        : classifyCommandError(message);
+      writeTypedCommandError(
+        "dns status",
+        code,
+        message,
+        options.json,
+        code === "invalid_url" || code === "invalid_mode" ? 1 : 2,
+      );
+    }
+  });
+
 program
   .command("mcp")
-  .description("Start the local ShipReady MCP stdio server (eight read-only tools, one guarded V1 write tool).")
+  .description("Start the local ShipReady MCP stdio server (nine read-only tools, one guarded V1 write tool).")
   .option(
     "--allow-root <absolute-path>",
     "Authorize one repository root (repeatable)",
@@ -407,6 +453,16 @@ type SearchConsoleStatusCommandOptions = {
   mock?: string;
   provider?: string;
   inspect?: boolean;
+  json?: boolean;
+};
+
+type DnsStatusCommandOptions = {
+  url: string;
+  expectedCanonicalHost?: string;
+  expectedWwwMode?: string;
+  expectedSearchConsoleTxt?: string;
+  checkHttp?: boolean;
+  mock?: string;
   json?: boolean;
 };
 

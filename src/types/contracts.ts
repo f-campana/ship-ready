@@ -14,6 +14,7 @@ export const CONTRACT_NAMES = {
   writeFix: "shipready.writeFix.v1",
   uiReport: "shipready.uiReport.v1",
   searchConsoleStatus: "shipready.searchConsoleStatus.v1",
+  dnsStatus: "shipready.dnsStatus.v1",
   status: "shipready.status.v1",
   doctor: "shipready.doctor.v1",
   error: "shipready.error.v1",
@@ -27,6 +28,7 @@ export const CLI_JSON_CONTRACT_BY_COMMAND = {
   "fix --write --allow-create --json": CONTRACT_NAMES.writeFix,
   "ui-report --json": CONTRACT_NAMES.uiReport,
   "search-console status --json": CONTRACT_NAMES.searchConsoleStatus,
+  "dns status --json": CONTRACT_NAMES.dnsStatus,
   "status --json": CONTRACT_NAMES.status,
   "doctor --json": CONTRACT_NAMES.doctor,
 } as const;
@@ -218,6 +220,87 @@ export const SearchConsoleStatusJsonContractSchema = z.object({
   }
 });
 
+const DnsResolutionStatusSchema = z.enum([
+  "ok",
+  "nxdomain",
+  "nodata",
+  "timeout",
+  "error",
+  "not_checked",
+]);
+
+const DnsCaaRecordSchema = z.object({
+  flags: z.number().int().nonnegative().optional(),
+  tag: z.string().min(1).optional(),
+  value: z.string().min(1).optional(),
+}).strict();
+
+const DnsHostSchema = z.object({
+  host: z.string().min(1),
+  role: z.enum(["apex", "www", "other"]),
+  records: z.object({
+    a: z.array(z.string().min(1)).optional(),
+    aaaa: z.array(z.string().min(1)).optional(),
+    cname: z.array(z.string().min(1)).optional(),
+    txt: z.array(z.string().min(1)).optional(),
+    caa: z.array(DnsCaaRecordSchema).optional(),
+    ns: z.array(z.string().min(1)).optional(),
+  }).strict(),
+  resolution: z.object({
+    status: DnsResolutionStatusSchema,
+    message: z.string().min(1),
+  }).strict(),
+  cnameChain: z.array(z.object({
+    from: z.string().min(1),
+    to: z.string().min(1),
+    status: z.enum(["followed", "loop", "too_deep", "target_missing", "error"]),
+  }).strict()).optional(),
+}).strict();
+
+export const DnsStatusJsonContractSchema = z.object({
+  contract: z.literal(CONTRACT_NAMES.dnsStatus),
+  url: z.string().min(1),
+  checkedAt: z.string().min(1),
+  mode: z.enum(["live", "mock"]),
+  domain: z.string().min(1),
+  hosts: z.array(DnsHostSchema).min(1),
+  canonical: z.object({
+    expectedHost: z.string().min(1).optional(),
+    observedFinalUrl: z.string().min(1).optional(),
+    status: z.enum(["ok", "mismatch", "unknown", "not_checked"]),
+    message: z.string().min(1),
+  }).strict().optional(),
+  dnssec: z.object({
+    status: z.enum(["not_checked", "appears_ok", "appears_broken", "unknown"]),
+    message: z.string().min(1),
+  }).strict().optional(),
+  caa: z.object({
+    status: z.enum(["not_checked", "not_present", "present", "possible_issue", "unknown"]),
+    message: z.string().min(1),
+  }).strict().optional(),
+  verification: z.object({
+    searchConsoleTxt: z.object({
+      status: z.enum(["not_checked", "found", "missing", "unknown"]),
+      message: z.string().min(1),
+    }).strict().optional(),
+  }).strict().optional(),
+  verdict: z.object({
+    status: z.enum(["ready", "needs_attention", "blocked", "unknown"]),
+    summary: z.string().min(1),
+  }).strict(),
+  limitations: z.array(z.string().min(1)).min(1),
+  nextActions: z.array(z.string().min(1)).min(1),
+}).strict().superRefine((status, context) => {
+  const serialized = JSON.stringify(status);
+  if (/google-site-verification=[A-Za-z0-9_-]{6,}/i.test(serialized)) {
+    context.addIssue({
+      code: "custom",
+      path: ["verification"],
+      message: "DNS status output must not expose raw Search Console verification tokens.",
+    });
+  }
+});
+
 const NotImplementedSchema = z.literal("not_implemented");
 
 export const StatusJsonContractSchema = z.object({
@@ -250,7 +333,9 @@ export const StatusJsonContractSchema = z.object({
   }).strict(),
   integrations: z.object({
     searchConsole: z.enum(["not_implemented", "mock_prototype"]),
-    dns: NotImplementedSchema,
+    dns: z.enum(["not_implemented", "read_only_status"]),
+    dnsProviderWrites: NotImplementedSchema,
+    dnsProviderIntegrations: NotImplementedSchema,
     github: NotImplementedSchema,
     deployment: NotImplementedSchema,
   }).strict(),
@@ -356,6 +441,7 @@ export type DryRunFixJsonContract = z.infer<typeof DryRunFixJsonContractSchema>;
 export type WriteFixJsonContract = z.infer<typeof WriteFixJsonContractSchema>;
 export type UiReportJsonContract = z.infer<typeof UiReportJsonContractSchema>;
 export type SearchConsoleStatusJsonContract = z.infer<typeof SearchConsoleStatusJsonContractSchema>;
+export type DnsStatusJsonContract = z.infer<typeof DnsStatusJsonContractSchema>;
 export type StatusJsonContract = z.infer<typeof StatusJsonContractSchema>;
 export type DoctorCheckStatus = z.infer<typeof DoctorCheckStatusSchema>;
 export type DoctorCheck = z.infer<typeof DoctorCheckSchema>;

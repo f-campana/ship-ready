@@ -1,0 +1,60 @@
+{
+  "contract": "shipready.dnsStatus.v1",
+  "url": "https://example.com/",
+  "checkedAt": "2026-06-30T12:00:00.000Z",
+  "mode": "mock",
+  "domain": "example.com",
+  "hosts": [
+    {
+      "host": "example.com",
+      "role": "apex",
+      "records": {},
+      "resolution": {
+        "status": "nxdomain",
+        "message": "example.com did not resolve to address records."
+      }
+    },
+    {
+      "host": "www.example.com",
+      "role": "www",
+      "records": {},
+      "resolution": {
+        "status": "nxdomain",
+        "message": "www.example.com did not resolve to address records."
+      }
+    }
+  ],
+  "canonical": {
+    "expectedHost": "example.com",
+    "status": "not_checked",
+    "message": "HTTP canonical host check was not requested."
+  },
+  "dnssec": {
+    "status": "not_checked",
+    "message": "DNSSEC validation is not checked by ShipReady DNS readiness v1."
+  },
+  "caa": {
+    "status": "not_present",
+    "message": "No CAA records were observed by the configured resolver."
+  },
+  "verification": {
+    "searchConsoleTxt": {
+      "status": "not_checked",
+      "message": "No expected Search Console TXT token was provided."
+    }
+  },
+  "verdict": {
+    "status": "blocked",
+    "summary": "A required launch host does not currently have observed address resolution."
+  },
+  "limitations": [
+    "Deterministic mock DNS data only; no live DNS resolver or provider API was used.",
+    "DNS readiness is advisory evidence only and does not guarantee propagation, certificate issuance, crawling, indexing, ranking, or third-party approval.",
+    "Registrable-domain derivation is conservative and does not use a public suffix list in v1.",
+    "HTTP canonical host checking was not requested.",
+    "Search Console TXT verification readiness was not checked because no expected token was provided."
+  ],
+  "nextActions": [
+    "Review the required host records with your DNS provider or registrar outside ShipReady."
+  ]
+}

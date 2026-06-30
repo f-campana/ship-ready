@@ -44,6 +44,16 @@ describe("doctor", () => {
       status: "pass",
       details: { liveIntegration: false, oauthRequired: false, fixtures: 7 },
     });
+    expect(report.checks.find((check) => check.id === "dns-readiness")).toMatchObject({
+      status: "pass",
+      details: {
+        readOnly: true,
+        providerWrites: false,
+        providerIntegrations: false,
+        fixtures: 11,
+        nodeDnsApisAvailable: true,
+      },
+    });
   });
 
   it("reports a missing optional FFmpeg tool as a warning", async () => {

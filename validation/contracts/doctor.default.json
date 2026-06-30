@@ -55,18 +55,18 @@
       "id": "contract-fixtures",
       "label": "Contract fixtures",
       "status": "pass",
-      "message": "24 canonical contract fixtures exist and parse.",
+      "message": "35 canonical contract fixtures exist and parse.",
       "details": {
-        "count": 24
+        "count": 35
       }
     },
     {
       "id": "canonical-docs",
       "label": "Canonical docs",
       "status": "pass",
-      "message": "10 canonical documentation files are present.",
+      "message": "11 canonical documentation files are present.",
       "details": {
-        "checked": 10,
+        "checked": 11,
         "missing": []
       }
     },
@@ -79,6 +79,20 @@
         "liveIntegration": false,
         "oauthRequired": false,
         "fixtures": 7,
+        "missing": []
+      }
+    },
+    {
+      "id": "dns-readiness",
+      "label": "DNS readiness",
+      "status": "pass",
+      "message": "The DNS specification, Node DNS APIs, and 11 deterministic mock fixtures are present; no DNS provider credentials are required.",
+      "details": {
+        "readOnly": true,
+        "providerWrites": false,
+        "providerIntegrations": false,
+        "fixtures": 11,
+        "nodeDnsApisAvailable": true,
         "missing": []
       }
     },
@@ -107,7 +121,7 @@
     }
   ],
   "summary": {
-    "pass": 11,
+    "pass": 12,
     "warn": 2,
     "fail": 0,
     "skip": 0

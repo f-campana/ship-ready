@@ -15,8 +15,11 @@ import {
   getSearchConsoleStatus,
 } from "../searchConsole/searchConsoleStatus";
 import { SEARCH_CONSOLE_MOCK_SCENARIOS } from "../searchConsole/searchConsoleTypes";
+import { formatDnsStatusJson, getDnsStatus } from "../dns/dnsStatus";
+import { DNS_MOCK_SCENARIOS, EXPECTED_WWW_MODES } from "../dns/dnsTypes";
 import {
   AuditJsonContractSchema,
+  DnsStatusJsonContractSchema,
   DryRunFixJsonContractSchema,
   FixPlanJsonContractSchema,
   RepoInspectionJsonContractSchema,
@@ -57,6 +60,14 @@ const SearchConsoleInputSchema = z.object({
   mock: z.enum(SEARCH_CONSOLE_MOCK_SCENARIOS).optional(),
   inspect: z.boolean().optional().default(false),
 }).strict();
+const DnsStatusInputSchema = z.object({
+  url: z.string().trim().min(1).max(2048),
+  expectedCanonicalHost: z.string().trim().min(1).max(255).optional(),
+  expectedWwwMode: z.enum(EXPECTED_WWW_MODES).optional(),
+  expectedSearchConsoleVerificationTxt: z.string().trim().min(1).max(4096).optional(),
+  checkHttp: z.boolean().optional().default(false),
+  mock: z.enum(DNS_MOCK_SCENARIOS).optional(),
+}).strict();
 const RepoInputSchema = z.object({ repoPath: z.string().trim().min(1).max(4096) }).strict();
 const UrlRepoInputSchema = UrlInputSchema.extend({ repoPath: z.string().trim().min(1).max(4096) }).strict();
 const WriteSafeCrawlFilesInputSchema = UrlRepoInputSchema.extend({
@@ -70,6 +81,7 @@ const PolicyInputSchema = z.object({ name: z.enum(Object.keys(POLICY_DOCS) as [k
 export type McpOperations = {
   auditSite: typeof auditUrl;
   searchConsoleStatus: typeof getSearchConsoleStatus;
+  dnsStatus: typeof getDnsStatus;
   inspectRepo: typeof inspectRepo;
   planFixes: typeof planFixes;
   previewFixes: typeof dryRunFix;
@@ -88,6 +100,7 @@ export type McpToolContext = {
 const DEFAULT_OPERATIONS: McpOperations = {
   auditSite: auditUrl,
   searchConsoleStatus: getSearchConsoleStatus,
+  dnsStatus: getDnsStatus,
   inspectRepo,
   planFixes,
   previewFixes: dryRunFix,
@@ -112,6 +125,14 @@ export function listTools() {
       mock: { type: "string", enum: [...SEARCH_CONSOLE_MOCK_SCENARIOS] },
       inspect: { type: "boolean", default: false },
     }, ["url"]), { ...readOnly, openWorldHint: false }),
+    tool("shipready.dns_status", "Return read-only DNS readiness evidence without repository access, provider credentials, or DNS writes.", schema({
+      url: stringSchema(2048),
+      expectedCanonicalHost: stringSchema(255),
+      expectedWwwMode: { type: "string", enum: [...EXPECTED_WWW_MODES] },
+      expectedSearchConsoleVerificationTxt: stringSchema(4096),
+      checkHttp: { type: "boolean", default: false },
+      mock: { type: "string", enum: [...DNS_MOCK_SCENARIOS] },
+    }, ["url"]), { ...readOnly, openWorldHint: true }),
     tool("shipready.inspect_repo", "Inspect one explicitly authorized repository without writes.", schema({
       repoPath: stringSchema(4096),
     }, ["repoPath"]), { ...readOnly, openWorldHint: false }),
@@ -228,6 +249,18 @@ async function executeTool(
     });
     return contractResult(formatSearchConsoleStatusJson(result), SearchConsoleStatusJsonContractSchema);
   }
+  if (name === "shipready.dns_status") {
+    const input = parseInput(DnsStatusInputSchema, args, "invalid_mode");
+    const result = await operations.dnsStatus({
+      url: input.url,
+      expectedCanonicalHost: input.expectedCanonicalHost,
+      expectedWwwMode: input.expectedWwwMode,
+      expectedSearchConsoleTxt: input.expectedSearchConsoleVerificationTxt,
+      checkHttp: input.checkHttp,
+      mock: input.mock,
+    });
+    return contractResult(formatDnsStatusJson(result), DnsStatusJsonContractSchema);
+  }
   if (name === "shipready.inspect_repo") {
     const input = parseInput(RepoInputSchema, args, "invalid_repo_path");
     const repoPath = await context.authorizer.authorizeRepoPath(input.repoPath);
@@ -318,13 +351,14 @@ function parseInput<T extends z.ZodType>(
   if (parsed.success) return parsed.data;
   const unknownField = parsed.error.issues.some((issue) => issue.code === "unrecognized_keys");
   const invalidRepoPath = parsed.error.issues.some((issue) => issue.path[0] === "repoPath");
-  const invalidMode = parsed.error.issues.some((issue) => issue.path[0] === "mock");
+  const invalidMode = parsed.error.issues.some((issue) =>
+    issue.path[0] === "mock" || issue.path[0] === "expectedWwwMode");
   throw new ShipReadyMcpError(
     unknownField ? "unsupported_command" : invalidRepoPath ? "invalid_repo_path" : invalidMode ? "invalid_mode" : code,
     unknownField
       ? "Tool input contains unsupported fields."
       : invalidMode
-        ? `Unsupported Search Console mock scenario. Use one of: ${SEARCH_CONSOLE_MOCK_SCENARIOS.join(", ")}.`
+        ? "Tool input contains an unsupported mode or mock scenario."
         : "Tool input is missing or invalid.",
     { stage: "input", retryable: false },
   );

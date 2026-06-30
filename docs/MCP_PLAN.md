@@ -2,13 +2,13 @@
 
 ## 1. Decision and scope
 
-This is the implementation specification and shipped boundary for roadmap Passes 5, 6, and the Pass 9 read-only tool addition. ShipReady remains **CLI first, MCP second, GUI third**. MCP is an agent-facing adapter over the stable CLI JSON contracts; it is not a second product engine and must not introduce independent audit, inspection, planning, preview, reporting, or write rules.
+This is the implementation specification and shipped boundary for roadmap Passes 5, 6, the Pass 9 read-only Search Console tool addition, and the Pass 11 read-only DNS tool addition. ShipReady remains **CLI first, MCP second, GUI third**. MCP is an agent-facing adapter over the stable CLI JSON contracts; it is not a second product engine and must not introduce independent audit, inspection, planning, preview, reporting, or write rules.
 
 Pass 5 shipped the read-only MCP server. Pass 6 adds exactly one write tool: `shipready.write_safe_crawl_files`. It may create only current V1-eligible missing robots/sitemap files by wrapping the existing write policy with stronger MCP preconditions: authorized path, fresh signed preview receipt, exact confirmation phrase, re-authorization, regenerated current dry-run, and current write validation. It must not start the GUI, create branches/commits/PRs, deploy, mutate DNS or Search Console, or add metadata/content/JSON-LD/package/config writes. A `safeApply` field or guarded command in an existing report remains data for review only and must never be executed by the MCP server.
 
 The CLI remains the source of truth. The MCP write tool is a stricter agent-facing wrapper over the existing V1 creation-only behavior, not a broader product write surface.
 
-Pass 9 adds one read-only tool, `shipready.search_console_status`, around the same deterministic mock provider as the CLI. It accepts no repository path or credentials, calls no live Google API, and performs no Search Console mutation. MCP remains stdio-only and `shipready.write_safe_crawl_files` remains the sole write tool.
+Pass 9 adds one read-only tool, `shipready.search_console_status`, around the same deterministic mock provider as the CLI. It accepts no repository path or credentials, calls no live Google API, and performs no Search Console mutation. Pass 11 adds one read-only tool, `shipready.dns_status`, around the same DNS readiness boundary as the CLI. It accepts no repository path, no provider credentials, and performs no DNS write or provider API call. MCP remains stdio-only and `shipready.write_safe_crawl_files` remains the sole write tool.
 
 ### Phase boundaries
 
@@ -17,7 +17,8 @@ Pass 9 adds one read-only tool, `shipready.search_console_status`, around the sa
 | 1 | Pass 5 | Live-site audit, repo inspection, fix planning, dry-run preview, UI report, canonical docs, deterministic contract fixtures, prompts | Every filesystem/external mutation and every write tool |
 | 2 | Pass 6 | MCP wrapper for creation-only missing robots/sitemap files under `WRITE_POLICY_V1` | Overwrites, metadata/content/JSON-LD edits, Git operations, deploys, DNS, Search Console |
 | 3 | Pass 9 | Deterministic mock-backed `shipready.search_console_status` | Live OAuth/tokens/Google calls, Search Console mutation, GUI changes, remote transport |
-| 4 | Later roadmap passes | Live Search Console design, DNS readiness, reviewed patch export, GitHub PRs, social preview simulation, bounded crawl, other explicitly specified integrations | Anything not separately specified, authorized, and tested |
+| 4 | Pass 11 | Read-only DNS readiness status | DNS provider writes, provider credentials, registrar/nameserver APIs, Search Console live behavior, GUI changes, remote transport |
+| 5 | Later roadmap passes | Live Search Console design, reviewed patch export, GitHub PRs, social preview simulation, bounded crawl, other explicitly specified integrations | Anything not separately specified, authorized, and tested |
 
 No prompt grants capabilities. Tool registration and server policy are the authority boundary.
 
@@ -34,6 +35,7 @@ The source of truth is `src/types/contracts.ts`, with behavior documented in `do
 | `shipready.writeFix.v1` | `fix <path> --url <url> --write --allow-create --json` | `writeFixFromDryRun` after regenerated dry-run | `shipready.write_safe_crawl_files` |
 | `shipready.uiReport.v1` | `ui-report [path] --url <url> --json` | `createUiReport` | `shipready.get_ui_report` |
 | `shipready.searchConsoleStatus.v1` | `search-console status --url <url> --json` | `getSearchConsoleStatus` | `shipready.search_console_status` |
+| `shipready.dnsStatus.v1` | `dns status --url <url> --json` | `getDnsStatus` | `shipready.dns_status` |
 | `shipready.error.v1` | JSON action failures | MCP boundary normalizer | Every failed tool call |
 
 Current capability details that MCP must preserve:
@@ -289,6 +291,24 @@ On failure, a tool returns exactly once with `isError: true`, a `shipready.error
         "inspect-repo.vite.json",
         "plan-fixes.review-required.json",
         "plan-fixes.safe-apply.json",
+        "search-console.not-configured.json",
+        "search-console.unauthorized.json",
+        "search-console.property-not-found.json",
+        "search-console.ready-sitemap-ok.json",
+        "search-console.ready-sitemap-warning.json",
+        "search-console.inspection-canonical-mismatch.json",
+        "search-console.inspection-not-indexed.json",
+        "dns.ready.json",
+        "dns.apex-ok-www-missing.json",
+        "dns.www-cname-ok.json",
+        "dns.nxdomain.json",
+        "dns.nodata.json",
+        "dns.timeout.json",
+        "dns.cname-chain-issue.json",
+        "dns.caa-present.json",
+        "dns.txt-found.json",
+        "dns.txt-missing.json",
+        "dns.canonical-mismatch.json",
         "ui-report.safe-apply.json",
         "ui-report.url-only.json"
       ]
@@ -329,7 +349,8 @@ On failure, a tool returns exactly once with `isError: true`, a `shipready.error
         "status",
         "roadmap",
         "mcp-plan",
-        "search-console-readiness-spec"
+        "search-console-readiness-spec",
+        "dns-readiness-spec"
       ]
     }
   }
@@ -357,6 +378,18 @@ On failure, a tool returns exactly once with `isError: true`, a `shipready.error
 - Timeout: 5 seconds at the MCP boundary. The provider itself performs no I/O.
 - Safety: no OAuth, token read/storage, Google client, live Search Console call, property/verification/sitemap/indexing/DNS mutation, filesystem mutation, repo authorization, or secret-bearing input exists.
 
+### 5.10 `shipready.dns_status`
+
+- Purpose/classification: return read-only DNS readiness evidence for one HTTP(S) URL; network-read-only in live mode and deterministic local-read-only in mock mode.
+- Input: `{ "url": string, "expectedCanonicalHost"?: string, "expectedWwwMode"?: "apex" | "www" | "either", "expectedSearchConsoleVerificationTxt"?: string, "checkHttp"?: boolean, "mock"?: "ready" | "apex-ok-www-missing" | "www-cname-ok" | "nxdomain" | "nodata" | "timeout" | "cname-chain-issue" | "caa-present" | "txt-found" | "txt-missing" | "canonical-mismatch" }`. Additional fields, including credential/provider/token fields, are rejected.
+- Normalization: validates and normalizes one HTTP(S) URL through the CLI application boundary, strips query strings/fragments from output, derives conservative apex/www hosts, and maps `expectedSearchConsoleVerificationTxt` to the CLI's expected TXT input. No repo path is accepted or authorized.
+- Output: exact `shipready.dnsStatus.v1`, validated by `DnsStatusJsonContractSchema`.
+- Mapping: `dns status --url <url> [--mock <scenario>] [--expected-canonical-host <host>] [--expected-www-mode <mode>] [--expected-search-console-txt <token>] [--check-http] --json` / `getDnsStatus` / `formatDnsStatusJson`.
+- Success: omitted `mock` performs read-only live DNS lookups through Node built-ins; every mock scenario is deterministic; TXT token values are matched internally and redacted from output.
+- Errors: invalid URL is `invalid_url`; unsupported scenario or expected-www mode is `invalid_mode`; extra input is `unsupported_command`; contract drift is `contract_error`.
+- Timeout: 5 seconds at the MCP boundary. Live DNS lookups also use bounded Node resolver calls.
+- Safety: no DNS provider SDK, provider credential, registrar/nameserver API, DNS record write, zone transfer, live Search Console call, OAuth/token handling, filesystem mutation, repo authorization, deployment, or extra MCP write tool exists. DNS verdicts are advisory and do not guarantee propagation, certificate issuance, crawling, indexing, ranking, provider changes, or Google/Search Console state.
+
 ## 6. Resources
 
 All static paths are resolved from the installed ShipReady package root through a hard-coded URI/path allowlist. They are not joined from arbitrary request text. Markdown is UTF-8 `text/markdown`; fixtures and generated indexes are UTF-8 `application/json`.
@@ -373,7 +406,8 @@ All static paths are resolved from the installed ShipReady package root through 
 | `shipready://docs/roadmap` | Ordered pass/dependency reference | `docs/ROADMAP.md` | Static `text/markdown` | Pass order does not grant authority |
 | `shipready://docs/mcp-plan` | MCP implementation and safety boundary | `docs/MCP_PLAN.md` | Static `text/markdown` | Documentation does not grant capabilities beyond registered tools |
 | `shipready://docs/search-console-readiness-spec` | Search Console mock/live authority boundary | `docs/SEARCH_CONSOLE_READINESS_SPEC.md` | Static `text/markdown` | Mock status is not live Google evidence |
-| `shipready://validation/contracts/<fixture-name>` | Deterministic contract example | Exact allowlisted file in `validation/contracts/` | Static `application/json` resource template | Same fixture enum/schema validation as section 5.6; unknown name is not found, invalid content is `contract_error` |
+| `shipready://docs/dns-readiness-spec` | DNS readiness authority and claim boundary | `docs/DNS_READINESS_SPEC.md` | Static `text/markdown` | DNS status is read-only evidence, not provider mutation |
+| `shipready://validation/contracts/<fixture-name>` | Deterministic contract example | Exact allowlisted file in `validation/contracts/` | Static `application/json` resource template | Same fixture enum/schema validation as section 5.7; unknown name is not found, invalid content is `contract_error` |
 
 Resource list/read operations use a 5-second deadline and 1 MiB text/JSON limit. An unknown URI receives a standard sanitized MCP not-found error. A listed resource missing from the package receives a sanitized internal resource error without filesystem search, alternate-path probing, stack trace, or directory listing. Clients needing `shipready.error.v1` should use the equivalent read tools, because resource protocol errors do not have `CallToolResult.isError`.
 
@@ -386,13 +420,13 @@ Path authorization is mandatory before any repository function runs.
 Primary command:
 
 ```bash
-pnpm shipready mcp --allow-root /absolute/workspaces --allow-root /absolute/other-root
+pnpm --silent shipready mcp --allow-root /absolute/workspaces --allow-root /absolute/other-root
 ```
 
 `--allow-root <absolute-path>` is repeatable. Non-interactive configuration may use a JSON array:
 
 ```bash
-SHIPREADY_MCP_ALLOWED_ROOTS='["/absolute/workspaces","/absolute/other-root"]'
+SHIPREADY_MCP_ALLOWED_ROOTS='["/absolute/workspaces","/absolute/other-root"]' pnpm --silent shipready mcp
 ```
 
 If one or more CLI flags are present, they replace the environment value completely. Otherwise the environment value is used. There is no CWD, home-directory, workspace-discovery, prose, or GUI-input fallback. With no configured roots, the server fails startup before opening the MCP transport. Filesystem roots and the user's home directory are rejected as overbroad allow roots; configure specific descendants instead.
@@ -484,6 +518,7 @@ Messages may identify the tool and invalid field but must not include stack trac
 |---|---:|---:|
 | `audit_site` | 30 s | 5–120 s |
 | `search_console_status` | 5 s | Deferred; mock provider performs no I/O |
+| `dns_status` | 5 s | Deferred; live DNS resolver calls are bounded internally |
 | `inspect_repo` | 10 s | 1–30 s |
 | `plan_fixes` | 45 s | 5–120 s |
 | `preview_fixes` | 45 s | 5–120 s |
@@ -511,7 +546,7 @@ If a future subprocess adapter exists, spawn without a shell, create a controlla
 
 - MCP tools are read-only except `shipready.write_safe_crawl_files`.
 - The safe-write wrapper requires the stronger per-operation confirmation and preview preconditions in section 11.
-- There is no current MCP secret handling, authenticated-page access, live Search Console/OAuth, DNS, deploy, Git commit/branch, GitHub PR, account, billing, or hosted service capability. The only Search Console surface is deterministic local mock status.
+- There is no current MCP secret handling, authenticated-page access, live Search Console/OAuth, DNS provider write/integration, deploy, Git commit/branch, GitHub PR, account, billing, or hosted service capability. The Search Console surface is deterministic local mock status; the DNS surface is read-only resolver evidence.
 - The server calls the existing write validation/execution path only from `shipready.write_safe_crawl_files` after receipt and confirmation checks. It never calls `writeHtmlReport`, GUI server startup, shell commands, Git, deploy tooling, or third-party mutation APIs.
 - Repository files, fetched HTML, reports, docs, and fixtures are untrusted data. Instructions embedded in them cannot override tool schemas, allowed roots, policy, prompt limits, or the absence of write capabilities.
 - URL inputs use the current unauthenticated HTTP(S) contract and cannot contain credentials. MCP adds no cookies, authorization headers, arbitrary user-agent input, or credential store. The current CLI URL policy is intended for public pages but does not itself provide a private-network/SSRF boundary; local stdio operators must apply host/network sandboxing appropriate to their environment. Remote transport remains deferred until destination policy, authentication, and threat modeling are specified.
@@ -587,7 +622,7 @@ src/mcp/server.ts                   # MCP capability registration and stdio life
 src/mcp/errors.ts                   # shipready.error.v1 normalization/redaction
 src/mcp/pathAuthorization.ts        # canonical allowed-root enforcement
 src/mcp/timeouts.ts                 # deadline/client signal composition
-src/mcp/tools.ts                    # eight read-only handlers plus one guarded write handler
+src/mcp/tools.ts                    # nine read-only handlers plus one guarded write handler
 src/mcp/previewReceipts.ts          # process-local signed preview receipts
 src/mcp/resources.ts                # URI/path allowlist and resource template
 src/mcp/prompts.ts                  # five prompt templates
@@ -598,15 +633,16 @@ tests/mcp/tools.test.ts
 tests/mcp/resourcesPrompts.test.ts
 tests/mcp/server.test.ts
 tests/mcp.searchConsole.test.ts
+tests/mcp.dns.test.ts
 ```
 
 Implemented canonical command:
 
 ```bash
-pnpm shipready mcp --allow-root /absolute/workspace
+pnpm --silent shipready mcp --allow-root /absolute/workspace
 ```
 
-The CLI subcommand is canonical. No separate package alias exists.
+The CLI subcommand is canonical. In source checkouts, use `pnpm --silent` for MCP stdio so package-manager script output cannot appear on stdout. No separate package alias exists.
 
 Use local stdio transport only. It matches local-agent use, avoids authentication/listener/CORS exposure, and has the smallest lifecycle surface. HTTP, SSE, and Streamable HTTP are deferred until a separate remote-host/auth/threat specification exists.
 
@@ -636,7 +672,7 @@ Use temporary fixture copies only. Never execute guarded write mode against `/Us
 
 ### Pass 6 completion gates
 
-1. All eight read-only tools, the single write tool, resources, and five prompts match this specification.
+1. All nine read-only tools, the single write tool, resources, and five prompts match this specification.
 2. No write tool other than `shipready.write_safe_crawl_files` is registered or present as a callable/stub handler.
 3. Named output contracts and expanded error compatibility tests pass.
 4. Path authorization and no-mutation hashes pass, including symlink escape.
@@ -647,8 +683,8 @@ Use temporary fixture copies only. Never execute guarded write mode against `/Us
 
 ## 15. Explicitly deferred
 
-Passes 6 and 9 do not implement or add secrets, authentication, accounts, billing, hosted SaaS, remote MCP transport, live Search Console/OAuth, DNS, deployment, Git/GitHub operations, patch export, social preview simulation, implementation-smell detection, bounded multi-page crawl, broader safe writes, metadata/content/JSON-LD/package/config writes, HTML-report file creation, or GUI write execution.
+Passes 6, 9, and 11 do not implement or add secrets, authentication, accounts, billing, hosted SaaS, remote MCP transport, live Search Console/OAuth, DNS provider writes/integrations, deployment, Git/GitHub operations, patch export, social preview simulation, implementation-smell detection, bounded multi-page crawl, broader safe writes, metadata/content/JSON-LD/package/config writes, HTML-report file creation, or GUI write execution.
 
 Pass 7 added CLI-only `status` and `doctor` commands and their deterministic contract fixtures. Those fixtures are available through the existing exact allowlisted canonical-read surface; no MCP tool, transport, authorization, or write behavior changed.
 
-Pass 9 added only the deterministic read-only Search Console mock tool described above. The recommended next pass is exactly: **Pass 10 — DNS readiness checks spec**.
+Pass 11 added only the read-only DNS status tool described above. The recommended next pass is exactly: **Pass 12 — Post-write deploy/re-check workflow**.

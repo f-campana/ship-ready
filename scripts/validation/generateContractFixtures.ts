@@ -18,6 +18,7 @@ import {
   formatSearchConsoleStatusJson,
   getSearchConsoleStatus,
 } from "../../src/searchConsole/searchConsoleStatus";
+import { formatDnsStatusJson, getDnsStatus } from "../../src/dns/dnsStatus";
 import { createDoctorReport, formatDoctorJson } from "../../src/doctor/doctor";
 import type { DoctorCheck } from "../../src/types/contracts";
 import type { AuditCheck, AuditResult, ExtractedPageMetadata } from "../../src/types/audit";
@@ -138,6 +139,37 @@ for (const [fileName, scenario, inspect] of [
   })));
 }
 
+const dnsFixtures: Array<{
+  fileName: string;
+  scenario: string;
+  url?: string;
+  expectedWwwMode?: string;
+  expectedSearchConsoleTxt?: string;
+  expectedCanonicalHost?: string;
+}> = [
+  { fileName: "dns.ready.json", scenario: "ready" },
+  { fileName: "dns.apex-ok-www-missing.json", scenario: "apex-ok-www-missing" },
+  { fileName: "dns.www-cname-ok.json", scenario: "www-cname-ok", url: "https://www.example.com/" },
+  { fileName: "dns.nxdomain.json", scenario: "nxdomain" },
+  { fileName: "dns.nodata.json", scenario: "nodata" },
+  { fileName: "dns.timeout.json", scenario: "timeout" },
+  { fileName: "dns.cname-chain-issue.json", scenario: "cname-chain-issue", expectedWwwMode: "www" },
+  { fileName: "dns.caa-present.json", scenario: "caa-present" },
+  { fileName: "dns.txt-found.json", scenario: "txt-found", expectedSearchConsoleTxt: "redacted-example-token" },
+  { fileName: "dns.txt-missing.json", scenario: "txt-missing", expectedSearchConsoleTxt: "redacted-example-token" },
+  { fileName: "dns.canonical-mismatch.json", scenario: "canonical-mismatch", expectedCanonicalHost: "example.com" },
+];
+
+for (const fixture of dnsFixtures) {
+  write(fixture.fileName, formatDnsStatusJson(await getDnsStatus({
+    url: fixture.url ?? "https://example.com/",
+    mock: fixture.scenario,
+    expectedWwwMode: fixture.expectedWwwMode,
+    expectedSearchConsoleTxt: fixture.expectedSearchConsoleTxt,
+    expectedCanonicalHost: fixture.expectedCanonicalHost,
+  })));
+}
+
 write("status.default.json", formatStatusJson(createStatus()));
 write("doctor.default.json", formatDoctorJson(createDoctorReport([
   doctorCheck("node-version", "Node.js", "pass", "Node.js 22.0.0 is supported.", { version: "22.0.0", minimumMajor: 20 }),
@@ -150,6 +182,7 @@ write("doctor.default.json", formatDoctorJson(createDoctorReport([
   doctorCheck("contract-fixtures", "Contract fixtures", "pass", `${FIXTURE_NAMES.length} canonical contract fixtures exist and parse.`, { count: FIXTURE_NAMES.length }),
   doctorCheck("canonical-docs", "Canonical docs", "pass", `${new Set(Object.values(DOC_RESOURCES)).size} canonical documentation files are present.`, { checked: new Set(Object.values(DOC_RESOURCES)).size, missing: [] }),
   doctorCheck("search-console-prototype", "Search Console mock prototype", "pass", "The Search Console specification and 7 deterministic mock fixtures are present; no Google credentials are required.", { liveIntegration: false, oauthRequired: false, fixtures: 7, missing: [] }),
+  doctorCheck("dns-readiness", "DNS readiness", "pass", "The DNS specification, Node DNS APIs, and 11 deterministic mock fixtures are present; no DNS provider credentials are required.", { readOnly: true, providerWrites: false, providerIntegrations: false, fixtures: 11, nodeDnsApisAvailable: true, missing: [] }),
   doctorCheck("write-policy", "WRITE_POLICY_V1", "pass", "The canonical creation_only_robots_sitemap_v1 policy document is present."),
   doctorCheck("local-gui-spec", "LOCAL_FIRST_GUI_SPEC", "pass", "The canonical local-first GUI specification is present."),
   doctorCheck("demo-artifacts", "Demo artifacts", "warn", "Optional demo artifacts are incomplete; core CLI operation is unaffected.", { missing: ["validation/example.mp4"] }),
