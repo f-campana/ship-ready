@@ -39,6 +39,14 @@ Canonical fixtures cover `not_configured`, `unauthorized`, `property_not_found`,
 
 The MCP tool accepts only `{ url, mock?, inspect? }`, needs no repository path, and returns this exact contract. It does not alter the sole MCP write tool, stdio-only transport, `WRITE_POLICY_V1`, GUI behavior, or `POST /api/fix = 404` boundary.
 
+## Planned `shipready.dnsStatus.v1`
+
+Pass 10 specifies the future DNS status contract but does not implement it. The recommended CLI surface is `dns status --url <url> --json`, and the recommended read-only MCP tool is `shipready.dns_status`.
+
+The contract should remain provider-neutral and read-only. It should separate DNS-only evidence such as A/AAAA, CNAME chain, NS, TXT, CAA, TTL, NXDOMAIN, NODATA, timeout, and resolver error states from HTTP/TLS-adjacent evidence such as canonical host redirects and TLS fetch failures. Optional Search Console verification-readiness should only check a user-supplied expected TXT/CNAME token and must not verify ownership or call Google.
+
+This planned contract must not add DNS/provider writes, provider credentials, registrar/nameserver APIs, Search Console live behavior, OAuth, GUI writes, remote MCP transport, or another MCP write tool. See [DNS_READINESS_SPEC.md](DNS_READINESS_SPEC.md) for the provisional shape and Pass 11 test strategy.
+
 ## Exact success shapes
 
 All outputs are one JSON object followed by a newline and do not use a generic success envelope. `shipready.doctor.v1` has an `ok` readiness boolean because failed local checks are part of its valid report model; that field is not a data wrapper.

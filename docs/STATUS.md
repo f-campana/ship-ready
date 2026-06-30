@@ -19,11 +19,12 @@ ShipReady is a CLI-first, agent-friendly launch-readiness engine for generated w
 - Fodmapp demo scripts, approved silent/captioned media, optional approved voiced media, thumbnail, captions, and review evidence.
 - Stable `shipready.searchConsoleStatus.v1`, `search-console status`, seven deterministic mock scenarios, opt-in mock indexed-version inspection, and the read-only `shipready.search_console_status` MCP tool.
 - Official-source-backed [Search Console readiness specification](SEARCH_CONSOLE_READINESS_SPEC.md) defining claim boundaries and the future live provider/OAuth boundary.
+- Official-source-backed [DNS readiness specification](DNS_READINESS_SPEC.md) defining planned read-only DNS checks, future `dns status`/`shipready.dnsStatus.v1`/`shipready.dns_status` shapes, and DNS claim boundaries.
 
 ## What is not built
 
 - Any MCP write tool beyond `shipready.write_safe_crawl_files`, or any remote MCP transport.
-- Live Google Search Console/OAuth/token custody or DNS integration. Only the local deterministic Search Console mock prototype exists.
+- Live Google Search Console/OAuth/token custody or implemented DNS status/resolution/provider integration. Only the local deterministic Search Console mock prototype exists.
 - GitHub/PR integration or deployment workflow.
 - GUI write execution.
 - Broader safe apply or writes to metadata, content, JSON-LD, packages, configuration, or existing files.
@@ -45,4 +46,4 @@ Read-only inspection and preview are the default. CLI write mode requires `fix -
 
 ## Next pass
 
-**Pass 10: DNS readiness checks spec.** Define provider-neutral, read-only DNS evidence and claim boundaries before implementing checks. Do not add DNS mutation or deployment behavior.
+**Pass 11: Read-only DNS checks implementation.** Implement the planned `dns status` capability from [DNS_READINESS_SPEC.md](DNS_READINESS_SPEC.md) without DNS mutation, provider credentials, Search Console live behavior, GUI writes, deployment, or remote MCP behavior.

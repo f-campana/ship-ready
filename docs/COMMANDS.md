@@ -183,6 +183,21 @@ pnpm shipready search-console status --url https://example.com --mock inspection
 
 The future live provider remains deferred. It would require a separately reviewed local OAuth/token-custody boundary and only Google's documented [`webmasters.readonly` scope](https://developers.google.com/webmaster-tools/v1/how-tos/authorizing). See [SEARCH_CONSOLE_READINESS_SPEC.md](SEARCH_CONSOLE_READINESS_SPEC.md).
 
+## Planned `dns status`
+
+Pass 10 specifies but does not implement this future read-only surface:
+
+```bash
+pnpm shipready dns status --url https://example.com --json
+```
+
+- Recommended JSON contract: `shipready.dnsStatus.v1`.
+- Recommended MCP tool: `shipready.dns_status`.
+- Purpose: report provider-neutral DNS readiness evidence for a launch domain, with DNS-only checks separated from HTTP/TLS-adjacent checks and optional Search Console verification-readiness.
+- Safety: this planned command must not write DNS records, call provider APIs, accept provider credentials, verify Search Console ownership, submit sitemaps, request indexing, deploy, write files, change GUI behavior, or add any MCP write tool.
+
+Until Pass 11 ships, DNS remains not implemented. See [DNS_READINESS_SPEC.md](DNS_READINESS_SPEC.md).
+
 ## Demo package scripts
 
 These scripts create recording artifacts under `validation/demo-fodmapp-recording-v2/`; they are tooling, not product interfaces.

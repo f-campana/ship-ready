@@ -22,6 +22,7 @@ Primary readers are Codex, Claude Code, Cursor, and future MCP clients; human de
 - `src/mcp/`: local stdio adapter, eight read-only tools, one guarded safe-write tool, preview receipts, canonical reads, prompts, authorization, errors, and deadlines.
 - `src/status/` and `src/doctor/`: static capability posture and bounded local readiness diagnostics.
 - `src/searchConsole/`: stable read-only status boundary and deterministic mock provider; no OAuth, tokens, or live Google client.
+- Planned DNS readiness lives in `docs/DNS_READINESS_SPEC.md`; no resolver, DNS dependency, provider integration, CLI command, MCP tool, or GUI behavior is implemented yet.
 - `scripts/demo/`: Fodmapp recording, captions, optional voice, and composition.
 - `validation/`: contract fixtures, reports, reviews, and approved demo artifacts.
 
@@ -36,9 +37,10 @@ Primary readers are Codex, Claude Code, Cursor, and future MCP clients; human de
 7. `docs/WRITE_POLICY_V1.md` for any fix or write work
 8. `docs/CLAIMS_POLICY.md` for UI, demo, report, or public copy
 9. `docs/SEARCH_CONSOLE_READINESS_SPEC.md` before any Search Console or Google OAuth work
-10. `docs/LOCAL_FIRST_GUI_SPEC.md` for GUI direction
-11. `docs/DEMO.md` for demo work
-12. `docs/ROADMAP.md` for sequencing
+10. `docs/DNS_READINESS_SPEC.md` before any DNS/domain-readiness work
+11. `docs/LOCAL_FIRST_GUI_SPEC.md` for GUI direction
+12. `docs/DEMO.md` for demo work
+13. `docs/ROADMAP.md` for sequencing
 
 ## Before any implementation
 
@@ -53,6 +55,8 @@ Primary readers are Codex, Claude Code, Cursor, and future MCP clients; human de
 For MCP work, read [MCP_PLAN.md](MCP_PLAN.md) first. The implemented Pass 6 server has exactly one write tool, `shipready.write_safe_crawl_files`. It may create only current V1-eligible missing robots/sitemap files after `shipready.preview_fixes` returns a fresh signed preview receipt, the repository path is re-authorized, and the caller supplies the exact confirmation phrase `CREATE_SAFE_CRAWL_FILES_ONLY`. Do not add any other MCP write tool or broaden this wrapper.
 
 For Search Console work, read [SEARCH_CONSOLE_READINESS_SPEC.md](SEARCH_CONSOLE_READINESS_SPEC.md) first. Pass 9 implements only a deterministic mock provider behind `shipready.searchConsoleStatus.v1`; it does not implement live OAuth, token custody, or Google API calls. Keep live unauthenticated evidence, future authorized Search Console evidence, and ownership verification separate. Mock URL inspection is opt-in and single-URL. Property creation, verification, DNS, sitemap submission, indexing requests, token exposure, and remote account custody remain outside the prototype.
+
+For DNS readiness work, read [DNS_READINESS_SPEC.md](DNS_READINESS_SPEC.md) first. Pass 10 is specification only. The recommended future shape is `pnpm shipready dns status --url <url> --json`, `shipready.dnsStatus.v1`, and read-only MCP tool `shipready.dns_status`. Do not add DNS writes, provider credentials, registrar/nameserver APIs, Search Console live behavior, OAuth, remote MCP, or GUI changes as part of DNS status work.
 
 ## Main commands
 
@@ -71,6 +75,8 @@ pnpm shipready mcp --allow-root /absolute/workspace
 ```
 
 Use `status` before assuming a capability or integration exists. Use `doctor` after installation and before workflows that require Playwright or MCP canonical content. Both are read-only, non-networked, require no target path, and must not be treated as evidence of indexing, DNS/Search Console state, deployment state, or live-site readiness.
+
+`dns status` is planned but not implemented. Do not present it as available until Pass 11 ships code, contracts, fixtures, and tests.
 
 The guarded write command exists but is not a routine validation command. Use it only with explicit instruction and the checks in the canonical write policy.
 
@@ -152,6 +158,7 @@ Describe observable launch-readiness, crawler/preview visibility, completeness, 
 - deployments;
 - DNS writes;
 - Search Console mutation;
+- DNS mutation or provider integration;
 - secret handling;
 - API key commits;
 - SEO ranking claims;
