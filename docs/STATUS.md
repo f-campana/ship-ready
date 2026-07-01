@@ -21,6 +21,9 @@ ShipReady is a CLI-first, agent-friendly launch-readiness engine for generated w
 - Official-source-backed [Search Console readiness specification](SEARCH_CONSOLE_READINESS_SPEC.md) defining claim boundaries and the future live provider/OAuth boundary.
 - Stable `shipready.dnsStatus.v1`, `dns status`, eleven deterministic DNS mock scenarios, redacted Search Console TXT-readiness checks, optional canonical-host evidence, and the read-only `shipready.dns_status` MCP tool.
 - Official-source-backed [DNS readiness specification](DNS_READINESS_SPEC.md) defining read-only DNS checks and DNS claim boundaries.
+- Repository-local [ShipReady Launch Readiness skill](../skills/shipready-launch-readiness/SKILL.md) packaging current CLI, MCP, GUI/report, Search Console mock, DNS, write-policy, claims, reporting, and troubleshooting workflows for agents.
+
+When present, `validation/e2e-project-review/` supplies current end-to-end evidence for these surfaces, including its summary, feature matrix, safety report, and screenshot index. The skill references this evidence without treating disposable-fixture writes as authorization for real repositories.
 
 ## What is not built
 

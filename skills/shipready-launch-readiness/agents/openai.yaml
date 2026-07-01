@@ -1,0 +1,4 @@
+interface:
+  display_name: "ShipReady Launch Readiness"
+  short_description: "Safe launch-readiness checks for generated sites"
+  default_prompt: "Use $shipready-launch-readiness to review a generated website and report launch readiness within current safety boundaries."

@@ -8,6 +8,8 @@ Operating hierarchy: **CLI first. MCP second. GUI third. The CLI is the source o
 
 Primary readers are Codex, Claude Code, Cursor, and future MCP clients; human developers and product reviewers follow. Keep changes operational, bounded, testable, and compatible with limited agent context.
 
+For launch-readiness operations, start with the repository-local [ShipReady Launch Readiness skill](../skills/shipready-launch-readiness/SKILL.md). It provides the concise command/MCP workflow, write checklist, reporting template, troubleshooting, and examples; this runbook remains the repository maintenance contract.
+
 ## Current architecture
 
 - `src/cli/index.ts`: implemented commands, flags, modes, and exit behavior.
@@ -29,18 +31,19 @@ Primary readers are Codex, Claude Code, Cursor, and future MCP clients; human de
 ## Recommended reading order
 
 1. `README.md`
-2. `docs/AGENT_RUNBOOK.md`
-3. `docs/STATUS.md`
-4. `docs/COMMANDS.md`
-5. `docs/CONTRACTS.md`
-6. `docs/MCP_PLAN.md` before any MCP work
-7. `docs/WRITE_POLICY_V1.md` for any fix or write work
-8. `docs/CLAIMS_POLICY.md` for UI, demo, report, or public copy
-9. `docs/SEARCH_CONSOLE_READINESS_SPEC.md` before any Search Console or Google OAuth work
-10. `docs/DNS_READINESS_SPEC.md` before any DNS/domain-readiness work
-11. `docs/LOCAL_FIRST_GUI_SPEC.md` for GUI direction
-12. `docs/DEMO.md` for demo work
-13. `docs/ROADMAP.md` for sequencing
+2. `skills/shipready-launch-readiness/SKILL.md` for operating ShipReady
+3. `docs/AGENT_RUNBOOK.md`
+4. `docs/STATUS.md`
+5. `docs/COMMANDS.md`
+6. `docs/CONTRACTS.md`
+7. `docs/MCP_PLAN.md` before any MCP work
+8. `docs/WRITE_POLICY_V1.md` for any fix or write work
+9. `docs/CLAIMS_POLICY.md` for UI, demo, report, or public copy
+10. `docs/SEARCH_CONSOLE_READINESS_SPEC.md` before any Search Console or Google OAuth work
+11. `docs/DNS_READINESS_SPEC.md` before any DNS/domain-readiness work
+12. `docs/LOCAL_FIRST_GUI_SPEC.md` for GUI direction
+13. `docs/DEMO.md` for demo work
+14. `docs/ROADMAP.md` for sequencing
 
 ## Before any implementation
 

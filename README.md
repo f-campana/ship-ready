@@ -2,6 +2,8 @@
 
 ShipReady is a CLI-first, agent-friendly launch-readiness engine for generated websites. It audits a public URL, inspects a local repository, plans fixes, previews file changes, and can create a narrow set of missing crawl files under an explicit V1 policy. **CLI first. MCP second. GUI third.** The CLI is the source of truth; the local stdio MCP server wraps stable CLI contracts and exposes exactly one guarded V1 write tool, while the GUI explains the engine to humans.
 
+For an agent-ready operating workflow, use the repository-local [ShipReady Launch Readiness skill](skills/shipready-launch-readiness/SKILL.md). It packages current commands, MCP tools, safety gates, reporting guidance, and concise examples without expanding product behavior.
+
 ## Current status
 
 Implemented: read-only `status` and `doctor` diagnostics, CLI audit and repo inspection, fix planning, dry-run previews, guarded creation-only writes, UI and static HTML reports, a local preview/copy-only GUI, a local stdio MCP server, Fodmapp demo tooling, a deterministic mock-backed Search Console status prototype, and read-only DNS readiness status. MCP exposes nine read-only tools and exactly one guarded write tool for the same creation-only crawl-file policy. Live Search Console/OAuth, DNS provider writes/integrations, GitHub, deployment, accounts, billing, hosted SaaS, and remote MCP are not built.
@@ -54,17 +56,18 @@ See [docs/DEMO.md](docs/DEMO.md) for provenance, reproduction commands, and reco
 
 ## Documentation index
 
-1. [Agent runbook](docs/AGENT_RUNBOOK.md) — operating contract and required reading order.
-2. [Commands](docs/COMMANDS.md) — implemented CLI and demo command reference.
-3. [Contracts](docs/CONTRACTS.md) — JSON/report types, consumers, and MCP hardening gaps.
-4. [Write policy V1](docs/WRITE_POLICY_V1.md) — canonical creation-only write policy.
-5. [Claims policy](docs/CLAIMS_POLICY.md) — approved and prohibited product language.
-6. [Demo](docs/DEMO.md) — approved artifacts and recording workflow.
-7. [Status](docs/STATUS.md) — implemented scope, omissions, and next pass.
-8. [Roadmap](docs/ROADMAP.md) — ordered 18-pass sequence.
-9. [Local-first GUI spec](docs/LOCAL_FIRST_GUI_SPEC.md) — canonical GUI direction.
-10. [Search Console readiness spec](docs/SEARCH_CONSOLE_READINESS_SPEC.md) — mock prototype contract and deferred live OAuth/provider boundary.
-11. [DNS readiness spec](docs/DNS_READINESS_SPEC.md) — read-only DNS status checks and DNS claim boundaries.
+1. [ShipReady Launch Readiness skill](skills/shipready-launch-readiness/SKILL.md) — agent operating workflow, boundaries, reports, and examples.
+2. [Agent runbook](docs/AGENT_RUNBOOK.md) — repository operating contract and required reading order.
+3. [Commands](docs/COMMANDS.md) — implemented CLI and demo command reference.
+4. [Contracts](docs/CONTRACTS.md) — JSON/report types, consumers, and MCP hardening gaps.
+5. [Write policy V1](docs/WRITE_POLICY_V1.md) — canonical creation-only write policy.
+6. [Claims policy](docs/CLAIMS_POLICY.md) — approved and prohibited product language.
+7. [Demo](docs/DEMO.md) — approved artifacts and recording workflow.
+8. [Status](docs/STATUS.md) — implemented scope, omissions, and next pass.
+9. [Roadmap](docs/ROADMAP.md) — ordered pass sequence.
+10. [Local-first GUI spec](docs/LOCAL_FIRST_GUI_SPEC.md) — canonical GUI direction.
+11. [Search Console readiness spec](docs/SEARCH_CONSOLE_READINESS_SPEC.md) — mock prototype contract and deferred live OAuth/provider boundary.
+12. [DNS readiness spec](docs/DNS_READINESS_SPEC.md) — read-only DNS status checks and DNS claim boundaries.
 
 ## What ShipReady is not
 
