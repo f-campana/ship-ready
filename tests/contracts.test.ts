@@ -12,6 +12,7 @@ import { formatUiReportJsonReport } from "../src/report/formatUiReportJsonReport
 import { formatWriteFixJsonReport } from "../src/report/formatWriteFixJsonReport";
 import { formatSearchConsoleStatusJson } from "../src/searchConsole/searchConsoleStatus";
 import { formatDnsStatusJson } from "../src/dns/dnsStatus";
+import { formatRecheckJson } from "../src/report/formatRecheckReport";
 import { AuditResultSchema } from "../src/types/audit";
 import {
   AuditJsonContractSchema,
@@ -22,6 +23,7 @@ import {
   DryRunFixJsonContractSchema,
   FixPlanJsonContractSchema,
   RepoInspectionJsonContractSchema,
+  RecheckJsonContractSchema,
   SearchConsoleStatusJsonContractSchema,
   UiReportJsonContractSchema,
   WriteFixJsonContractSchema,
@@ -75,6 +77,12 @@ describe("CLI JSON contracts", () => {
     ["error.invalid-url.json", CliErrorContractSchema, CONTRACT_NAMES.error],
     ["status.default.json", StatusJsonContractSchema, CONTRACT_NAMES.status],
     ["doctor.default.json", DoctorJsonContractSchema, CONTRACT_NAMES.doctor],
+    ["recheck.url-only-ready.json", RecheckJsonContractSchema, CONTRACT_NAMES.recheck],
+    ["recheck.url-only-needs-attention.json", RecheckJsonContractSchema, CONTRACT_NAMES.recheck],
+    ["recheck.repo-backed-appears-deployed.json", RecheckJsonContractSchema, CONTRACT_NAMES.recheck],
+    ["recheck.repo-backed-needs-deploy.json", RecheckJsonContractSchema, CONTRACT_NAMES.recheck],
+    ["recheck.repo-backed-partial.json", RecheckJsonContractSchema, CONTRACT_NAMES.recheck],
+    ["recheck.unknown.json", RecheckJsonContractSchema, CONTRACT_NAMES.recheck],
   ] as const)("parses %s and preserves its discriminator", (name, schema, contract) => {
     const fixture = readFixture(name);
 
@@ -92,6 +100,7 @@ describe("CLI JSON contracts", () => {
       "ui-report --json": "shipready.uiReport.v1",
       "search-console status --json": "shipready.searchConsoleStatus.v1",
       "dns status --json": "shipready.dnsStatus.v1",
+      "recheck --json": "shipready.recheck.v1",
       "status --json": "shipready.status.v1",
       "doctor --json": "shipready.doctor.v1",
     });
@@ -122,6 +131,27 @@ describe("CLI JSON contracts", () => {
     expect(contractOf(formatDnsStatusJson(
       DnsStatusJsonContractSchema.parse(readFixture("dns.ready.json")),
     ))).toBe(CONTRACT_NAMES.dnsStatus);
+    expect(contractOf(formatRecheckJson(
+      RecheckJsonContractSchema.parse(readFixture("recheck.url-only-ready.json")),
+    ))).toBe(CONTRACT_NAMES.recheck);
+  });
+
+  it("keeps recheck deployment and verdict states constrained", () => {
+    const fixtures = [
+      "recheck.url-only-ready.json",
+      "recheck.url-only-needs-attention.json",
+      "recheck.repo-backed-appears-deployed.json",
+      "recheck.repo-backed-needs-deploy.json",
+      "recheck.repo-backed-partial.json",
+      "recheck.unknown.json",
+    ];
+    for (const fixtureName of fixtures) {
+      const result = RecheckJsonContractSchema.parse(readFixture(fixtureName));
+      expect(["not_checked", "appears_deployed", "appears_not_deployed", "partially_deployed", "unknown"])
+        .toContain(result.deployment.status);
+      expect(["ready", "needs_deploy", "needs_attention", "unknown"])
+        .toContain(result.verdict.status);
+    }
   });
 
   it("keeps DNS readiness verdicts and host resolution statuses constrained", () => {

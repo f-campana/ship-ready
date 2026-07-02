@@ -93,11 +93,11 @@ function formatRollback(result: WriteFixResult): string[] {
 
 function formatRecommendedNextStep(result: WriteFixResult): string {
   if (result.recommendedNextStep === "review_created_files") {
-    return `Review created files, run your tests, then run: pnpm shipready audit ${result.url}`;
+    return `Review created files and run your tests. Deploy through your external workflow, then run: pnpm shipready recheck ${result.repoPath} --url ${result.url}`;
   }
 
   if (result.recommendedNextStep === "run_audit_again") {
-    return `Run: pnpm shipready audit ${result.url}`;
+    return `After external deployment, run: pnpm shipready recheck ${result.repoPath} --url ${result.url}`;
   }
 
   if (result.recommendedNextStep === "manual_review_required") {

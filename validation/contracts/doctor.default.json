@@ -55,18 +55,18 @@
       "id": "contract-fixtures",
       "label": "Contract fixtures",
       "status": "pass",
-      "message": "35 canonical contract fixtures exist and parse.",
+      "message": "41 canonical contract fixtures exist and parse.",
       "details": {
-        "count": 35
+        "count": 41
       }
     },
     {
       "id": "canonical-docs",
       "label": "Canonical docs",
       "status": "pass",
-      "message": "11 canonical documentation files are present.",
+      "message": "12 canonical documentation files are present.",
       "details": {
-        "checked": 11,
+        "checked": 12,
         "missing": []
       }
     },
@@ -97,6 +97,20 @@
       }
     },
     {
+      "id": "post-write-recheck",
+      "label": "Post-write recheck",
+      "status": "pass",
+      "message": "The read-only recheck guide, skill workflow, and 6 deterministic fixtures are present; no network or deployment credentials are required by doctor.",
+      "details": {
+        "readOnly": true,
+        "networkRequired": false,
+        "deploymentCredentialsRequired": false,
+        "fixtures": 6,
+        "missing": [],
+        "skillReferencesRecheck": true
+      }
+    },
+    {
       "id": "write-policy",
       "label": "WRITE_POLICY_V1",
       "status": "pass",
@@ -121,7 +135,7 @@
     }
   ],
   "summary": {
-    "pass": 12,
+    "pass": 13,
     "warn": 2,
     "fail": 0,
     "skip": 0

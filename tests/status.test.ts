@@ -28,6 +28,8 @@ describe("status", () => {
     expect(output).toContain("pnpm shipready doctor");
     expect(output).toContain("mock prototype available, live integration not implemented");
     expect(output).toContain("DNS readiness: read-only status checks implemented");
+    expect(output).toContain("Post-write recheck: implemented read-only");
+    expect(output).toContain("Deployment automation and deploy provider integrations: not implemented");
   });
 
   it("emits the stable JSON capability and safety contract", async () => {
@@ -48,6 +50,9 @@ describe("status", () => {
       dnsProviderIntegrations: "not_implemented",
       github: "not_implemented",
       deployment: "not_implemented",
+      postWriteRecheck: "read_only",
+      deploymentAutomation: "not_implemented",
+      deployProviderIntegrations: "not_implemented",
     });
     expect(status.writePolicy.id).toBe(WRITE_POLICY_V1);
   });

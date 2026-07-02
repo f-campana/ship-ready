@@ -16,8 +16,8 @@ Order is contractual: harden CLI interfaces before wrapping them, ship read-only
 | 10 | Complete | Specify DNS readiness checks and provider-neutral evidence in [DNS_READINESS_SPEC.md](DNS_READINESS_SPEC.md). | Avoids provider coupling and unsafe remediation claims. | Read-only/spec | Pass 7 |
 | 11 | Complete | Implement read-only DNS checks. | Adds evidence only after the check contract is reviewed. | Read-only | Pass 10 |
 | 12A | Complete | Package current capabilities as the repository-local [ShipReady Launch Readiness skill](../skills/shipready-launch-readiness/SKILL.md). | Gives agents one concise, safety-bounded operating guide before post-write workflow design. | Read-only/docs | Pass 11 |
-| 12 | Next | Define post-write deployment handoff and live re-check workflow. | Connects local effects to verified live state without hiding boundaries. | Write-bearing | Pass 6 |
-| 13 | Planned | Add a social preview simulator. | Builds on stable audit/report metadata contracts. | Read-only | Pass 3 |
+| 12 | Complete | Implement the external deployment handoff and read-only live recheck in [POST_WRITE_RECHECK.md](POST_WRITE_RECHECK.md). | Connects local effects to public evidence without adding deployment behavior. | Read-only | Pass 6 |
+| 13 | Next | Add a social preview simulator. | Builds on stable audit/report metadata contracts. | Read-only | Pass 3 |
 | 14 | Planned | Detect generated-site implementation smells. | Adds bounded repository diagnostics after inspection contracts harden. | Read-only | Pass 3 |
 | 15 | Planned | Add a bounded multi-page crawl. | Expands audit scope only after single-page contracts stabilize. | Read-only | Pass 3 |
 | 16 | Planned | Revisit and polish the GUI. | Lets human UX consume proven CLI/MCP/report behavior. | Read-only | Passes 7, 13–15 |

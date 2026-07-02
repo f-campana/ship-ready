@@ -15,6 +15,7 @@ export const CONTRACT_NAMES = {
   uiReport: "shipready.uiReport.v1",
   searchConsoleStatus: "shipready.searchConsoleStatus.v1",
   dnsStatus: "shipready.dnsStatus.v1",
+  recheck: "shipready.recheck.v1",
   status: "shipready.status.v1",
   doctor: "shipready.doctor.v1",
   error: "shipready.error.v1",
@@ -29,6 +30,7 @@ export const CLI_JSON_CONTRACT_BY_COMMAND = {
   "ui-report --json": CONTRACT_NAMES.uiReport,
   "search-console status --json": CONTRACT_NAMES.searchConsoleStatus,
   "dns status --json": CONTRACT_NAMES.dnsStatus,
+  "recheck --json": CONTRACT_NAMES.recheck,
   "status --json": CONTRACT_NAMES.status,
   "doctor --json": CONTRACT_NAMES.doctor,
 } as const;
@@ -301,6 +303,73 @@ export const DnsStatusJsonContractSchema = z.object({
   }
 });
 
+const RecheckLiveResourceSchema = z.object({
+  status: z.enum(["present", "missing", "invalid", "unreachable", "unknown"]),
+  url: z.string().min(1).optional(),
+  httpStatus: z.number().int().optional(),
+  message: z.string().min(1),
+}).strict();
+
+export const RecheckJsonContractSchema = z.object({
+  contract: z.literal(CONTRACT_NAMES.recheck),
+  url: z.string().min(1),
+  checkedAt: z.string().min(1),
+  mode: z.enum(["url_only", "repo_backed"]),
+  live: z.object({
+    robots: RecheckLiveResourceSchema,
+    sitemap: RecheckLiveResourceSchema,
+    auditContract: z.literal(CONTRACT_NAMES.audit).optional(),
+  }).strict(),
+  local: z.object({
+    repoPath: z.string().min(1),
+    framework: z.string().min(1).optional(),
+    expectedFiles: z.array(z.object({
+      path: z.string().min(1),
+      kind: z.enum(["robots", "sitemap"]),
+      exists: z.boolean(),
+    }).strict()),
+    inspectionContract: z.literal(CONTRACT_NAMES.repoInspection),
+  }).strict().optional(),
+  deployment: z.object({
+    status: z.enum([
+      "not_checked",
+      "appears_deployed",
+      "appears_not_deployed",
+      "partially_deployed",
+      "unknown",
+    ]),
+    message: z.string().min(1),
+  }).strict(),
+  verdict: z.object({
+    status: z.enum(["ready", "needs_deploy", "needs_attention", "unknown"]),
+    summary: z.string().min(1),
+  }).strict(),
+  limitations: z.array(z.string().min(1)).min(1),
+  nextActions: z.array(z.string().min(1)).min(1),
+}).strict().superRefine((result, context) => {
+  if (result.mode === "url_only" && result.local) {
+    context.addIssue({
+      code: "custom",
+      path: ["local"],
+      message: "URL-only recheck must not include local repository evidence.",
+    });
+  }
+  if (result.mode === "url_only" && result.deployment.status !== "not_checked") {
+    context.addIssue({
+      code: "custom",
+      path: ["deployment", "status"],
+      message: "URL-only recheck cannot infer deployment status.",
+    });
+  }
+  if (result.mode === "repo_backed" && !result.local) {
+    context.addIssue({
+      code: "custom",
+      path: ["local"],
+      message: "Repo-backed recheck requires local repository evidence.",
+    });
+  }
+});
+
 const NotImplementedSchema = z.literal("not_implemented");
 
 export const StatusJsonContractSchema = z.object({
@@ -338,6 +407,9 @@ export const StatusJsonContractSchema = z.object({
     dnsProviderIntegrations: NotImplementedSchema,
     github: NotImplementedSchema,
     deployment: NotImplementedSchema,
+    postWriteRecheck: z.literal("read_only"),
+    deploymentAutomation: NotImplementedSchema,
+    deployProviderIntegrations: NotImplementedSchema,
   }).strict(),
   demos: z.object({
     fodmappShare: z.string().min(1).optional(),
@@ -442,6 +514,7 @@ export type WriteFixJsonContract = z.infer<typeof WriteFixJsonContractSchema>;
 export type UiReportJsonContract = z.infer<typeof UiReportJsonContractSchema>;
 export type SearchConsoleStatusJsonContract = z.infer<typeof SearchConsoleStatusJsonContractSchema>;
 export type DnsStatusJsonContract = z.infer<typeof DnsStatusJsonContractSchema>;
+export type RecheckJsonContract = z.infer<typeof RecheckJsonContractSchema>;
 export type StatusJsonContract = z.infer<typeof StatusJsonContractSchema>;
 export type DoctorCheckStatus = z.infer<typeof DoctorCheckStatusSchema>;
 export type DoctorCheck = z.infer<typeof DoctorCheckSchema>;

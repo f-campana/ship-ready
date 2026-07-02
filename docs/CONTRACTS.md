@@ -17,6 +17,7 @@ This was low risk because CLI JSON formatting already had a dedicated Zod-valida
 | `status --json` | Yes | `shipready.status.v1` | V1 CLI boundary | Static/local read only |
 | `doctor --json` | Yes | `shipready.doctor.v1` | V1 CLI boundary | Bounded local read only |
 | `audit <url> --json` | Yes | `shipready.audit.v1` | V1 CLI boundary | Network read only |
+| `recheck [path] --url <url> --json` | Yes | `shipready.recheck.v1` | V1 post-write follow-up boundary | Network/optional local read only |
 | `inspect-repo <path> --json` | Yes | `shipready.repoInspection.v1` | V1 CLI boundary | Local read only |
 | `plan-fixes <path> --url <url> --json` | Yes | `shipready.fixPlan.v1` | V1 CLI boundary | Network/local read only |
 | `fix <path> --url <url> --dry-run --json` | Yes | `shipready.dryRunFix.v1` | V1 CLI boundary | Network/local read only |
@@ -56,6 +57,20 @@ Canonical fixtures cover `ready`, `apex-ok-www-missing`, `www-cname-ok`, `nxdoma
 
 The MCP tool accepts `{ url, expectedCanonicalHost?, expectedWwwMode?, expectedSearchConsoleVerificationTxt?, checkHttp?, mock? }`, needs no repository path, and returns this exact contract. It does not alter the sole MCP write tool, stdio-only transport, `WRITE_POLICY_V1`, GUI behavior, or `POST /api/fix = 404` boundary.
 
+## `shipready.recheck.v1`
+
+Pass 12 implements this contract for `recheck [path] --url <url> --json` and the read-only MCP tool `shipready.recheck`.
+
+Top-level keys are `contract`, `url`, `checkedAt`, `mode`, `live`, optional `local`, `deployment`, `verdict`, `limitations`, and `nextActions`. `mode` is `url_only` or `repo_backed`. `live.robots` and `live.sitemap` each preserve a separate status: `present`, `missing`, `invalid`, `unreachable`, or `unknown`, with optional URL/HTTP evidence and a conservative message. A successful reused audit identifies `auditContract: "shipready.audit.v1"`.
+
+Repo-backed output includes `repoPath`, detected `framework`, inferred V1-safe `expectedFiles`, and `inspectionContract: "shipready.repoInspection.v1"`. Expected paths are limited to the same static HTML, Vite React, and Next.js App Router conventions already allowed by `WRITE_POLICY_V1`; unsupported frameworks do not invent paths.
+
+Deployment status is one of `not_checked`, `appears_deployed`, `appears_not_deployed`, `partially_deployed`, or `unknown`. URL-only mode always uses `not_checked`. Repo-backed classifications compare local presence with public conventional crawl-resource evidence, using “appears” language because ShipReady does not observe a hosting provider deployment event. Verdict is `ready`, `needs_deploy`, `needs_attention`, or `unknown`. Network failure is normally an `unreachable`/`unknown` result, not proof of absence.
+
+The command disables the rendered browser pass because only public crawl-resource evidence is needed. It never calls write mode, deployment tooling, provider APIs, Git/GitHub, DNS writes, or Search Console. Positive live evidence does not guarantee crawling, indexing, propagation, or future availability.
+
+Canonical fixtures cover URL-only ready/needs-attention, repo-backed appears-deployed/needs-deploy/partial, and unknown evidence. All use fixed timestamps and mocked audit/inspection inputs; no fixture generation uses the network.
+
 ## Exact success shapes
 
 All outputs are one JSON object followed by a newline and do not use a generic success envelope. `shipready.doctor.v1` has an `ok` readiness boolean because failed local checks are part of its valid report model; that field is not a data wrapper.
@@ -64,7 +79,7 @@ All outputs are one JSON object followed by a newline and do not use a generic s
 
 Top-level keys: `contract`, `version`, `mode`, `capabilities`, `writePolicy`, `integrations`, `demos`, `nextRecommendedCommand`, and `nextRecommendedPass`.
 
-Stable posture fields report `cliFirst: true`, `mcpSecond: true`, `guiThird: true`, local stdio MCP with `remoteTransport: false`, exactly one MCP write tool (`shipready.write_safe_crawl_files`), and a local GUI with `writeEndpoint: false`. Search Console is `mock_prototype`; DNS is `read_only_status`; DNS provider writes, DNS provider integrations, GitHub, and deployment remain `not_implemented`. `writePolicy.id` remains `creation_only_robots_sitemap_v1`; this report does not redefine policy semantics.
+Stable posture fields report `cliFirst: true`, `mcpSecond: true`, `guiThird: true`, local stdio MCP with `remoteTransport: false`, exactly one MCP write tool (`shipready.write_safe_crawl_files`), and a local GUI with `writeEndpoint: false`. Search Console is `mock_prototype`; DNS is `read_only_status`; post-write recheck is `read_only`; DNS/provider writes, GitHub, deployment, deployment automation, and deploy-provider integrations remain `not_implemented`. `writePolicy.id` remains `creation_only_robots_sitemap_v1`; this report does not redefine policy semantics.
 
 Internal source and formatter: `src/status/status.ts`. Exit behavior: `0`. The command is static/read-only, makes no network request, and does not inspect a target repository.
 
@@ -215,6 +230,12 @@ Deterministic fixtures live in `validation/contracts/`:
 - `error.invalid-url.json`
 - `status.default.json`
 - `doctor.default.json`
+- `recheck.url-only-ready.json`
+- `recheck.url-only-needs-attention.json`
+- `recheck.repo-backed-appears-deployed.json`
+- `recheck.repo-backed-needs-deploy.json`
+- `recheck.repo-backed-partial.json`
+- `recheck.unknown.json`
 
 Regenerate them from local test repositories and deterministic in-memory audit results:
 
@@ -224,7 +245,7 @@ pnpm contracts:fixtures
 
 The generator is `scripts/validation/generateContractFixtures.ts`. It makes no external requests. The write fixtures run `writeFixFromDryRun` only against temporary copies under the operating-system temp directory, record the returned results, and remove the copies. They never target a real repository. Fixed timestamps and repository display paths keep fixtures reproducible.
 
-Focused drift coverage is in `tests/contracts.test.ts`, `tests/status.test.ts`, `tests/doctor.test.ts`, `tests/dnsStatus.test.ts`, and `tests/dnsCli.test.ts`. Tests validate every fixture, every formatter discriminator, status/doctor posture and summaries, error code/message compatibility, DNS verdict/resolution constraints and token redaction, UI report dual discriminators, dry-run state separation, write effect fields, the command mapping, and invalid-URL CLI exits.
+Focused drift coverage includes `tests/contracts.test.ts`, `tests/recheck.test.ts`, `tests/recheckCli.test.ts`, `tests/mcp.recheck.test.ts`, `tests/status.test.ts`, and `tests/doctor.test.ts`. Tests validate every fixture and formatter discriminator, constrained recheck states, mocked local/live comparisons, no-mutation behavior, allowed-root enforcement, status/doctor posture, and existing safety boundaries.
 
 ## Downstream consumers
 
@@ -238,7 +259,7 @@ Focused drift coverage is in `tests/contracts.test.ts`, `tests/status.test.ts`, 
 
 ## MCP mapping
 
-The implemented Pass 6 specification is [MCP_PLAN.md](MCP_PLAN.md). Eight contract-backed tools preserve their top-level CLI contract objects; two canonical-read tools expose validated fixtures and allowlisted documents. `shipready.write_safe_crawl_files` returns `shipready.writeFix.v1` and is the only MCP write tool.
+The implemented MCP specification is [MCP_PLAN.md](MCP_PLAN.md). Nine contract-backed tools preserve their top-level CLI contract objects; two canonical-read tools expose validated fixtures and allowlisted documents. `shipready.write_safe_crawl_files` returns `shipready.writeFix.v1` and is the only MCP write tool.
 
 `shipready.preview_fixes` still returns `shipready.dryRunFix.v1`; when current V1-eligible crawl-file creations exist, the MCP layer adds an agent-facing `previewReceipt` to the tool payload. The receipt is not a CLI contract field and is not write authority by itself. It is a signed, short-lived MCP precondition binding the normalized URL, authorized canonical repository path, policy, eligible paths, and stable dry-run/candidate digests.
 
@@ -246,7 +267,7 @@ The MCP write call must supply the same URL and repo path, the fresh receipt, an
 
 Ready now:
 
-- Nine implemented JSON-capable command surfaces have explicit V1 contract names.
+- Eleven implemented JSON-capable command surfaces have explicit V1 contract names.
 - Success outputs retain their existing fields and add stable discriminators.
 - Action-level JSON errors have stable codes/messages and preserve the legacy `error` field.
 - Deterministic local fixtures and focused drift tests cover success, failure, dry-run, write, UI, Search Console, and DNS states.

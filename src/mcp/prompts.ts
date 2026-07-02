@@ -22,7 +22,7 @@ export function listPrompts() {
       argument("url", true), argument("repoPath", true), argument("rendered", false),
     ]),
     prompt("post_deploy_recheck", "Recheck current live evidence after a deployment performed elsewhere.", [
-      argument("url", true), argument("repoPath", false), argument("rendered", false),
+      argument("url", true), argument("repoPath", false),
     ]),
     prompt("write_policy_summary", "Summarize the current CLI and MCP safe-write boundary.", []),
   ];
@@ -70,7 +70,7 @@ export async function renderPrompt(
 
   if (name === "post_deploy_recheck") {
     return message(
-      `${common}${repoPath ? `\nAuthorized repository: ${repoPath}` : ""}\nUse shipready.audit_site, then shipready.get_ui_report; inspect the repository only when the explicit authorized path above exists. Compare only against baseline results already supplied in the conversation, otherwise label the baseline unavailable. Report current evidence only. Do not deploy, write files, or claim third-party indexing.`,
+      `${common}${repoPath ? `\nAuthorized repository: ${repoPath}` : ""}\nUse shipready.recheck with the normalized URL and optional authorized repository path. Report its conservative local-versus-live crawl-file evidence and limitations. Do not deploy, write files, call provider APIs, or claim crawling or indexing.`,
     );
   }
 
@@ -117,7 +117,9 @@ function parseRendered(value: string | undefined): boolean {
 function rejectUnknownArguments(name: string, args: Record<string, string>): void {
   const allowed = name === "write_policy_summary"
     ? new Set<string>()
-    : new Set(["url", "repoPath", "rendered"]);
+    : name === "post_deploy_recheck"
+      ? new Set(["url", "repoPath"])
+      : new Set(["url", "repoPath", "rendered"]);
   if (Object.keys(args).some((key) => !allowed.has(key))) {
     throw new ShipReadyMcpError("unsupported_command", "Prompt contains an unsupported argument.", {
       stage: "input",

@@ -421,6 +421,8 @@ describe("write fix mode", () => {
     expect(report).toContain("- No dependencies installed.");
     expect(report).toContain("- No formatting run.");
     expect(report).toContain("- No deploys performed.");
+    expect(report).toContain("Deploy through your external workflow");
+    expect(report).toContain("pnpm shipready recheck");
   });
 });
 

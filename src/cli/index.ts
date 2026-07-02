@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import { Command } from "commander";
+import { z } from "zod";
 import { auditUrl } from "../audit/auditUrl";
 import { dryRunFix } from "../fix/dryRunFix";
 import { writeFix, WriteFixExecutionError, WriteFixValidationError } from "../fix/writeFix";
@@ -38,6 +39,8 @@ import {
   getDnsStatus,
 } from "../dns/dnsStatus";
 import { SHIPREADY_VERSION } from "../version";
+import { recheck } from "../recheck/recheck";
+import { formatRecheckHuman, formatRecheckJson } from "../report/formatRecheckReport";
 
 const program = new Command();
 
@@ -63,6 +66,62 @@ program
     const report = await runDoctor();
     process.stdout.write(options.json ? formatDoctorJson(report) : formatDoctorHuman(report));
     if (!report.ok) process.exitCode = 1;
+  });
+
+program
+  .command("recheck")
+  .description("Compare live crawl-file evidence with optional local expected files; never deploys or writes.")
+  .argument("[path]", "Optional local repository path for a repo-backed comparison")
+  .requiredOption("--url <url>", "Public HTTP(S) URL to recheck")
+  .option("--json", "Output structured JSON")
+  .option("--timeout <ms>", "Network timeout in milliseconds", "15000")
+  .option("--user-agent <ua>", "Override the default user agent")
+  .action(async (path: string | undefined, options: RecheckCommandOptions) => {
+    const timeoutMs = Number(options.timeout);
+    if (!Number.isFinite(timeoutMs) || timeoutMs <= 0) {
+      writeCommandError("recheck", "Invalid timeout. Provide a positive number of milliseconds.", options.json, 1);
+      return;
+    }
+
+    try {
+      const result = await recheck({
+        url: options.url,
+        repoPath: path,
+        timeoutMs,
+        userAgent: options.userAgent,
+      });
+      process.stdout.write(options.json ? formatRecheckJson(result) : formatRecheckHuman(result));
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Unexpected recheck failure.";
+      const code = classifyCommandError(message);
+      if (code === "invalid_url") {
+        writeTypedCommandError("recheck", code, message, options.json, 1);
+      } else if (code === "invalid_repo_path") {
+        writeTypedCommandError(
+          "recheck",
+          code,
+          "Repository path must be an existing accessible directory.",
+          options.json,
+          1,
+        );
+      } else if (error instanceof z.ZodError) {
+        writeTypedCommandError(
+          "recheck",
+          "contract_error",
+          "ShipReady produced data that did not match its published recheck contract.",
+          options.json,
+          2,
+        );
+      } else {
+        writeTypedCommandError(
+          "recheck",
+          "internal_error",
+          "ShipReady recheck could not complete.",
+          options.json,
+          2,
+        );
+      }
+    }
   });
 
 const searchConsole = program
@@ -151,7 +210,7 @@ dns
 
 program
   .command("mcp")
-  .description("Start the local ShipReady MCP stdio server (nine read-only tools, one guarded V1 write tool).")
+  .description("Start the local ShipReady MCP stdio server (ten read-only tools, one guarded V1 write tool).")
   .option(
     "--allow-root <absolute-path>",
     "Authorize one repository root (repeatable)",
@@ -446,6 +505,13 @@ type StatusCommandOptions = {
 
 type DoctorCommandOptions = {
   json?: boolean;
+};
+
+type RecheckCommandOptions = {
+  url: string;
+  json?: boolean;
+  timeout: string;
+  userAgent?: string;
 };
 
 type SearchConsoleStatusCommandOptions = {

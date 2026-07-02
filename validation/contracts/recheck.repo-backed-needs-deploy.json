@@ -1,0 +1,54 @@
+{
+  "contract": "shipready.recheck.v1",
+  "url": "https://example.com/",
+  "checkedAt": "2026-06-21T12:00:00.000Z",
+  "mode": "repo_backed",
+  "live": {
+    "robots": {
+      "status": "missing",
+      "url": "https://example.com/robots.txt",
+      "httpStatus": 404,
+      "message": "Live robots.txt was not observed at the conventional URL (HTTP 404)."
+    },
+    "sitemap": {
+      "status": "missing",
+      "url": "https://example.com/sitemap.xml",
+      "httpStatus": 404,
+      "message": "Live sitemap.xml was not observed at the conventional URL (HTTP 404)."
+    },
+    "auditContract": "shipready.audit.v1"
+  },
+  "local": {
+    "repoPath": "tests/fixtures/repos/next-app-router-dry-run",
+    "framework": "Next.js App Router",
+    "expectedFiles": [
+      {
+        "path": "src/app/robots.ts",
+        "kind": "robots",
+        "exists": true
+      },
+      {
+        "path": "src/app/sitemap.ts",
+        "kind": "sitemap",
+        "exists": true
+      }
+    ],
+    "inspectionContract": "shipready.repoInspection.v1"
+  },
+  "deployment": {
+    "status": "appears_not_deployed",
+    "message": "Local expected crawl files exist, but both live resources still appear missing or invalid."
+  },
+  "verdict": {
+    "status": "needs_deploy",
+    "summary": "The local crawl-file changes appear not deployed or not served at the conventional URLs."
+  },
+  "limitations": [
+    "Recheck reads public evidence only; it does not deploy or call hosting provider APIs.",
+    "Visible crawl files do not guarantee crawling, indexing, propagation, or third-party behavior.",
+    "Local expected paths are inferred only from the current V1-safe framework conventions."
+  ],
+  "nextActions": [
+    "Deploy through your normal external workflow or review hosting configuration, then run recheck again."
+  ]
+}

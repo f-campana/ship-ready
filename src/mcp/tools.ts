@@ -16,6 +16,8 @@ import {
 } from "../searchConsole/searchConsoleStatus";
 import { SEARCH_CONSOLE_MOCK_SCENARIOS } from "../searchConsole/searchConsoleTypes";
 import { formatDnsStatusJson, getDnsStatus } from "../dns/dnsStatus";
+import { recheck } from "../recheck/recheck";
+import { formatRecheckJson } from "../report/formatRecheckReport";
 import { DNS_MOCK_SCENARIOS, EXPECTED_WWW_MODES } from "../dns/dnsTypes";
 import {
   AuditJsonContractSchema,
@@ -23,6 +25,7 @@ import {
   DryRunFixJsonContractSchema,
   FixPlanJsonContractSchema,
   RepoInspectionJsonContractSchema,
+  RecheckJsonContractSchema,
   SearchConsoleStatusJsonContractSchema,
   UiReportJsonContractSchema,
   WriteFixJsonContractSchema,
@@ -75,6 +78,10 @@ const WriteSafeCrawlFilesInputSchema = UrlRepoInputSchema.extend({
   confirmation: z.string(),
 }).strict();
 const UiReportInputSchema = UrlInputSchema.extend({ repoPath: z.string().trim().min(1).max(4096).optional() }).strict();
+const RecheckInputSchema = z.object({
+  url: z.string().trim().min(1).max(2048),
+  repoPath: z.string().trim().min(1).max(4096).optional(),
+}).strict();
 const FixtureInputSchema = z.object({ fixtureName: z.enum(FIXTURE_NAMES) }).strict();
 const PolicyInputSchema = z.object({ name: z.enum(Object.keys(POLICY_DOCS) as [keyof typeof POLICY_DOCS, ...(keyof typeof POLICY_DOCS)[]]) }).strict();
 
@@ -82,6 +89,7 @@ export type McpOperations = {
   auditSite: typeof auditUrl;
   searchConsoleStatus: typeof getSearchConsoleStatus;
   dnsStatus: typeof getDnsStatus;
+  recheck: typeof recheck;
   inspectRepo: typeof inspectRepo;
   planFixes: typeof planFixes;
   previewFixes: typeof dryRunFix;
@@ -101,6 +109,7 @@ const DEFAULT_OPERATIONS: McpOperations = {
   auditSite: auditUrl,
   searchConsoleStatus: getSearchConsoleStatus,
   dnsStatus: getDnsStatus,
+  recheck,
   inspectRepo,
   planFixes,
   previewFixes: dryRunFix,
@@ -132,6 +141,10 @@ export function listTools() {
       expectedSearchConsoleVerificationTxt: stringSchema(4096),
       checkHttp: { type: "boolean", default: false },
       mock: { type: "string", enum: [...DNS_MOCK_SCENARIOS] },
+    }, ["url"]), { ...readOnly, openWorldHint: true }),
+    tool("shipready.recheck", "Compare live crawl-file evidence with optional authorized local expected files; never writes or deploys.", schema({
+      url: stringSchema(2048),
+      repoPath: stringSchema(4096),
     }, ["url"]), { ...readOnly, openWorldHint: true }),
     tool("shipready.inspect_repo", "Inspect one explicitly authorized repository without writes.", schema({
       repoPath: stringSchema(4096),
@@ -260,6 +273,15 @@ async function executeTool(
       mock: input.mock,
     });
     return contractResult(formatDnsStatusJson(result), DnsStatusJsonContractSchema);
+  }
+  if (name === "shipready.recheck") {
+    const input = parseInput(RecheckInputSchema, args, "invalid_url");
+    const url = normalizeAuditUrl(input.url);
+    const repoPath = input.repoPath
+      ? await context.authorizer.authorizeRepoPath(input.repoPath)
+      : undefined;
+    const result = await operations.recheck({ url, repoPath, timeoutMs });
+    return contractResult(formatRecheckJson(result), RecheckJsonContractSchema);
   }
   if (name === "shipready.inspect_repo") {
     const input = parseInput(RepoInputSchema, args, "invalid_repo_path");
@@ -418,6 +440,7 @@ function assertResultSize(result: unknown): void {
 function timeoutFor(name: ToolName, timeouts: McpTimeouts): number {
   if (name === "shipready.audit_site") return timeouts.audit_site;
   if (name === "shipready.search_console_status") return timeouts.canonical_read;
+  if (name === "shipready.recheck") return timeouts.audit_site;
   if (name === "shipready.inspect_repo") return timeouts.inspect_repo;
   if (name === "shipready.plan_fixes") return timeouts.plan_fixes;
   if (name === "shipready.preview_fixes") return timeouts.preview_fixes;

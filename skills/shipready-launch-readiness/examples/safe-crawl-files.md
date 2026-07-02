@@ -16,4 +16,4 @@ Only after approval and review, run:
 pnpm shipready fix /path/to/repo --url https://example.com --write --allow-create
 ```
 
-Report exact local files created and all blocked/review-required work. State that ShipReady did not deploy; the owner must deploy through their normal workflow and re-check the live URL separately.
+Report exact local files created and all blocked/review-required work. State that ShipReady did not deploy; the owner must deploy through their normal workflow. After deployment, run the read-only comparison shown in [post-write-recheck.md](post-write-recheck.md).

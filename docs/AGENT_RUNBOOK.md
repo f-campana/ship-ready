@@ -17,11 +17,12 @@ For launch-readiness operations, start with the repository-local [ShipReady Laun
 - `src/repo/`: bounded read-only repository inspection.
 - `src/plan/`: audit-to-fix planning.
 - `src/fix/`: dry-run previews and guarded V1 creation-only writes.
+- `src/recheck/`: read-only local-versus-live crawl-file comparison after external deployment.
 - `src/types/`: Zod schemas and TypeScript result contracts.
 - `src/report/`: human, JSON, UI, and static HTML formatting.
 - `src/ui/`: normalized `ui-report-v1` creation.
 - `src/gui/`: local server and preview/copy-only browser UI.
-- `src/mcp/`: local stdio adapter, nine read-only tools, one guarded safe-write tool, preview receipts, canonical reads, prompts, authorization, errors, and deadlines.
+- `src/mcp/`: local stdio adapter, ten read-only tools, one guarded safe-write tool, preview receipts, canonical reads, prompts, authorization, errors, and deadlines.
 - `src/status/` and `src/doctor/`: static capability posture and bounded local readiness diagnostics.
 - `src/searchConsole/`: stable read-only status boundary and deterministic mock provider; no OAuth, tokens, or live Google client.
 - `src/dns/`: read-only DNS readiness status, live Node DNS resolver, deterministic mock scenarios, redacted TXT evidence, and no provider integration or DNS writes.
@@ -41,9 +42,10 @@ For launch-readiness operations, start with the repository-local [ShipReady Laun
 9. `docs/CLAIMS_POLICY.md` for UI, demo, report, or public copy
 10. `docs/SEARCH_CONSOLE_READINESS_SPEC.md` before any Search Console or Google OAuth work
 11. `docs/DNS_READINESS_SPEC.md` before any DNS/domain-readiness work
-12. `docs/LOCAL_FIRST_GUI_SPEC.md` for GUI direction
-13. `docs/DEMO.md` for demo work
-14. `docs/ROADMAP.md` for sequencing
+12. `docs/POST_WRITE_RECHECK.md` before post-write follow-up work
+13. `docs/LOCAL_FIRST_GUI_SPEC.md` for GUI direction
+14. `docs/DEMO.md` for demo work
+15. `docs/ROADMAP.md` for sequencing
 
 ## Before any implementation
 
@@ -61,6 +63,8 @@ For Search Console work, read [SEARCH_CONSOLE_READINESS_SPEC.md](SEARCH_CONSOLE_
 
 For DNS readiness work, read [DNS_READINESS_SPEC.md](DNS_READINESS_SPEC.md) first. Pass 11 implements `pnpm shipready dns status --url <url> --json`, `shipready.dnsStatus.v1`, and read-only MCP tool `shipready.dns_status`. It uses Node DNS APIs and deterministic mocks; it does not add DNS writes, provider credentials, registrar/nameserver APIs, Search Console live behavior, OAuth, remote MCP, or GUI changes.
 
+For post-write follow-up, read [POST_WRITE_RECHECK.md](POST_WRITE_RECHECK.md). Pass 12 implements read-only `recheck` and MCP `shipready.recheck`. Local files still require deployment through the owner's external workflow. Repo-backed recheck authorizes/inspects the repository and compares only inferred V1-safe expected crawl-file presence with live conventional URLs; it never writes or deploys.
+
 ## Main commands
 
 ```bash
@@ -69,6 +73,7 @@ pnpm shipready doctor --json
 pnpm shipready search-console status --url https://example.com --mock ready_sitemap_ok --json
 pnpm shipready dns status --url https://example.com --mock ready --json
 pnpm shipready audit <url> --json
+pnpm shipready recheck [path] --url <url> --json
 pnpm shipready inspect-repo <path> --json
 pnpm shipready plan-fixes <path> --url <url> --json
 pnpm shipready fix <path> --url <url> --dry-run --json
@@ -83,6 +88,8 @@ Use `status` before assuming a capability or integration exists. Use `doctor` af
 `dns status` is implemented as read-only advisory evidence. Use `--mock <scenario>` for deterministic tests and fixtures. Live mode reads DNS through Node built-ins; it does not write records, call provider APIs, use provider credentials, verify Search Console ownership, deploy, or mutate repositories.
 
 The guarded write command exists but is not a routine validation command. Use it only with explicit instruction and the checks in the canonical write policy.
+
+After an authorized local write, report that deployment remains external. Once the owner deploys, use `recheck` in URL-only or repo-backed mode. Treat unreachable live evidence as unknown and use “appears” deployment wording; never convert crawl-file visibility into a crawling or indexing claim.
 
 MCP safe-write flow:
 
@@ -129,6 +136,7 @@ JSON contract work never authorizes broader writes. `docs/WRITE_POLICY_V1.md` re
 - Never use the Fodmapp marketing repository as a write target for demos or validation.
 - The GUI may generate reports and copy a command; it cannot execute writes.
 - Local changes do not affect a live site until the owner deploys them through their normal workflow.
+- Recheck is strictly read-only and never invokes guarded write mode or deployment automation.
 
 ## Write-policy summary
 

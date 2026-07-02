@@ -19,6 +19,8 @@ import {
   getSearchConsoleStatus,
 } from "../../src/searchConsole/searchConsoleStatus";
 import { formatDnsStatusJson, getDnsStatus } from "../../src/dns/dnsStatus";
+import { createRecheckResult } from "../../src/recheck/recheck";
+import { formatRecheckJson } from "../../src/report/formatRecheckReport";
 import { createDoctorReport, formatDoctorJson } from "../../src/doctor/doctor";
 import type { DoctorCheck } from "../../src/types/contracts";
 import type { AuditCheck, AuditResult, ExtractedPageMetadata } from "../../src/types/audit";
@@ -55,6 +57,14 @@ const reviewRequiredAudit = auditResult([
   check("metadata.canonical.missing", "critical"),
   check("social.og.url_missing", "warning"),
 ], 64, "needs_work", true);
+
+const partialCrawlAudit: AuditResult = {
+  ...cleanAudit,
+  resources: {
+    robotsTxt: resource("https://example.com/robots.txt", true),
+    sitemapXml: resource("https://example.com/sitemap.xml", false),
+  },
+};
 
 const nextInspection = deterministicInspection("next-app-router-dry-run", FIXTURE_PATH);
 const viteInspection = deterministicInspection("vite-react", "tests/fixtures/repos/vite-react");
@@ -123,6 +133,47 @@ write("error.invalid-url.json", formatCliErrorJson({
   message: "Invalid URL. Provide an absolute http:// or https:// URL.",
 }));
 
+const expectedNextFiles = [
+  { path: "src/app/robots.ts", kind: "robots" as const, exists: true },
+  { path: "src/app/sitemap.ts", kind: "sitemap" as const, exists: true },
+];
+write("recheck.url-only-ready.json", formatRecheckJson(createRecheckResult({
+  url: cleanAudit.url,
+  checkedAt: FIXED_AT,
+  audit: cleanAudit,
+})));
+write("recheck.url-only-needs-attention.json", formatRecheckJson(createRecheckResult({
+  url: needsWorkAudit.url,
+  checkedAt: FIXED_AT,
+  audit: needsWorkAudit,
+})));
+write("recheck.repo-backed-appears-deployed.json", formatRecheckJson(createRecheckResult({
+  url: cleanAudit.url,
+  checkedAt: FIXED_AT,
+  audit: cleanAudit,
+  inspection: nextInspection,
+  expectedFiles: expectedNextFiles,
+})));
+write("recheck.repo-backed-needs-deploy.json", formatRecheckJson(createRecheckResult({
+  url: needsWorkAudit.url,
+  checkedAt: FIXED_AT,
+  audit: needsWorkAudit,
+  inspection: nextInspection,
+  expectedFiles: expectedNextFiles,
+})));
+write("recheck.repo-backed-partial.json", formatRecheckJson(createRecheckResult({
+  url: partialCrawlAudit.url,
+  checkedAt: FIXED_AT,
+  audit: partialCrawlAudit,
+  inspection: nextInspection,
+  expectedFiles: expectedNextFiles,
+})));
+write("recheck.unknown.json", formatRecheckJson(createRecheckResult({
+  url: "https://example.com/",
+  checkedAt: FIXED_AT,
+  auditUnavailable: true,
+})));
+
 for (const [fileName, scenario, inspect] of [
   ["search-console.not-configured.json", "not_configured", false],
   ["search-console.unauthorized.json", "unauthorized", false],
@@ -183,6 +234,7 @@ write("doctor.default.json", formatDoctorJson(createDoctorReport([
   doctorCheck("canonical-docs", "Canonical docs", "pass", `${new Set(Object.values(DOC_RESOURCES)).size} canonical documentation files are present.`, { checked: new Set(Object.values(DOC_RESOURCES)).size, missing: [] }),
   doctorCheck("search-console-prototype", "Search Console mock prototype", "pass", "The Search Console specification and 7 deterministic mock fixtures are present; no Google credentials are required.", { liveIntegration: false, oauthRequired: false, fixtures: 7, missing: [] }),
   doctorCheck("dns-readiness", "DNS readiness", "pass", "The DNS specification, Node DNS APIs, and 11 deterministic mock fixtures are present; no DNS provider credentials are required.", { readOnly: true, providerWrites: false, providerIntegrations: false, fixtures: 11, nodeDnsApisAvailable: true, missing: [] }),
+  doctorCheck("post-write-recheck", "Post-write recheck", "pass", "The read-only recheck guide, skill workflow, and 6 deterministic fixtures are present; no network or deployment credentials are required by doctor.", { readOnly: true, networkRequired: false, deploymentCredentialsRequired: false, fixtures: 6, missing: [], skillReferencesRecheck: true }),
   doctorCheck("write-policy", "WRITE_POLICY_V1", "pass", "The canonical creation_only_robots_sitemap_v1 policy document is present."),
   doctorCheck("local-gui-spec", "LOCAL_FIRST_GUI_SPEC", "pass", "The canonical local-first GUI specification is present."),
   doctorCheck("demo-artifacts", "Demo artifacts", "warn", "Optional demo artifacts are incomplete; core CLI operation is unaffected.", { missing: ["validation/example.mp4"] }),

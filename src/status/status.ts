@@ -12,6 +12,7 @@ export const STATUS_CLI_COMMANDS = [
   "doctor",
   "search-console status",
   "dns status",
+  "recheck",
   "audit",
   "inspect-repo",
   "plan-fixes",
@@ -66,13 +67,16 @@ export function createStatus(): StatusJsonContract {
       dnsProviderIntegrations: "not_implemented",
       github: "not_implemented",
       deployment: "not_implemented",
+      postWriteRecheck: "read_only",
+      deploymentAutomation: "not_implemented",
+      deployProviderIntegrations: "not_implemented",
     },
     demos: {
       fodmappShare: "validation/demo-fodmapp-share/",
       fodmappVoiceover: "validation/demo-fodmapp-voiceover-final/",
     },
     nextRecommendedCommand: "pnpm shipready doctor",
-    nextRecommendedPass: "Post-write deploy/re-check workflow",
+    nextRecommendedPass: "Social preview simulator",
   });
 }
 
@@ -94,7 +98,9 @@ export function formatStatusHuman(status = createStatus()): string {
     `  ${status.writePolicy.name}: ${status.writePolicy.summary}`,
     "  Search Console: spec exists, mock prototype available, live integration not implemented",
     "  DNS readiness: read-only status checks implemented; provider writes/integrations not implemented",
-    "  Remote MCP, GitHub, and deployment integrations: not implemented",
+    "  Post-write recheck: implemented read-only; local changes still require external deployment",
+    "  Deployment automation and deploy provider integrations: not implemented",
+    "  Remote MCP and GitHub integrations: not implemented",
     "",
     "Demo artifacts",
     `  ${status.demos.fodmappShare}`,

@@ -14,6 +14,7 @@ ShipReady reports evidence and prepares bounded local work. It can detect launch
 - **preview first** — inspect proposed effects before any authorized action.
 - **guarded command** — an explicit CLI command with policy gates.
 - **local changes require deployment** — local files do not alter the live site by themselves.
+- **appears deployed / appears not deployed / partially deployed** — conservative comparison of local expected crawl-file presence with live observed conventional URLs, not provider-event evidence.
 - **reported by Search Console** — future authenticated evidence attributed to the matched property and authorized account.
 - **indexed-version inspection** — future URL Inspection API evidence; Google documents that the API does not test the live URL. [Google URL Inspection API](https://developers.google.com/webmaster-tools/v1/urlInspection.index/inspect)
 - **accessible property** — a property returned for the authorized account; not proof that no other property or owner exists.
@@ -48,6 +49,7 @@ Do not use close paraphrases that imply the same certainty or capability.
 - Metadata and structured data can improve completeness; external systems decide display and eligibility.
 - Indexing and ranking depend on third parties and factors outside ShipReady.
 - A preview is not a write. A local write is not a deployment. A deployment is not proof that live resources changed until re-checked.
+- A positive recheck is public crawl-file evidence only; it does not guarantee provider state, propagation, crawling, indexing, or future availability. An unreachable recheck is unknown, not proof of absence.
 - Only deterministic mock-backed Search Console status is implemented; live Google Search Console/OAuth is not implemented. DNS readiness is implemented as read-only resolver evidence; DNS provider writes and provider integrations are not implemented. MCP remains local stdio with one guarded write tool. Future live Search Console or mutation-bearing work must remain visibly labeled **Planned** until shipped and validated.
 - Future Search Console output must distinguish live unauthenticated checks, authenticated Google-reported status, and ownership verification. “No accessible property” must be scoped to the authorized account.
 - DNS readiness output must distinguish DNS-only evidence, HTTP-adjacent evidence, and Search Console verification-readiness. Visible records are observations, not propagation, certificate, crawling, indexing, or approval guarantees.

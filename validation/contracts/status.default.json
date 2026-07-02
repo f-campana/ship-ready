@@ -12,6 +12,7 @@
       "doctor",
       "search-console status",
       "dns status",
+      "recheck",
       "audit",
       "inspect-repo",
       "plan-fixes",
@@ -28,6 +29,7 @@
         "shipready.audit_site",
         "shipready.search_console_status",
         "shipready.dns_status",
+        "shipready.recheck",
         "shipready.inspect_repo",
         "shipready.plan_fixes",
         "shipready.preview_fixes",
@@ -65,12 +67,15 @@
     "dnsProviderWrites": "not_implemented",
     "dnsProviderIntegrations": "not_implemented",
     "github": "not_implemented",
-    "deployment": "not_implemented"
+    "deployment": "not_implemented",
+    "postWriteRecheck": "read_only",
+    "deploymentAutomation": "not_implemented",
+    "deployProviderIntegrations": "not_implemented"
   },
   "demos": {
     "fodmappShare": "validation/demo-fodmapp-share/",
     "fodmappVoiceover": "validation/demo-fodmapp-voiceover-final/"
   },
   "nextRecommendedCommand": "pnpm shipready doctor",
-  "nextRecommendedPass": "Post-write deploy/re-check workflow"
+  "nextRecommendedPass": "Social preview simulator"
 }

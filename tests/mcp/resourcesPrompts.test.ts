@@ -28,6 +28,7 @@ describe("MCP canonical resources and prompts", () => {
       "shipready://docs/mcp-plan",
       "shipready://docs/search-console-readiness-spec",
       "shipready://docs/dns-readiness-spec",
+      "shipready://docs/post-write-recheck",
     ]) {
       expect(uris).toContain(uri);
       const resource = await readResource(packageRoot, uri);
@@ -61,7 +62,9 @@ describe("MCP canonical resources and prompts", () => {
 
     await expect(renderPrompt("review_launch_readiness", { url: "https://example.com" }, authorizer)).resolves.toBeDefined();
     await expect(renderPrompt("explain_review_required_changes", { url: "https://example.com", repoPath }, authorizer)).resolves.toBeDefined();
-    await expect(renderPrompt("post_deploy_recheck", { url: "https://example.com" }, authorizer)).resolves.toBeDefined();
+    const recheck = await renderPrompt("post_deploy_recheck", { url: "https://example.com" }, authorizer);
+    expect(recheck.messages[0]!.content.text).toContain("shipready.recheck");
+    expect(recheck.messages[0]!.content.text).toContain("Do not deploy");
     await expect(renderPrompt("write_policy_summary", {}, authorizer)).resolves.toBeDefined();
   });
 });

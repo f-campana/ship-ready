@@ -14,6 +14,7 @@ import {
   WriteFixJsonContractSchema,
   StatusJsonContractSchema,
   DoctorJsonContractSchema,
+  RecheckJsonContractSchema,
 } from "../types/contracts";
 import { ShipReadyMcpError } from "./errors";
 
@@ -55,6 +56,12 @@ export const FIXTURE_NAMES = [
   "ui-report.url-only.json",
   "status.default.json",
   "doctor.default.json",
+  "recheck.url-only-ready.json",
+  "recheck.url-only-needs-attention.json",
+  "recheck.repo-backed-appears-deployed.json",
+  "recheck.repo-backed-needs-deploy.json",
+  "recheck.repo-backed-partial.json",
+  "recheck.unknown.json",
 ] as const;
 
 export type FixtureName = (typeof FIXTURE_NAMES)[number];
@@ -70,6 +77,7 @@ export const POLICY_DOCS = {
   "mcp-plan": { uri: "shipready://docs/mcp-plan", path: "docs/MCP_PLAN.md" },
   "search-console-readiness-spec": { uri: "shipready://docs/search-console-readiness-spec", path: "docs/SEARCH_CONSOLE_READINESS_SPEC.md" },
   "dns-readiness-spec": { uri: "shipready://docs/dns-readiness-spec", path: "docs/DNS_READINESS_SPEC.md" },
+  "post-write-recheck": { uri: "shipready://docs/post-write-recheck", path: "docs/POST_WRITE_RECHECK.md" },
 } as const;
 
 export type PolicyDocName = keyof typeof POLICY_DOCS;
@@ -243,6 +251,7 @@ const FIXTURE_SCHEMAS: Readonly<Record<string, ZodType>> = {
   "shipready.error.v1": CliErrorContractSchema,
   "shipready.status.v1": StatusJsonContractSchema,
   "shipready.doctor.v1": DoctorJsonContractSchema,
+  "shipready.recheck.v1": RecheckJsonContractSchema,
 };
 
 async function readCanonicalFile(packageRoot: string, relativePath: string): Promise<string> {

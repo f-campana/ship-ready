@@ -12,16 +12,18 @@ ShipReady is a CLI-first, agent-friendly launch-readiness engine for generated w
 - Bounded read-only repository inspection.
 - Read-only fix planning and exact dry-run previews.
 - Strict V1 creation-only writes for eligible missing crawl files.
+- Read-only `recheck` in URL-only and repo-backed modes, with conservative local expected-file versus live crawl-resource evidence.
 - Human and Zod-validated JSON outputs.
 - Versioned `ui-report-v1` normalization and self-contained HTML reports.
 - Local GUI with `POST /api/ui-report`; safe apply is preview/copy-only and no write endpoint exists.
-- Local MCP stdio server with nine read-only tools, one guarded safe-write tool for V1 crawl-file creations, canonical docs/fixtures, five prompts, explicit allowed roots, stable errors, preview receipts, and bounded deadlines.
+- Local MCP stdio server with ten read-only tools, one guarded safe-write tool for V1 crawl-file creations, canonical docs/fixtures, five prompts, explicit allowed roots, stable errors, preview receipts, and bounded deadlines.
 - Fodmapp demo scripts, approved silent/captioned media, optional approved voiced media, thumbnail, captions, and review evidence.
 - Stable `shipready.searchConsoleStatus.v1`, `search-console status`, seven deterministic mock scenarios, opt-in mock indexed-version inspection, and the read-only `shipready.search_console_status` MCP tool.
 - Official-source-backed [Search Console readiness specification](SEARCH_CONSOLE_READINESS_SPEC.md) defining claim boundaries and the future live provider/OAuth boundary.
 - Stable `shipready.dnsStatus.v1`, `dns status`, eleven deterministic DNS mock scenarios, redacted Search Console TXT-readiness checks, optional canonical-host evidence, and the read-only `shipready.dns_status` MCP tool.
 - Official-source-backed [DNS readiness specification](DNS_READINESS_SPEC.md) defining read-only DNS checks and DNS claim boundaries.
 - Repository-local [ShipReady Launch Readiness skill](../skills/shipready-launch-readiness/SKILL.md) packaging current CLI, MCP, GUI/report, Search Console mock, DNS, write-policy, claims, reporting, and troubleshooting workflows for agents.
+- Practical [post-write recheck guide](POST_WRITE_RECHECK.md) that keeps deployment external and classifies network uncertainty without overclaiming.
 
 When present, `validation/e2e-project-review/` supplies current end-to-end evidence for these surfaces, including its summary, feature matrix, safety report, and screenshot index. The skill references this evidence without treating disposable-fixture writes as authorization for real repositories.
 
@@ -29,7 +31,7 @@ When present, `validation/e2e-project-review/` supplies current end-to-end evide
 
 - Any MCP write tool beyond `shipready.write_safe_crawl_files`, or any remote MCP transport.
 - Live Google Search Console/OAuth/token custody, DNS provider writes, or DNS provider integrations. Search Console remains a local deterministic mock prototype; DNS readiness is read-only resolver evidence only.
-- GitHub/PR integration or deployment workflow.
+- GitHub/PR integration, deployment execution, deployment automation, or deploy-provider integration.
 - GUI write execution.
 - Broader safe apply or writes to metadata, content, JSON-LD, packages, configuration, or existing files.
 - Multi-page crawl, social preview simulator, smell detector, or patch export.
@@ -50,4 +52,4 @@ Read-only inspection and preview are the default. CLI write mode requires `fix -
 
 ## Next pass
 
-**Pass 12: Post-write deploy/re-check workflow.** Define the post-write deployment handoff and live re-check workflow without hiding that deployment remains outside the current ShipReady write policy.
+**Pass 13: Social preview simulator.** Build a read-only simulator on the stable audit/report metadata contracts without changing the current GUI or write policy.

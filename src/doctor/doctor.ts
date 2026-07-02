@@ -140,6 +140,7 @@ export async function runDoctor(
       ["canonical-docs", "Canonical docs"],
       ["search-console-prototype", "Search Console mock prototype"],
       ["dns-readiness", "DNS readiness"],
+      ["post-write-recheck", "Post-write recheck"],
       ["write-policy", "WRITE_POLICY_V1"],
       ["local-gui-spec", "LOCAL_FIRST_GUI_SPEC"],
       ["demo-artifacts", "Demo artifacts"],
@@ -258,6 +259,42 @@ export async function runDoctor(
       fixtures: dnsFixtures.length,
       nodeDnsApisAvailable: dnsApisAvailable,
       missing: missingDnsContent,
+    },
+  });
+
+  const recheckDoc = "docs/POST_WRITE_RECHECK.md";
+  const recheckSkill = "skills/shipready-launch-readiness/SKILL.md";
+  const recheckFixtures = FIXTURE_NAMES.filter((name) => name.startsWith("recheck."));
+  const missingRecheckContent = [
+    ...(!dependencies.pathExists(join(packageRoot, recheckDoc)) ? [recheckDoc] : []),
+    ...(!dependencies.pathExists(join(packageRoot, recheckSkill)) ? [recheckSkill] : []),
+    ...recheckFixtures
+      .map((name) => `validation/contracts/${name}`)
+      .filter((path) => !dependencies.pathExists(join(packageRoot, path))),
+  ];
+  let skillReferencesRecheck = false;
+  if (missingRecheckContent.length === 0) {
+    try {
+      const skill = await dependencies.readText(join(packageRoot, recheckSkill));
+      skillReferencesRecheck = skill.includes("shipready recheck") && skill.includes("Do not deploy");
+    } catch {
+      skillReferencesRecheck = false;
+    }
+  }
+  checks.push({
+    id: "post-write-recheck",
+    label: "Post-write recheck",
+    status: missingRecheckContent.length === 0 && skillReferencesRecheck ? "pass" : "fail",
+    message: missingRecheckContent.length === 0 && skillReferencesRecheck
+      ? `The read-only recheck guide, skill workflow, and ${recheckFixtures.length} deterministic fixtures are present; no network or deployment credentials are required by doctor.`
+      : `Post-write recheck content is incomplete or inconsistent; missing: ${missingRecheckContent.join(", ") || "safe skill guidance"}.`,
+    details: {
+      readOnly: true,
+      networkRequired: false,
+      deploymentCredentialsRequired: false,
+      fixtures: recheckFixtures.length,
+      missing: missingRecheckContent,
+      skillReferencesRecheck,
     },
   });
 

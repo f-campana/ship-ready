@@ -1,0 +1,37 @@
+{
+  "contract": "shipready.recheck.v1",
+  "url": "https://example.com/",
+  "checkedAt": "2026-06-21T12:00:00.000Z",
+  "mode": "url_only",
+  "live": {
+    "robots": {
+      "status": "missing",
+      "url": "https://example.com/robots.txt",
+      "httpStatus": 404,
+      "message": "Live robots.txt was not observed at the conventional URL (HTTP 404)."
+    },
+    "sitemap": {
+      "status": "missing",
+      "url": "https://example.com/sitemap.xml",
+      "httpStatus": 404,
+      "message": "Live sitemap.xml was not observed at the conventional URL (HTTP 404)."
+    },
+    "auditContract": "shipready.audit.v1"
+  },
+  "deployment": {
+    "status": "not_checked",
+    "message": "Deployment status is not checked without local repository evidence."
+  },
+  "verdict": {
+    "status": "needs_attention",
+    "summary": "One or more live crawl files were not observed."
+  },
+  "limitations": [
+    "Recheck reads public evidence only; it does not deploy or call hosting provider APIs.",
+    "Visible crawl files do not guarantee crawling, indexing, propagation, or third-party behavior.",
+    "Local repository state is unknown, so deployment status is not checked."
+  ],
+  "nextActions": [
+    "Inspect the local repository, make any approved changes, deploy externally, then run a repo-backed recheck."
+  ]
+}

@@ -54,6 +54,16 @@ describe("doctor", () => {
         nodeDnsApisAvailable: true,
       },
     });
+    expect(report.checks.find((check) => check.id === "post-write-recheck")).toMatchObject({
+      status: "pass",
+      details: {
+        readOnly: true,
+        networkRequired: false,
+        deploymentCredentialsRequired: false,
+        fixtures: 6,
+        skillReferencesRecheck: true,
+      },
+    });
   });
 
   it("reports a missing optional FFmpeg tool as a warning", async () => {

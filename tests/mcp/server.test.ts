@@ -1,5 +1,6 @@
 import { execFile } from "node:child_process";
 import { readFile } from "node:fs/promises";
+import { createServer } from "node:http";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
 import { join } from "node:path";
@@ -19,6 +20,24 @@ describe("MCP startup and stdio transport", () => {
   });
 
   it("initializes and lists tools, resources, templates, and prompts over protocol-clean stdio", async () => {
+    const fixtureServer = createServer((request, response) => {
+      if (request.url === "/robots.txt") {
+        response.writeHead(200, { "content-type": "text/plain" });
+        response.end("User-agent: *\nAllow: /\n");
+        return;
+      }
+      if (request.url === "/sitemap.xml") {
+        response.writeHead(200, { "content-type": "application/xml" });
+        response.end("<?xml version=\"1.0\"?><urlset><url><loc>http://fixture/</loc></url></urlset>");
+        return;
+      }
+      response.writeHead(200, { "content-type": "text/html" });
+      response.end("<!doctype html><html><head><title>Fixture</title></head><body><h1>Fixture</h1></body></html>");
+    });
+    await new Promise<void>((resolve) => fixtureServer.listen(0, "127.0.0.1", resolve));
+    const address = fixtureServer.address();
+    if (!address || typeof address === "string") throw new Error("Fixture server did not expose a port.");
+    const recheckUrl = `http://127.0.0.1:${address.port}/`;
     const transport = new StdioClientTransport({
       command: "pnpm",
       args: ["--silent", "shipready", "mcp", "--allow-root", fixtureRoot],
@@ -35,7 +54,7 @@ describe("MCP startup and stdio transport", () => {
       const resources = await client.listResources();
       const templates = await client.listResourceTemplates();
       const prompts = await client.listPrompts();
-      expect(tools.tools).toHaveLength(10);
+      expect(tools.tools).toHaveLength(11);
       expect(tools.tools.map((tool) => tool.name).filter((name) => name.includes("write"))).toEqual([
         "shipready.write_safe_crawl_files",
       ]);
@@ -68,6 +87,24 @@ describe("MCP startup and stdio transport", () => {
         mode: "mock",
         verdict: { status: "ready" },
       });
+      const recheckUrlOnly = await client.callTool({
+        name: "shipready.recheck",
+        arguments: { url: recheckUrl },
+      });
+      expect(recheckUrlOnly.structuredContent).toMatchObject({
+        contract: "shipready.recheck.v1",
+        mode: "url_only",
+        verdict: { status: "ready" },
+      });
+      const recheckRepoBacked = await client.callTool({
+        name: "shipready.recheck",
+        arguments: { url: recheckUrl, repoPath: join(fixtureRoot, "static-html") },
+      });
+      expect(recheckRepoBacked.structuredContent).toMatchObject({
+        contract: "shipready.recheck.v1",
+        mode: "repo_backed",
+        deployment: { status: "appears_deployed" },
+      });
       const resource = await client.readResource({ uri: "shipready://docs/contracts" });
       expect(resource.contents[0]).toMatchObject({ mimeType: "text/markdown" });
       const prompt = await client.getPrompt({ name: "write_policy_summary" });
@@ -75,6 +112,7 @@ describe("MCP startup and stdio transport", () => {
       expect(stderr).toBe("");
     } finally {
       await client.close();
+      await new Promise<void>((resolve) => fixtureServer.close(() => resolve()));
     }
   }, 20_000);
 

@@ -1,6 +1,6 @@
 ---
 name: shipready-launch-readiness
-description: Use ShipReady to check whether a generated website is ready to share, crawl, preview, and safely prepare for deployment. Use for live URL audits, local repository inspection, fix planning, dry-run previews, guarded crawl-file creation, UI or HTML reports, stdio MCP workflows, mock-backed Search Console status, read-only DNS checks, metadata or crawlability review, link-preview diagnosis, and launch-readiness reporting.
+description: Use ShipReady to check whether a generated website is ready to share, crawl, preview, and safely prepare for deployment. Use for live URL audits, local repository inspection, fix planning, dry-run previews, guarded crawl-file creation, post-write rechecks after external deployment, UI or HTML reports, stdio MCP workflows, mock-backed Search Console status, read-only DNS checks, metadata or crawlability review, link-preview diagnosis, and launch-readiness reporting.
 ---
 
 # ShipReady Launch Readiness
@@ -28,9 +28,9 @@ Do not use ShipReady for keyword research, rank tracking, backlink analysis, gen
 |---|---|
 | Implemented | Single-page audit; bounded repo inspection; planning; dry-run; status/doctor; versioned JSON; UI and HTML reports; local GUI; stdio MCP |
 | Mock-backed | Search Console status only; no Google OAuth, tokens, or live API calls |
-| Read-only | Audit, inspection, planning, dry-run, UI report, GUI, Search Console mocks, and DNS status; live DNS uses resolver observations only |
+| Read-only | Audit, inspection, planning, dry-run, post-write recheck, UI report, GUI, Search Console mocks, and DNS status; live DNS uses resolver observations only |
 | Write-guarded | CLI and the sole MCP write tool may create only eligible missing robots/sitemap files under `WRITE_POLICY_V1` |
-| Future | Post-write deploy/re-check workflow, social preview simulator, generated-site smell detector, bounded multi-page crawl, GUI revisit, patch export, and GitHub PR integration |
+| Future | Social preview simulator, generated-site smell detector, bounded multi-page crawl, GUI revisit, patch export, and GitHub PR integration |
 
 Never infer future behavior from a roadmap name. A current audit covers one page. Current preview cards are not the future social preview simulator.
 
@@ -42,6 +42,7 @@ Start read-only and preserve structured output:
 pnpm shipready doctor --json
 pnpm shipready status --json
 pnpm shipready audit <url> --json
+pnpm shipready recheck --url <url> --json
 pnpm shipready inspect-repo <path> --json
 pnpm shipready plan-fixes <path> --url <url> --json
 pnpm shipready fix <path> --url <url> --dry-run --json
@@ -80,7 +81,16 @@ Confirm every item before writing:
 8. Avoid real production repositories unless the user explicitly requested that exact target.
 9. Exclude metadata, content, configuration, Git, deployment, and all other forbidden effects.
 
-Stop if any check fails. Never run guarded write mode merely to validate this skill. After a permitted write, report exact local creations and remind the user that deployment and live re-check remain external.
+Stop if any check fails. Never run guarded write mode merely to validate this skill. After a permitted write, report exact local creations, tell the user to deploy through their external workflow, and then use `shipready recheck` for read-only live evidence. Do not deploy.
+
+## Recheck after external deployment
+
+```bash
+pnpm shipready recheck --url <url> --json
+pnpm shipready recheck <path> --url <url> --json
+```
+
+Use URL-only mode when local state is unavailable. Use repo-backed mode to compare current V1-safe local expected crawl-file presence with live `robots.txt` and `sitemap.xml` evidence. Treat `appears_deployed`, `appears_not_deployed`, and `partially_deployed` as evidence classifications, not guarantees. An unreachable result is unknown, not missing. Recheck never invokes write mode, Git, deployment, provider APIs, DNS writes, or Search Console.
 
 ## Use MCP safely
 
@@ -101,6 +111,7 @@ Use these read-only tools by their exact names:
 - `shipready.get_policy_doc`
 - `shipready.search_console_status`
 - `shipready.dns_status`
+- `shipready.recheck`
 
 Treat `shipready.write_safe_crawl_files` as the only MCP write tool. Before calling it, require an authorized repository path, a fresh receipt from `shipready.preview_fixes`, the same normalized URL and canonical repo path, and exact confirmation `CREATE_SAFE_CRAWL_FILES_ONLY`. The server must re-authorize and revalidate current V1 candidates.
 
@@ -198,5 +209,6 @@ State whether each command was URL-only, repo-backed, mock-backed, or live read-
 - Read [url-only-check.md](examples/url-only-check.md) for a public-URL-only review.
 - Read [generated-site-review.md](examples/generated-site-review.md) for a combined repo, DNS, Search Console mock, and report workflow.
 - Read [safe-crawl-files.md](examples/safe-crawl-files.md) only when explicit crawl-file creation is being considered.
+- Read [post-write-recheck.md](examples/post-write-recheck.md) after local crawl-file creation and external deployment.
 
 Use the latest `validation/e2e-project-review/` package when present as evidence of current behavior, especially `SUMMARY.md`, `FEATURE_MATRIX.md`, `SAFETY_REPORT.md`, and `SCREENSHOT_INDEX.md`. Do not regenerate that package for routine use and do not treat validation writes on disposable fixtures as authority to write a real repository.

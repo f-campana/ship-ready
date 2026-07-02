@@ -26,7 +26,7 @@ pnpm shipready doctor --json
 ```
 
 - Purpose: check local runtime readiness without requiring a URL or repository path.
-- Checks: Node.js, pnpm, the Playwright Chromium executable, optional FFmpeg, package content, MCP SDK/configurability, parsed contract fixtures, canonical docs, Search Console mock content, DNS readiness content/API availability, `WRITE_POLICY_V1`, `LOCAL_FIRST_GUI_SPEC`, and expected demo artifacts.
+- Checks: Node.js, pnpm, the Playwright Chromium executable, optional FFmpeg, package content, MCP SDK/configurability, parsed contract fixtures, canonical docs, Search Console mock content, DNS readiness content/API availability, post-write recheck docs/fixtures/skill guidance, `WRITE_POLICY_V1`, `LOCAL_FIRST_GUI_SPEC`, and expected demo artifacts.
 - Behavior: uses bounded local executable/file/dependency probes only. It does not access the network, inspect an arbitrary repository, start the MCP/GUI server, or mutate files.
 - Classification: every check is `pass`, `warn`, `fail`, or `skip`. Missing optional FFmpeg/demo artifacts warn rather than fail. `ok` is true exactly when no required check fails.
 - JSON contract: `shipready.doctor.v1`; normalized fixture: [`doctor.default.json`](../validation/contracts/doctor.default.json).
@@ -48,6 +48,25 @@ pnpm shipready audit https://example.com --json
 - Exit behavior: `0` when an audit result is emitted regardless of readiness status, `1` for invalid input, `2` for operational failure. JSON action errors use `shipready.error.v1`.
 - Agent use: first live-site check and source for downstream planning.
 - Safety: this is a single-page check, not a crawler; private/authenticated pages are out of scope.
+
+## `recheck`
+
+```bash
+pnpm shipready recheck --url https://example.com
+pnpm shipready recheck --url https://example.com --json
+pnpm shipready recheck <path> --url https://example.com --json
+```
+
+- Purpose: read live `robots.txt` and `sitemap.xml` evidence after deployment performed outside ShipReady; optional repo-backed mode compares that evidence with inferred V1-safe local expected files.
+- Behavior: reuses the single-page audit with rendering disabled and optional bounded repository inspection. It never invokes `fix`, writes files, runs Git, deploys, or calls hosting-provider APIs.
+- JSON contract: `shipready.recheck.v1`; fixtures cover URL-only ready/needs-attention, repo-backed appears-deployed/needs-deploy/partial, and unknown evidence.
+- Output: human report or one JSON contract with `live`, optional `local`, conservative `deployment`, `verdict`, `limitations`, and `nextActions` sections.
+- Exit behavior: `0` when a valid recheck result is emitted, including missing/unreachable live evidence; `1` for invalid URL/path/timeout; `2` for unexpected internal or contract failure. Network unavailability is normally represented as `unknown`/`unreachable` evidence rather than a command error.
+- URL-only boundary: deployment is `not_checked` because local repository state is unknown.
+- Repo-backed boundary: only static HTML, Vite React, and Next.js App Router V1-safe expected paths are inferred. Unsupported frameworks return an unknown comparison.
+- Claims boundary: `appears_deployed` is evidence that local expected files exist and both live resources appear present. It is not proof of provider deployment, propagation, crawling, indexing, or future availability.
+
+See [POST_WRITE_RECHECK.md](POST_WRITE_RECHECK.md) for the external deployment handoff.
 
 ## `inspect-repo`
 
@@ -238,7 +257,7 @@ SHIPREADY_MCP_ALLOWED_ROOTS='["/absolute/workspace-a","/absolute/workspace-b"]' 
 
 - Purpose: start the local MCP stdio server. Stdout is reserved for MCP protocol frames; use `pnpm --silent` in source checkouts so package-manager script output cannot pollute stdio.
 - Authorization: at least one explicit root is required. Repeat `--allow-root` for multiple roots; CLI roots replace the JSON-array environment fallback. Relative, missing, home, filesystem-root, traversal, and symlink-escape paths fail closed.
-- Surface: nine read-only tools, one guarded write tool, eleven canonical documentation resources plus allowlisted contract fixtures, and five prompt templates. `shipready.search_console_status` and `shipready.dns_status` accept no repository-path input and perform no repository-path authorization; the server's existing allowed-root startup requirement remains unchanged for repo-capable tools. See [MCP_PLAN.md](MCP_PLAN.md) for the exact lists.
+- Surface: ten read-only tools, one guarded write tool, twelve canonical documentation resources plus allowlisted contract fixtures, and five prompt templates. `shipready.search_console_status` and `shipready.dns_status` accept no repository-path input. `shipready.recheck` authorizes a repository only when optional `repoPath` is supplied. The server's existing allowed-root startup requirement remains unchanged. See [MCP_PLAN.md](MCP_PLAN.md) for the exact lists.
 - Safe write tool: `shipready.write_safe_crawl_files` can create only current V1-eligible missing robots/sitemap files. Required flow: call `shipready.preview_fixes`, review `shipready.dryRunFix.v1` and its fresh `previewReceipt`, then call the write tool with the same URL, same authorized repo path, that receipt, and `confirmation: "CREATE_SAFE_CRAWL_FILES_ONLY"`.
 - Safety: the write tool re-authorizes the path, validates the receipt signature/expiry/bindings, regenerates the current dry-run, revalidates `WRITE_POLICY_V1`, and returns `shipready.writeFix.v1`. It never accepts arbitrary file paths or client-supplied file lists as authority. The server does not start the GUI or write an HTML report.
 - Limitation: request deadlines and client cancellation are bounded at the MCP boundary. Existing synchronous repository scans and application operations do not yet accept `AbortSignal`, so already-started underlying work may finish its own bounded cleanup after the MCP response.

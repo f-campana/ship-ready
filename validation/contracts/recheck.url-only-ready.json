@@ -1,0 +1,37 @@
+{
+  "contract": "shipready.recheck.v1",
+  "url": "https://example.com/",
+  "checkedAt": "2026-06-21T12:00:00.000Z",
+  "mode": "url_only",
+  "live": {
+    "robots": {
+      "status": "present",
+      "url": "https://example.com/robots.txt",
+      "httpStatus": 200,
+      "message": "Live robots.txt appears present."
+    },
+    "sitemap": {
+      "status": "present",
+      "url": "https://example.com/sitemap.xml",
+      "httpStatus": 200,
+      "message": "Live sitemap.xml appears present."
+    },
+    "auditContract": "shipready.audit.v1"
+  },
+  "deployment": {
+    "status": "not_checked",
+    "message": "Both live crawl files appear present, but deployment status is not checked without local evidence."
+  },
+  "verdict": {
+    "status": "ready",
+    "summary": "Live robots.txt and sitemap.xml appear present."
+  },
+  "limitations": [
+    "Recheck reads public evidence only; it does not deploy or call hosting provider APIs.",
+    "Visible crawl files do not guarantee crawling, indexing, propagation, or third-party behavior.",
+    "Local repository state is unknown, so deployment status is not checked."
+  ],
+  "nextActions": [
+    "Review the reported limitations; crawling and indexing remain outside ShipReady's control."
+  ]
+}

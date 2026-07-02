@@ -1,0 +1,32 @@
+{
+  "contract": "shipready.recheck.v1",
+  "url": "https://example.com/",
+  "checkedAt": "2026-06-21T12:00:00.000Z",
+  "mode": "url_only",
+  "live": {
+    "robots": {
+      "status": "unreachable",
+      "message": "The live page audit was unreachable, so robots.txt presence could not be determined."
+    },
+    "sitemap": {
+      "status": "unreachable",
+      "message": "The live page audit was unreachable, so sitemap.xml presence could not be determined."
+    }
+  },
+  "deployment": {
+    "status": "not_checked",
+    "message": "Deployment status is not checked without local repository evidence."
+  },
+  "verdict": {
+    "status": "unknown",
+    "summary": "Live crawl-file evidence is incomplete or unreachable."
+  },
+  "limitations": [
+    "Recheck reads public evidence only; it does not deploy or call hosting provider APIs.",
+    "Visible crawl files do not guarantee crawling, indexing, propagation, or third-party behavior.",
+    "Local repository state is unknown, so deployment status is not checked."
+  ],
+  "nextActions": [
+    "Retry the read-only recheck when the public URL and crawl resources are reachable."
+  ]
+}
