@@ -142,6 +142,7 @@ export async function runDoctor(
       ["dns-readiness", "DNS readiness"],
       ["post-write-recheck", "Post-write recheck"],
       ["social-preview-simulator", "Social preview simulator"],
+      ["generated-site-smells", "Generated-site smell detector"],
       ["write-policy", "WRITE_POLICY_V1"],
       ["local-gui-spec", "LOCAL_FIRST_GUI_SPEC"],
       ["demo-artifacts", "Demo artifacts"],
@@ -334,6 +335,53 @@ export async function runDoctor(
       fixtures: socialPreviewFixtures.length,
       missing: missingSocialPreviewContent,
       skillReferencesSocialPreview,
+    },
+  });
+
+  const smellSkill = "skills/shipready-launch-readiness/SKILL.md";
+  const smellDocs = ["docs/COMMANDS.md", "docs/CONTRACTS.md", "docs/CLAIMS_POLICY.md"];
+  const smellFixtures = FIXTURE_NAMES.filter((name) => name.startsWith("generated-site-smells."));
+  const missingSmellContent = [
+    ...(!dependencies.pathExists(join(packageRoot, smellSkill)) ? [smellSkill] : []),
+    ...smellDocs.filter((path) => !dependencies.pathExists(join(packageRoot, path))),
+    ...smellFixtures
+      .map((name) => `validation/contracts/${name}`)
+      .filter((path) => !dependencies.pathExists(join(packageRoot, path))),
+  ];
+  let smellDocsReferenceLimitations = false;
+  if (missingSmellContent.length === 0) {
+    try {
+      const [skill, commands, contracts, claims] = await Promise.all([
+        dependencies.readText(join(packageRoot, smellSkill)),
+        dependencies.readText(join(packageRoot, "docs/COMMANDS.md")),
+        dependencies.readText(join(packageRoot, "docs/CONTRACTS.md")),
+        dependencies.readText(join(packageRoot, "docs/CLAIMS_POLICY.md")),
+      ]);
+      const combined = `${skill}\n${commands}\n${contracts}\n${claims}`;
+      smellDocsReferenceLimitations =
+        combined.includes("shipready smells") &&
+        combined.includes("generated-site implementation") &&
+        combined.includes("heuristic implementation signals") &&
+        combined.includes("not proof");
+    } catch {
+      smellDocsReferenceLimitations = false;
+    }
+  }
+  checks.push({
+    id: "generated-site-smells",
+    label: "Generated-site smell detector",
+    status: missingSmellContent.length === 0 && smellDocsReferenceLimitations ? "pass" : "fail",
+    message: missingSmellContent.length === 0 && smellDocsReferenceLimitations
+      ? `The read-only generated-site smell detector guidance and ${smellFixtures.length} deterministic fixtures are present; no repo input or network is required by doctor.`
+      : `Generated-site smell detector content is incomplete or inconsistent; missing: ${missingSmellContent.join(", ") || "safe detector guidance"}.`,
+    details: {
+      readOnly: true,
+      autoFixes: false,
+      authorshipIdentification: false,
+      networkRequired: false,
+      fixtures: smellFixtures.length,
+      missing: missingSmellContent,
+      docsReferenceLimitations: smellDocsReferenceLimitations,
     },
   });
 

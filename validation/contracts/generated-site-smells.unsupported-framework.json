@@ -1,0 +1,74 @@
+{
+  "contract": "shipready.generatedSiteSmells.v1",
+  "checkedAt": "2026-07-06T12:00:00.000Z",
+  "mode": "mock",
+  "repoPath": "tests/fixtures/repos/unknown",
+  "framework": {
+    "kind": "unknown",
+    "name": "Unknown",
+    "confidence": "low",
+    "evidence": [
+      {
+        "kind": "file",
+        "value": "Mock unsupported framework shape",
+        "weight": "weak"
+      }
+    ]
+  },
+  "summary": {
+    "status": "manual_review",
+    "severityCounts": {
+      "high": 0,
+      "medium": 0,
+      "low": 1,
+      "info": 0
+    },
+    "findingCount": 1
+  },
+  "findings": [
+    {
+      "id": "framework.unsupported_shape",
+      "title": "Project shape needs manual framework review",
+      "category": "framework",
+      "severity": "low",
+      "confidence": "high",
+      "status": "manual_review",
+      "evidence": [
+        {
+          "source": "mock",
+          "valuePreview": "No supported framework convention was detected with confidence.",
+          "message": "Deterministic mock evidence."
+        }
+      ],
+      "whyItMatters": "Unsupported or unclear project shapes make metadata, routing, and public asset conventions harder to evaluate automatically.",
+      "nextAction": "Manually identify the framework and confirm where raw metadata, crawl files, and public assets are produced.",
+      "relatedCommands": [
+        "pnpm shipready smells <path> --json"
+      ],
+      "relatedContracts": [
+        "shipready.generatedSiteSmells.v1"
+      ]
+    }
+  ],
+  "scanned": {
+    "files": 24,
+    "bytes": 31744,
+    "skippedFiles": 3,
+    "truncated": false,
+    "limits": {
+      "maxFiles": 250,
+      "maxBytes": 524288,
+      "maxFileBytes": 49152,
+      "maxFindings": 40,
+      "maxValuePreviewLength": 120
+    }
+  },
+  "limitations": [
+    "Mock mode uses deterministic local fixtures and performs no network request.",
+    "Findings are heuristic implementation signals, not proof of who or what produced a site.",
+    "The smell detector is read-only and does not apply fixes."
+  ],
+  "nextActions": [
+    "Manually identify the framework and confirm where raw metadata, crawl files, and public assets are produced."
+  ]
+}

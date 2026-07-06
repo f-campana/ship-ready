@@ -38,10 +38,10 @@ beforeAll(async () => {
 afterAll(async () => closeServer());
 
 describe("MCP tools", () => {
-  it("registers the eleven read-only tools and exactly one write tool", () => {
+  it("registers the twelve read-only tools and exactly one write tool", () => {
     const names = listTools().map((tool) => tool.name);
     expect(names).toEqual([
-      "shipready.audit_site", "shipready.search_console_status", "shipready.dns_status", "shipready.recheck", "shipready.social_preview", "shipready.inspect_repo", "shipready.plan_fixes",
+      "shipready.audit_site", "shipready.search_console_status", "shipready.dns_status", "shipready.recheck", "shipready.social_preview", "shipready.generated_site_smells", "shipready.inspect_repo", "shipready.plan_fixes",
       "shipready.preview_fixes", "shipready.write_safe_crawl_files", "shipready.get_ui_report",
       "shipready.get_contract_fixture", "shipready.get_policy_doc",
     ]);
@@ -121,6 +121,7 @@ describe("MCP tools", () => {
       timeouts: {
         audit_site: 20,
         inspect_repo: 10_000,
+        generated_site_smells: 45_000,
         plan_fixes: 45_000,
         preview_fixes: 45_000,
         write_safe_crawl_files: 45_000,

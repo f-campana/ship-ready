@@ -24,6 +24,8 @@ import { formatRecheckJson } from "../../src/report/formatRecheckReport";
 import { createDoctorReport, formatDoctorJson } from "../../src/doctor/doctor";
 import { getSocialPreview } from "../../src/socialPreview/socialPreview";
 import { formatSocialPreviewJson } from "../../src/report/formatSocialPreviewReport";
+import { getGeneratedSiteSmells } from "../../src/smells/generatedSiteSmells";
+import { formatGeneratedSiteSmellsJson } from "../../src/report/formatGeneratedSiteSmellsReport";
 import type { DoctorCheck } from "../../src/types/contracts";
 import type { AuditCheck, AuditResult, ExtractedPageMetadata } from "../../src/types/audit";
 import { DOC_RESOURCES, FIXTURE_NAMES } from "../../src/mcp/resources";
@@ -194,6 +196,24 @@ for (const [fileName, scenario] of [
   })));
 }
 
+for (const [fileName, scenario, fixture, url] of [
+  ["generated-site-smells.clean.json", "clean", "vite-react", undefined],
+  ["generated-site-smells.vite-client-only-metadata.json", "vite-client-only-metadata", "vite-react", undefined],
+  ["generated-site-smells.placeholder-content.json", "placeholder-content", "vite-react", undefined],
+  ["generated-site-smells.missing-social-assets.json", "missing-social-assets", "vite-react", undefined],
+  ["generated-site-smells.hardcoded-localhost.json", "hardcoded-localhost", "vite-react", undefined],
+  ["generated-site-smells.unsupported-framework.json", "unsupported-framework", "unknown", undefined],
+  ["generated-site-smells.repo-plus-url-rendered-only.json", "repo-plus-url-rendered-only", "vite-react", "https://example.com/?token=redacted"],
+] as const) {
+  write(fileName, formatGeneratedSiteSmellsJson(await getGeneratedSiteSmells({
+    repoPath: join(REPOS, fixture),
+    url,
+    mock: scenario,
+    checkedAt: FIXED_AT,
+    cwd: ROOT,
+  })));
+}
+
 for (const [fileName, scenario, inspect] of [
   ["search-console.not-configured.json", "not_configured", false],
   ["search-console.unauthorized.json", "unauthorized", false],
@@ -256,6 +276,7 @@ write("doctor.default.json", formatDoctorJson(createDoctorReport([
   doctorCheck("dns-readiness", "DNS readiness", "pass", "The DNS specification, Node DNS APIs, and 11 deterministic mock fixtures are present; no DNS provider credentials are required.", { readOnly: true, providerWrites: false, providerIntegrations: false, fixtures: 11, nodeDnsApisAvailable: true, missing: [] }),
   doctorCheck("post-write-recheck", "Post-write recheck", "pass", "The read-only recheck guide, skill workflow, and 6 deterministic fixtures are present; no network or deployment credentials are required by doctor.", { readOnly: true, networkRequired: false, deploymentCredentialsRequired: false, fixtures: 6, missing: [], skillReferencesRecheck: true }),
   doctorCheck("social-preview-simulator", "Social preview simulator", "pass", "The read-only social preview simulator guidance and 9 deterministic fixtures are present; no social platform credentials or network checks are required by doctor.", { readOnly: true, socialPlatformApis: false, exactRenderingGuarantee: false, networkRequired: false, fixtures: 9, missing: [], skillReferencesSocialPreview: true }),
+  doctorCheck("generated-site-smells", "Generated-site smell detector", "pass", "The read-only generated-site smell detector guidance and 7 deterministic fixtures are present; no repo input or network is required by doctor.", { readOnly: true, autoFixes: false, authorshipIdentification: false, networkRequired: false, fixtures: 7, missing: [], docsReferenceLimitations: true }),
   doctorCheck("write-policy", "WRITE_POLICY_V1", "pass", "The canonical creation_only_robots_sitemap_v1 policy document is present."),
   doctorCheck("local-gui-spec", "LOCAL_FIRST_GUI_SPEC", "pass", "The canonical local-first GUI specification is present."),
   doctorCheck("demo-artifacts", "Demo artifacts", "warn", "Optional demo artifacts are incomplete; core CLI operation is unaffected.", { missing: ["validation/example.mp4"] }),

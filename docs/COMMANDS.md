@@ -247,6 +247,31 @@ pnpm shipready dns status --url https://example.com --expected-canonical-host ex
 
 MCP exposes the same read-only contract as `shipready.dns_status`. It accepts no repository path, requires no repo-root authorization for the call, and does not change the sole MCP write tool.
 
+## `smells`
+
+Pass 14 implements a read-only generated-site implementation smell detector:
+
+```bash
+pnpm shipready smells <path>
+pnpm shipready smells <path> --json
+pnpm shipready smells <path> --url https://example.com --json
+pnpm shipready smells <path> --mock clean --json
+pnpm shipready smells <path> --mock placeholder-content --json
+```
+
+- Purpose: identify heuristic implementation signals that commonly appear in generated sites and may need review before launch. It answers which repository patterns may make crawler, preview, sharing, and launch-readiness behavior fragile.
+- Required: `<path>` local repository path. Optional: `--url <url>`, `--json`, `--mock <scenario>`, `--max-files <n>`, `--max-bytes <n>`, `--timeout <ms>`, `--no-render`, and `--user-agent <ua>`.
+- Modes: without `--url`, repo-only bounded scanning is local and does not require network. With `--url`, ShipReady adds the existing single-page audit/social-preview evidence for raw-versus-rendered metadata cross-checks. Mock mode is deterministic and local.
+- Mock scenarios: `clean`, `vite-client-only-metadata`, `placeholder-content`, `missing-social-assets`, `hardcoded-localhost`, `unsupported-framework`, `repo-plus-url-rendered-only`, and `multiple-smells`.
+- JSON contract: `shipready.generatedSiteSmells.v1`; fixtures are named `generated-site-smells.<scenario>.json`.
+- Human output: sections for summary, top findings, metadata/preview risks, crawlability risks, placeholder/boilerplate signals, asset risks, framework/configuration ambiguity, limitations, and next actions.
+- Scanner limits: bounded source/config/public text scan; skips dependency directories, build output, lockfiles, binary files, large media, and environment files. Evidence paths are repo-relative and value previews are capped/redacted.
+- Safety: read-only. It does not write files, run fix mode, deploy, call Git/GitHub/provider APIs, mutate DNS/Search Console, call social platform APIs, use OAuth, store tokens, or broaden `WRITE_POLICY_V1`.
+- Claim boundary: findings are heuristic implementation signals, not proof of authorship, generator identity, or site quality. Authorship identification and auto-fixes from this detector are not implemented.
+- Error behavior: invalid repository paths, invalid URLs, invalid timeouts, unsupported mock scenarios, contract drift, timeouts, and internal failures use `shipready.error.v1` when `--json` is supplied.
+
+MCP exposes the same read-only contract as `shipready.generated_site_smells`. The tool requires an authorized `repoPath`, accepts optional `url` and `mock`, and does not change the sole MCP write tool.
+
 ## Demo package scripts
 
 These scripts create recording artifacts under `validation/demo-fodmapp-recording-v2/`; they are tooling, not product interfaces.
@@ -277,7 +302,7 @@ SHIPREADY_MCP_ALLOWED_ROOTS='["/absolute/workspace-a","/absolute/workspace-b"]' 
 
 - Purpose: start the local MCP stdio server. Stdout is reserved for MCP protocol frames; use `pnpm --silent` in source checkouts so package-manager script output cannot pollute stdio.
 - Authorization: at least one explicit root is required. Repeat `--allow-root` for multiple roots; CLI roots replace the JSON-array environment fallback. Relative, missing, home, filesystem-root, traversal, and symlink-escape paths fail closed.
-- Surface: eleven read-only tools, one guarded write tool, twelve canonical documentation resources plus allowlisted contract fixtures, and five prompt templates. `shipready.search_console_status`, `shipready.dns_status`, and `shipready.social_preview` accept no repository-path input. `shipready.recheck` authorizes a repository only when optional `repoPath` is supplied. The server's existing allowed-root startup requirement remains unchanged. See [MCP_PLAN.md](MCP_PLAN.md) for the exact lists.
+- Surface: twelve read-only tools, one guarded write tool, twelve canonical documentation resources plus allowlisted contract fixtures, and five prompt templates. `shipready.search_console_status`, `shipready.dns_status`, and `shipready.social_preview` accept no repository-path input. `shipready.generated_site_smells` and other repo tools authorize `repoPath` before inspection. `shipready.recheck` authorizes a repository only when optional `repoPath` is supplied. The server's existing allowed-root startup requirement remains unchanged. See [MCP_PLAN.md](MCP_PLAN.md) for the exact lists.
 - Safe write tool: `shipready.write_safe_crawl_files` can create only current V1-eligible missing robots/sitemap files. Required flow: call `shipready.preview_fixes`, review `shipready.dryRunFix.v1` and its fresh `previewReceipt`, then call the write tool with the same URL, same authorized repo path, that receipt, and `confirmation: "CREATE_SAFE_CRAWL_FILES_ONLY"`.
 - Safety: the write tool re-authorizes the path, validates the receipt signature/expiry/bindings, regenerates the current dry-run, revalidates `WRITE_POLICY_V1`, and returns `shipready.writeFix.v1`. It never accepts arbitrary file paths or client-supplied file lists as authority. The server does not start the GUI or write an HTML report.
 - Limitation: request deadlines and client cancellation are bounded at the MCP boundary. Existing synchronous repository scans and application operations do not yet accept `AbortSignal`, so already-started underlying work may finish its own bounded cleanup after the MCP response.

@@ -1,0 +1,145 @@
+{
+  "contract": "shipready.generatedSiteSmells.v1",
+  "checkedAt": "2026-07-06T12:00:00.000Z",
+  "mode": "mock",
+  "repoPath": "tests/fixtures/repos/vite-react",
+  "framework": {
+    "kind": "vite_react",
+    "name": "Vite React",
+    "confidence": "high",
+    "evidence": [
+      {
+        "kind": "package_dependency",
+        "path": "package.json",
+        "value": "package.json includes dependency \"vite\"",
+        "weight": "strong"
+      },
+      {
+        "kind": "package_dependency",
+        "path": "package.json",
+        "value": "package.json includes dependency \"react\"",
+        "weight": "weak"
+      },
+      {
+        "kind": "package_dependency",
+        "path": "package.json",
+        "value": "package.json includes dependency \"@vitejs/plugin-react\"",
+        "weight": "medium"
+      },
+      {
+        "kind": "package_dependency",
+        "path": "package.json",
+        "value": "package.json includes dependency \"react-router-dom\"",
+        "weight": "weak"
+      },
+      {
+        "kind": "file",
+        "path": "vite.config.ts",
+        "value": "Vite config found",
+        "weight": "medium"
+      },
+      {
+        "kind": "file",
+        "path": "index.html",
+        "value": "Vite root index.html found",
+        "weight": "medium"
+      },
+      {
+        "kind": "file",
+        "path": "src/main.tsx",
+        "value": "React entry file found",
+        "weight": "medium"
+      },
+      {
+        "kind": "file",
+        "path": "src/App.tsx",
+        "value": "React app component found",
+        "weight": "weak"
+      }
+    ]
+  },
+  "summary": {
+    "status": "needs_attention",
+    "severityCounts": {
+      "high": 1,
+      "medium": 0,
+      "low": 1,
+      "info": 0
+    },
+    "findingCount": 2
+  },
+  "findings": [
+    {
+      "id": "assets.missing_social_image",
+      "title": "Referenced social image is missing locally",
+      "category": "assets",
+      "severity": "high",
+      "confidence": "high",
+      "status": "needs_attention",
+      "evidence": [
+        {
+          "source": "repo",
+          "path": "index.html",
+          "line": 8,
+          "valuePreview": "<meta property=\"og:image\" content=\"/og-image.png\">",
+          "message": "index.html:8"
+        }
+      ],
+      "whyItMatters": "A missing social image can make shared links fall back to a plain or inconsistent preview.",
+      "nextAction": "Add the referenced public image or update metadata to an existing launch-ready asset.",
+      "relatedCommands": [
+        "pnpm shipready smells <path> --json"
+      ],
+      "relatedContracts": [
+        "shipready.generatedSiteSmells.v1"
+      ]
+    },
+    {
+      "id": "assets.missing_favicon",
+      "title": "Referenced favicon is missing locally",
+      "category": "assets",
+      "severity": "low",
+      "confidence": "high",
+      "status": "needs_attention",
+      "evidence": [
+        {
+          "source": "repo",
+          "path": "index.html",
+          "line": 6,
+          "valuePreview": "<link rel=\"icon\" href=\"/favicon.svg\">",
+          "message": "index.html:6"
+        }
+      ],
+      "whyItMatters": "Missing favicon assets are small launch-readiness issues that can make browser and share surfaces look unfinished.",
+      "nextAction": "Add the referenced icon under the public asset root or update the favicon link.",
+      "relatedCommands": [
+        "pnpm shipready smells <path> --json"
+      ],
+      "relatedContracts": [
+        "shipready.generatedSiteSmells.v1"
+      ]
+    }
+  ],
+  "scanned": {
+    "files": 24,
+    "bytes": 31744,
+    "skippedFiles": 3,
+    "truncated": false,
+    "limits": {
+      "maxFiles": 250,
+      "maxBytes": 524288,
+      "maxFileBytes": 49152,
+      "maxFindings": 40,
+      "maxValuePreviewLength": 120
+    }
+  },
+  "limitations": [
+    "Mock mode uses deterministic local fixtures and performs no network request.",
+    "Findings are heuristic implementation signals, not proof of who or what produced a site.",
+    "The smell detector is read-only and does not apply fixes."
+  ],
+  "nextActions": [
+    "Add the referenced public image or update metadata to an existing launch-ready asset.",
+    "Add the referenced icon under the public asset root or update the favicon link."
+  ]
+}

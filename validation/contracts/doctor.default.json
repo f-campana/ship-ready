@@ -55,9 +55,9 @@
       "id": "contract-fixtures",
       "label": "Contract fixtures",
       "status": "pass",
-      "message": "50 canonical contract fixtures exist and parse.",
+      "message": "57 canonical contract fixtures exist and parse.",
       "details": {
-        "count": 50
+        "count": 57
       }
     },
     {
@@ -126,6 +126,21 @@
       }
     },
     {
+      "id": "generated-site-smells",
+      "label": "Generated-site smell detector",
+      "status": "pass",
+      "message": "The read-only generated-site smell detector guidance and 7 deterministic fixtures are present; no repo input or network is required by doctor.",
+      "details": {
+        "readOnly": true,
+        "autoFixes": false,
+        "authorshipIdentification": false,
+        "networkRequired": false,
+        "fixtures": 7,
+        "missing": [],
+        "docsReferenceLimitations": true
+      }
+    },
+    {
       "id": "write-policy",
       "label": "WRITE_POLICY_V1",
       "status": "pass",
@@ -150,7 +165,7 @@
     }
   ],
   "summary": {
-    "pass": 14,
+    "pass": 15,
     "warn": 2,
     "fail": 0,
     "skip": 0

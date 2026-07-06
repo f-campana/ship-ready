@@ -14,6 +14,7 @@ import { formatSearchConsoleStatusJson } from "../src/searchConsole/searchConsol
 import { formatDnsStatusJson } from "../src/dns/dnsStatus";
 import { formatRecheckJson } from "../src/report/formatRecheckReport";
 import { formatSocialPreviewJson } from "../src/report/formatSocialPreviewReport";
+import { formatGeneratedSiteSmellsJson } from "../src/report/formatGeneratedSiteSmellsReport";
 import { AuditResultSchema } from "../src/types/audit";
 import {
   AuditJsonContractSchema,
@@ -23,6 +24,7 @@ import {
   DnsStatusJsonContractSchema,
   DryRunFixJsonContractSchema,
   FixPlanJsonContractSchema,
+  GeneratedSiteSmellsJsonContractSchema,
   RepoInspectionJsonContractSchema,
   RecheckJsonContractSchema,
   SearchConsoleStatusJsonContractSchema,
@@ -94,6 +96,13 @@ describe("CLI JSON contracts", () => {
     ["social-preview.raw-rendered-different.json", SocialPreviewJsonContractSchema, CONTRACT_NAMES.socialPreview],
     ["social-preview.image-unreachable.json", SocialPreviewJsonContractSchema, CONTRACT_NAMES.socialPreview],
     ["social-preview.minimal-title-only.json", SocialPreviewJsonContractSchema, CONTRACT_NAMES.socialPreview],
+    ["generated-site-smells.clean.json", GeneratedSiteSmellsJsonContractSchema, CONTRACT_NAMES.generatedSiteSmells],
+    ["generated-site-smells.vite-client-only-metadata.json", GeneratedSiteSmellsJsonContractSchema, CONTRACT_NAMES.generatedSiteSmells],
+    ["generated-site-smells.placeholder-content.json", GeneratedSiteSmellsJsonContractSchema, CONTRACT_NAMES.generatedSiteSmells],
+    ["generated-site-smells.missing-social-assets.json", GeneratedSiteSmellsJsonContractSchema, CONTRACT_NAMES.generatedSiteSmells],
+    ["generated-site-smells.hardcoded-localhost.json", GeneratedSiteSmellsJsonContractSchema, CONTRACT_NAMES.generatedSiteSmells],
+    ["generated-site-smells.unsupported-framework.json", GeneratedSiteSmellsJsonContractSchema, CONTRACT_NAMES.generatedSiteSmells],
+    ["generated-site-smells.repo-plus-url-rendered-only.json", GeneratedSiteSmellsJsonContractSchema, CONTRACT_NAMES.generatedSiteSmells],
   ] as const)("parses %s and preserves its discriminator", (name, schema, contract) => {
     const fixture = readFixture(name);
 
@@ -113,6 +122,7 @@ describe("CLI JSON contracts", () => {
       "dns status --json": "shipready.dnsStatus.v1",
       "recheck --json": "shipready.recheck.v1",
       "social-preview --json": "shipready.socialPreview.v1",
+      "smells --json": "shipready.generatedSiteSmells.v1",
       "status --json": "shipready.status.v1",
       "doctor --json": "shipready.doctor.v1",
     });
@@ -149,6 +159,35 @@ describe("CLI JSON contracts", () => {
     expect(contractOf(formatSocialPreviewJson(
       SocialPreviewJsonContractSchema.parse(readFixture("social-preview.complete.json")),
     ))).toBe(CONTRACT_NAMES.socialPreview);
+    expect(contractOf(formatGeneratedSiteSmellsJson(
+      GeneratedSiteSmellsJsonContractSchema.parse(readFixture("generated-site-smells.clean.json")),
+    ))).toBe(CONTRACT_NAMES.generatedSiteSmells);
+  });
+
+  it("keeps generated-site smell fixtures deterministic and constrained", () => {
+    const clean = GeneratedSiteSmellsJsonContractSchema.parse(readFixture("generated-site-smells.clean.json"));
+    const clientOnly = GeneratedSiteSmellsJsonContractSchema.parse(readFixture("generated-site-smells.vite-client-only-metadata.json"));
+    const placeholder = GeneratedSiteSmellsJsonContractSchema.parse(readFixture("generated-site-smells.placeholder-content.json"));
+    const missingAssets = GeneratedSiteSmellsJsonContractSchema.parse(readFixture("generated-site-smells.missing-social-assets.json"));
+    const unsupported = GeneratedSiteSmellsJsonContractSchema.parse(readFixture("generated-site-smells.unsupported-framework.json"));
+    const renderedOnly = GeneratedSiteSmellsJsonContractSchema.parse(readFixture("generated-site-smells.repo-plus-url-rendered-only.json"));
+
+    expect(clean.summary.status).toBe("clean");
+    expect(clientOnly.findings).toEqual(expect.arrayContaining([expect.objectContaining({ id: "metadata.client_only_metadata" })]));
+    expect(placeholder.findings).toEqual(expect.arrayContaining([expect.objectContaining({ category: "content_placeholders" })]));
+    expect(missingAssets.findings).toEqual(expect.arrayContaining([expect.objectContaining({ id: "assets.missing_social_image" })]));
+    expect(unsupported.summary.status).toBe("manual_review");
+    expect(renderedOnly.url).toBe("https://example.com/");
+    for (const fixture of [clean, clientOnly, placeholder, missingAssets, unsupported, renderedOnly]) {
+      expect(["repo_only", "repo_plus_url", "mock"]).toContain(fixture.mode);
+      expect(fixture.scanned.limits.maxFiles).toBeGreaterThan(0);
+      for (const finding of fixture.findings) {
+        expect(["high", "medium", "low", "info"]).toContain(finding.severity);
+        expect(["high", "medium", "low"]).toContain(finding.confidence);
+        expect(["needs_attention", "manual_review", "info"]).toContain(finding.status);
+      }
+      expect(JSON.stringify(fixture)).not.toContain("?token=");
+    }
   });
 
   it("keeps social preview fixtures deterministic and constrained", () => {

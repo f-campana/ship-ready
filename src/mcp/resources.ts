@@ -8,6 +8,7 @@ import {
   DnsStatusJsonContractSchema,
   DryRunFixJsonContractSchema,
   FixPlanJsonContractSchema,
+  GeneratedSiteSmellsJsonContractSchema,
   RepoInspectionJsonContractSchema,
   SearchConsoleStatusJsonContractSchema,
   UiReportJsonContractSchema,
@@ -72,6 +73,13 @@ export const FIXTURE_NAMES = [
   "social-preview.raw-rendered-different.json",
   "social-preview.image-unreachable.json",
   "social-preview.minimal-title-only.json",
+  "generated-site-smells.clean.json",
+  "generated-site-smells.vite-client-only-metadata.json",
+  "generated-site-smells.placeholder-content.json",
+  "generated-site-smells.missing-social-assets.json",
+  "generated-site-smells.hardcoded-localhost.json",
+  "generated-site-smells.unsupported-framework.json",
+  "generated-site-smells.repo-plus-url-rendered-only.json",
 ] as const;
 
 export type FixtureName = (typeof FIXTURE_NAMES)[number];
@@ -263,6 +271,7 @@ const FIXTURE_SCHEMAS: Readonly<Record<string, ZodType>> = {
   "shipready.doctor.v1": DoctorJsonContractSchema,
   "shipready.recheck.v1": RecheckJsonContractSchema,
   "shipready.socialPreview.v1": SocialPreviewJsonContractSchema,
+  "shipready.generatedSiteSmells.v1": GeneratedSiteSmellsJsonContractSchema,
 };
 
 async function readCanonicalFile(packageRoot: string, relativePath: string): Promise<string> {

@@ -15,6 +15,7 @@ For launch-readiness operations, start with the repository-local [ShipReady Laun
 - `src/cli/index.ts`: implemented commands, flags, modes, and exit behavior.
 - `src/audit/`: public-URL fetch, rendered pass, metadata/crawl checks, and scoring.
 - `src/socialPreview/`: read-only simulated preview builder and deterministic mock scenarios built from observed audit metadata.
+- `src/smells/`: read-only generated-site implementation smell detector, bounded repo scanner, deterministic mocks, and no authorship identification or auto-fixes.
 - `src/repo/`: bounded read-only repository inspection.
 - `src/plan/`: audit-to-fix planning.
 - `src/fix/`: dry-run previews and guarded V1 creation-only writes.
@@ -23,7 +24,7 @@ For launch-readiness operations, start with the repository-local [ShipReady Laun
 - `src/report/`: human, JSON, UI, and static HTML formatting.
 - `src/ui/`: normalized `ui-report-v1` creation.
 - `src/gui/`: local server and preview/copy-only browser UI.
-- `src/mcp/`: local stdio adapter, eleven read-only tools, one guarded safe-write tool, preview receipts, canonical reads, prompts, authorization, errors, and deadlines.
+- `src/mcp/`: local stdio adapter, twelve read-only tools, one guarded safe-write tool, preview receipts, canonical reads, prompts, authorization, errors, and deadlines.
 - `src/status/` and `src/doctor/`: static capability posture and bounded local readiness diagnostics.
 - `src/searchConsole/`: stable read-only status boundary and deterministic mock provider; no OAuth, tokens, or live Google client.
 - `src/dns/`: read-only DNS readiness status, live Node DNS resolver, deterministic mock scenarios, redacted TXT evidence, and no provider integration or DNS writes.
@@ -68,6 +69,8 @@ For post-write follow-up, read [POST_WRITE_RECHECK.md](POST_WRITE_RECHECK.md). P
 
 For social preview work, use `pnpm shipready social-preview --url <url> --json` or MCP `shipready.social_preview`. Pass 13 implements a simulated preview from observed raw/rendered metadata only. It does not use social platform APIs, platform scraping endpoints, screenshots, image generation, deployment, OAuth, token storage, or provider integrations, and it does not provide a precise third-party rendering guarantee.
 
+For generated-site implementation smell work, use `pnpm shipready smells <path> --json` or MCP `shipready.generated_site_smells`. Pass 14 implements heuristic implementation signals for repo-level launch-readiness risks such as client-only metadata, weak SPA raw HTML, placeholder copy, default starter boilerplate, missing referenced public assets, local/example URLs, and unclear framework shape. Findings are not proof of authorship, generator identity, or site quality. The detector is read-only, bounded, skips environment files and build/dependency output, and does not run fix mode, write files, deploy, call provider APIs, mutate DNS/Search Console, call social platform APIs, use OAuth, store tokens, or broaden `WRITE_POLICY_V1`.
+
 ## Main commands
 
 ```bash
@@ -76,6 +79,7 @@ pnpm shipready doctor --json
 pnpm shipready search-console status --url https://example.com --mock ready_sitemap_ok --json
 pnpm shipready dns status --url https://example.com --mock ready --json
 pnpm shipready social-preview --url https://example.com --mock complete --json
+pnpm shipready smells . --mock clean --json
 pnpm shipready audit <url> --json
 pnpm shipready recheck [path] --url <url> --json
 pnpm shipready inspect-repo <path> --json
@@ -93,7 +97,7 @@ Use `status` before assuming a capability or integration exists. Use `doctor` af
 
 The guarded write command exists but is not a routine validation command. Use it only with explicit instruction and the checks in the canonical write policy.
 
-After an authorized local write, report that deployment remains external. Once the owner deploys, use `recheck` in URL-only or repo-backed mode. Treat unreachable live evidence as unknown and use “appears” deployment wording; never convert crawl-file visibility into a crawling or indexing claim.
+After an authorized local write, report that deployment remains external. Once the owner deploys, use `recheck` in URL-only or repo-backed mode. Treat unreachable live evidence as unknown and use “appears” deployment wording; never convert crawl-file visibility into a crawling or indexing claim. Smell findings remain review targets and never authorize auto-fixes.
 
 MCP safe-write flow:
 

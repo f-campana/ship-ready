@@ -22,6 +22,8 @@ ShipReady reports evidence and prepares bounded local work. It can detect launch
 - **accessible property** — a property returned for the authorized account; not proof that no other property or owner exists.
 - **DNS readiness** — read-only reporting about observed DNS responses and adjacent reachability evidence, not provider repair or third-party outcome prediction.
 - **observed DNS response** — the answer, negative answer, timeout, or error returned by a resolver for the checked name/type.
+- **heuristic implementation signals** — bounded repository patterns that may need launch-readiness review; not proof of authorship, generator identity, or quality.
+- **generated-site implementation smell** — a practical review signal for fragile metadata, preview, crawlability, asset, placeholder, boilerplate, framework, or configuration patterns commonly seen in generated sites.
 
 Prefer measurable wording: “detected,” “missing,” “present in raw HTML,” “appears after rendering,” “previewed,” “eligible under V1,” and “requires review.”
 
@@ -61,6 +63,7 @@ Do not use close paraphrases that imply the same certainty or capability.
 - Future Search Console output must distinguish live unauthenticated checks, authenticated Google-reported status, and ownership verification. “No accessible property” must be scoped to the authorized account.
 - DNS readiness output must distinguish DNS-only evidence, HTTP-adjacent evidence, and Search Console verification-readiness. Visible records are observations, not propagation, certificate, crawling, indexing, or approval guarantees.
 - Social preview simulator output must use approximation language. It can report likely input fields from observed metadata and raw-versus-rendered caveats, but it must not claim platform-specific rendering, cache behavior, share-card refresh, or official preview API results.
+- Generated-site smell output must use heuristic and review language. It can report evidence-backed implementation smells and why they may affect crawler, preview, sharing, and launch-readiness behavior, but it must not identify an authoring tool, infer who produced the site, grade quality because a site appears generated, or apply fixes automatically.
 
 See [SEARCH_CONSOLE_READINESS_SPEC.md](SEARCH_CONSOLE_READINESS_SPEC.md) for the Pass 8 source-backed claim and authority boundaries.
 See [DNS_READINESS_SPEC.md](DNS_READINESS_SPEC.md) for the Pass 10/11 source-backed DNS claim and authority boundaries.

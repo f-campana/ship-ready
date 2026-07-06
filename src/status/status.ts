@@ -14,6 +14,7 @@ export const STATUS_CLI_COMMANDS = [
   "dns status",
   "recheck",
   "social-preview",
+  "smells",
   "audit",
   "inspect-repo",
   "plan-fixes",
@@ -62,6 +63,9 @@ export function createStatus(): StatusJsonContract {
       ],
     },
     integrations: {
+      generatedSiteSmells: "read_only_detector",
+      aiAuthorshipDetection: "not_implemented",
+      smellDetectorAutoFixes: "not_implemented",
       socialPreview: "read_only_simulator",
       socialPlatformApis: "not_implemented",
       exactSocialRenderingGuarantee: false,
@@ -80,7 +84,7 @@ export function createStatus(): StatusJsonContract {
       fodmappVoiceover: "validation/demo-fodmapp-voiceover-final/",
     },
     nextRecommendedCommand: "pnpm shipready doctor",
-    nextRecommendedPass: "Generated-site smell detector",
+    nextRecommendedPass: "Bounded multi-page crawl",
   });
 }
 
@@ -104,6 +108,7 @@ export function formatStatusHuman(status = createStatus()): string {
     "  DNS readiness: read-only status checks implemented; provider writes/integrations not implemented",
     "  Post-write recheck: implemented read-only; local changes still require external deployment",
     "  Social preview simulator: implemented read-only; social platform APIs and exact rendering guarantees not implemented",
+    "  Generated-site implementation smell detector: implemented read-only; authorship identification and auto-fixes not implemented",
     "  Deployment automation and deploy provider integrations: not implemented",
     "  Remote MCP and GitHub integrations: not implemented",
     "",

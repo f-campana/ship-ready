@@ -6,7 +6,7 @@ For an agent-ready operating workflow, use the repository-local [ShipReady Launc
 
 ## Current status
 
-Implemented: read-only `status` and `doctor` diagnostics, CLI audit and repo inspection, the read-only social preview simulator, fix planning, dry-run previews, guarded creation-only writes, a read-only post-write recheck, UI and static HTML reports, a local preview/copy-only GUI, a local stdio MCP server, Fodmapp demo tooling, a deterministic mock-backed Search Console status prototype, and read-only DNS readiness status. MCP exposes eleven read-only tools and exactly one guarded write tool for the same creation-only crawl-file policy. Social platform APIs, live Search Console/OAuth, DNS provider writes/integrations, deployment automation/provider integrations, GitHub, accounts, billing, hosted SaaS, and remote MCP are not built.
+Implemented: read-only `status` and `doctor` diagnostics, CLI audit and repo inspection, the read-only social preview simulator, the read-only generated-site implementation smell detector, fix planning, dry-run previews, guarded creation-only writes, a read-only post-write recheck, UI and static HTML reports, a local preview/copy-only GUI, a local stdio MCP server, Fodmapp demo tooling, a deterministic mock-backed Search Console status prototype, and read-only DNS readiness status. MCP exposes twelve read-only tools and exactly one guarded write tool for the same creation-only crawl-file policy. Authorship identification, smell-detector auto-fixes, social platform APIs, live Search Console/OAuth, DNS provider writes/integrations, deployment automation/provider integrations, GitHub, accounts, billing, hosted SaaS, and remote MCP are not built.
 
 ## Core commands
 
@@ -17,6 +17,7 @@ pnpm shipready doctor
 pnpm shipready search-console status --url https://example.com --mock ready_sitemap_ok --json
 pnpm shipready dns status --url https://example.com --mock ready --json
 pnpm shipready social-preview --url https://example.com --mock complete --json
+pnpm shipready smells . --mock clean --json
 pnpm shipready audit https://example.com
 pnpm shipready recheck --url https://example.com --json
 pnpm shipready inspect-repo .
@@ -27,7 +28,7 @@ pnpm shipready html-report . --url https://example.com --output validation/examp
 pnpm shipready gui
 ```
 
-Use `--json` with `status`, `doctor`, `search-console status`, `dns status`, `social-preview`, `recheck`, `audit`, `inspect-repo`, `plan-fixes`, `fix`, and `ui-report` for structured output. `social-preview` is a read-only approximation based on observed raw/rendered metadata; platform behavior may differ and no social platform API is called. `recheck` is network-read-only and can optionally compare V1-safe local expected crawl files with live evidence; it never deploys. `search-console status` is mock-backed, deterministic, read-only, and makes no Google API or OAuth call. `dns status` uses read-only DNS lookups by default and deterministic mocks for CI/tests; it never writes DNS records or calls provider APIs. `status` is a static capability/safety inventory. `doctor` performs bounded local checks only and requires no network or deployment credentials. Neither status/doctor command deploys or proves indexing/DNS outcomes. See [docs/COMMANDS.md](docs/COMMANDS.md) for exact flags and behavior.
+Use `--json` with `status`, `doctor`, `search-console status`, `dns status`, `social-preview`, `smells`, `recheck`, `audit`, `inspect-repo`, `plan-fixes`, `fix`, and `ui-report` for structured output. `social-preview` is a read-only approximation based on observed raw/rendered metadata; platform behavior may differ and no social platform API is called. `smells` reports heuristic implementation signals commonly seen in generated sites; it is read-only and not proof of authorship, generator identity, or site quality. `recheck` is network-read-only and can optionally compare V1-safe local expected crawl files with live evidence; it never deploys. `search-console status` is mock-backed, deterministic, read-only, and makes no Google API or OAuth call. `dns status` uses read-only DNS lookups by default and deterministic mocks for CI/tests; it never writes DNS records or calls provider APIs. `status` is a static capability/safety inventory. `doctor` performs bounded local checks only and requires no network or deployment credentials. Neither status/doctor command deploys or proves indexing/DNS outcomes. See [docs/COMMANDS.md](docs/COMMANDS.md) for exact flags and behavior.
 
 ## Safe-write boundary
 

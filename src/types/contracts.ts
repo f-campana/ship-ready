@@ -17,6 +17,7 @@ export const CONTRACT_NAMES = {
   dnsStatus: "shipready.dnsStatus.v1",
   recheck: "shipready.recheck.v1",
   socialPreview: "shipready.socialPreview.v1",
+  generatedSiteSmells: "shipready.generatedSiteSmells.v1",
   status: "shipready.status.v1",
   doctor: "shipready.doctor.v1",
   error: "shipready.error.v1",
@@ -33,6 +34,7 @@ export const CLI_JSON_CONTRACT_BY_COMMAND = {
   "dns status --json": CONTRACT_NAMES.dnsStatus,
   "recheck --json": CONTRACT_NAMES.recheck,
   "social-preview --json": CONTRACT_NAMES.socialPreview,
+  "smells --json": CONTRACT_NAMES.generatedSiteSmells,
   "status --json": CONTRACT_NAMES.status,
   "doctor --json": CONTRACT_NAMES.doctor,
 } as const;
@@ -504,6 +506,125 @@ export const SocialPreviewJsonContractSchema = z.object({
   }
 });
 
+const GeneratedSiteSmellCategorySchema = z.enum([
+  "metadata",
+  "crawlability",
+  "preview",
+  "routing",
+  "assets",
+  "content_placeholders",
+  "configuration",
+  "framework",
+  "generated_boilerplate",
+  "unknown",
+]);
+
+const GeneratedSiteSmellSeveritySchema = z.enum(["high", "medium", "low", "info"]);
+const GeneratedSiteSmellConfidenceSchema = z.enum(["high", "medium", "low"]);
+const GeneratedSiteSmellFindingStatusSchema = z.enum(["needs_attention", "manual_review", "info"]);
+
+const GeneratedSiteSmellEvidenceSchema = z.object({
+  source: z.enum(["repo", "audit", "social_preview", "scanner", "mock"]),
+  path: z.string().min(1).optional(),
+  line: z.number().int().positive().optional(),
+  field: z.string().min(1).optional(),
+  valuePreview: z.string().min(1).max(140).optional(),
+  message: z.string().min(1),
+}).strict();
+
+const GeneratedSiteSmellFindingSchema = z.object({
+  id: z.string().min(1),
+  title: z.string().min(1),
+  category: GeneratedSiteSmellCategorySchema,
+  severity: GeneratedSiteSmellSeveritySchema,
+  confidence: GeneratedSiteSmellConfidenceSchema,
+  status: GeneratedSiteSmellFindingStatusSchema,
+  evidence: z.array(GeneratedSiteSmellEvidenceSchema).min(1).max(8),
+  whyItMatters: z.string().min(1),
+  nextAction: z.string().min(1),
+  relatedCommands: z.array(z.string().min(1)),
+  relatedContracts: z.array(z.string().min(1)),
+}).strict();
+
+export const GeneratedSiteSmellsJsonContractSchema = z.object({
+  contract: z.literal(CONTRACT_NAMES.generatedSiteSmells),
+  checkedAt: z.string().min(1),
+  mode: z.enum(["repo_only", "repo_plus_url", "mock"]),
+  repoPath: z.string().min(1),
+  url: z.string().min(1).optional(),
+  framework: z.object({
+    kind: z.string().min(1),
+    name: z.string().min(1),
+    confidence: z.enum(["high", "medium", "low"]),
+    evidence: z.array(z.object({
+      kind: z.string().min(1),
+      path: z.string().min(1).optional(),
+      value: z.string().min(1),
+      weight: z.enum(["strong", "medium", "weak"]),
+    }).strict()),
+  }).strict(),
+  summary: z.object({
+    status: z.enum(["clean", "needs_attention", "manual_review", "unknown"]),
+    severityCounts: z.object({
+      high: z.number().int().nonnegative(),
+      medium: z.number().int().nonnegative(),
+      low: z.number().int().nonnegative(),
+      info: z.number().int().nonnegative(),
+    }).strict(),
+    findingCount: z.number().int().nonnegative(),
+  }).strict(),
+  findings: z.array(GeneratedSiteSmellFindingSchema),
+  scanned: z.object({
+    files: z.number().int().nonnegative(),
+    bytes: z.number().int().nonnegative(),
+    skippedFiles: z.number().int().nonnegative(),
+    truncated: z.boolean(),
+    limits: z.object({
+      maxFiles: z.number().int().positive(),
+      maxBytes: z.number().int().positive(),
+      maxFileBytes: z.number().int().positive(),
+      maxFindings: z.number().int().positive(),
+      maxValuePreviewLength: z.number().int().positive(),
+    }).strict(),
+  }).strict(),
+  limitations: z.array(z.string().min(1)).min(1),
+  nextActions: z.array(z.string().min(1)).min(1),
+}).strict().superRefine((result, context) => {
+  const severityCounts = { high: 0, medium: 0, low: 0, info: 0 };
+  for (const finding of result.findings) severityCounts[finding.severity] += 1;
+  for (const severity of GeneratedSiteSmellSeveritySchema.options) {
+    if (result.summary.severityCounts[severity] !== severityCounts[severity]) {
+      context.addIssue({
+        code: "custom",
+        path: ["summary", "severityCounts", severity],
+        message: `Expected ${severityCounts[severity]} ${severity} generated-site smell findings.`,
+      });
+    }
+  }
+  if (result.summary.findingCount !== result.findings.length) {
+    context.addIssue({
+      code: "custom",
+      path: ["summary", "findingCount"],
+      message: "findingCount must match findings length.",
+    });
+  }
+  if (result.mode === "repo_only" && result.url) {
+    context.addIssue({
+      code: "custom",
+      path: ["url"],
+      message: "Repo-only generated-site smell results must not include a URL.",
+    });
+  }
+  const serialized = JSON.stringify(result);
+  if (/[?&](token|secret|key|password|code)=/i.test(serialized)) {
+    context.addIssue({
+      code: "custom",
+      path: ["findings"],
+      message: "Generated-site smell output must not expose sensitive query strings.",
+    });
+  }
+});
+
 const NotImplementedSchema = z.literal("not_implemented");
 
 export const StatusJsonContractSchema = z.object({
@@ -535,6 +656,9 @@ export const StatusJsonContractSchema = z.object({
     forbidden: z.array(z.string().min(1)),
   }).strict(),
   integrations: z.object({
+    generatedSiteSmells: z.literal("read_only_detector"),
+    aiAuthorshipDetection: NotImplementedSchema,
+    smellDetectorAutoFixes: NotImplementedSchema,
     socialPreview: z.literal("read_only_simulator"),
     socialPlatformApis: NotImplementedSchema,
     exactSocialRenderingGuarantee: z.literal(false),
@@ -653,6 +777,7 @@ export type SearchConsoleStatusJsonContract = z.infer<typeof SearchConsoleStatus
 export type DnsStatusJsonContract = z.infer<typeof DnsStatusJsonContractSchema>;
 export type RecheckJsonContract = z.infer<typeof RecheckJsonContractSchema>;
 export type SocialPreviewJsonContract = z.infer<typeof SocialPreviewJsonContractSchema>;
+export type GeneratedSiteSmellsJsonContract = z.infer<typeof GeneratedSiteSmellsJsonContractSchema>;
 export type StatusJsonContract = z.infer<typeof StatusJsonContractSchema>;
 export type DoctorCheckStatus = z.infer<typeof DoctorCheckStatusSchema>;
 export type DoctorCheck = z.infer<typeof DoctorCheckSchema>;

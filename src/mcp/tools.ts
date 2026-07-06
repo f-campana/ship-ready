@@ -25,11 +25,15 @@ import {
   SOCIAL_PREVIEW_SOURCE_MODES,
 } from "../socialPreview/socialPreviewTypes";
 import { formatSocialPreviewJson } from "../report/formatSocialPreviewReport";
+import { getGeneratedSiteSmells } from "../smells/generatedSiteSmells";
+import { GENERATED_SITE_SMELL_MOCK_SCENARIOS } from "../smells/generatedSiteSmellTypes";
+import { formatGeneratedSiteSmellsJson } from "../report/formatGeneratedSiteSmellsReport";
 import {
   AuditJsonContractSchema,
   DnsStatusJsonContractSchema,
   DryRunFixJsonContractSchema,
   FixPlanJsonContractSchema,
+  GeneratedSiteSmellsJsonContractSchema,
   RepoInspectionJsonContractSchema,
   RecheckJsonContractSchema,
   SearchConsoleStatusJsonContractSchema,
@@ -95,6 +99,11 @@ const SocialPreviewInputSchema = z.object({
   checkAssets: z.boolean().optional().default(false),
   mock: z.enum(SOCIAL_PREVIEW_MOCK_SCENARIOS).optional(),
 }).strict();
+const GeneratedSiteSmellsInputSchema = z.object({
+  repoPath: z.string().trim().min(1).max(4096),
+  url: z.string().trim().min(1).max(2048).optional(),
+  mock: z.enum(GENERATED_SITE_SMELL_MOCK_SCENARIOS).optional(),
+}).strict();
 const FixtureInputSchema = z.object({ fixtureName: z.enum(FIXTURE_NAMES) }).strict();
 const PolicyInputSchema = z.object({ name: z.enum(Object.keys(POLICY_DOCS) as [keyof typeof POLICY_DOCS, ...(keyof typeof POLICY_DOCS)[]]) }).strict();
 
@@ -104,6 +113,7 @@ export type McpOperations = {
   dnsStatus: typeof getDnsStatus;
   recheck: typeof recheck;
   socialPreview: typeof getSocialPreview;
+  generatedSiteSmells: typeof getGeneratedSiteSmells;
   inspectRepo: typeof inspectRepo;
   planFixes: typeof planFixes;
   previewFixes: typeof dryRunFix;
@@ -125,6 +135,7 @@ const DEFAULT_OPERATIONS: McpOperations = {
   dnsStatus: getDnsStatus,
   recheck,
   socialPreview: getSocialPreview,
+  generatedSiteSmells: getGeneratedSiteSmells,
   inspectRepo,
   planFixes,
   previewFixes: dryRunFix,
@@ -167,6 +178,11 @@ export function listTools() {
       checkAssets: { type: "boolean", default: false },
       mock: { type: "string", enum: [...SOCIAL_PREVIEW_MOCK_SCENARIOS] },
     }, ["url"]), { ...readOnly, openWorldHint: true }),
+    tool("shipready.generated_site_smells", "Detect read-only generated-site implementation smells in an authorized repository; heuristic signals, not authorship proof.", schema({
+      repoPath: stringSchema(4096),
+      url: stringSchema(2048),
+      mock: { type: "string", enum: [...GENERATED_SITE_SMELL_MOCK_SCENARIOS] },
+    }, ["repoPath"]), { ...readOnly, openWorldHint: true }),
     tool("shipready.inspect_repo", "Inspect one explicitly authorized repository without writes.", schema({
       repoPath: stringSchema(4096),
     }, ["repoPath"]), { ...readOnly, openWorldHint: false }),
@@ -314,6 +330,17 @@ async function executeTool(
       timeoutMs,
     });
     return contractResult(formatSocialPreviewJson(result), SocialPreviewJsonContractSchema);
+  }
+  if (name === "shipready.generated_site_smells") {
+    const input = parseInput(GeneratedSiteSmellsInputSchema, args, "invalid_repo_path");
+    const repoPath = await context.authorizer.authorizeRepoPath(input.repoPath);
+    const result = await operations.generatedSiteSmells({
+      repoPath,
+      url: input.url,
+      mock: input.mock,
+      timeoutMs,
+    });
+    return contractResult(formatGeneratedSiteSmellsJson(result), GeneratedSiteSmellsJsonContractSchema);
   }
   if (name === "shipready.inspect_repo") {
     const input = parseInput(RepoInputSchema, args, "invalid_repo_path");
@@ -474,6 +501,7 @@ function timeoutFor(name: ToolName, timeouts: McpTimeouts): number {
   if (name === "shipready.search_console_status") return timeouts.canonical_read;
   if (name === "shipready.recheck") return timeouts.audit_site;
   if (name === "shipready.social_preview") return timeouts.audit_site;
+  if (name === "shipready.generated_site_smells") return timeouts.generated_site_smells;
   if (name === "shipready.inspect_repo") return timeouts.inspect_repo;
   if (name === "shipready.plan_fixes") return timeouts.plan_fixes;
   if (name === "shipready.preview_fixes") return timeouts.preview_fixes;

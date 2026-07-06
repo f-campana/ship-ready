@@ -75,6 +75,17 @@ describe("doctor", () => {
         skillReferencesSocialPreview: true,
       },
     });
+    expect(report.checks.find((check) => check.id === "generated-site-smells")).toMatchObject({
+      status: "pass",
+      details: {
+        readOnly: true,
+        autoFixes: false,
+        authorshipIdentification: false,
+        networkRequired: false,
+        fixtures: 7,
+        docsReferenceLimitations: true,
+      },
+    });
   });
 
   it("reports a missing optional FFmpeg tool as a warning", async () => {

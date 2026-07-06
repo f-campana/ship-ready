@@ -1,6 +1,6 @@
 ---
 name: shipready-launch-readiness
-description: Use ShipReady to check whether a generated website is ready to share, crawl, preview, and safely prepare for deployment. Use for live URL audits, local repository inspection, fix planning, dry-run previews, guarded crawl-file creation, post-write rechecks after external deployment, UI or HTML reports, stdio MCP workflows, mock-backed Search Console status, read-only DNS checks, metadata or crawlability review, link-preview diagnosis, and launch-readiness reporting.
+description: Use ShipReady to check whether a generated website is ready to share, crawl, preview, and safely prepare for deployment. Use for live URL audits, local repository inspection, generated-site implementation smell detection, fix planning, dry-run previews, guarded crawl-file creation, post-write rechecks after external deployment, UI or HTML reports, stdio MCP workflows, mock-backed Search Console status, read-only DNS checks, metadata or crawlability review, link-preview diagnosis, and launch-readiness reporting.
 ---
 
 # ShipReady Launch Readiness
@@ -9,7 +9,7 @@ Treat ShipReady as a CLI-first, agent-friendly launch-readiness engine for gener
 
 ## Choose the workflow
 
-Use this skill when reviewing a generated site, checking metadata or crawl resources, diagnosing weak link-preview inputs, safely creating eligible missing robots/sitemap files, or preparing a launch-readiness report with DNS and Search Console context.
+Use this skill when reviewing a generated site, checking metadata or crawl resources, diagnosing weak link-preview inputs, identifying generated-site implementation smells, safely creating eligible missing robots/sitemap files, or preparing a launch-readiness report with DNS and Search Console context.
 
 Do not use ShipReady for keyword research, rank tracking, backlink analysis, general SEO strategy, deployment, DNS writes, live Search Console mutation, GitHub pull requests, broad content rewriting, or metadata/content writes. Do not present it as an SEO suite, deployment system, DNS manager, Search Console automation system, PR bot, or SaaS dashboard.
 
@@ -26,11 +26,11 @@ Do not use ShipReady for keyword research, rank tracking, backlink analysis, gen
 
 | State | Current capability |
 |---|---|
-| Implemented | Single-page audit; bounded repo inspection; social preview simulator; planning; dry-run; status/doctor; versioned JSON; UI and HTML reports; local GUI; stdio MCP |
+| Implemented | Single-page audit; bounded repo inspection; generated-site implementation smell detector; social preview simulator; planning; dry-run; status/doctor; versioned JSON; UI and HTML reports; local GUI; stdio MCP |
 | Mock-backed | Search Console status only; no Google OAuth, tokens, or live API calls |
 | Read-only | Audit, inspection, social preview simulation, planning, dry-run, post-write recheck, UI report, GUI, Search Console mocks, and DNS status; live DNS uses resolver observations only |
 | Write-guarded | CLI and the sole MCP write tool may create only eligible missing robots/sitemap files under `WRITE_POLICY_V1` |
-| Future | Generated-site smell detector, bounded multi-page crawl, GUI revisit, terminal output polish/TUI viewer, patch export, and GitHub PR integration |
+| Future | Bounded multi-page crawl, GUI revisit, terminal output polish/TUI viewer, patch export, and GitHub PR integration |
 
 Never infer future behavior from a roadmap name. A current audit covers one page. The current social preview simulator is a metadata-based approximation, not platform output.
 
@@ -48,6 +48,8 @@ pnpm shipready plan-fixes <path> --url <url> --json
 pnpm shipready fix <path> --url <url> --dry-run --json
 pnpm shipready dns status --url <url> --json
 pnpm shipready social-preview --url <url> --json
+pnpm shipready smells <path> --json
+pnpm shipready smells <path> --url <url> --json
 pnpm shipready search-console status --url <url> --json
 pnpm shipready ui-report <path> --url <url> --json
 pnpm shipready html-report <path> --url <url> --output shipready-report.html
@@ -111,6 +113,21 @@ Use deterministic mocks for examples/tests: `complete`, `missing-image`, `render
 
 No social platform APIs are used. Do not present the output as a precise LinkedIn, X, Slack, Discord, Google, or browser rendering result. It does not call platform preview endpoints, generate screenshots/images, deploy, mutate DNS/Search Console, use OAuth, store tokens, or write repository files.
 
+## Detect generated-site implementation smells
+
+```bash
+pnpm shipready smells <path>
+pnpm shipready smells <path> --json
+pnpm shipready smells <path> --url https://example.com --json
+pnpm shipready smells <path> --mock clean --json
+```
+
+Use this read-only detector to identify heuristic implementation signals that commonly appear in generated sites and may need launch-readiness review: metadata only injected client-side, weak SPA raw HTML, missing crawl files, placeholder copy, default starter boilerplate, missing referenced public assets, hardcoded local/example URLs, generic metadata, and unclear framework shape.
+
+Without `--url`, the command performs a bounded local repo scan only. With `--url`, it adds ShipReady's existing single-page audit/social-preview evidence for raw-versus-rendered metadata cross-checks. Mock scenarios are deterministic: `clean`, `vite-client-only-metadata`, `placeholder-content`, `missing-social-assets`, `hardcoded-localhost`, `unsupported-framework`, `repo-plus-url-rendered-only`, and `multiple-smells`.
+
+Treat every finding as a review target, not a conclusion about authorship, generator identity, or site quality. The detector is not an authorship-identification system and does not apply fixes. It writes no files, runs no `fix` mode, deploys nothing, calls no Git/GitHub/provider APIs, performs no DNS/Search Console mutation, calls no social platform APIs, uses no OAuth, stores no tokens, and does not broaden `WRITE_POLICY_V1`.
+
 ## Use MCP safely
 
 Start the local stdio server with at least one explicit allowed root:
@@ -132,10 +149,11 @@ Use these read-only tools by their exact names:
 - `shipready.dns_status`
 - `shipready.recheck`
 - `shipready.social_preview`
+- `shipready.generated_site_smells`
 
 Treat `shipready.write_safe_crawl_files` as the only MCP write tool. Before calling it, require an authorized repository path, a fresh receipt from `shipready.preview_fixes`, the same normalized URL and canonical repo path, and exact confirmation `CREATE_SAFE_CRAWL_FILES_ONLY`. The server must re-authorize and revalidate current V1 candidates.
 
-MCP remains stdio-only. Do not add or imply remote transport, arbitrary file writes, client-supplied write paths, or DNS, Search Console, GitHub, Git, or deployment mutation. Read [MCP_PLAN.md](../../docs/MCP_PLAN.md) for schemas, resources, prompts, and failure behavior.
+MCP remains stdio-only. Do not add or imply remote transport, arbitrary file writes, client-supplied write paths, detector auto-fixes, or DNS, Search Console, GitHub, Git, or deployment mutation. Read [MCP_PLAN.md](../../docs/MCP_PLAN.md) for schemas, resources, prompts, and failure behavior.
 
 ## Produce GUI and HTML reports
 

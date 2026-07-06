@@ -30,6 +30,7 @@ describe("status", () => {
     expect(output).toContain("DNS readiness: read-only status checks implemented");
     expect(output).toContain("Post-write recheck: implemented read-only");
     expect(output).toContain("Social preview simulator: implemented read-only");
+    expect(output).toContain("Generated-site implementation smell detector: implemented read-only");
     expect(output).toContain("Deployment automation and deploy provider integrations: not implemented");
   });
 
@@ -45,6 +46,9 @@ describe("status", () => {
     expect(status.capabilities.mcp.writeTools).toEqual(["shipready.write_safe_crawl_files"]);
     expect(status.capabilities.gui).toEqual({ local: true, writeEndpoint: false });
     expect(status.integrations).toEqual({
+      generatedSiteSmells: "read_only_detector",
+      aiAuthorshipDetection: "not_implemented",
+      smellDetectorAutoFixes: "not_implemented",
       socialPreview: "read_only_simulator",
       socialPlatformApis: "not_implemented",
       exactSocialRenderingGuarantee: false,

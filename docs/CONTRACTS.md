@@ -26,6 +26,7 @@ This was low risk because CLI JSON formatting already had a dedicated Zod-valida
 | `search-console status --url <url> --json` | Yes | `shipready.searchConsoleStatus.v1` | V1 mock prototype boundary | Deterministic local read only |
 | `dns status --url <url> --json` | Yes | `shipready.dnsStatus.v1` | V1 DNS readiness boundary | Read-only DNS/optional HTTP evidence |
 | `social-preview --url <url> --json` | Yes | `shipready.socialPreview.v1` | V1 simulated preview boundary | Network read only or deterministic local mock |
+| `smells <path> --json` | Yes | `shipready.generatedSiteSmells.v1` | V1 implementation-smell boundary | Local read only or optional network read with `--url` |
 | JSON command failure | When the invoked command accepted `--json` | `shipready.error.v1` | V1 error boundary; Commander parse gaps remain | No additional effects |
 
 The authoritative mapping and CLI contract schemas are in `src/types/contracts.ts`.
@@ -89,6 +90,22 @@ Top-level keys are `contract`, `url`, `checkedAt`, `mode`, `sourceMode`, optiona
 Canonical fixtures cover `complete`, `missing-image`, `rendered-only-metadata`, `twitter-fallback`, `missing-description`, `missing-og-url`, `raw-rendered-different`, `image-unreachable`, and `minimal-title-only`. All use fixed timestamps and synthetic `example.com` values. Fixture generation makes no external requests.
 
 The CLI and MCP tool do not write files, require a repository path, call social platform APIs, scrape platform preview endpoints, render screenshots, generate images, deploy, mutate DNS/Search Console, use OAuth, store tokens, or broaden `WRITE_POLICY_V1`.
+
+## `shipready.generatedSiteSmells.v1`
+
+Pass 14 implements this contract for `smells <path> --json` and the read-only MCP tool `shipready.generated_site_smells`.
+
+Top-level keys are `contract`, `checkedAt`, `mode`, `repoPath`, optional `url`, `framework`, `summary`, `findings`, `scanned`, `limitations`, and `nextActions`. `mode` is `repo_only`, `repo_plus_url`, or `mock`. URL mode strips query strings from output before reporting and reuses the existing single-page audit/social-preview evidence; it is not a crawler.
+
+`framework` reports the same detected framework kind/name/confidence/evidence shape used by repo inspection. `summary.status` is `clean`, `needs_attention`, `manual_review`, or `unknown`, with constrained severity counts for `high`, `medium`, `low`, and `info`. Findings use constrained categories: `metadata`, `crawlability`, `preview`, `routing`, `assets`, `content_placeholders`, `configuration`, `framework`, `generated_boilerplate`, and `unknown`.
+
+Each finding includes `id`, `title`, `category`, `severity`, `confidence`, `status`, bounded `evidence`, `whyItMatters`, `nextAction`, `relatedCommands`, and `relatedContracts`. Evidence is repo-relative where it references files and may include line numbers, fields, short redacted value previews, and source tags (`repo`, `audit`, `social_preview`, `scanner`, or `mock`). It must not contain raw full-file content, environment values, provider credentials, or sensitive query strings.
+
+`scanned` reports files, bytes, skipped files, truncation, and limits. The scanner is intentionally practical and bounded: it reads likely source/config/public text files and skips dependency directories, build output, lockfiles, binary files, large media, and environment files. It is not a linter framework, security scanner, content quality grader, full SEO audit, multi-page crawler, or authorship classifier.
+
+Canonical fixtures cover `clean`, `vite-client-only-metadata`, `placeholder-content`, `missing-social-assets`, `hardcoded-localhost`, `unsupported-framework`, and `repo-plus-url-rendered-only`. All use deterministic local mocks and fixed timestamps. The mock provider makes no network request and writes no files.
+
+The CLI and MCP tool do not apply fixes, mutate repositories, call deploy/Git/GitHub/provider APIs, mutate DNS/Search Console, call social platform APIs, use OAuth, store tokens, or broaden `WRITE_POLICY_V1`. Findings are heuristic implementation signals that commonly appear in generated sites; they are not proof of authorship, generator identity, or site quality.
 
 ## Exact success shapes
 
@@ -182,6 +199,14 @@ Internal source and formatter: `src/socialPreview/socialPreview.ts` and `src/rep
 
 Consumers: CLI users, MCP clients, contract fixtures, tests, and future report/GUI work. Current GUI and HTML report surfaces do not consume this contract.
 
+### `shipready.generatedSiteSmells.v1`
+
+Top-level keys: `contract`, `checkedAt`, `mode`, `repoPath`, optional `url`, `framework`, `summary`, `findings`, `scanned`, `limitations`, and `nextActions`.
+
+Internal source and formatter: `src/smells/generatedSiteSmells.ts`, `src/smells/repoSmellScanner.ts`, `src/smells/mockGeneratedSiteSmells.ts`, and `src/report/formatGeneratedSiteSmellsReport.ts`. Exit behavior: `0` after an emitted smell report, including clean, manual-review, and needs-attention results; `1` for invalid repo path, invalid URL, unsupported mock, invalid timeout, or invalid scan-limit input; `2` for operational or contract failure.
+
+Consumers: CLI users, MCP clients, contract fixtures, tests, and future report/GUI work. Current GUI and HTML report surfaces do not consume this contract.
+
 ## Error contract
 
 `shipready.error.v1` has required keys:
@@ -272,6 +297,13 @@ Deterministic fixtures live in `validation/contracts/`:
 - `social-preview.raw-rendered-different.json`
 - `social-preview.image-unreachable.json`
 - `social-preview.minimal-title-only.json`
+- `generated-site-smells.clean.json`
+- `generated-site-smells.vite-client-only-metadata.json`
+- `generated-site-smells.placeholder-content.json`
+- `generated-site-smells.missing-social-assets.json`
+- `generated-site-smells.hardcoded-localhost.json`
+- `generated-site-smells.unsupported-framework.json`
+- `generated-site-smells.repo-plus-url-rendered-only.json`
 
 Regenerate them from local test repositories and deterministic in-memory audit results:
 
@@ -281,7 +313,7 @@ pnpm contracts:fixtures
 
 The generator is `scripts/validation/generateContractFixtures.ts`. It makes no external requests. The write fixtures run `writeFixFromDryRun` only against temporary copies under the operating-system temp directory, record the returned results, and remove the copies. They never target a real repository. Fixed timestamps and repository display paths keep fixtures reproducible.
 
-Focused drift coverage includes `tests/contracts.test.ts`, `tests/socialPreview.test.ts`, `tests/socialPreviewCli.test.ts`, `tests/mcp.socialPreview.test.ts`, `tests/recheck.test.ts`, `tests/recheckCli.test.ts`, `tests/mcp.recheck.test.ts`, `tests/status.test.ts`, and `tests/doctor.test.ts`. Tests validate every fixture and formatter discriminator, constrained social-preview/recheck states, mocked local/live comparisons, no-mutation behavior, allowed-root enforcement, status/doctor posture, and existing safety boundaries.
+Focused drift coverage includes `tests/contracts.test.ts`, `tests/socialPreview.test.ts`, `tests/socialPreviewCli.test.ts`, `tests/mcp.socialPreview.test.ts`, `tests/generatedSiteSmells.test.ts`, `tests/generatedSiteSmellsCli.test.ts`, `tests/mcp.generatedSiteSmells.test.ts`, `tests/recheck.test.ts`, `tests/recheckCli.test.ts`, `tests/mcp.recheck.test.ts`, `tests/status.test.ts`, and `tests/doctor.test.ts`. Tests validate every fixture and formatter discriminator, constrained social-preview/recheck/generated-site smell states, mocked local/live comparisons, no-mutation behavior, allowed-root enforcement, status/doctor posture, and existing safety boundaries.
 
 ## Downstream consumers
 
@@ -303,10 +335,10 @@ The MCP write call must supply the same URL and repo path, the fresh receipt, an
 
 Ready now:
 
-- Twelve implemented JSON-capable command surfaces have explicit V1 contract names.
+- Thirteen implemented JSON-capable command surfaces have explicit V1 contract names.
 - Success outputs retain their existing fields and add stable discriminators.
 - Action-level JSON errors have stable codes/messages and preserve the legacy `error` field.
-- Deterministic local fixtures and focused drift tests cover success, failure, dry-run, write, UI, Search Console, DNS, recheck, and social preview states.
+- Deterministic local fixtures and focused drift tests cover success, failure, dry-run, write, UI, Search Console, DNS, recheck, social preview, and generated-site smell states.
 - Creation-only write evidence remains explicit and policy-bound.
 - Human CLI, HTML file, and GUI server surfaces are clearly separated from CLI JSON contracts.
 

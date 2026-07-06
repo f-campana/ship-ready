@@ -49,6 +49,14 @@ import {
   formatSocialPreviewHuman,
   formatSocialPreviewJson,
 } from "../report/formatSocialPreviewReport";
+import {
+  classifyGeneratedSiteSmellsError,
+  getGeneratedSiteSmells,
+} from "../smells/generatedSiteSmells";
+import {
+  formatGeneratedSiteSmellsHuman,
+  formatGeneratedSiteSmellsJson,
+} from "../report/formatGeneratedSiteSmellsReport";
 
 const program = new Command();
 
@@ -180,6 +188,73 @@ program
     }
   });
 
+program
+  .command("smells")
+  .description("Detect read-only generated-site implementation smells in a local repository.")
+  .argument("<path>", "Local repository path to scan")
+  .option("--url <url>", "Optional public HTTP(S) URL for raw/rendered cross-check evidence")
+  .option("--json", "Output structured JSON")
+  .option("--mock <scenario>", "Deterministic mock scenario")
+  .option("--max-files <n>", "Maximum text/config files to scan")
+  .option("--max-bytes <n>", "Maximum text/config bytes to read")
+  .option("--timeout <ms>", "Network and render timeout in milliseconds when --url is used", "15000")
+  .option("--no-render", "Skip the Playwright rendered pass when --url is used")
+  .option("--user-agent <ua>", "Override the default user agent when --url is used")
+  .action(async (path: string, options: GeneratedSiteSmellsCommandOptions) => {
+    const timeoutMs = Number(options.timeout);
+    if (!Number.isFinite(timeoutMs) || timeoutMs <= 0) {
+      writeTypedCommandError(
+        "smells",
+        "invalid_timeout",
+        "Invalid timeout. Provide a positive number of milliseconds.",
+        options.json,
+        1,
+      );
+      return;
+    }
+
+    const maxFiles = parsePositiveIntegerOption(options.maxFiles, "max-files");
+    if (maxFiles instanceof Error) {
+      writeTypedCommandError("smells", "invalid_mode", maxFiles.message, options.json, 1);
+      return;
+    }
+    const maxBytes = parsePositiveIntegerOption(options.maxBytes, "max-bytes");
+    if (maxBytes instanceof Error) {
+      writeTypedCommandError("smells", "invalid_mode", maxBytes.message, options.json, 1);
+      return;
+    }
+
+    try {
+      const result = await getGeneratedSiteSmells({
+        repoPath: path,
+        url: options.url,
+        mock: options.mock,
+        maxFiles,
+        maxBytes,
+        timeoutMs,
+        userAgent: options.userAgent,
+        render: options.render,
+      });
+      process.stdout.write(
+        options.json
+          ? formatGeneratedSiteSmellsJson(result)
+          : formatGeneratedSiteSmellsHuman(result),
+      );
+    } catch (error) {
+      const code = classifyGeneratedSiteSmellsError(error);
+      const message = error instanceof Error && code !== "internal_error"
+        ? error.message
+        : "ShipReady generated-site smell detection could not complete.";
+      writeTypedCommandError(
+        "smells",
+        code,
+        message,
+        options.json,
+        code === "invalid_url" || code === "invalid_repo_path" || code === "invalid_mode" || code === "invalid_timeout" ? 1 : 2,
+      );
+    }
+  });
+
 const searchConsole = program
   .command("search-console")
   .description("Read mock-backed Search Console status without Google API access or writes.");
@@ -266,7 +341,7 @@ dns
 
 program
   .command("mcp")
-  .description("Start the local ShipReady MCP stdio server (eleven read-only tools, one guarded V1 write tool).")
+  .description("Start the local ShipReady MCP stdio server (twelve read-only tools, one guarded V1 write tool).")
   .option(
     "--allow-root <absolute-path>",
     "Authorize one repository root (repeatable)",
@@ -580,6 +655,17 @@ type SocialPreviewCommandOptions = {
   userAgent?: string;
 };
 
+type GeneratedSiteSmellsCommandOptions = {
+  url?: string;
+  json?: boolean;
+  mock?: string;
+  maxFiles?: string;
+  maxBytes?: string;
+  timeout: string;
+  render: boolean;
+  userAgent?: string;
+};
+
 type SearchConsoleStatusCommandOptions = {
   url: string;
   mock?: string;
@@ -600,6 +686,15 @@ type DnsStatusCommandOptions = {
 
 function collectOption(value: string, previous: string[]): string[] {
   return [...previous, value];
+}
+
+function parsePositiveIntegerOption(value: string | undefined, name: string): number | undefined | Error {
+  if (value === undefined) return undefined;
+  const parsed = Number(value);
+  if (!Number.isInteger(parsed) || parsed <= 0) {
+    return new Error(`Invalid ${name}. Provide a positive integer.`);
+  }
+  return parsed;
 }
 
 type InspectRepoCommandOptions = {
