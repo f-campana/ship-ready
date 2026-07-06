@@ -16,6 +16,7 @@ export const CONTRACT_NAMES = {
   searchConsoleStatus: "shipready.searchConsoleStatus.v1",
   dnsStatus: "shipready.dnsStatus.v1",
   recheck: "shipready.recheck.v1",
+  socialPreview: "shipready.socialPreview.v1",
   status: "shipready.status.v1",
   doctor: "shipready.doctor.v1",
   error: "shipready.error.v1",
@@ -31,6 +32,7 @@ export const CLI_JSON_CONTRACT_BY_COMMAND = {
   "search-console status --json": CONTRACT_NAMES.searchConsoleStatus,
   "dns status --json": CONTRACT_NAMES.dnsStatus,
   "recheck --json": CONTRACT_NAMES.recheck,
+  "social-preview --json": CONTRACT_NAMES.socialPreview,
   "status --json": CONTRACT_NAMES.status,
   "doctor --json": CONTRACT_NAMES.doctor,
 } as const;
@@ -370,6 +372,138 @@ export const RecheckJsonContractSchema = z.object({
   }
 });
 
+const SocialPreviewSourceFieldNameSchema = z.enum([
+  "title",
+  "meta description",
+  "canonical",
+  "og:title",
+  "og:description",
+  "og:url",
+  "og:image",
+  "og:type",
+  "og:site_name",
+  "twitter:card",
+  "twitter:title",
+  "twitter:description",
+  "twitter:image",
+]);
+
+const SocialPreviewFieldStatusSchema = z.enum([
+  "present",
+  "missing",
+  "fallback",
+  "unknown",
+]);
+
+const SocialPreviewFieldSourceSchema = z.enum([
+  "raw_html",
+  "rendered_html",
+  "fallback",
+  "unknown",
+]);
+
+const SocialPreviewObservedFieldSchema = z.object({
+  name: SocialPreviewSourceFieldNameSchema,
+  rawValue: z.string().min(1).optional(),
+  renderedValue: z.string().min(1).optional(),
+  selectedValue: z.string().min(1).optional(),
+  selectedSource: SocialPreviewFieldSourceSchema,
+  status: SocialPreviewFieldStatusSchema,
+}).strict();
+
+const SocialPreviewFieldSchema = z.object({
+  status: SocialPreviewFieldStatusSchema,
+  value: z.string().min(1).optional(),
+  source: SocialPreviewFieldSourceSchema,
+  sourceField: SocialPreviewSourceFieldNameSchema.optional(),
+  message: z.string().min(1),
+}).strict();
+
+const SocialPreviewImageFieldSchema = SocialPreviewFieldSchema.extend({
+  assetStatus: z.enum(["not_checked", "reachable", "unreachable", "unknown"]),
+  assetMessage: z.string().min(1),
+}).strict();
+
+const SocialPreviewSurfaceSchema = z.object({
+  surface: z.enum([
+    "google_search",
+    "generic_social",
+    "x_twitter",
+    "slack_discord",
+    "linkedin",
+  ]),
+  label: z.string().min(1),
+  fields: z.object({
+    title: SocialPreviewFieldSchema,
+    description: SocialPreviewFieldSchema,
+    url: SocialPreviewFieldSchema,
+    cardType: SocialPreviewFieldSchema.optional(),
+    image: SocialPreviewImageFieldSchema.optional(),
+  }).strict(),
+  warnings: z.array(z.string().min(1)),
+}).strict();
+
+const SocialPreviewRawRenderedDifferenceSchema = z.object({
+  field: SocialPreviewSourceFieldNameSchema,
+  rawValue: z.string().min(1).optional(),
+  renderedValue: z.string().min(1).optional(),
+  status: z.enum([
+    "missing_in_both",
+    "present_in_raw",
+    "present_after_render_only",
+    "changed_after_render",
+  ]),
+}).strict();
+
+export const SocialPreviewJsonContractSchema = z.object({
+  contract: z.literal(CONTRACT_NAMES.socialPreview),
+  url: z.string().min(1),
+  checkedAt: z.string().min(1),
+  mode: z.enum(["live", "mock"]),
+  sourceMode: z.enum(["raw", "rendered", "both"]),
+  canonicalUrl: z.string().min(1).optional(),
+  previews: z.object({
+    google_search: SocialPreviewSurfaceSchema,
+    generic_social: SocialPreviewSurfaceSchema,
+    x_twitter: SocialPreviewSurfaceSchema,
+    slack_discord: SocialPreviewSurfaceSchema,
+    linkedin: SocialPreviewSurfaceSchema,
+  }).strict(),
+  fields: z.array(SocialPreviewObservedFieldSchema).min(1),
+  image: SocialPreviewImageFieldSchema,
+  warnings: z.array(z.string().min(1)),
+  limitations: z.array(z.string().min(1)).min(1),
+  comparison: z.object({
+    rawVsRendered: z.array(SocialPreviewRawRenderedDifferenceSchema),
+  }).strict(),
+  verdict: z.object({
+    status: z.enum(["ready", "needs_attention", "unknown"]),
+    summary: z.string().min(1),
+  }).strict(),
+  nextActions: z.array(z.string().min(1)).min(1),
+}).strict().superRefine((result, context) => {
+  for (const [key, preview] of Object.entries(result.previews)) {
+    if (preview.surface !== key) {
+      context.addIssue({
+        code: "custom",
+        path: ["previews", key, "surface"],
+        message: "Preview surface key must match its surface discriminator.",
+      });
+    }
+  }
+  if (result.verdict.status === "ready") {
+    const hasMissing = Object.values(result.previews).some((preview) =>
+      Object.values(preview.fields).some((field) => field?.status === "missing"));
+    if (hasMissing) {
+      context.addIssue({
+        code: "custom",
+        path: ["verdict", "status"],
+        message: "A ready simulated preview must not contain missing preview fields.",
+      });
+    }
+  }
+});
+
 const NotImplementedSchema = z.literal("not_implemented");
 
 export const StatusJsonContractSchema = z.object({
@@ -401,6 +535,9 @@ export const StatusJsonContractSchema = z.object({
     forbidden: z.array(z.string().min(1)),
   }).strict(),
   integrations: z.object({
+    socialPreview: z.literal("read_only_simulator"),
+    socialPlatformApis: NotImplementedSchema,
+    exactSocialRenderingGuarantee: z.literal(false),
     searchConsole: z.enum(["not_implemented", "mock_prototype"]),
     dns: z.enum(["not_implemented", "read_only_status"]),
     dnsProviderWrites: NotImplementedSchema,
@@ -515,6 +652,7 @@ export type UiReportJsonContract = z.infer<typeof UiReportJsonContractSchema>;
 export type SearchConsoleStatusJsonContract = z.infer<typeof SearchConsoleStatusJsonContractSchema>;
 export type DnsStatusJsonContract = z.infer<typeof DnsStatusJsonContractSchema>;
 export type RecheckJsonContract = z.infer<typeof RecheckJsonContractSchema>;
+export type SocialPreviewJsonContract = z.infer<typeof SocialPreviewJsonContractSchema>;
 export type StatusJsonContract = z.infer<typeof StatusJsonContractSchema>;
 export type DoctorCheckStatus = z.infer<typeof DoctorCheckStatusSchema>;
 export type DoctorCheck = z.infer<typeof DoctorCheckSchema>;

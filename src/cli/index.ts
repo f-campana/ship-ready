@@ -41,6 +41,14 @@ import {
 import { SHIPREADY_VERSION } from "../version";
 import { recheck } from "../recheck/recheck";
 import { formatRecheckHuman, formatRecheckJson } from "../report/formatRecheckReport";
+import {
+  classifySocialPreviewError,
+  getSocialPreview,
+} from "../socialPreview/socialPreview";
+import {
+  formatSocialPreviewHuman,
+  formatSocialPreviewJson,
+} from "../report/formatSocialPreviewReport";
 
 const program = new Command();
 
@@ -121,6 +129,54 @@ program
           2,
         );
       }
+    }
+  });
+
+program
+  .command("social-preview")
+  .description("Simulate likely search and social preview inputs from observed page metadata; read-only approximation.")
+  .requiredOption("--url <url>", "Public HTTP(S) URL to simulate")
+  .option("--json", "Output structured JSON")
+  .option("--source <source>", "Metadata source to use: raw, rendered, or both", "both")
+  .option("--check-assets", "Request image asset reachability status when safe")
+  .option("--mock <scenario>", "Deterministic mock scenario")
+  .option("--timeout <ms>", "Network and render timeout in milliseconds", "15000")
+  .option("--user-agent <ua>", "Override the default user agent")
+  .action(async (options: SocialPreviewCommandOptions) => {
+    const timeoutMs = Number(options.timeout);
+    if (!Number.isFinite(timeoutMs) || timeoutMs <= 0) {
+      writeTypedCommandError(
+        "social-preview",
+        "invalid_timeout",
+        "Invalid timeout. Provide a positive number of milliseconds.",
+        options.json,
+        1,
+      );
+      return;
+    }
+
+    try {
+      const result = await getSocialPreview({
+        url: options.url,
+        source: options.source,
+        checkAssets: options.checkAssets,
+        mock: options.mock,
+        timeoutMs,
+        userAgent: options.userAgent,
+      });
+      process.stdout.write(options.json ? formatSocialPreviewJson(result) : formatSocialPreviewHuman(result));
+    } catch (error) {
+      const code = classifySocialPreviewError(error);
+      const message = error instanceof Error && code !== "internal_error"
+        ? error.message
+        : "ShipReady social preview simulation could not complete.";
+      writeTypedCommandError(
+        "social-preview",
+        code,
+        message,
+        options.json,
+        code === "invalid_url" || code === "invalid_mode" || code === "invalid_timeout" ? 1 : 2,
+      );
     }
   });
 
@@ -210,7 +266,7 @@ dns
 
 program
   .command("mcp")
-  .description("Start the local ShipReady MCP stdio server (ten read-only tools, one guarded V1 write tool).")
+  .description("Start the local ShipReady MCP stdio server (eleven read-only tools, one guarded V1 write tool).")
   .option(
     "--allow-root <absolute-path>",
     "Authorize one repository root (repeatable)",
@@ -510,6 +566,16 @@ type DoctorCommandOptions = {
 type RecheckCommandOptions = {
   url: string;
   json?: boolean;
+  timeout: string;
+  userAgent?: string;
+};
+
+type SocialPreviewCommandOptions = {
+  url: string;
+  json?: boolean;
+  source?: string;
+  checkAssets?: boolean;
+  mock?: string;
   timeout: string;
   userAgent?: string;
 };

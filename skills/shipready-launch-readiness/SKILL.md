@@ -26,13 +26,13 @@ Do not use ShipReady for keyword research, rank tracking, backlink analysis, gen
 
 | State | Current capability |
 |---|---|
-| Implemented | Single-page audit; bounded repo inspection; planning; dry-run; status/doctor; versioned JSON; UI and HTML reports; local GUI; stdio MCP |
+| Implemented | Single-page audit; bounded repo inspection; social preview simulator; planning; dry-run; status/doctor; versioned JSON; UI and HTML reports; local GUI; stdio MCP |
 | Mock-backed | Search Console status only; no Google OAuth, tokens, or live API calls |
-| Read-only | Audit, inspection, planning, dry-run, post-write recheck, UI report, GUI, Search Console mocks, and DNS status; live DNS uses resolver observations only |
+| Read-only | Audit, inspection, social preview simulation, planning, dry-run, post-write recheck, UI report, GUI, Search Console mocks, and DNS status; live DNS uses resolver observations only |
 | Write-guarded | CLI and the sole MCP write tool may create only eligible missing robots/sitemap files under `WRITE_POLICY_V1` |
-| Future | Social preview simulator, generated-site smell detector, bounded multi-page crawl, GUI revisit, patch export, and GitHub PR integration |
+| Future | Generated-site smell detector, bounded multi-page crawl, GUI revisit, terminal output polish/TUI viewer, patch export, and GitHub PR integration |
 
-Never infer future behavior from a roadmap name. A current audit covers one page. Current preview cards are not the future social preview simulator.
+Never infer future behavior from a roadmap name. A current audit covers one page. The current social preview simulator is a metadata-based approximation, not platform output.
 
 ## Run the canonical CLI workflow
 
@@ -47,6 +47,7 @@ pnpm shipready inspect-repo <path> --json
 pnpm shipready plan-fixes <path> --url <url> --json
 pnpm shipready fix <path> --url <url> --dry-run --json
 pnpm shipready dns status --url <url> --json
+pnpm shipready social-preview --url <url> --json
 pnpm shipready search-console status --url <url> --json
 pnpm shipready ui-report <path> --url <url> --json
 pnpm shipready html-report <path> --url <url> --output shipready-report.html
@@ -55,6 +56,7 @@ pnpm shipready html-report <path> --url <url> --output shipready-report.html
 - Use URL-only `audit` and `ui-report` when no repository is available; do not claim local fixes can be planned.
 - Use repo-backed commands for framework evidence, fix classification, and exact previews.
 - Treat `plan-fixes` automation fields as capability descriptions, not authorization.
+- Treat `social-preview` as a simulated preview from observed metadata, not a precise third-party rendering result.
 - Treat `fix --dry-run` as mandatory before a write; it writes nothing.
 - Treat JSON `contract` discriminators as versioned public boundaries. See [CONTRACTS.md](../../docs/CONTRACTS.md).
 - Separate safe candidates, review-required changes, manual actions, already-good checks, limitations, and local-versus-live state.
@@ -92,6 +94,23 @@ pnpm shipready recheck <path> --url <url> --json
 
 Use URL-only mode when local state is unavailable. Use repo-backed mode to compare current V1-safe local expected crawl-file presence with live `robots.txt` and `sitemap.xml` evidence. Treat `appears_deployed`, `appears_not_deployed`, and `partially_deployed` as evidence classifications, not guarantees. An unreachable result is unknown, not missing. Recheck never invokes write mode, Git, deployment, provider APIs, DNS writes, or Search Console.
 
+## Simulate social previews
+
+```bash
+pnpm shipready social-preview --url https://example.com
+pnpm shipready social-preview --url https://example.com --json
+pnpm shipready social-preview --url https://example.com --source raw|rendered|both
+pnpm shipready social-preview --url https://example.com --mock complete --json
+```
+
+Use this read-only command to inspect likely input fields for Google-style search snippets and generic social, X/Twitter, Slack/Discord, and LinkedIn-style link cards. It reports title, description, URL, card type, image URL presence, image asset status, raw-versus-rendered differences, warnings, limitations, and next actions.
+
+Prefer `--source both` unless you have a specific diagnostic reason. It prefers raw HTML values and reports rendered-only fallbacks because raw HTML is usually safer for preview bots.
+
+Use deterministic mocks for examples/tests: `complete`, `missing-image`, `rendered-only-metadata`, `twitter-fallback`, `missing-description`, `missing-og-url`, `raw-rendered-different`, `image-unreachable`, and `minimal-title-only`.
+
+No social platform APIs are used. Do not present the output as a precise LinkedIn, X, Slack, Discord, Google, or browser rendering result. It does not call platform preview endpoints, generate screenshots/images, deploy, mutate DNS/Search Console, use OAuth, store tokens, or write repository files.
+
 ## Use MCP safely
 
 Start the local stdio server with at least one explicit allowed root:
@@ -112,6 +131,7 @@ Use these read-only tools by their exact names:
 - `shipready.search_console_status`
 - `shipready.dns_status`
 - `shipready.recheck`
+- `shipready.social_preview`
 
 Treat `shipready.write_safe_crawl_files` as the only MCP write tool. Before calling it, require an authorized repository path, a fresh receipt from `shipready.preview_fixes`, the same normalized URL and canonical repo path, and exact confirmation `CREATE_SAFE_CRAWL_FILES_ONLY`. The server must re-authorize and revalidate current V1 candidates.
 

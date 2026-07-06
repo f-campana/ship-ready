@@ -54,7 +54,7 @@ describe("MCP startup and stdio transport", () => {
       const resources = await client.listResources();
       const templates = await client.listResourceTemplates();
       const prompts = await client.listPrompts();
-      expect(tools.tools).toHaveLength(11);
+      expect(tools.tools).toHaveLength(12);
       expect(tools.tools.map((tool) => tool.name).filter((name) => name.includes("write"))).toEqual([
         "shipready.write_safe_crawl_files",
       ]);
@@ -104,6 +104,15 @@ describe("MCP startup and stdio transport", () => {
         contract: "shipready.recheck.v1",
         mode: "repo_backed",
         deployment: { status: "appears_deployed" },
+      });
+      const socialPreview = await client.callTool({
+        name: "shipready.social_preview",
+        arguments: { url: "https://example.com", mock: "complete" },
+      });
+      expect(socialPreview.structuredContent).toMatchObject({
+        contract: "shipready.socialPreview.v1",
+        mode: "mock",
+        verdict: { status: "ready" },
       });
       const resource = await client.readResource({ uri: "shipready://docs/contracts" });
       expect(resource.contents[0]).toMatchObject({ mimeType: "text/markdown" });

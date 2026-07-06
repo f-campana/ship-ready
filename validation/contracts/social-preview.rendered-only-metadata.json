@@ -1,0 +1,451 @@
+{
+  "contract": "shipready.socialPreview.v1",
+  "url": "https://example.com/",
+  "checkedAt": "2026-07-06T12:00:00.000Z",
+  "mode": "mock",
+  "sourceMode": "both",
+  "canonicalUrl": "https://example.com/",
+  "previews": {
+    "google_search": {
+      "surface": "google_search",
+      "label": "Google-style search preview",
+      "fields": {
+        "title": {
+          "status": "fallback",
+          "value": "Complete Launch Page",
+          "source": "rendered_html",
+          "sourceField": "title",
+          "message": "Title uses a fallback from title in rendered HTML."
+        },
+        "description": {
+          "status": "fallback",
+          "value": "A complete deterministic preview description for sharing.",
+          "source": "rendered_html",
+          "sourceField": "meta description",
+          "message": "Description uses a fallback from meta description in rendered HTML."
+        },
+        "url": {
+          "status": "fallback",
+          "value": "https://example.com/",
+          "source": "rendered_html",
+          "sourceField": "canonical",
+          "message": "URL uses a fallback from canonical in rendered HTML."
+        }
+      },
+      "warnings": [
+        "Google-style title appears only after rendering; raw HTML is usually safer for preview bots.",
+        "Google-style description appears only after rendering; raw HTML is usually safer for preview bots."
+      ]
+    },
+    "generic_social": {
+      "surface": "generic_social",
+      "label": "Generic social preview",
+      "fields": {
+        "title": {
+          "status": "fallback",
+          "value": "Complete Launch Page",
+          "source": "rendered_html",
+          "sourceField": "og:title",
+          "message": "Title uses a fallback from og:title in rendered HTML."
+        },
+        "description": {
+          "status": "fallback",
+          "value": "A complete deterministic preview description for sharing.",
+          "source": "rendered_html",
+          "sourceField": "og:description",
+          "message": "Description uses a fallback from og:description in rendered HTML."
+        },
+        "url": {
+          "status": "fallback",
+          "value": "https://example.com/",
+          "source": "rendered_html",
+          "sourceField": "og:url",
+          "message": "URL uses a fallback from og:url in rendered HTML."
+        },
+        "cardType": {
+          "status": "fallback",
+          "value": "website",
+          "source": "rendered_html",
+          "sourceField": "og:type",
+          "message": "Card type uses a fallback from og:type in rendered HTML."
+        },
+        "image": {
+          "status": "fallback",
+          "value": "https://example.com/social-preview.png",
+          "source": "rendered_html",
+          "sourceField": "og:image",
+          "message": "Image uses a fallback from og:image in rendered HTML.",
+          "assetStatus": "reachable",
+          "assetMessage": "The deterministic mock marks this image URL as reachable."
+        }
+      },
+      "warnings": [
+        "Generic social preview uses a fallback for title from og:title.",
+        "Generic social preview uses a fallback for description from og:description.",
+        "Generic social preview uses a fallback for url from og:url.",
+        "Generic social preview uses a fallback for image from og:image.",
+        "Generic social preview title appears only after rendering; raw HTML is usually safer for preview bots.",
+        "Generic social preview description appears only after rendering; raw HTML is usually safer for preview bots.",
+        "Generic social preview URL appears only after rendering; raw HTML is usually safer for preview bots.",
+        "Generic social preview image appears only after rendering; raw HTML is usually safer for preview bots."
+      ]
+    },
+    "x_twitter": {
+      "surface": "x_twitter",
+      "label": "X/Twitter preview",
+      "fields": {
+        "title": {
+          "status": "fallback",
+          "value": "Complete Launch Page",
+          "source": "rendered_html",
+          "sourceField": "twitter:title",
+          "message": "Title uses a fallback from twitter:title in rendered HTML."
+        },
+        "description": {
+          "status": "fallback",
+          "value": "A complete deterministic preview description for sharing.",
+          "source": "rendered_html",
+          "sourceField": "twitter:description",
+          "message": "Description uses a fallback from twitter:description in rendered HTML."
+        },
+        "url": {
+          "status": "fallback",
+          "value": "https://example.com/",
+          "source": "rendered_html",
+          "sourceField": "og:url",
+          "message": "URL uses a fallback from og:url in rendered HTML."
+        },
+        "cardType": {
+          "status": "fallback",
+          "value": "summary_large_image",
+          "source": "rendered_html",
+          "sourceField": "twitter:card",
+          "message": "Card type uses a fallback from twitter:card in rendered HTML."
+        },
+        "image": {
+          "status": "fallback",
+          "value": "https://example.com/social-preview.png",
+          "source": "rendered_html",
+          "sourceField": "twitter:image",
+          "message": "Image uses a fallback from twitter:image in rendered HTML.",
+          "assetStatus": "reachable",
+          "assetMessage": "The deterministic mock marks this image URL as reachable."
+        }
+      },
+      "warnings": [
+        "X/Twitter preview uses a fallback for title from twitter:title.",
+        "X/Twitter preview uses a fallback for description from twitter:description.",
+        "X/Twitter preview uses a fallback for url from og:url.",
+        "X/Twitter preview uses a fallback for cardType from twitter:card.",
+        "X/Twitter preview uses a fallback for image from twitter:image.",
+        "X/Twitter title appears only after rendering; raw HTML is usually safer for preview bots.",
+        "X/Twitter description appears only after rendering; raw HTML is usually safer for preview bots.",
+        "X/Twitter image appears only after rendering; raw HTML is usually safer for preview bots."
+      ]
+    },
+    "slack_discord": {
+      "surface": "slack_discord",
+      "label": "Slack/Discord preview",
+      "fields": {
+        "title": {
+          "status": "fallback",
+          "value": "Complete Launch Page",
+          "source": "rendered_html",
+          "sourceField": "og:title",
+          "message": "Title uses a fallback from og:title in rendered HTML."
+        },
+        "description": {
+          "status": "fallback",
+          "value": "A complete deterministic preview description for sharing.",
+          "source": "rendered_html",
+          "sourceField": "og:description",
+          "message": "Description uses a fallback from og:description in rendered HTML."
+        },
+        "url": {
+          "status": "fallback",
+          "value": "https://example.com/",
+          "source": "rendered_html",
+          "sourceField": "og:url",
+          "message": "URL uses a fallback from og:url in rendered HTML."
+        },
+        "image": {
+          "status": "fallback",
+          "value": "https://example.com/social-preview.png",
+          "source": "rendered_html",
+          "sourceField": "og:image",
+          "message": "Image uses a fallback from og:image in rendered HTML.",
+          "assetStatus": "reachable",
+          "assetMessage": "The deterministic mock marks this image URL as reachable."
+        }
+      },
+      "warnings": [
+        "Slack/Discord-style preview uses a fallback for title from og:title.",
+        "Slack/Discord-style preview uses a fallback for description from og:description.",
+        "Slack/Discord-style preview uses a fallback for url from og:url.",
+        "Slack/Discord-style preview uses a fallback for image from og:image.",
+        "Slack/Discord title appears only after rendering; raw HTML is usually safer for preview bots.",
+        "Slack/Discord description appears only after rendering; raw HTML is usually safer for preview bots.",
+        "Slack/Discord image appears only after rendering; raw HTML is usually safer for preview bots."
+      ]
+    },
+    "linkedin": {
+      "surface": "linkedin",
+      "label": "LinkedIn preview",
+      "fields": {
+        "title": {
+          "status": "fallback",
+          "value": "Complete Launch Page",
+          "source": "rendered_html",
+          "sourceField": "og:title",
+          "message": "Title uses a fallback from og:title in rendered HTML."
+        },
+        "description": {
+          "status": "fallback",
+          "value": "A complete deterministic preview description for sharing.",
+          "source": "rendered_html",
+          "sourceField": "og:description",
+          "message": "Description uses a fallback from og:description in rendered HTML."
+        },
+        "url": {
+          "status": "fallback",
+          "value": "https://example.com/",
+          "source": "rendered_html",
+          "sourceField": "og:url",
+          "message": "URL uses a fallback from og:url in rendered HTML."
+        },
+        "image": {
+          "status": "fallback",
+          "value": "https://example.com/social-preview.png",
+          "source": "rendered_html",
+          "sourceField": "og:image",
+          "message": "Image uses a fallback from og:image in rendered HTML.",
+          "assetStatus": "reachable",
+          "assetMessage": "The deterministic mock marks this image URL as reachable."
+        }
+      },
+      "warnings": [
+        "LinkedIn-style preview uses a fallback for title from og:title.",
+        "LinkedIn-style preview uses a fallback for description from og:description.",
+        "LinkedIn-style preview uses a fallback for url from og:url.",
+        "LinkedIn-style preview uses a fallback for image from og:image.",
+        "LinkedIn title appears only after rendering; raw HTML is usually safer for preview bots.",
+        "LinkedIn description appears only after rendering; raw HTML is usually safer for preview bots.",
+        "LinkedIn image appears only after rendering; raw HTML is usually safer for preview bots."
+      ]
+    }
+  },
+  "fields": [
+    {
+      "name": "title",
+      "renderedValue": "Complete Launch Page",
+      "selectedValue": "Complete Launch Page",
+      "selectedSource": "rendered_html",
+      "status": "fallback"
+    },
+    {
+      "name": "meta description",
+      "renderedValue": "A complete deterministic preview description for sharing.",
+      "selectedValue": "A complete deterministic preview description for sharing.",
+      "selectedSource": "rendered_html",
+      "status": "fallback"
+    },
+    {
+      "name": "canonical",
+      "renderedValue": "https://example.com/",
+      "selectedValue": "https://example.com/",
+      "selectedSource": "rendered_html",
+      "status": "fallback"
+    },
+    {
+      "name": "og:title",
+      "renderedValue": "Complete Launch Page",
+      "selectedValue": "Complete Launch Page",
+      "selectedSource": "rendered_html",
+      "status": "fallback"
+    },
+    {
+      "name": "og:description",
+      "renderedValue": "A complete deterministic preview description for sharing.",
+      "selectedValue": "A complete deterministic preview description for sharing.",
+      "selectedSource": "rendered_html",
+      "status": "fallback"
+    },
+    {
+      "name": "og:url",
+      "renderedValue": "https://example.com/",
+      "selectedValue": "https://example.com/",
+      "selectedSource": "rendered_html",
+      "status": "fallback"
+    },
+    {
+      "name": "og:image",
+      "renderedValue": "https://example.com/social-preview.png",
+      "selectedValue": "https://example.com/social-preview.png",
+      "selectedSource": "rendered_html",
+      "status": "fallback"
+    },
+    {
+      "name": "og:type",
+      "renderedValue": "website",
+      "selectedValue": "website",
+      "selectedSource": "rendered_html",
+      "status": "fallback"
+    },
+    {
+      "name": "og:site_name",
+      "renderedValue": "ShipReady Fixture",
+      "selectedValue": "ShipReady Fixture",
+      "selectedSource": "rendered_html",
+      "status": "fallback"
+    },
+    {
+      "name": "twitter:card",
+      "renderedValue": "summary_large_image",
+      "selectedValue": "summary_large_image",
+      "selectedSource": "rendered_html",
+      "status": "fallback"
+    },
+    {
+      "name": "twitter:title",
+      "renderedValue": "Complete Launch Page",
+      "selectedValue": "Complete Launch Page",
+      "selectedSource": "rendered_html",
+      "status": "fallback"
+    },
+    {
+      "name": "twitter:description",
+      "renderedValue": "A complete deterministic preview description for sharing.",
+      "selectedValue": "A complete deterministic preview description for sharing.",
+      "selectedSource": "rendered_html",
+      "status": "fallback"
+    },
+    {
+      "name": "twitter:image",
+      "renderedValue": "https://example.com/social-preview.png",
+      "selectedValue": "https://example.com/social-preview.png",
+      "selectedSource": "rendered_html",
+      "status": "fallback"
+    }
+  ],
+  "image": {
+    "status": "fallback",
+    "value": "https://example.com/social-preview.png",
+    "source": "rendered_html",
+    "sourceField": "og:image",
+    "message": "Image uses a fallback from og:image in rendered HTML.",
+    "assetStatus": "reachable",
+    "assetMessage": "The deterministic mock marks this image URL as reachable."
+  },
+  "warnings": [
+    "Google-style title appears only after rendering; raw HTML is usually safer for preview bots.",
+    "Google-style description appears only after rendering; raw HTML is usually safer for preview bots.",
+    "Generic social preview uses a fallback for title from og:title.",
+    "Generic social preview uses a fallback for description from og:description.",
+    "Generic social preview uses a fallback for url from og:url.",
+    "Generic social preview uses a fallback for image from og:image.",
+    "Generic social preview title appears only after rendering; raw HTML is usually safer for preview bots.",
+    "Generic social preview description appears only after rendering; raw HTML is usually safer for preview bots.",
+    "Generic social preview URL appears only after rendering; raw HTML is usually safer for preview bots.",
+    "Generic social preview image appears only after rendering; raw HTML is usually safer for preview bots.",
+    "X/Twitter preview uses a fallback for title from twitter:title.",
+    "X/Twitter preview uses a fallback for description from twitter:description.",
+    "X/Twitter preview uses a fallback for url from og:url.",
+    "X/Twitter preview uses a fallback for cardType from twitter:card.",
+    "X/Twitter preview uses a fallback for image from twitter:image.",
+    "X/Twitter title appears only after rendering; raw HTML is usually safer for preview bots.",
+    "X/Twitter description appears only after rendering; raw HTML is usually safer for preview bots.",
+    "X/Twitter image appears only after rendering; raw HTML is usually safer for preview bots.",
+    "Slack/Discord-style preview uses a fallback for title from og:title.",
+    "Slack/Discord-style preview uses a fallback for description from og:description.",
+    "Slack/Discord-style preview uses a fallback for url from og:url.",
+    "Slack/Discord-style preview uses a fallback for image from og:image.",
+    "Slack/Discord title appears only after rendering; raw HTML is usually safer for preview bots.",
+    "Slack/Discord description appears only after rendering; raw HTML is usually safer for preview bots.",
+    "Slack/Discord image appears only after rendering; raw HTML is usually safer for preview bots.",
+    "LinkedIn-style preview uses a fallback for title from og:title.",
+    "LinkedIn-style preview uses a fallback for description from og:description.",
+    "LinkedIn-style preview uses a fallback for url from og:url.",
+    "LinkedIn-style preview uses a fallback for image from og:image.",
+    "LinkedIn title appears only after rendering; raw HTML is usually safer for preview bots.",
+    "LinkedIn description appears only after rendering; raw HTML is usually safer for preview bots.",
+    "LinkedIn image appears only after rendering; raw HTML is usually safer for preview bots."
+  ],
+  "limitations": [
+    "This is a simulated preview and approximation based on observed metadata, not an official platform API output.",
+    "Platform behavior may differ by crawler, cache state, account settings, locale, page history, and platform-specific rules.",
+    "Raw HTML metadata is usually safer for preview bots than metadata injected only after JavaScript rendering.",
+    "ShipReady does not render screenshots, generate images, scrape platform preview endpoints, deploy changes, or call social platform APIs.",
+    "Mock mode uses deterministic local fixtures and no network request."
+  ],
+  "comparison": {
+    "rawVsRendered": [
+      {
+        "field": "title",
+        "renderedValue": "Complete Launch Page",
+        "status": "present_after_render_only"
+      },
+      {
+        "field": "canonical",
+        "renderedValue": "https://example.com/",
+        "status": "present_after_render_only"
+      },
+      {
+        "field": "og:title",
+        "renderedValue": "Complete Launch Page",
+        "status": "present_after_render_only"
+      },
+      {
+        "field": "og:description",
+        "renderedValue": "A complete deterministic preview description for sharing.",
+        "status": "present_after_render_only"
+      },
+      {
+        "field": "og:image",
+        "renderedValue": "https://example.com/social-preview.png",
+        "status": "present_after_render_only"
+      },
+      {
+        "field": "og:url",
+        "renderedValue": "https://example.com/",
+        "status": "present_after_render_only"
+      },
+      {
+        "field": "og:type",
+        "renderedValue": "website",
+        "status": "present_after_render_only"
+      },
+      {
+        "field": "og:site_name",
+        "renderedValue": "ShipReady Fixture",
+        "status": "present_after_render_only"
+      },
+      {
+        "field": "twitter:card",
+        "renderedValue": "summary_large_image",
+        "status": "present_after_render_only"
+      },
+      {
+        "field": "twitter:title",
+        "renderedValue": "Complete Launch Page",
+        "status": "present_after_render_only"
+      },
+      {
+        "field": "twitter:description",
+        "renderedValue": "A complete deterministic preview description for sharing.",
+        "status": "present_after_render_only"
+      },
+      {
+        "field": "twitter:image",
+        "renderedValue": "https://example.com/social-preview.png",
+        "status": "present_after_render_only"
+      }
+    ]
+  },
+  "verdict": {
+    "status": "needs_attention",
+    "summary": "One or more simulated preview inputs are missing, fallback-based, rendered-only, or have image evidence that needs attention."
+  },
+  "nextActions": [
+    "Move important preview metadata into raw HTML when preview-bot visibility matters."
+  ]
+}

@@ -141,6 +141,7 @@ export async function runDoctor(
       ["search-console-prototype", "Search Console mock prototype"],
       ["dns-readiness", "DNS readiness"],
       ["post-write-recheck", "Post-write recheck"],
+      ["social-preview-simulator", "Social preview simulator"],
       ["write-policy", "WRITE_POLICY_V1"],
       ["local-gui-spec", "LOCAL_FIRST_GUI_SPEC"],
       ["demo-artifacts", "Demo artifacts"],
@@ -295,6 +296,44 @@ export async function runDoctor(
       fixtures: recheckFixtures.length,
       missing: missingRecheckContent,
       skillReferencesRecheck,
+    },
+  });
+
+  const socialPreviewSkill = "skills/shipready-launch-readiness/SKILL.md";
+  const socialPreviewFixtures = FIXTURE_NAMES.filter((name) => name.startsWith("social-preview."));
+  const missingSocialPreviewContent = [
+    ...(!dependencies.pathExists(join(packageRoot, socialPreviewSkill)) ? [socialPreviewSkill] : []),
+    ...socialPreviewFixtures
+      .map((name) => `validation/contracts/${name}`)
+      .filter((path) => !dependencies.pathExists(join(packageRoot, path))),
+  ];
+  let skillReferencesSocialPreview = false;
+  if (missingSocialPreviewContent.length === 0) {
+    try {
+      const skill = await dependencies.readText(join(packageRoot, socialPreviewSkill));
+      skillReferencesSocialPreview =
+        skill.includes("shipready social-preview") &&
+        skill.includes("simulated preview") &&
+        skill.includes("No social platform APIs");
+    } catch {
+      skillReferencesSocialPreview = false;
+    }
+  }
+  checks.push({
+    id: "social-preview-simulator",
+    label: "Social preview simulator",
+    status: missingSocialPreviewContent.length === 0 && skillReferencesSocialPreview ? "pass" : "fail",
+    message: missingSocialPreviewContent.length === 0 && skillReferencesSocialPreview
+      ? `The read-only social preview simulator guidance and ${socialPreviewFixtures.length} deterministic fixtures are present; no social platform credentials or network checks are required by doctor.`
+      : `Social preview simulator content is incomplete or inconsistent; missing: ${missingSocialPreviewContent.join(", ") || "safe skill guidance"}.`,
+    details: {
+      readOnly: true,
+      socialPlatformApis: false,
+      exactRenderingGuarantee: false,
+      networkRequired: false,
+      fixtures: socialPreviewFixtures.length,
+      missing: missingSocialPreviewContent,
+      skillReferencesSocialPreview,
     },
   });
 

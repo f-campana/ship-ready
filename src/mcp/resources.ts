@@ -15,6 +15,7 @@ import {
   StatusJsonContractSchema,
   DoctorJsonContractSchema,
   RecheckJsonContractSchema,
+  SocialPreviewJsonContractSchema,
 } from "../types/contracts";
 import { ShipReadyMcpError } from "./errors";
 
@@ -62,6 +63,15 @@ export const FIXTURE_NAMES = [
   "recheck.repo-backed-needs-deploy.json",
   "recheck.repo-backed-partial.json",
   "recheck.unknown.json",
+  "social-preview.complete.json",
+  "social-preview.missing-image.json",
+  "social-preview.rendered-only-metadata.json",
+  "social-preview.twitter-fallback.json",
+  "social-preview.missing-description.json",
+  "social-preview.missing-og-url.json",
+  "social-preview.raw-rendered-different.json",
+  "social-preview.image-unreachable.json",
+  "social-preview.minimal-title-only.json",
 ] as const;
 
 export type FixtureName = (typeof FIXTURE_NAMES)[number];
@@ -252,6 +262,7 @@ const FIXTURE_SCHEMAS: Readonly<Record<string, ZodType>> = {
   "shipready.status.v1": StatusJsonContractSchema,
   "shipready.doctor.v1": DoctorJsonContractSchema,
   "shipready.recheck.v1": RecheckJsonContractSchema,
+  "shipready.socialPreview.v1": SocialPreviewJsonContractSchema,
 };
 
 async function readCanonicalFile(packageRoot: string, relativePath: string): Promise<string> {

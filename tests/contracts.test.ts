@@ -13,6 +13,7 @@ import { formatWriteFixJsonReport } from "../src/report/formatWriteFixJsonReport
 import { formatSearchConsoleStatusJson } from "../src/searchConsole/searchConsoleStatus";
 import { formatDnsStatusJson } from "../src/dns/dnsStatus";
 import { formatRecheckJson } from "../src/report/formatRecheckReport";
+import { formatSocialPreviewJson } from "../src/report/formatSocialPreviewReport";
 import { AuditResultSchema } from "../src/types/audit";
 import {
   AuditJsonContractSchema,
@@ -25,6 +26,7 @@ import {
   RepoInspectionJsonContractSchema,
   RecheckJsonContractSchema,
   SearchConsoleStatusJsonContractSchema,
+  SocialPreviewJsonContractSchema,
   UiReportJsonContractSchema,
   WriteFixJsonContractSchema,
   StatusJsonContractSchema,
@@ -83,6 +85,15 @@ describe("CLI JSON contracts", () => {
     ["recheck.repo-backed-needs-deploy.json", RecheckJsonContractSchema, CONTRACT_NAMES.recheck],
     ["recheck.repo-backed-partial.json", RecheckJsonContractSchema, CONTRACT_NAMES.recheck],
     ["recheck.unknown.json", RecheckJsonContractSchema, CONTRACT_NAMES.recheck],
+    ["social-preview.complete.json", SocialPreviewJsonContractSchema, CONTRACT_NAMES.socialPreview],
+    ["social-preview.missing-image.json", SocialPreviewJsonContractSchema, CONTRACT_NAMES.socialPreview],
+    ["social-preview.rendered-only-metadata.json", SocialPreviewJsonContractSchema, CONTRACT_NAMES.socialPreview],
+    ["social-preview.twitter-fallback.json", SocialPreviewJsonContractSchema, CONTRACT_NAMES.socialPreview],
+    ["social-preview.missing-description.json", SocialPreviewJsonContractSchema, CONTRACT_NAMES.socialPreview],
+    ["social-preview.missing-og-url.json", SocialPreviewJsonContractSchema, CONTRACT_NAMES.socialPreview],
+    ["social-preview.raw-rendered-different.json", SocialPreviewJsonContractSchema, CONTRACT_NAMES.socialPreview],
+    ["social-preview.image-unreachable.json", SocialPreviewJsonContractSchema, CONTRACT_NAMES.socialPreview],
+    ["social-preview.minimal-title-only.json", SocialPreviewJsonContractSchema, CONTRACT_NAMES.socialPreview],
   ] as const)("parses %s and preserves its discriminator", (name, schema, contract) => {
     const fixture = readFixture(name);
 
@@ -101,6 +112,7 @@ describe("CLI JSON contracts", () => {
       "search-console status --json": "shipready.searchConsoleStatus.v1",
       "dns status --json": "shipready.dnsStatus.v1",
       "recheck --json": "shipready.recheck.v1",
+      "social-preview --json": "shipready.socialPreview.v1",
       "status --json": "shipready.status.v1",
       "doctor --json": "shipready.doctor.v1",
     });
@@ -134,6 +146,29 @@ describe("CLI JSON contracts", () => {
     expect(contractOf(formatRecheckJson(
       RecheckJsonContractSchema.parse(readFixture("recheck.url-only-ready.json")),
     ))).toBe(CONTRACT_NAMES.recheck);
+    expect(contractOf(formatSocialPreviewJson(
+      SocialPreviewJsonContractSchema.parse(readFixture("social-preview.complete.json")),
+    ))).toBe(CONTRACT_NAMES.socialPreview);
+  });
+
+  it("keeps social preview fixtures deterministic and constrained", () => {
+    const complete = SocialPreviewJsonContractSchema.parse(readFixture("social-preview.complete.json"));
+    const missingImage = SocialPreviewJsonContractSchema.parse(readFixture("social-preview.missing-image.json"));
+    const renderedOnly = SocialPreviewJsonContractSchema.parse(readFixture("social-preview.rendered-only-metadata.json"));
+    const imageUnreachable = SocialPreviewJsonContractSchema.parse(readFixture("social-preview.image-unreachable.json"));
+
+    expect(complete.verdict.status).toBe("ready");
+    expect(missingImage.verdict.status).toBe("needs_attention");
+    expect(renderedOnly.comparison.rawVsRendered).toEqual(expect.arrayContaining([
+      expect.objectContaining({ status: "present_after_render_only" }),
+    ]));
+    expect(imageUnreachable.image.assetStatus).toBe("unreachable");
+    for (const fixture of [complete, missingImage, renderedOnly, imageUnreachable]) {
+      expect(["raw", "rendered", "both"]).toContain(fixture.sourceMode);
+      for (const field of fixture.fields) {
+        expect(["present", "missing", "fallback", "unknown"]).toContain(field.status);
+      }
+    }
   });
 
   it("keeps recheck deployment and verdict states constrained", () => {

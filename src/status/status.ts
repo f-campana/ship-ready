@@ -13,6 +13,7 @@ export const STATUS_CLI_COMMANDS = [
   "search-console status",
   "dns status",
   "recheck",
+  "social-preview",
   "audit",
   "inspect-repo",
   "plan-fixes",
@@ -61,6 +62,9 @@ export function createStatus(): StatusJsonContract {
       ],
     },
     integrations: {
+      socialPreview: "read_only_simulator",
+      socialPlatformApis: "not_implemented",
+      exactSocialRenderingGuarantee: false,
       searchConsole: "mock_prototype",
       dns: "read_only_status",
       dnsProviderWrites: "not_implemented",
@@ -76,7 +80,7 @@ export function createStatus(): StatusJsonContract {
       fodmappVoiceover: "validation/demo-fodmapp-voiceover-final/",
     },
     nextRecommendedCommand: "pnpm shipready doctor",
-    nextRecommendedPass: "Social preview simulator",
+    nextRecommendedPass: "Generated-site smell detector",
   });
 }
 
@@ -99,6 +103,7 @@ export function formatStatusHuman(status = createStatus()): string {
     "  Search Console: spec exists, mock prototype available, live integration not implemented",
     "  DNS readiness: read-only status checks implemented; provider writes/integrations not implemented",
     "  Post-write recheck: implemented read-only; local changes still require external deployment",
+    "  Social preview simulator: implemented read-only; social platform APIs and exact rendering guarantees not implemented",
     "  Deployment automation and deploy provider integrations: not implemented",
     "  Remote MCP and GitHub integrations: not implemented",
     "",

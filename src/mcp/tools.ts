@@ -19,6 +19,12 @@ import { formatDnsStatusJson, getDnsStatus } from "../dns/dnsStatus";
 import { recheck } from "../recheck/recheck";
 import { formatRecheckJson } from "../report/formatRecheckReport";
 import { DNS_MOCK_SCENARIOS, EXPECTED_WWW_MODES } from "../dns/dnsTypes";
+import { getSocialPreview } from "../socialPreview/socialPreview";
+import {
+  SOCIAL_PREVIEW_MOCK_SCENARIOS,
+  SOCIAL_PREVIEW_SOURCE_MODES,
+} from "../socialPreview/socialPreviewTypes";
+import { formatSocialPreviewJson } from "../report/formatSocialPreviewReport";
 import {
   AuditJsonContractSchema,
   DnsStatusJsonContractSchema,
@@ -27,6 +33,7 @@ import {
   RepoInspectionJsonContractSchema,
   RecheckJsonContractSchema,
   SearchConsoleStatusJsonContractSchema,
+  SocialPreviewJsonContractSchema,
   UiReportJsonContractSchema,
   WriteFixJsonContractSchema,
 } from "../types/contracts";
@@ -82,6 +89,12 @@ const RecheckInputSchema = z.object({
   url: z.string().trim().min(1).max(2048),
   repoPath: z.string().trim().min(1).max(4096).optional(),
 }).strict();
+const SocialPreviewInputSchema = z.object({
+  url: z.string().trim().min(1).max(2048),
+  source: z.enum(SOCIAL_PREVIEW_SOURCE_MODES).optional(),
+  checkAssets: z.boolean().optional().default(false),
+  mock: z.enum(SOCIAL_PREVIEW_MOCK_SCENARIOS).optional(),
+}).strict();
 const FixtureInputSchema = z.object({ fixtureName: z.enum(FIXTURE_NAMES) }).strict();
 const PolicyInputSchema = z.object({ name: z.enum(Object.keys(POLICY_DOCS) as [keyof typeof POLICY_DOCS, ...(keyof typeof POLICY_DOCS)[]]) }).strict();
 
@@ -90,6 +103,7 @@ export type McpOperations = {
   searchConsoleStatus: typeof getSearchConsoleStatus;
   dnsStatus: typeof getDnsStatus;
   recheck: typeof recheck;
+  socialPreview: typeof getSocialPreview;
   inspectRepo: typeof inspectRepo;
   planFixes: typeof planFixes;
   previewFixes: typeof dryRunFix;
@@ -110,6 +124,7 @@ const DEFAULT_OPERATIONS: McpOperations = {
   searchConsoleStatus: getSearchConsoleStatus,
   dnsStatus: getDnsStatus,
   recheck,
+  socialPreview: getSocialPreview,
   inspectRepo,
   planFixes,
   previewFixes: dryRunFix,
@@ -145,6 +160,12 @@ export function listTools() {
     tool("shipready.recheck", "Compare live crawl-file evidence with optional authorized local expected files; never writes or deploys.", schema({
       url: stringSchema(2048),
       repoPath: stringSchema(4096),
+    }, ["url"]), { ...readOnly, openWorldHint: true }),
+    tool("shipready.social_preview", "Simulate likely search and social preview inputs from observed metadata; read-only approximation with no platform APIs.", schema({
+      url: stringSchema(2048),
+      source: { type: "string", enum: [...SOCIAL_PREVIEW_SOURCE_MODES], default: "both" },
+      checkAssets: { type: "boolean", default: false },
+      mock: { type: "string", enum: [...SOCIAL_PREVIEW_MOCK_SCENARIOS] },
     }, ["url"]), { ...readOnly, openWorldHint: true }),
     tool("shipready.inspect_repo", "Inspect one explicitly authorized repository without writes.", schema({
       repoPath: stringSchema(4096),
@@ -283,6 +304,17 @@ async function executeTool(
     const result = await operations.recheck({ url, repoPath, timeoutMs });
     return contractResult(formatRecheckJson(result), RecheckJsonContractSchema);
   }
+  if (name === "shipready.social_preview") {
+    const input = parseInput(SocialPreviewInputSchema, args, "invalid_url");
+    const result = await operations.socialPreview({
+      url: input.url,
+      source: input.source,
+      checkAssets: input.checkAssets,
+      mock: input.mock,
+      timeoutMs,
+    });
+    return contractResult(formatSocialPreviewJson(result), SocialPreviewJsonContractSchema);
+  }
   if (name === "shipready.inspect_repo") {
     const input = parseInput(RepoInputSchema, args, "invalid_repo_path");
     const repoPath = await context.authorizer.authorizeRepoPath(input.repoPath);
@@ -374,7 +406,7 @@ function parseInput<T extends z.ZodType>(
   const unknownField = parsed.error.issues.some((issue) => issue.code === "unrecognized_keys");
   const invalidRepoPath = parsed.error.issues.some((issue) => issue.path[0] === "repoPath");
   const invalidMode = parsed.error.issues.some((issue) =>
-    issue.path[0] === "mock" || issue.path[0] === "expectedWwwMode");
+    issue.path[0] === "mock" || issue.path[0] === "expectedWwwMode" || issue.path[0] === "source");
   throw new ShipReadyMcpError(
     unknownField ? "unsupported_command" : invalidRepoPath ? "invalid_repo_path" : invalidMode ? "invalid_mode" : code,
     unknownField
@@ -441,6 +473,7 @@ function timeoutFor(name: ToolName, timeouts: McpTimeouts): number {
   if (name === "shipready.audit_site") return timeouts.audit_site;
   if (name === "shipready.search_console_status") return timeouts.canonical_read;
   if (name === "shipready.recheck") return timeouts.audit_site;
+  if (name === "shipready.social_preview") return timeouts.audit_site;
   if (name === "shipready.inspect_repo") return timeouts.inspect_repo;
   if (name === "shipready.plan_fixes") return timeouts.plan_fixes;
   if (name === "shipready.preview_fixes") return timeouts.preview_fixes;

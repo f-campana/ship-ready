@@ -15,6 +15,7 @@ import {
   FixPlanJsonContractSchema,
   RepoInspectionJsonContractSchema,
   SearchConsoleStatusJsonContractSchema,
+  SocialPreviewJsonContractSchema,
   UiReportJsonContractSchema,
 } from "../../src/types/contracts";
 
@@ -37,10 +38,10 @@ beforeAll(async () => {
 afterAll(async () => closeServer());
 
 describe("MCP tools", () => {
-  it("registers the ten read-only tools and exactly one write tool", () => {
+  it("registers the eleven read-only tools and exactly one write tool", () => {
     const names = listTools().map((tool) => tool.name);
     expect(names).toEqual([
-      "shipready.audit_site", "shipready.search_console_status", "shipready.dns_status", "shipready.recheck", "shipready.inspect_repo", "shipready.plan_fixes",
+      "shipready.audit_site", "shipready.search_console_status", "shipready.dns_status", "shipready.recheck", "shipready.social_preview", "shipready.inspect_repo", "shipready.plan_fixes",
       "shipready.preview_fixes", "shipready.write_safe_crawl_files", "shipready.get_ui_report",
       "shipready.get_contract_fixture", "shipready.get_policy_doc",
     ]);
@@ -65,6 +66,20 @@ describe("MCP tools", () => {
     expect(() => FixPlanJsonContractSchema.parse(plan.structuredContent)).not.toThrow();
     expect(DryRunFixJsonContractSchema.parse(preview.structuredContent)).toMatchObject({ mode: "dry_run", wroteFiles: false });
     expect(() => UiReportJsonContractSchema.parse(report.structuredContent)).not.toThrow();
+  });
+
+  it("returns the social preview contract without repository authorization", async () => {
+    const result = await callReadOnlyTool(context, "shipready.social_preview", {
+      url: "https://example.com",
+      mock: "complete",
+    });
+
+    expect(() => SocialPreviewJsonContractSchema.parse(result.structuredContent)).not.toThrow();
+    expect(result.structuredContent).toMatchObject({
+      contract: "shipready.socialPreview.v1",
+      mode: "mock",
+      verdict: { status: "ready" },
+    });
   });
 
   it("does not mutate the target tree during dry-run preview", async () => {

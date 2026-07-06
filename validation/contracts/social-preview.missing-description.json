@@ -1,0 +1,399 @@
+{
+  "contract": "shipready.socialPreview.v1",
+  "url": "https://example.com/",
+  "checkedAt": "2026-07-06T12:00:00.000Z",
+  "mode": "mock",
+  "sourceMode": "both",
+  "canonicalUrl": "https://example.com/",
+  "previews": {
+    "google_search": {
+      "surface": "google_search",
+      "label": "Google-style search preview",
+      "fields": {
+        "title": {
+          "status": "present",
+          "value": "Complete Launch Page",
+          "source": "raw_html",
+          "sourceField": "title",
+          "message": "Title comes from title in raw HTML."
+        },
+        "description": {
+          "status": "missing",
+          "source": "unknown",
+          "message": "No meta description was observed."
+        },
+        "url": {
+          "status": "present",
+          "value": "https://example.com/",
+          "source": "raw_html",
+          "sourceField": "canonical",
+          "message": "URL comes from canonical in raw HTML."
+        }
+      },
+      "warnings": [
+        "Google-style preview is missing description."
+      ]
+    },
+    "generic_social": {
+      "surface": "generic_social",
+      "label": "Generic social preview",
+      "fields": {
+        "title": {
+          "status": "present",
+          "value": "Complete Launch Page",
+          "source": "raw_html",
+          "sourceField": "og:title",
+          "message": "Title comes from og:title in raw HTML."
+        },
+        "description": {
+          "status": "missing",
+          "source": "unknown",
+          "message": "No Open Graph or meta description was observed."
+        },
+        "url": {
+          "status": "present",
+          "value": "https://example.com/",
+          "source": "raw_html",
+          "sourceField": "og:url",
+          "message": "URL comes from og:url in raw HTML."
+        },
+        "cardType": {
+          "status": "present",
+          "value": "website",
+          "source": "raw_html",
+          "sourceField": "og:type",
+          "message": "Card type comes from og:type in raw HTML."
+        },
+        "image": {
+          "status": "present",
+          "value": "https://example.com/social-preview.png",
+          "source": "raw_html",
+          "sourceField": "og:image",
+          "message": "Image comes from og:image in raw HTML.",
+          "assetStatus": "reachable",
+          "assetMessage": "The deterministic mock marks this image URL as reachable."
+        }
+      },
+      "warnings": [
+        "Generic social preview is missing Open Graph description."
+      ]
+    },
+    "x_twitter": {
+      "surface": "x_twitter",
+      "label": "X/Twitter preview",
+      "fields": {
+        "title": {
+          "status": "present",
+          "value": "Complete Launch Page",
+          "source": "raw_html",
+          "sourceField": "twitter:title",
+          "message": "Title comes from twitter:title in raw HTML."
+        },
+        "description": {
+          "status": "missing",
+          "source": "unknown",
+          "message": "No Twitter, Open Graph, or meta description was observed."
+        },
+        "url": {
+          "status": "present",
+          "value": "https://example.com/",
+          "source": "raw_html",
+          "sourceField": "og:url",
+          "message": "URL comes from og:url in raw HTML."
+        },
+        "cardType": {
+          "status": "present",
+          "value": "summary_large_image",
+          "source": "raw_html",
+          "sourceField": "twitter:card",
+          "message": "Card type comes from twitter:card in raw HTML."
+        },
+        "image": {
+          "status": "present",
+          "value": "https://example.com/social-preview.png",
+          "source": "raw_html",
+          "sourceField": "twitter:image",
+          "message": "Image comes from twitter:image in raw HTML.",
+          "assetStatus": "reachable",
+          "assetMessage": "The deterministic mock marks this image URL as reachable."
+        }
+      },
+      "warnings": [
+        "X/Twitter preview is missing Twitter description."
+      ]
+    },
+    "slack_discord": {
+      "surface": "slack_discord",
+      "label": "Slack/Discord preview",
+      "fields": {
+        "title": {
+          "status": "present",
+          "value": "Complete Launch Page",
+          "source": "raw_html",
+          "sourceField": "og:title",
+          "message": "Title comes from og:title in raw HTML."
+        },
+        "description": {
+          "status": "missing",
+          "source": "unknown",
+          "message": "No Open Graph or meta description was observed."
+        },
+        "url": {
+          "status": "present",
+          "value": "https://example.com/",
+          "source": "raw_html",
+          "sourceField": "og:url",
+          "message": "URL comes from og:url in raw HTML."
+        },
+        "image": {
+          "status": "present",
+          "value": "https://example.com/social-preview.png",
+          "source": "raw_html",
+          "sourceField": "og:image",
+          "message": "Image comes from og:image in raw HTML.",
+          "assetStatus": "reachable",
+          "assetMessage": "The deterministic mock marks this image URL as reachable."
+        }
+      },
+      "warnings": [
+        "Slack/Discord-style preview is missing description."
+      ]
+    },
+    "linkedin": {
+      "surface": "linkedin",
+      "label": "LinkedIn preview",
+      "fields": {
+        "title": {
+          "status": "present",
+          "value": "Complete Launch Page",
+          "source": "raw_html",
+          "sourceField": "og:title",
+          "message": "Title comes from og:title in raw HTML."
+        },
+        "description": {
+          "status": "missing",
+          "source": "unknown",
+          "message": "No Open Graph or meta description was observed."
+        },
+        "url": {
+          "status": "present",
+          "value": "https://example.com/",
+          "source": "raw_html",
+          "sourceField": "og:url",
+          "message": "URL comes from og:url in raw HTML."
+        },
+        "image": {
+          "status": "present",
+          "value": "https://example.com/social-preview.png",
+          "source": "raw_html",
+          "sourceField": "og:image",
+          "message": "Image comes from og:image in raw HTML.",
+          "assetStatus": "reachable",
+          "assetMessage": "The deterministic mock marks this image URL as reachable."
+        }
+      },
+      "warnings": [
+        "LinkedIn-style preview is missing Open Graph description."
+      ]
+    }
+  },
+  "fields": [
+    {
+      "name": "title",
+      "rawValue": "Complete Launch Page",
+      "renderedValue": "Complete Launch Page",
+      "selectedValue": "Complete Launch Page",
+      "selectedSource": "raw_html",
+      "status": "present"
+    },
+    {
+      "name": "meta description",
+      "selectedSource": "unknown",
+      "status": "missing"
+    },
+    {
+      "name": "canonical",
+      "rawValue": "https://example.com/",
+      "renderedValue": "https://example.com/",
+      "selectedValue": "https://example.com/",
+      "selectedSource": "raw_html",
+      "status": "present"
+    },
+    {
+      "name": "og:title",
+      "rawValue": "Complete Launch Page",
+      "renderedValue": "Complete Launch Page",
+      "selectedValue": "Complete Launch Page",
+      "selectedSource": "raw_html",
+      "status": "present"
+    },
+    {
+      "name": "og:description",
+      "selectedSource": "unknown",
+      "status": "missing"
+    },
+    {
+      "name": "og:url",
+      "rawValue": "https://example.com/",
+      "renderedValue": "https://example.com/",
+      "selectedValue": "https://example.com/",
+      "selectedSource": "raw_html",
+      "status": "present"
+    },
+    {
+      "name": "og:image",
+      "rawValue": "https://example.com/social-preview.png",
+      "renderedValue": "https://example.com/social-preview.png",
+      "selectedValue": "https://example.com/social-preview.png",
+      "selectedSource": "raw_html",
+      "status": "present"
+    },
+    {
+      "name": "og:type",
+      "rawValue": "website",
+      "renderedValue": "website",
+      "selectedValue": "website",
+      "selectedSource": "raw_html",
+      "status": "present"
+    },
+    {
+      "name": "og:site_name",
+      "rawValue": "ShipReady Fixture",
+      "renderedValue": "ShipReady Fixture",
+      "selectedValue": "ShipReady Fixture",
+      "selectedSource": "raw_html",
+      "status": "present"
+    },
+    {
+      "name": "twitter:card",
+      "rawValue": "summary_large_image",
+      "renderedValue": "summary_large_image",
+      "selectedValue": "summary_large_image",
+      "selectedSource": "raw_html",
+      "status": "present"
+    },
+    {
+      "name": "twitter:title",
+      "rawValue": "Complete Launch Page",
+      "renderedValue": "Complete Launch Page",
+      "selectedValue": "Complete Launch Page",
+      "selectedSource": "raw_html",
+      "status": "present"
+    },
+    {
+      "name": "twitter:description",
+      "selectedSource": "unknown",
+      "status": "missing"
+    },
+    {
+      "name": "twitter:image",
+      "rawValue": "https://example.com/social-preview.png",
+      "renderedValue": "https://example.com/social-preview.png",
+      "selectedValue": "https://example.com/social-preview.png",
+      "selectedSource": "raw_html",
+      "status": "present"
+    }
+  ],
+  "image": {
+    "status": "present",
+    "value": "https://example.com/social-preview.png",
+    "source": "raw_html",
+    "sourceField": "og:image",
+    "message": "Image comes from og:image in raw HTML.",
+    "assetStatus": "reachable",
+    "assetMessage": "The deterministic mock marks this image URL as reachable."
+  },
+  "warnings": [
+    "Google-style preview is missing description.",
+    "Generic social preview is missing Open Graph description.",
+    "X/Twitter preview is missing Twitter description.",
+    "Slack/Discord-style preview is missing description.",
+    "LinkedIn-style preview is missing Open Graph description."
+  ],
+  "limitations": [
+    "This is a simulated preview and approximation based on observed metadata, not an official platform API output.",
+    "Platform behavior may differ by crawler, cache state, account settings, locale, page history, and platform-specific rules.",
+    "Raw HTML metadata is usually safer for preview bots than metadata injected only after JavaScript rendering.",
+    "ShipReady does not render screenshots, generate images, scrape platform preview endpoints, deploy changes, or call social platform APIs.",
+    "Mock mode uses deterministic local fixtures and no network request."
+  ],
+  "comparison": {
+    "rawVsRendered": [
+      {
+        "field": "title",
+        "rawValue": "Complete Launch Page",
+        "renderedValue": "Complete Launch Page",
+        "status": "present_in_raw"
+      },
+      {
+        "field": "canonical",
+        "rawValue": "https://example.com/",
+        "renderedValue": "https://example.com/",
+        "status": "present_in_raw"
+      },
+      {
+        "field": "og:title",
+        "rawValue": "Complete Launch Page",
+        "renderedValue": "Complete Launch Page",
+        "status": "present_in_raw"
+      },
+      {
+        "field": "og:description",
+        "status": "missing_in_both"
+      },
+      {
+        "field": "og:image",
+        "rawValue": "https://example.com/social-preview.png",
+        "renderedValue": "https://example.com/social-preview.png",
+        "status": "present_in_raw"
+      },
+      {
+        "field": "og:url",
+        "rawValue": "https://example.com/",
+        "renderedValue": "https://example.com/",
+        "status": "present_in_raw"
+      },
+      {
+        "field": "og:type",
+        "rawValue": "website",
+        "renderedValue": "website",
+        "status": "present_in_raw"
+      },
+      {
+        "field": "og:site_name",
+        "rawValue": "ShipReady Fixture",
+        "renderedValue": "ShipReady Fixture",
+        "status": "present_in_raw"
+      },
+      {
+        "field": "twitter:card",
+        "rawValue": "summary_large_image",
+        "renderedValue": "summary_large_image",
+        "status": "present_in_raw"
+      },
+      {
+        "field": "twitter:title",
+        "rawValue": "Complete Launch Page",
+        "renderedValue": "Complete Launch Page",
+        "status": "present_in_raw"
+      },
+      {
+        "field": "twitter:description",
+        "status": "missing_in_both"
+      },
+      {
+        "field": "twitter:image",
+        "rawValue": "https://example.com/social-preview.png",
+        "renderedValue": "https://example.com/social-preview.png",
+        "status": "present_in_raw"
+      }
+    ]
+  },
+  "verdict": {
+    "status": "needs_attention",
+    "summary": "One or more simulated preview inputs are missing, fallback-based, rendered-only, or have image evidence that needs attention."
+  },
+  "nextActions": [
+    "Add a concise meta description plus Open Graph and Twitter descriptions where those surfaces matter."
+  ]
+}

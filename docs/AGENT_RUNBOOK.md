@@ -14,6 +14,7 @@ For launch-readiness operations, start with the repository-local [ShipReady Laun
 
 - `src/cli/index.ts`: implemented commands, flags, modes, and exit behavior.
 - `src/audit/`: public-URL fetch, rendered pass, metadata/crawl checks, and scoring.
+- `src/socialPreview/`: read-only simulated preview builder and deterministic mock scenarios built from observed audit metadata.
 - `src/repo/`: bounded read-only repository inspection.
 - `src/plan/`: audit-to-fix planning.
 - `src/fix/`: dry-run previews and guarded V1 creation-only writes.
@@ -22,7 +23,7 @@ For launch-readiness operations, start with the repository-local [ShipReady Laun
 - `src/report/`: human, JSON, UI, and static HTML formatting.
 - `src/ui/`: normalized `ui-report-v1` creation.
 - `src/gui/`: local server and preview/copy-only browser UI.
-- `src/mcp/`: local stdio adapter, ten read-only tools, one guarded safe-write tool, preview receipts, canonical reads, prompts, authorization, errors, and deadlines.
+- `src/mcp/`: local stdio adapter, eleven read-only tools, one guarded safe-write tool, preview receipts, canonical reads, prompts, authorization, errors, and deadlines.
 - `src/status/` and `src/doctor/`: static capability posture and bounded local readiness diagnostics.
 - `src/searchConsole/`: stable read-only status boundary and deterministic mock provider; no OAuth, tokens, or live Google client.
 - `src/dns/`: read-only DNS readiness status, live Node DNS resolver, deterministic mock scenarios, redacted TXT evidence, and no provider integration or DNS writes.
@@ -65,6 +66,8 @@ For DNS readiness work, read [DNS_READINESS_SPEC.md](DNS_READINESS_SPEC.md) firs
 
 For post-write follow-up, read [POST_WRITE_RECHECK.md](POST_WRITE_RECHECK.md). Pass 12 implements read-only `recheck` and MCP `shipready.recheck`. Local files still require deployment through the owner's external workflow. Repo-backed recheck authorizes/inspects the repository and compares only inferred V1-safe expected crawl-file presence with live conventional URLs; it never writes or deploys.
 
+For social preview work, use `pnpm shipready social-preview --url <url> --json` or MCP `shipready.social_preview`. Pass 13 implements a simulated preview from observed raw/rendered metadata only. It does not use social platform APIs, platform scraping endpoints, screenshots, image generation, deployment, OAuth, token storage, or provider integrations, and it does not provide a precise third-party rendering guarantee.
+
 ## Main commands
 
 ```bash
@@ -72,6 +75,7 @@ pnpm shipready status --json
 pnpm shipready doctor --json
 pnpm shipready search-console status --url https://example.com --mock ready_sitemap_ok --json
 pnpm shipready dns status --url https://example.com --mock ready --json
+pnpm shipready social-preview --url https://example.com --mock complete --json
 pnpm shipready audit <url> --json
 pnpm shipready recheck [path] --url <url> --json
 pnpm shipready inspect-repo <path> --json

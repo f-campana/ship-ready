@@ -64,6 +64,17 @@ describe("doctor", () => {
         skillReferencesRecheck: true,
       },
     });
+    expect(report.checks.find((check) => check.id === "social-preview-simulator")).toMatchObject({
+      status: "pass",
+      details: {
+        readOnly: true,
+        socialPlatformApis: false,
+        exactRenderingGuarantee: false,
+        networkRequired: false,
+        fixtures: 9,
+        skillReferencesSocialPreview: true,
+      },
+    });
   });
 
   it("reports a missing optional FFmpeg tool as a warning", async () => {

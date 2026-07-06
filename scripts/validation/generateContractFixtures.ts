@@ -22,6 +22,8 @@ import { formatDnsStatusJson, getDnsStatus } from "../../src/dns/dnsStatus";
 import { createRecheckResult } from "../../src/recheck/recheck";
 import { formatRecheckJson } from "../../src/report/formatRecheckReport";
 import { createDoctorReport, formatDoctorJson } from "../../src/doctor/doctor";
+import { getSocialPreview } from "../../src/socialPreview/socialPreview";
+import { formatSocialPreviewJson } from "../../src/report/formatSocialPreviewReport";
 import type { DoctorCheck } from "../../src/types/contracts";
 import type { AuditCheck, AuditResult, ExtractedPageMetadata } from "../../src/types/audit";
 import { DOC_RESOURCES, FIXTURE_NAMES } from "../../src/mcp/resources";
@@ -174,6 +176,24 @@ write("recheck.unknown.json", formatRecheckJson(createRecheckResult({
   auditUnavailable: true,
 })));
 
+for (const [fileName, scenario] of [
+  ["social-preview.complete.json", "complete"],
+  ["social-preview.missing-image.json", "missing-image"],
+  ["social-preview.rendered-only-metadata.json", "rendered-only-metadata"],
+  ["social-preview.twitter-fallback.json", "twitter-fallback"],
+  ["social-preview.missing-description.json", "missing-description"],
+  ["social-preview.missing-og-url.json", "missing-og-url"],
+  ["social-preview.raw-rendered-different.json", "raw-rendered-different"],
+  ["social-preview.image-unreachable.json", "image-unreachable"],
+  ["social-preview.minimal-title-only.json", "minimal-title-only"],
+] as const) {
+  write(fileName, formatSocialPreviewJson(await getSocialPreview({
+    url: "https://example.com/",
+    mock: scenario,
+    source: "both",
+  })));
+}
+
 for (const [fileName, scenario, inspect] of [
   ["search-console.not-configured.json", "not_configured", false],
   ["search-console.unauthorized.json", "unauthorized", false],
@@ -235,6 +255,7 @@ write("doctor.default.json", formatDoctorJson(createDoctorReport([
   doctorCheck("search-console-prototype", "Search Console mock prototype", "pass", "The Search Console specification and 7 deterministic mock fixtures are present; no Google credentials are required.", { liveIntegration: false, oauthRequired: false, fixtures: 7, missing: [] }),
   doctorCheck("dns-readiness", "DNS readiness", "pass", "The DNS specification, Node DNS APIs, and 11 deterministic mock fixtures are present; no DNS provider credentials are required.", { readOnly: true, providerWrites: false, providerIntegrations: false, fixtures: 11, nodeDnsApisAvailable: true, missing: [] }),
   doctorCheck("post-write-recheck", "Post-write recheck", "pass", "The read-only recheck guide, skill workflow, and 6 deterministic fixtures are present; no network or deployment credentials are required by doctor.", { readOnly: true, networkRequired: false, deploymentCredentialsRequired: false, fixtures: 6, missing: [], skillReferencesRecheck: true }),
+  doctorCheck("social-preview-simulator", "Social preview simulator", "pass", "The read-only social preview simulator guidance and 9 deterministic fixtures are present; no social platform credentials or network checks are required by doctor.", { readOnly: true, socialPlatformApis: false, exactRenderingGuarantee: false, networkRequired: false, fixtures: 9, missing: [], skillReferencesSocialPreview: true }),
   doctorCheck("write-policy", "WRITE_POLICY_V1", "pass", "The canonical creation_only_robots_sitemap_v1 policy document is present."),
   doctorCheck("local-gui-spec", "LOCAL_FIRST_GUI_SPEC", "pass", "The canonical local-first GUI specification is present."),
   doctorCheck("demo-artifacts", "Demo artifacts", "warn", "Optional demo artifacts are incomplete; core CLI operation is unaffected.", { missing: ["validation/example.mp4"] }),

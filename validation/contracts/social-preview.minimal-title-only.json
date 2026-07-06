@@ -1,0 +1,360 @@
+{
+  "contract": "shipready.socialPreview.v1",
+  "url": "https://example.com/",
+  "checkedAt": "2026-07-06T12:00:00.000Z",
+  "mode": "mock",
+  "sourceMode": "both",
+  "previews": {
+    "google_search": {
+      "surface": "google_search",
+      "label": "Google-style search preview",
+      "fields": {
+        "title": {
+          "status": "present",
+          "value": "Minimal Title Only",
+          "source": "raw_html",
+          "sourceField": "title",
+          "message": "Title comes from title in raw HTML."
+        },
+        "description": {
+          "status": "missing",
+          "source": "unknown",
+          "message": "No meta description was observed."
+        },
+        "url": {
+          "status": "missing",
+          "source": "unknown",
+          "message": "No canonical URL was observed."
+        }
+      },
+      "warnings": [
+        "Google-style preview is missing description.",
+        "Google-style preview is missing url."
+      ]
+    },
+    "generic_social": {
+      "surface": "generic_social",
+      "label": "Generic social preview",
+      "fields": {
+        "title": {
+          "status": "fallback",
+          "value": "Minimal Title Only",
+          "source": "raw_html",
+          "sourceField": "title",
+          "message": "Title uses a fallback from title in raw HTML."
+        },
+        "description": {
+          "status": "missing",
+          "source": "unknown",
+          "message": "No Open Graph or meta description was observed."
+        },
+        "url": {
+          "status": "missing",
+          "source": "unknown",
+          "message": "No Open Graph URL or canonical URL was observed."
+        },
+        "cardType": {
+          "status": "missing",
+          "source": "unknown",
+          "message": "No Open Graph type was observed."
+        },
+        "image": {
+          "status": "missing",
+          "source": "unknown",
+          "message": "No Open Graph or Twitter image was observed.",
+          "assetStatus": "unknown",
+          "assetMessage": "No image URL was observed."
+        }
+      },
+      "warnings": [
+        "Generic social preview is missing Open Graph title.",
+        "Generic social preview is missing Open Graph description.",
+        "Generic social preview is missing Open Graph URL.",
+        "Generic social preview is missing Open Graph image.",
+        "Generic social preview uses a fallback for title from title."
+      ]
+    },
+    "x_twitter": {
+      "surface": "x_twitter",
+      "label": "X/Twitter preview",
+      "fields": {
+        "title": {
+          "status": "fallback",
+          "value": "Minimal Title Only",
+          "source": "raw_html",
+          "sourceField": "title",
+          "message": "Title uses a fallback from title in raw HTML."
+        },
+        "description": {
+          "status": "missing",
+          "source": "unknown",
+          "message": "No Twitter, Open Graph, or meta description was observed."
+        },
+        "url": {
+          "status": "missing",
+          "source": "unknown",
+          "message": "No Open Graph URL or canonical URL was observed."
+        },
+        "cardType": {
+          "status": "missing",
+          "source": "unknown",
+          "message": "No Twitter card type was observed."
+        },
+        "image": {
+          "status": "missing",
+          "source": "unknown",
+          "message": "No Twitter or Open Graph image was observed.",
+          "assetStatus": "unknown",
+          "assetMessage": "No image URL was observed."
+        }
+      },
+      "warnings": [
+        "X/Twitter preview is missing Twitter card type.",
+        "X/Twitter preview is missing Twitter title.",
+        "X/Twitter preview is missing Twitter description.",
+        "X/Twitter preview is missing Twitter image.",
+        "X/Twitter preview uses a fallback for title from title."
+      ]
+    },
+    "slack_discord": {
+      "surface": "slack_discord",
+      "label": "Slack/Discord preview",
+      "fields": {
+        "title": {
+          "status": "fallback",
+          "value": "Minimal Title Only",
+          "source": "raw_html",
+          "sourceField": "title",
+          "message": "Title uses a fallback from title in raw HTML."
+        },
+        "description": {
+          "status": "missing",
+          "source": "unknown",
+          "message": "No Open Graph or meta description was observed."
+        },
+        "url": {
+          "status": "missing",
+          "source": "unknown",
+          "message": "No Open Graph URL or canonical URL was observed."
+        },
+        "image": {
+          "status": "missing",
+          "source": "unknown",
+          "message": "No Open Graph or Twitter image was observed.",
+          "assetStatus": "unknown",
+          "assetMessage": "No image URL was observed."
+        }
+      },
+      "warnings": [
+        "Slack/Discord-style preview is missing description.",
+        "Slack/Discord-style preview is missing image.",
+        "Slack/Discord-style preview uses a fallback for title from title."
+      ]
+    },
+    "linkedin": {
+      "surface": "linkedin",
+      "label": "LinkedIn preview",
+      "fields": {
+        "title": {
+          "status": "fallback",
+          "value": "Minimal Title Only",
+          "source": "raw_html",
+          "sourceField": "title",
+          "message": "Title uses a fallback from title in raw HTML."
+        },
+        "description": {
+          "status": "missing",
+          "source": "unknown",
+          "message": "No Open Graph or meta description was observed."
+        },
+        "url": {
+          "status": "missing",
+          "source": "unknown",
+          "message": "No Open Graph URL or canonical URL was observed."
+        },
+        "image": {
+          "status": "missing",
+          "source": "unknown",
+          "message": "No Open Graph image was observed.",
+          "assetStatus": "unknown",
+          "assetMessage": "No image URL was observed."
+        }
+      },
+      "warnings": [
+        "LinkedIn-style preview is missing Open Graph title.",
+        "LinkedIn-style preview is missing Open Graph description.",
+        "LinkedIn-style preview is missing Open Graph image.",
+        "LinkedIn-style preview uses a fallback for title from title."
+      ]
+    }
+  },
+  "fields": [
+    {
+      "name": "title",
+      "rawValue": "Minimal Title Only",
+      "renderedValue": "Minimal Title Only",
+      "selectedValue": "Minimal Title Only",
+      "selectedSource": "raw_html",
+      "status": "present"
+    },
+    {
+      "name": "meta description",
+      "selectedSource": "unknown",
+      "status": "missing"
+    },
+    {
+      "name": "canonical",
+      "selectedSource": "unknown",
+      "status": "missing"
+    },
+    {
+      "name": "og:title",
+      "selectedSource": "unknown",
+      "status": "missing"
+    },
+    {
+      "name": "og:description",
+      "selectedSource": "unknown",
+      "status": "missing"
+    },
+    {
+      "name": "og:url",
+      "selectedSource": "unknown",
+      "status": "missing"
+    },
+    {
+      "name": "og:image",
+      "selectedSource": "unknown",
+      "status": "missing"
+    },
+    {
+      "name": "og:type",
+      "selectedSource": "unknown",
+      "status": "missing"
+    },
+    {
+      "name": "og:site_name",
+      "selectedSource": "unknown",
+      "status": "missing"
+    },
+    {
+      "name": "twitter:card",
+      "selectedSource": "unknown",
+      "status": "missing"
+    },
+    {
+      "name": "twitter:title",
+      "selectedSource": "unknown",
+      "status": "missing"
+    },
+    {
+      "name": "twitter:description",
+      "selectedSource": "unknown",
+      "status": "missing"
+    },
+    {
+      "name": "twitter:image",
+      "selectedSource": "unknown",
+      "status": "missing"
+    }
+  ],
+  "image": {
+    "status": "missing",
+    "source": "unknown",
+    "message": "No social image URL was observed.",
+    "assetStatus": "unknown",
+    "assetMessage": "No image URL was observed."
+  },
+  "warnings": [
+    "Google-style preview is missing description.",
+    "Google-style preview is missing url.",
+    "Generic social preview is missing Open Graph title.",
+    "Generic social preview is missing Open Graph description.",
+    "Generic social preview is missing Open Graph URL.",
+    "Generic social preview is missing Open Graph image.",
+    "Generic social preview uses a fallback for title from title.",
+    "X/Twitter preview is missing Twitter card type.",
+    "X/Twitter preview is missing Twitter title.",
+    "X/Twitter preview is missing Twitter description.",
+    "X/Twitter preview is missing Twitter image.",
+    "X/Twitter preview uses a fallback for title from title.",
+    "Slack/Discord-style preview is missing description.",
+    "Slack/Discord-style preview is missing image.",
+    "Slack/Discord-style preview uses a fallback for title from title.",
+    "LinkedIn-style preview is missing Open Graph title.",
+    "LinkedIn-style preview is missing Open Graph description.",
+    "LinkedIn-style preview is missing Open Graph image.",
+    "LinkedIn-style preview uses a fallback for title from title.",
+    "No image URL was available for social preview simulation."
+  ],
+  "limitations": [
+    "This is a simulated preview and approximation based on observed metadata, not an official platform API output.",
+    "Platform behavior may differ by crawler, cache state, account settings, locale, page history, and platform-specific rules.",
+    "Raw HTML metadata is usually safer for preview bots than metadata injected only after JavaScript rendering.",
+    "ShipReady does not render screenshots, generate images, scrape platform preview endpoints, deploy changes, or call social platform APIs.",
+    "Mock mode uses deterministic local fixtures and no network request."
+  ],
+  "comparison": {
+    "rawVsRendered": [
+      {
+        "field": "title",
+        "rawValue": "Minimal Title Only",
+        "renderedValue": "Minimal Title Only",
+        "status": "present_in_raw"
+      },
+      {
+        "field": "canonical",
+        "status": "missing_in_both"
+      },
+      {
+        "field": "og:title",
+        "status": "missing_in_both"
+      },
+      {
+        "field": "og:description",
+        "status": "missing_in_both"
+      },
+      {
+        "field": "og:image",
+        "status": "missing_in_both"
+      },
+      {
+        "field": "og:url",
+        "status": "missing_in_both"
+      },
+      {
+        "field": "og:type",
+        "status": "missing_in_both"
+      },
+      {
+        "field": "og:site_name",
+        "status": "missing_in_both"
+      },
+      {
+        "field": "twitter:card",
+        "status": "missing_in_both"
+      },
+      {
+        "field": "twitter:title",
+        "status": "missing_in_both"
+      },
+      {
+        "field": "twitter:description",
+        "status": "missing_in_both"
+      },
+      {
+        "field": "twitter:image",
+        "status": "missing_in_both"
+      }
+    ]
+  },
+  "verdict": {
+    "status": "needs_attention",
+    "summary": "One or more simulated preview inputs are missing, fallback-based, rendered-only, or have image evidence that needs attention."
+  },
+  "nextActions": [
+    "Add a concise meta description plus Open Graph and Twitter descriptions where those surfaces matter.",
+    "Add a canonical URL and matching og:url so previews use a stable page URL.",
+    "Add an absolute, shareable og:image and twitter:image URL sized for social cards."
+  ]
+}

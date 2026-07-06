@@ -7,6 +7,8 @@ ShipReady reports evidence and prepares bounded local work. It can detect launch
 - **launch-readiness** — the product’s operating category.
 - **crawler visibility** — what the fetched HTML and crawl resources expose.
 - **preview-bot visibility** — what social and link-preview consumers may receive.
+- **simulated preview** — a ShipReady approximation based on observed metadata, not an official platform output.
+- **observed preview inputs** — title, description, URL, card type, and image metadata found in raw or rendered HTML.
 - **safe crawl files** — only eligible V1 `robots`/`sitemap` creations.
 - **metadata completeness** — observed presence or absence, not outcome prediction.
 - **structured data recommendation** — advice that requires factual review.
@@ -40,6 +42,11 @@ The following are forbidden claims, except when quoted here or clearly labeled a
 - “guaranteed propagation”
 - “guaranteed certificate issuance”
 - “URL Inspection tested the live page”
+- “guaranteed social preview”
+- “exact social preview”
+- “official LinkedIn preview”
+- “official X preview”
+- “official Slack preview”
 
 Do not use close paraphrases that imply the same certainty or capability.
 
@@ -53,6 +60,7 @@ Do not use close paraphrases that imply the same certainty or capability.
 - Only deterministic mock-backed Search Console status is implemented; live Google Search Console/OAuth is not implemented. DNS readiness is implemented as read-only resolver evidence; DNS provider writes and provider integrations are not implemented. MCP remains local stdio with one guarded write tool. Future live Search Console or mutation-bearing work must remain visibly labeled **Planned** until shipped and validated.
 - Future Search Console output must distinguish live unauthenticated checks, authenticated Google-reported status, and ownership verification. “No accessible property” must be scoped to the authorized account.
 - DNS readiness output must distinguish DNS-only evidence, HTTP-adjacent evidence, and Search Console verification-readiness. Visible records are observations, not propagation, certificate, crawling, indexing, or approval guarantees.
+- Social preview simulator output must use approximation language. It can report likely input fields from observed metadata and raw-versus-rendered caveats, but it must not claim platform-specific rendering, cache behavior, share-card refresh, or official preview API results.
 
 See [SEARCH_CONSOLE_READINESS_SPEC.md](SEARCH_CONSOLE_READINESS_SPEC.md) for the Pass 8 source-backed claim and authority boundaries.
 See [DNS_READINESS_SPEC.md](DNS_READINESS_SPEC.md) for the Pass 10/11 source-backed DNS claim and authority boundaries.

@@ -55,9 +55,9 @@
       "id": "contract-fixtures",
       "label": "Contract fixtures",
       "status": "pass",
-      "message": "41 canonical contract fixtures exist and parse.",
+      "message": "50 canonical contract fixtures exist and parse.",
       "details": {
-        "count": 41
+        "count": 50
       }
     },
     {
@@ -111,6 +111,21 @@
       }
     },
     {
+      "id": "social-preview-simulator",
+      "label": "Social preview simulator",
+      "status": "pass",
+      "message": "The read-only social preview simulator guidance and 9 deterministic fixtures are present; no social platform credentials or network checks are required by doctor.",
+      "details": {
+        "readOnly": true,
+        "socialPlatformApis": false,
+        "exactRenderingGuarantee": false,
+        "networkRequired": false,
+        "fixtures": 9,
+        "missing": [],
+        "skillReferencesSocialPreview": true
+      }
+    },
+    {
       "id": "write-policy",
       "label": "WRITE_POLICY_V1",
       "status": "pass",
@@ -135,7 +150,7 @@
     }
   ],
   "summary": {
-    "pass": 13,
+    "pass": 14,
     "warn": 2,
     "fail": 0,
     "skip": 0

@@ -25,6 +25,7 @@ This was low risk because CLI JSON formatting already had a dedicated Zod-valida
 | `ui-report [path] --url <url> --json` | Yes | `shipready.uiReport.v1` | V1 CLI boundary plus `ui-report-v1` model | Network/optional local read only |
 | `search-console status --url <url> --json` | Yes | `shipready.searchConsoleStatus.v1` | V1 mock prototype boundary | Deterministic local read only |
 | `dns status --url <url> --json` | Yes | `shipready.dnsStatus.v1` | V1 DNS readiness boundary | Read-only DNS/optional HTTP evidence |
+| `social-preview --url <url> --json` | Yes | `shipready.socialPreview.v1` | V1 simulated preview boundary | Network read only or deterministic local mock |
 | JSON command failure | When the invoked command accepted `--json` | `shipready.error.v1` | V1 error boundary; Commander parse gaps remain | No additional effects |
 
 The authoritative mapping and CLI contract schemas are in `src/types/contracts.ts`.
@@ -70,6 +71,24 @@ Deployment status is one of `not_checked`, `appears_deployed`, `appears_not_depl
 The command disables the rendered browser pass because only public crawl-resource evidence is needed. It never calls write mode, deployment tooling, provider APIs, Git/GitHub, DNS writes, or Search Console. Positive live evidence does not guarantee crawling, indexing, propagation, or future availability.
 
 Canonical fixtures cover URL-only ready/needs-attention, repo-backed appears-deployed/needs-deploy/partial, and unknown evidence. All use fixed timestamps and mocked audit/inspection inputs; no fixture generation uses the network.
+
+## `shipready.socialPreview.v1`
+
+Pass 13 implements this contract for `social-preview --json` and the read-only MCP tool `shipready.social_preview`.
+
+Top-level keys are `contract`, `url`, `checkedAt`, `mode`, `sourceMode`, optional `canonicalUrl`, `previews`, `fields`, `image`, `warnings`, `limitations`, `comparison`, `verdict`, and `nextActions`. `mode` is `live` or `mock`; `sourceMode` is `raw`, `rendered`, or `both`. The default `both` mode prefers raw HTML values, then reports rendered HTML only as fallback evidence because raw metadata is usually safer for preview bots.
+
+`fields` maps observed metadata names to raw/rendered values and constrained statuses: `present`, `missing`, `fallback`, or `unknown`. Source field names are fixed to `title`, `meta description`, `canonical`, Open Graph fields (`og:title`, `og:description`, `og:url`, `og:image`, `og:type`, `og:site_name`), and Twitter fields (`twitter:card`, `twitter:title`, `twitter:description`, `twitter:image`).
+
+`previews` contains five simulated surfaces: `google_search`, `generic_social`, `x_twitter`, `slack_discord`, and `linkedin`. Google-style output uses title, meta description, and canonical URL. Generic social, Slack/Discord-style, and LinkedIn-style output prefer Open Graph fields with documented fallbacks. X/Twitter output prefers Twitter fields and falls back to Open Graph where practical. Each surface includes field statuses and warnings for missing primary fields, fallback use, rendered-only metadata, and image/description gaps.
+
+`image.assetStatus` is `not_checked`, `reachable`, `unreachable`, or `unknown`. Live mode does not call platform APIs or arbitrary image-validation services; when image checking is not safe, it reports `not_checked`. Deterministic mocks may report reachable/unreachable evidence without network calls.
+
+`comparison.rawVsRendered` preserves raw-versus-rendered metadata differences for the supported source field names. `verdict.status` is `ready`, `needs_attention`, or `unknown`; it is a review classification for observed preview inputs, not a promise about third-party rendering.
+
+Canonical fixtures cover `complete`, `missing-image`, `rendered-only-metadata`, `twitter-fallback`, `missing-description`, `missing-og-url`, `raw-rendered-different`, `image-unreachable`, and `minimal-title-only`. All use fixed timestamps and synthetic `example.com` values. Fixture generation makes no external requests.
+
+The CLI and MCP tool do not write files, require a repository path, call social platform APIs, scrape platform preview endpoints, render screenshots, generate images, deploy, mutate DNS/Search Console, use OAuth, store tokens, or broaden `WRITE_POLICY_V1`.
 
 ## Exact success shapes
 
@@ -155,6 +174,14 @@ Exit behavior: `0` when `errors` is empty; `1` when a valid UI report is emitted
 
 Consumers: CLI users, the normalized model used by the local GUI and static HTML renderer, tests, demos, validation fixtures.
 
+### `shipready.socialPreview.v1`
+
+Top-level keys: `contract`, `url`, `checkedAt`, `mode`, `sourceMode`, optional `canonicalUrl`, `previews`, `fields`, `image`, `warnings`, `limitations`, `comparison`, `verdict`, and `nextActions`.
+
+Internal source and formatter: `src/socialPreview/socialPreview.ts` and `src/report/formatSocialPreviewReport.ts`. Exit behavior: `0` after an emitted simulated preview; `1` for invalid URL/source/mock/timeout; `2` for operational or contract failure.
+
+Consumers: CLI users, MCP clients, contract fixtures, tests, and future report/GUI work. Current GUI and HTML report surfaces do not consume this contract.
+
 ## Error contract
 
 `shipready.error.v1` has required keys:
@@ -236,6 +263,15 @@ Deterministic fixtures live in `validation/contracts/`:
 - `recheck.repo-backed-needs-deploy.json`
 - `recheck.repo-backed-partial.json`
 - `recheck.unknown.json`
+- `social-preview.complete.json`
+- `social-preview.missing-image.json`
+- `social-preview.rendered-only-metadata.json`
+- `social-preview.twitter-fallback.json`
+- `social-preview.missing-description.json`
+- `social-preview.missing-og-url.json`
+- `social-preview.raw-rendered-different.json`
+- `social-preview.image-unreachable.json`
+- `social-preview.minimal-title-only.json`
 
 Regenerate them from local test repositories and deterministic in-memory audit results:
 
@@ -245,7 +281,7 @@ pnpm contracts:fixtures
 
 The generator is `scripts/validation/generateContractFixtures.ts`. It makes no external requests. The write fixtures run `writeFixFromDryRun` only against temporary copies under the operating-system temp directory, record the returned results, and remove the copies. They never target a real repository. Fixed timestamps and repository display paths keep fixtures reproducible.
 
-Focused drift coverage includes `tests/contracts.test.ts`, `tests/recheck.test.ts`, `tests/recheckCli.test.ts`, `tests/mcp.recheck.test.ts`, `tests/status.test.ts`, and `tests/doctor.test.ts`. Tests validate every fixture and formatter discriminator, constrained recheck states, mocked local/live comparisons, no-mutation behavior, allowed-root enforcement, status/doctor posture, and existing safety boundaries.
+Focused drift coverage includes `tests/contracts.test.ts`, `tests/socialPreview.test.ts`, `tests/socialPreviewCli.test.ts`, `tests/mcp.socialPreview.test.ts`, `tests/recheck.test.ts`, `tests/recheckCli.test.ts`, `tests/mcp.recheck.test.ts`, `tests/status.test.ts`, and `tests/doctor.test.ts`. Tests validate every fixture and formatter discriminator, constrained social-preview/recheck states, mocked local/live comparisons, no-mutation behavior, allowed-root enforcement, status/doctor posture, and existing safety boundaries.
 
 ## Downstream consumers
 
@@ -259,7 +295,7 @@ Focused drift coverage includes `tests/contracts.test.ts`, `tests/recheck.test.t
 
 ## MCP mapping
 
-The implemented MCP specification is [MCP_PLAN.md](MCP_PLAN.md). Nine contract-backed tools preserve their top-level CLI contract objects; two canonical-read tools expose validated fixtures and allowlisted documents. `shipready.write_safe_crawl_files` returns `shipready.writeFix.v1` and is the only MCP write tool.
+The implemented MCP specification is [MCP_PLAN.md](MCP_PLAN.md). Ten contract-backed read-only tools preserve their top-level CLI contract objects; two canonical-read tools expose validated fixtures and allowlisted documents. `shipready.write_safe_crawl_files` returns `shipready.writeFix.v1` and is the only MCP write tool.
 
 `shipready.preview_fixes` still returns `shipready.dryRunFix.v1`; when current V1-eligible crawl-file creations exist, the MCP layer adds an agent-facing `previewReceipt` to the tool payload. The receipt is not a CLI contract field and is not write authority by itself. It is a signed, short-lived MCP precondition binding the normalized URL, authorized canonical repository path, policy, eligible paths, and stable dry-run/candidate digests.
 
@@ -267,10 +303,10 @@ The MCP write call must supply the same URL and repo path, the fresh receipt, an
 
 Ready now:
 
-- Eleven implemented JSON-capable command surfaces have explicit V1 contract names.
+- Twelve implemented JSON-capable command surfaces have explicit V1 contract names.
 - Success outputs retain their existing fields and add stable discriminators.
 - Action-level JSON errors have stable codes/messages and preserve the legacy `error` field.
-- Deterministic local fixtures and focused drift tests cover success, failure, dry-run, write, UI, Search Console, and DNS states.
+- Deterministic local fixtures and focused drift tests cover success, failure, dry-run, write, UI, Search Console, DNS, recheck, and social preview states.
 - Creation-only write evidence remains explicit and policy-bound.
 - Human CLI, HTML file, and GUI server surfaces are clearly separated from CLI JSON contracts.
 

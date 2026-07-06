@@ -220,6 +220,7 @@ Data source:
 - `raw.metadata` for crawler-visible previews.
 - `rendered.metadata` for "after app loads" comparisons.
 - `resources.robotsTxt` and `resources.sitemapXml` for crawl resource status.
+- Pass 13's `social-preview` CLI/MCP contract provides a richer read-only simulator, but wiring that contract into the GUI is a future GUI revisit rather than part of Pass 13.
 
 ### Screen 3 - Repo Understanding
 

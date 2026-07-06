@@ -26,7 +26,7 @@ pnpm shipready doctor --json
 ```
 
 - Purpose: check local runtime readiness without requiring a URL or repository path.
-- Checks: Node.js, pnpm, the Playwright Chromium executable, optional FFmpeg, package content, MCP SDK/configurability, parsed contract fixtures, canonical docs, Search Console mock content, DNS readiness content/API availability, post-write recheck docs/fixtures/skill guidance, `WRITE_POLICY_V1`, `LOCAL_FIRST_GUI_SPEC`, and expected demo artifacts.
+- Checks: Node.js, pnpm, the Playwright Chromium executable, optional FFmpeg, package content, MCP SDK/configurability, parsed contract fixtures, canonical docs, Search Console mock content, DNS readiness content/API availability, post-write recheck docs/fixtures/skill guidance, social preview simulator fixtures/skill guidance, `WRITE_POLICY_V1`, `LOCAL_FIRST_GUI_SPEC`, and expected demo artifacts.
 - Behavior: uses bounded local executable/file/dependency probes only. It does not access the network, inspect an arbitrary repository, start the MCP/GUI server, or mutate files.
 - Classification: every check is `pass`, `warn`, `fail`, or `skip`. Missing optional FFmpeg/demo artifacts warn rather than fail. `ok` is true exactly when no required check fails.
 - JSON contract: `shipready.doctor.v1`; normalized fixture: [`doctor.default.json`](../validation/contracts/doctor.default.json).
@@ -48,6 +48,26 @@ pnpm shipready audit https://example.com --json
 - Exit behavior: `0` when an audit result is emitted regardless of readiness status, `1` for invalid input, `2` for operational failure. JSON action errors use `shipready.error.v1`.
 - Agent use: first live-site check and source for downstream planning.
 - Safety: this is a single-page check, not a crawler; private/authenticated pages are out of scope.
+
+## `social-preview`
+
+```bash
+pnpm shipready social-preview --url https://example.com
+pnpm shipready social-preview --url https://example.com --json
+pnpm shipready social-preview --url https://example.com --source raw|rendered|both
+pnpm shipready social-preview --url https://example.com --mock complete --json
+```
+
+- Purpose: simulate what common search/social preview surfaces would likely use from one page's observed metadata.
+- Behavior: reuses the single-page audit path; live mode reads one URL and writes nothing. Mock mode is deterministic and local-only.
+- Source mode: `--source both` is the default. `raw` uses initial HTML metadata only. `rendered` uses rendered metadata. `both` prefers raw HTML values and reports rendered-only fallbacks because raw HTML is usually safer for preview bots.
+- Asset status: `--check-assets` is accepted, but live image asset reachability is not checked in this pass when it cannot be done safely; JSON reports `not_checked`. Deterministic mocks can report `reachable`, `unreachable`, or `unknown`.
+- Surfaces: `google_search`, `generic_social`, `x_twitter`, `slack_discord`, and `linkedin`. These are approximations from observed metadata, not official platform API outputs.
+- Mock scenarios: `complete`, `missing-image`, `rendered-only-metadata`, `twitter-fallback`, `missing-description`, `missing-og-url`, `raw-rendered-different`, `image-unreachable`, and `minimal-title-only`.
+- JSON contract: `shipready.socialPreview.v1`; fixtures are named `social-preview.<scenario>.json`.
+- Output: human sections for verdict, each simulated preview surface, raw-vs-rendered differences, limitations, and next actions; JSON preserves full field values while human output truncates long values.
+- Exit behavior: `0` when a valid simulation is emitted; `1` for invalid URL/source/mock/timeout input; `2` for operational or contract failure. JSON errors use `shipready.error.v1`.
+- Safety: no local repository is required; no files are written; no screenshots, image generation, platform preview APIs, social scraping endpoints, Git, deployment, DNS writes, Search Console live calls, OAuth, token storage, or provider integrations are used.
 
 ## `recheck`
 
@@ -257,7 +277,7 @@ SHIPREADY_MCP_ALLOWED_ROOTS='["/absolute/workspace-a","/absolute/workspace-b"]' 
 
 - Purpose: start the local MCP stdio server. Stdout is reserved for MCP protocol frames; use `pnpm --silent` in source checkouts so package-manager script output cannot pollute stdio.
 - Authorization: at least one explicit root is required. Repeat `--allow-root` for multiple roots; CLI roots replace the JSON-array environment fallback. Relative, missing, home, filesystem-root, traversal, and symlink-escape paths fail closed.
-- Surface: ten read-only tools, one guarded write tool, twelve canonical documentation resources plus allowlisted contract fixtures, and five prompt templates. `shipready.search_console_status` and `shipready.dns_status` accept no repository-path input. `shipready.recheck` authorizes a repository only when optional `repoPath` is supplied. The server's existing allowed-root startup requirement remains unchanged. See [MCP_PLAN.md](MCP_PLAN.md) for the exact lists.
+- Surface: eleven read-only tools, one guarded write tool, twelve canonical documentation resources plus allowlisted contract fixtures, and five prompt templates. `shipready.search_console_status`, `shipready.dns_status`, and `shipready.social_preview` accept no repository-path input. `shipready.recheck` authorizes a repository only when optional `repoPath` is supplied. The server's existing allowed-root startup requirement remains unchanged. See [MCP_PLAN.md](MCP_PLAN.md) for the exact lists.
 - Safe write tool: `shipready.write_safe_crawl_files` can create only current V1-eligible missing robots/sitemap files. Required flow: call `shipready.preview_fixes`, review `shipready.dryRunFix.v1` and its fresh `previewReceipt`, then call the write tool with the same URL, same authorized repo path, that receipt, and `confirmation: "CREATE_SAFE_CRAWL_FILES_ONLY"`.
 - Safety: the write tool re-authorizes the path, validates the receipt signature/expiry/bindings, regenerates the current dry-run, revalidates `WRITE_POLICY_V1`, and returns `shipready.writeFix.v1`. It never accepts arbitrary file paths or client-supplied file lists as authority. The server does not start the GUI or write an HTML report.
 - Limitation: request deadlines and client cancellation are bounded at the MCP boundary. Existing synchronous repository scans and application operations do not yet accept `AbortSignal`, so already-started underlying work may finish its own bounded cleanup after the MCP response.
