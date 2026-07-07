@@ -143,6 +143,7 @@ export async function runDoctor(
       ["post-write-recheck", "Post-write recheck"],
       ["social-preview-simulator", "Social preview simulator"],
       ["generated-site-smells", "Generated-site smell detector"],
+      ["bounded-crawl", "Bounded multi-page crawl"],
       ["write-policy", "WRITE_POLICY_V1"],
       ["local-gui-spec", "LOCAL_FIRST_GUI_SPEC"],
       ["demo-artifacts", "Demo artifacts"],
@@ -382,6 +383,53 @@ export async function runDoctor(
       fixtures: smellFixtures.length,
       missing: missingSmellContent,
       docsReferenceLimitations: smellDocsReferenceLimitations,
+    },
+  });
+
+  const crawlSkill = "skills/shipready-launch-readiness/SKILL.md";
+  const crawlDocs = ["docs/COMMANDS.md", "docs/CONTRACTS.md", "docs/CLAIMS_POLICY.md"];
+  const crawlFixtures = FIXTURE_NAMES.filter((name) => name.startsWith("crawl."));
+  const missingCrawlContent = [
+    ...(!dependencies.pathExists(join(packageRoot, crawlSkill)) ? [crawlSkill] : []),
+    ...crawlDocs.filter((path) => !dependencies.pathExists(join(packageRoot, path))),
+    ...crawlFixtures
+      .map((name) => `validation/contracts/${name}`)
+      .filter((path) => !dependencies.pathExists(join(packageRoot, path))),
+  ];
+  let crawlDocsReferenceLimitations = false;
+  if (missingCrawlContent.length === 0) {
+    try {
+      const [skill, commands, contracts, claims] = await Promise.all([
+        dependencies.readText(join(packageRoot, crawlSkill)),
+        dependencies.readText(join(packageRoot, "docs/COMMANDS.md")),
+        dependencies.readText(join(packageRoot, "docs/CONTRACTS.md")),
+        dependencies.readText(join(packageRoot, "docs/CLAIMS_POLICY.md")),
+      ]);
+      const combined = `${skill}\n${commands}\n${contracts}\n${claims}`;
+      crawlDocsReferenceLimitations =
+        combined.includes("shipready crawl") &&
+        combined.includes("bounded multi-page crawl") &&
+        combined.includes("same-origin") &&
+        combined.includes("not a full-site crawler");
+    } catch {
+      crawlDocsReferenceLimitations = false;
+    }
+  }
+  checks.push({
+    id: "bounded-crawl",
+    label: "Bounded multi-page crawl",
+    status: missingCrawlContent.length === 0 && crawlDocsReferenceLimitations ? "pass" : "fail",
+    message: missingCrawlContent.length === 0 && crawlDocsReferenceLimitations
+      ? `The read-only bounded crawl guidance and ${crawlFixtures.length} deterministic fixtures are present; doctor performs no network crawl.`
+      : `Bounded crawl content is incomplete or inconsistent; missing: ${missingCrawlContent.join(", ") || "safe crawl guidance"}.`,
+    details: {
+      readOnly: true,
+      networkRequired: false,
+      fullSiteCrawler: false,
+      monitoring: false,
+      fixtures: crawlFixtures.length,
+      missing: missingCrawlContent,
+      docsReferenceLimitations: crawlDocsReferenceLimitations,
     },
   });
 

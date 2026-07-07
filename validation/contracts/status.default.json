@@ -13,6 +13,7 @@
       "search-console status",
       "dns status",
       "recheck",
+      "crawl",
       "social-preview",
       "smells",
       "audit",
@@ -29,6 +30,7 @@
       "stdio": true,
       "readOnlyTools": [
         "shipready.audit_site",
+        "shipready.crawl_site",
         "shipready.search_console_status",
         "shipready.dns_status",
         "shipready.recheck",
@@ -66,6 +68,10 @@
     ]
   },
   "integrations": {
+    "boundedMultiPageCrawl": "read_only_bounded_sample",
+    "fullSiteCrawler": "not_implemented",
+    "monitoring": "not_implemented",
+    "scheduledCrawls": "not_implemented",
     "generatedSiteSmells": "read_only_detector",
     "aiAuthorshipDetection": "not_implemented",
     "smellDetectorAutoFixes": "not_implemented",
@@ -87,5 +93,5 @@
     "fodmappVoiceover": "validation/demo-fodmapp-voiceover-final/"
   },
   "nextRecommendedCommand": "pnpm shipready doctor",
-  "nextRecommendedPass": "Bounded multi-page crawl"
+  "nextRecommendedPass": "GUI polish / revisit"
 }

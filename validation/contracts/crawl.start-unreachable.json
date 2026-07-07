@@ -1,0 +1,88 @@
+{
+  "contract": "shipready.crawl.v1",
+  "checkedAt": "2026-06-21T12:00:00.000Z",
+  "mode": "mock",
+  "startUrl": "https://example.com/",
+  "origin": "https://example.com",
+  "options": {
+    "maxPages": 8,
+    "maxDepth": 1,
+    "source": "both",
+    "rendered": true
+  },
+  "summary": {
+    "status": "unknown",
+    "pagesChecked": 1,
+    "pagesDiscovered": 1,
+    "pagesSkipped": 0,
+    "criticalIssues": 1,
+    "warnings": 0,
+    "repeatedIssues": 0
+  },
+  "pages": [
+    {
+      "url": "https://example.com/",
+      "depth": 0,
+      "source": "start",
+      "status": "unknown",
+      "title": "Example Home",
+      "issueSummary": {
+        "critical": 1,
+        "warnings": 0,
+        "topIssueTitles": [
+          "Page could not be audited"
+        ]
+      },
+      "topIssues": [
+        {
+          "id": "crawl.page.unreachable",
+          "title": "Page could not be audited",
+          "severity": "critical",
+          "category": "crawlability"
+        }
+      ]
+    }
+  ],
+  "repeatedFindings": [],
+  "consistency": {
+    "canonicalHosts": [],
+    "titlePatterns": {
+      "duplicateTitles": [],
+      "missingTitles": 0
+    },
+    "missingMetadata": [
+      {
+        "field": "description",
+        "count": 1,
+        "urls": [
+          "https://example.com/"
+        ]
+      },
+      {
+        "field": "canonical",
+        "count": 1,
+        "urls": [
+          "https://example.com/"
+        ]
+      },
+      {
+        "field": "og:image",
+        "count": 1,
+        "urls": [
+          "https://example.com/"
+        ]
+      }
+    ],
+    "issues": []
+  },
+  "skipped": [],
+  "limitations": [
+    "This is a bounded same-origin launch-readiness sample, not a full-site crawl or complete SEO audit.",
+    "Only compact page summaries are returned; raw HTML and full audit payloads are not embedded.",
+    "Mock scenario represents an unreachable starting URL."
+  ],
+  "nextActions": [
+    "Verify the starting public URL is reachable, then run the bounded crawl again.",
+    "Use single-page `shipready audit --json` for full details on any individual page that needs review."
+  ]
+}

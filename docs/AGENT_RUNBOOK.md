@@ -14,6 +14,7 @@ For launch-readiness operations, start with the repository-local [ShipReady Laun
 
 - `src/cli/index.ts`: implemented commands, flags, modes, and exit behavior.
 - `src/audit/`: public-URL fetch, rendered pass, metadata/crawl checks, and scoring.
+- `src/crawl/`: read-only bounded same-origin multi-page crawl, link/sitemap discovery, page audit summaries, metadata consistency aggregation, repeated findings, and deterministic mock scenarios.
 - `src/socialPreview/`: read-only simulated preview builder and deterministic mock scenarios built from observed audit metadata.
 - `src/smells/`: read-only generated-site implementation smell detector, bounded repo scanner, deterministic mocks, and no authorship identification or auto-fixes.
 - `src/repo/`: bounded read-only repository inspection.
@@ -24,7 +25,7 @@ For launch-readiness operations, start with the repository-local [ShipReady Laun
 - `src/report/`: human, JSON, UI, and static HTML formatting.
 - `src/ui/`: normalized `ui-report-v1` creation.
 - `src/gui/`: local server and preview/copy-only browser UI.
-- `src/mcp/`: local stdio adapter, twelve read-only tools, one guarded safe-write tool, preview receipts, canonical reads, prompts, authorization, errors, and deadlines.
+- `src/mcp/`: local stdio adapter, thirteen read-only tools, one guarded safe-write tool, preview receipts, canonical reads, prompts, authorization, errors, and deadlines.
 - `src/status/` and `src/doctor/`: static capability posture and bounded local readiness diagnostics.
 - `src/searchConsole/`: stable read-only status boundary and deterministic mock provider; no OAuth, tokens, or live Google client.
 - `src/dns/`: read-only DNS readiness status, live Node DNS resolver, deterministic mock scenarios, redacted TXT evidence, and no provider integration or DNS writes.
@@ -71,6 +72,8 @@ For social preview work, use `pnpm shipready social-preview --url <url> --json` 
 
 For generated-site implementation smell work, use `pnpm shipready smells <path> --json` or MCP `shipready.generated_site_smells`. Pass 14 implements heuristic implementation signals for repo-level launch-readiness risks such as client-only metadata, weak SPA raw HTML, placeholder copy, default starter boilerplate, missing referenced public assets, local/example URLs, and unclear framework shape. Findings are not proof of authorship, generator identity, or site quality. The detector is read-only, bounded, skips environment files and build/dependency output, and does not run fix mode, write files, deploy, call provider APIs, mutate DNS/Search Console, call social platform APIs, use OAuth, store tokens, or broaden `WRITE_POLICY_V1`.
 
+For bounded multi-page crawl work, use `pnpm shipready crawl --url <url> --json` or MCP `shipready.crawl_site`. Pass 15 implements a read-only same-origin sample from one public HTTP(S) URL, capped at `maxPages <= 25` and `maxDepth <= 2`. It audits selected pages through the existing single-page audit logic, reports compact page summaries, repeated findings, metadata consistency, skipped URL reasons, limits, limitations, and next actions. It is not a full-site crawler, monitoring system, complete SEO audit, ranking analysis, indexing guarantee, complete broken-link scan, security scan, accessibility audit, or write surface.
+
 ## Main commands
 
 ```bash
@@ -80,6 +83,7 @@ pnpm shipready search-console status --url https://example.com --mock ready_site
 pnpm shipready dns status --url https://example.com --mock ready --json
 pnpm shipready social-preview --url https://example.com --mock complete --json
 pnpm shipready smells . --mock clean --json
+pnpm shipready crawl --url https://example.com --mock clean-small-site --json
 pnpm shipready audit <url> --json
 pnpm shipready recheck [path] --url <url> --json
 pnpm shipready inspect-repo <path> --json

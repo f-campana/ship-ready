@@ -55,9 +55,9 @@
       "id": "contract-fixtures",
       "label": "Contract fixtures",
       "status": "pass",
-      "message": "57 canonical contract fixtures exist and parse.",
+      "message": "64 canonical contract fixtures exist and parse.",
       "details": {
-        "count": 57
+        "count": 64
       }
     },
     {
@@ -141,6 +141,21 @@
       }
     },
     {
+      "id": "bounded-crawl",
+      "label": "Bounded multi-page crawl",
+      "status": "pass",
+      "message": "The read-only bounded crawl guidance and 7 deterministic fixtures are present; doctor performs no network crawl.",
+      "details": {
+        "readOnly": true,
+        "networkRequired": false,
+        "fullSiteCrawler": false,
+        "monitoring": false,
+        "fixtures": 7,
+        "missing": [],
+        "docsReferenceLimitations": true
+      }
+    },
+    {
       "id": "write-policy",
       "label": "WRITE_POLICY_V1",
       "status": "pass",
@@ -165,7 +180,7 @@
     }
   ],
   "summary": {
-    "pass": 15,
+    "pass": 16,
     "warn": 2,
     "fail": 0,
     "skip": 0

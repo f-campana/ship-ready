@@ -5,6 +5,7 @@ import type { ZodType } from "zod";
 import {
   AuditJsonContractSchema,
   CliErrorContractSchema,
+  CrawlJsonContractSchema,
   DnsStatusJsonContractSchema,
   DryRunFixJsonContractSchema,
   FixPlanJsonContractSchema,
@@ -25,6 +26,13 @@ const MAX_CANONICAL_READ_BYTES = 1024 * 1024;
 export const FIXTURE_NAMES = [
   "audit.clean.json",
   "audit.needs-work.json",
+  "crawl.clean-small-site.json",
+  "crawl.missing-descriptions.json",
+  "crawl.canonical-inconsistent.json",
+  "crawl.social-images-missing.json",
+  "crawl.start-unreachable.json",
+  "crawl.limit-reached.json",
+  "crawl.mixed-readiness.json",
   "error.invalid-url.json",
   "fix-dry-run.review-required.json",
   "fix-dry-run.safe-apply.json",
@@ -259,6 +267,7 @@ export function listResources() {
 
 const FIXTURE_SCHEMAS: Readonly<Record<string, ZodType>> = {
   "shipready.audit.v1": AuditJsonContractSchema,
+  "shipready.crawl.v1": CrawlJsonContractSchema,
   "shipready.repoInspection.v1": RepoInspectionJsonContractSchema,
   "shipready.fixPlan.v1": FixPlanJsonContractSchema,
   "shipready.dryRunFix.v1": DryRunFixJsonContractSchema,

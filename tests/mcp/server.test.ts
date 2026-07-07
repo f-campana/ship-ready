@@ -54,7 +54,7 @@ describe("MCP startup and stdio transport", () => {
       const resources = await client.listResources();
       const templates = await client.listResourceTemplates();
       const prompts = await client.listPrompts();
-      expect(tools.tools).toHaveLength(13);
+      expect(tools.tools).toHaveLength(14);
       expect(tools.tools.map((tool) => tool.name).filter((name) => name.includes("write"))).toEqual([
         "shipready.write_safe_crawl_files",
       ]);
@@ -86,6 +86,15 @@ describe("MCP startup and stdio transport", () => {
         contract: "shipready.dnsStatus.v1",
         mode: "mock",
         verdict: { status: "ready" },
+      });
+      const crawl = await client.callTool({
+        name: "shipready.crawl_site",
+        arguments: { url: "https://example.com", mock: "clean-small-site" },
+      });
+      expect(crawl.structuredContent).toMatchObject({
+        contract: "shipready.crawl.v1",
+        mode: "mock",
+        summary: { status: "ready" },
       });
       const recheckUrlOnly = await client.callTool({
         name: "shipready.recheck",

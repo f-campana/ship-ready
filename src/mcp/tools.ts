@@ -1,5 +1,8 @@
 import { z } from "zod";
 import { auditUrl } from "../audit/auditUrl";
+import { crawlSite } from "../crawl/crawl";
+import { CRAWL_MOCK_SCENARIOS } from "../crawl/mockCrawl";
+import { CRAWL_SOURCE_MODES } from "../crawl/crawlTypes";
 import { dryRunFix } from "../fix/dryRunFix";
 import { writeFixFromDryRun } from "../fix/writeFix";
 import { planFixes } from "../plan/planFixes";
@@ -28,8 +31,10 @@ import { formatSocialPreviewJson } from "../report/formatSocialPreviewReport";
 import { getGeneratedSiteSmells } from "../smells/generatedSiteSmells";
 import { GENERATED_SITE_SMELL_MOCK_SCENARIOS } from "../smells/generatedSiteSmellTypes";
 import { formatGeneratedSiteSmellsJson } from "../report/formatGeneratedSiteSmellsReport";
+import { formatCrawlJson } from "../report/formatCrawlReport";
 import {
   AuditJsonContractSchema,
+  CrawlJsonContractSchema,
   DnsStatusJsonContractSchema,
   DryRunFixJsonContractSchema,
   FixPlanJsonContractSchema,
@@ -68,6 +73,14 @@ export { TOOL_NAMES } from "./toolNames";
 const UrlInputSchema = z.object({
   url: z.string().trim().min(1).max(2048),
   rendered: z.boolean().optional().default(true),
+}).strict();
+const CrawlInputSchema = z.object({
+  url: z.string().trim().min(1).max(2048),
+  maxPages: z.number().int().positive().optional(),
+  maxDepth: z.number().int().nonnegative().optional(),
+  source: z.enum(CRAWL_SOURCE_MODES).optional(),
+  rendered: z.boolean().optional().default(true),
+  mock: z.enum(CRAWL_MOCK_SCENARIOS).optional(),
 }).strict();
 const SearchConsoleInputSchema = z.object({
   url: z.string().trim().min(1).max(2048),
@@ -109,6 +122,7 @@ const PolicyInputSchema = z.object({ name: z.enum(Object.keys(POLICY_DOCS) as [k
 
 export type McpOperations = {
   auditSite: typeof auditUrl;
+  crawlSite: typeof crawlSite;
   searchConsoleStatus: typeof getSearchConsoleStatus;
   dnsStatus: typeof getDnsStatus;
   recheck: typeof recheck;
@@ -131,6 +145,7 @@ export type McpToolContext = {
 
 const DEFAULT_OPERATIONS: McpOperations = {
   auditSite: auditUrl,
+  crawlSite,
   searchConsoleStatus: getSearchConsoleStatus,
   dnsStatus: getDnsStatus,
   recheck,
@@ -154,6 +169,14 @@ export function listTools() {
   return [
     tool("shipready.audit_site", "Audit one public HTTP(S) page without local writes.", schema({
       url: stringSchema(2048), rendered: { type: "boolean", default: true },
+    }, ["url"]), { ...readOnly, openWorldHint: true }),
+    tool("shipready.crawl_site", "Run a read-only bounded same-origin launch-readiness crawl without repository access or writes.", schema({
+      url: stringSchema(2048),
+      maxPages: { type: "integer", minimum: 1, maximum: 25 },
+      maxDepth: { type: "integer", minimum: 0, maximum: 2 },
+      source: { type: "string", enum: [...CRAWL_SOURCE_MODES], default: "both" },
+      rendered: { type: "boolean", default: true },
+      mock: { type: "string", enum: [...CRAWL_MOCK_SCENARIOS] },
     }, ["url"]), { ...readOnly, openWorldHint: true }),
     tool("shipready.search_console_status", "Return deterministic mock-backed Search Console status without OAuth, Google API access, repository access, or writes.", schema({
       url: stringSchema(2048),
@@ -289,6 +312,19 @@ async function executeTool(
     const url = normalizeAuditUrl(input.url);
     const result = await operations.auditSite(url, { timeoutMs, render: input.rendered });
     return contractResult(formatJsonReport(result), AuditJsonContractSchema);
+  }
+  if (name === "shipready.crawl_site") {
+    const input = parseInput(CrawlInputSchema, args, "invalid_url");
+    const result = await operations.crawlSite({
+      url: input.url,
+      maxPages: input.maxPages,
+      maxDepth: input.maxDepth,
+      source: input.source,
+      rendered: input.rendered,
+      mock: input.mock,
+      timeoutMs,
+    });
+    return contractResult(formatCrawlJson(result), CrawlJsonContractSchema);
   }
   if (name === "shipready.search_console_status") {
     const input = parseInput(SearchConsoleInputSchema, args, "invalid_mode");
@@ -433,7 +469,11 @@ function parseInput<T extends z.ZodType>(
   const unknownField = parsed.error.issues.some((issue) => issue.code === "unrecognized_keys");
   const invalidRepoPath = parsed.error.issues.some((issue) => issue.path[0] === "repoPath");
   const invalidMode = parsed.error.issues.some((issue) =>
-    issue.path[0] === "mock" || issue.path[0] === "expectedWwwMode" || issue.path[0] === "source");
+    issue.path[0] === "mock" ||
+    issue.path[0] === "expectedWwwMode" ||
+    issue.path[0] === "source" ||
+    issue.path[0] === "maxPages" ||
+    issue.path[0] === "maxDepth");
   throw new ShipReadyMcpError(
     unknownField ? "unsupported_command" : invalidRepoPath ? "invalid_repo_path" : invalidMode ? "invalid_mode" : code,
     unknownField
@@ -498,6 +538,7 @@ function assertResultSize(result: unknown): void {
 
 function timeoutFor(name: ToolName, timeouts: McpTimeouts): number {
   if (name === "shipready.audit_site") return timeouts.audit_site;
+  if (name === "shipready.crawl_site") return timeouts.crawl_site;
   if (name === "shipready.search_console_status") return timeouts.canonical_read;
   if (name === "shipready.recheck") return timeouts.audit_site;
   if (name === "shipready.social_preview") return timeouts.audit_site;

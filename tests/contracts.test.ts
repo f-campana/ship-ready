@@ -15,12 +15,14 @@ import { formatDnsStatusJson } from "../src/dns/dnsStatus";
 import { formatRecheckJson } from "../src/report/formatRecheckReport";
 import { formatSocialPreviewJson } from "../src/report/formatSocialPreviewReport";
 import { formatGeneratedSiteSmellsJson } from "../src/report/formatGeneratedSiteSmellsReport";
+import { formatCrawlJson } from "../src/report/formatCrawlReport";
 import { AuditResultSchema } from "../src/types/audit";
 import {
   AuditJsonContractSchema,
   CLI_JSON_CONTRACT_BY_COMMAND,
   CliErrorContractSchema,
   CONTRACT_NAMES,
+  CrawlJsonContractSchema,
   DnsStatusJsonContractSchema,
   DryRunFixJsonContractSchema,
   FixPlanJsonContractSchema,
@@ -48,6 +50,13 @@ describe("CLI JSON contracts", () => {
   it.each([
     ["audit.clean.json", AuditJsonContractSchema, CONTRACT_NAMES.audit],
     ["audit.needs-work.json", AuditJsonContractSchema, CONTRACT_NAMES.audit],
+    ["crawl.clean-small-site.json", CrawlJsonContractSchema, CONTRACT_NAMES.crawl],
+    ["crawl.missing-descriptions.json", CrawlJsonContractSchema, CONTRACT_NAMES.crawl],
+    ["crawl.canonical-inconsistent.json", CrawlJsonContractSchema, CONTRACT_NAMES.crawl],
+    ["crawl.social-images-missing.json", CrawlJsonContractSchema, CONTRACT_NAMES.crawl],
+    ["crawl.start-unreachable.json", CrawlJsonContractSchema, CONTRACT_NAMES.crawl],
+    ["crawl.limit-reached.json", CrawlJsonContractSchema, CONTRACT_NAMES.crawl],
+    ["crawl.mixed-readiness.json", CrawlJsonContractSchema, CONTRACT_NAMES.crawl],
     ["inspect-repo.next-app.json", RepoInspectionJsonContractSchema, CONTRACT_NAMES.repoInspection],
     ["inspect-repo.vite.json", RepoInspectionJsonContractSchema, CONTRACT_NAMES.repoInspection],
     ["plan-fixes.safe-apply.json", FixPlanJsonContractSchema, CONTRACT_NAMES.fixPlan],
@@ -123,6 +132,7 @@ describe("CLI JSON contracts", () => {
       "recheck --json": "shipready.recheck.v1",
       "social-preview --json": "shipready.socialPreview.v1",
       "smells --json": "shipready.generatedSiteSmells.v1",
+      "crawl --json": "shipready.crawl.v1",
       "status --json": "shipready.status.v1",
       "doctor --json": "shipready.doctor.v1",
     });
@@ -162,6 +172,41 @@ describe("CLI JSON contracts", () => {
     expect(contractOf(formatGeneratedSiteSmellsJson(
       GeneratedSiteSmellsJsonContractSchema.parse(readFixture("generated-site-smells.clean.json")),
     ))).toBe(CONTRACT_NAMES.generatedSiteSmells);
+    expect(contractOf(formatCrawlJson(
+      CrawlJsonContractSchema.parse(readFixture("crawl.clean-small-site.json")),
+    ))).toBe(CONTRACT_NAMES.crawl);
+  });
+
+  it("keeps crawl fixtures deterministic, bounded, and constrained", () => {
+    const clean = CrawlJsonContractSchema.parse(readFixture("crawl.clean-small-site.json"));
+    const missingDescriptions = CrawlJsonContractSchema.parse(readFixture("crawl.missing-descriptions.json"));
+    const canonical = CrawlJsonContractSchema.parse(readFixture("crawl.canonical-inconsistent.json"));
+    const socialImages = CrawlJsonContractSchema.parse(readFixture("crawl.social-images-missing.json"));
+    const unreachable = CrawlJsonContractSchema.parse(readFixture("crawl.start-unreachable.json"));
+    const limitReached = CrawlJsonContractSchema.parse(readFixture("crawl.limit-reached.json"));
+
+    expect(clean.summary.status).toBe("ready");
+    expect(missingDescriptions.repeatedFindings).toEqual(expect.arrayContaining([
+      expect.objectContaining({ id: "metadata.description.missing", count: 4 }),
+    ]));
+    expect(canonical.consistency.issues).toEqual(expect.arrayContaining([
+      expect.objectContaining({ id: "metadata.canonical.host_inconsistent" }),
+    ]));
+    expect(socialImages.repeatedFindings).toEqual(expect.arrayContaining([
+      expect.objectContaining({ id: "social.og.image_missing", count: 3 }),
+    ]));
+    expect(unreachable.summary.status).toBe("unknown");
+    expect(limitReached.skipped).toEqual(expect.arrayContaining([
+      expect.objectContaining({ reason: "limit_reached" }),
+    ]));
+    for (const fixture of [clean, missingDescriptions, canonical, socialImages, unreachable, limitReached]) {
+      expect(fixture.pages.length).toBeLessThanOrEqual(25);
+      expect(fixture.options.maxDepth).toBeLessThanOrEqual(2);
+      expect(["live", "mock"]).toContain(fixture.mode);
+      expect(["ready", "needs_attention", "unknown"]).toContain(fixture.summary.status);
+      expect(JSON.stringify(fixture)).not.toMatch(/<html|<!doctype/i);
+      expect(JSON.stringify(fixture)).not.toMatch(/[?&](token|secret|key|password|code)=/i);
+    }
   });
 
   it("keeps generated-site smell fixtures deterministic and constrained", () => {

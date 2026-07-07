@@ -22,6 +22,10 @@ ShipReady reports evidence and prepares bounded local work. It can detect launch
 - **accessible property** — a property returned for the authorized account; not proof that no other property or owner exists.
 - **DNS readiness** — read-only reporting about observed DNS responses and adjacent reachability evidence, not provider repair or third-party outcome prediction.
 - **observed DNS response** — the answer, negative answer, timeout, or error returned by a resolver for the checked name/type.
+- **bounded multi-page crawl** — a small same-origin launch-readiness sample with strict page/depth limits, not exhaustive site coverage.
+- **bounded sample** — the pages ShipReady selected under the current crawl limits.
+- **observed metadata consistency** — consistency signals across checked pages, not a site-wide conclusion.
+- **repeated finding** — the same launch-readiness issue observed on multiple checked pages, with affected pages listed for review.
 - **heuristic implementation signals** — bounded repository patterns that may need launch-readiness review; not proof of authorship, generator identity, or quality.
 - **generated-site implementation smell** — a practical review signal for fragile metadata, preview, crawlability, asset, placeholder, boilerplate, framework, or configuration patterns commonly seen in generated sites.
 
@@ -64,6 +68,7 @@ Do not use close paraphrases that imply the same certainty or capability.
 - DNS readiness output must distinguish DNS-only evidence, HTTP-adjacent evidence, and Search Console verification-readiness. Visible records are observations, not propagation, certificate, crawling, indexing, or approval guarantees.
 - Social preview simulator output must use approximation language. It can report likely input fields from observed metadata and raw-versus-rendered caveats, but it must not claim platform-specific rendering, cache behavior, share-card refresh, or official preview API results.
 - Generated-site smell output must use heuristic and review language. It can report evidence-backed implementation smells and why they may affect crawler, preview, sharing, and launch-readiness behavior, but it must not identify an authoring tool, infer who produced the site, grade quality because a site appears generated, or apply fixes automatically.
+- Bounded crawl output must use sample and limit language. It can report same-origin page summaries, repeated findings, skipped candidates, and observed metadata consistency across checked pages, but it must not claim full-site crawl coverage, complete SEO audit coverage, ranking analysis, traffic improvement, indexing, monitoring, complete broken-link scanning, security scanning, accessibility auditing, or any write/remediation behavior.
 
 See [SEARCH_CONSOLE_READINESS_SPEC.md](SEARCH_CONSOLE_READINESS_SPEC.md) for the Pass 8 source-backed claim and authority boundaries.
 See [DNS_READINESS_SPEC.md](DNS_READINESS_SPEC.md) for the Pass 10/11 source-backed DNS claim and authority boundaries.

@@ -58,7 +58,7 @@ The first GUI MVP should not include:
 - Full SEO strategy.
 - CMS integrations.
 - Competitor analysis.
-- Site crawling beyond the single audited URL.
+- GUI-driven crawl exploration beyond the current report flow. Pass 15's `crawl` CLI/MCP contract provides a bounded same-origin sample, but wiring that contract into the GUI is a future GUI revisit.
 - Automated metadata, JSON-LD, content, accessibility text, package, config, Git, commit, or deploy writes.
 - A general-purpose expert SEO dashboard.
 
@@ -679,7 +679,7 @@ Later product directions:
 - Desktop app.
 - Small localhost server UI.
 - Future SaaS.
-- Multi-page crawl mode.
+- Bounded multi-page crawl presentation from the `shipready.crawl.v1` CLI/MCP contract.
 - Screenshot-based preview validation.
 - Exportable HTML/PDF report for clients.
 - Export patch file.

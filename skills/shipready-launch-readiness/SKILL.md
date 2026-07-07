@@ -1,6 +1,6 @@
 ---
 name: shipready-launch-readiness
-description: Use ShipReady to check whether a generated website is ready to share, crawl, preview, and safely prepare for deployment. Use for live URL audits, local repository inspection, generated-site implementation smell detection, fix planning, dry-run previews, guarded crawl-file creation, post-write rechecks after external deployment, UI or HTML reports, stdio MCP workflows, mock-backed Search Console status, read-only DNS checks, metadata or crawlability review, link-preview diagnosis, and launch-readiness reporting.
+description: Use ShipReady to check whether a generated website is ready to share, crawl, preview, and safely prepare for deployment. Use for live URL audits, bounded multi-page launch-readiness crawls, local repository inspection, generated-site implementation smell detection, fix planning, dry-run previews, guarded crawl-file creation, post-write rechecks after external deployment, UI or HTML reports, stdio MCP workflows, mock-backed Search Console status, read-only DNS checks, metadata or crawlability review, link-preview diagnosis, and launch-readiness reporting.
 ---
 
 # ShipReady Launch Readiness
@@ -26,13 +26,13 @@ Do not use ShipReady for keyword research, rank tracking, backlink analysis, gen
 
 | State | Current capability |
 |---|---|
-| Implemented | Single-page audit; bounded repo inspection; generated-site implementation smell detector; social preview simulator; planning; dry-run; status/doctor; versioned JSON; UI and HTML reports; local GUI; stdio MCP |
+| Implemented | Single-page audit; bounded multi-page crawl; bounded repo inspection; generated-site implementation smell detector; social preview simulator; planning; dry-run; status/doctor; versioned JSON; UI and HTML reports; local GUI; stdio MCP |
 | Mock-backed | Search Console status only; no Google OAuth, tokens, or live API calls |
-| Read-only | Audit, inspection, social preview simulation, planning, dry-run, post-write recheck, UI report, GUI, Search Console mocks, and DNS status; live DNS uses resolver observations only |
+| Read-only | Audit, bounded crawl, inspection, social preview simulation, planning, dry-run, post-write recheck, UI report, GUI, Search Console mocks, and DNS status; live DNS uses resolver observations only |
 | Write-guarded | CLI and the sole MCP write tool may create only eligible missing robots/sitemap files under `WRITE_POLICY_V1` |
-| Future | Bounded multi-page crawl, GUI revisit, terminal output polish/TUI viewer, patch export, and GitHub PR integration |
+| Future | GUI revisit, terminal output polish/TUI viewer, patch export, and GitHub PR integration |
 
-Never infer future behavior from a roadmap name. A current audit covers one page. The current social preview simulator is a metadata-based approximation, not platform output.
+Never infer future behavior from a roadmap name. A single-page audit covers one page; bounded crawl covers only a small same-origin sample under strict limits. The current social preview simulator is a metadata-based approximation, not platform output.
 
 ## Run the canonical CLI workflow
 
@@ -50,6 +50,7 @@ pnpm shipready dns status --url <url> --json
 pnpm shipready social-preview --url <url> --json
 pnpm shipready smells <path> --json
 pnpm shipready smells <path> --url <url> --json
+pnpm shipready crawl --url <url> --json
 pnpm shipready search-console status --url <url> --json
 pnpm shipready ui-report <path> --url <url> --json
 pnpm shipready html-report <path> --url <url> --output shipready-report.html
@@ -59,6 +60,7 @@ pnpm shipready html-report <path> --url <url> --output shipready-report.html
 - Use repo-backed commands for framework evidence, fix classification, and exact previews.
 - Treat `plan-fixes` automation fields as capability descriptions, not authorization.
 - Treat `social-preview` as a simulated preview from observed metadata, not a precise third-party rendering result.
+- Treat `crawl` as a bounded same-origin sample, not a full-site crawler or complete SEO audit.
 - Treat `fix --dry-run` as mandatory before a write; it writes nothing.
 - Treat JSON `contract` discriminators as versioned public boundaries. See [CONTRACTS.md](../../docs/CONTRACTS.md).
 - Separate safe candidates, review-required changes, manual actions, already-good checks, limitations, and local-versus-live state.
@@ -128,6 +130,21 @@ Without `--url`, the command performs a bounded local repo scan only. With `--ur
 
 Treat every finding as a review target, not a conclusion about authorship, generator identity, or site quality. The detector is not an authorship-identification system and does not apply fixes. It writes no files, runs no `fix` mode, deploys nothing, calls no Git/GitHub/provider APIs, performs no DNS/Search Console mutation, calls no social platform APIs, uses no OAuth, stores no tokens, and does not broaden `WRITE_POLICY_V1`.
 
+## Run a bounded multi-page crawl
+
+```bash
+pnpm shipready crawl --url https://example.com
+pnpm shipready crawl --url https://example.com --json
+pnpm shipready crawl --url https://example.com --max-pages 8 --max-depth 1 --source both --json
+pnpm shipready crawl --url https://example.com --mock clean-small-site --json
+```
+
+Use this read-only command to sample a small same-origin set of public HTTP(S) pages and ask whether important pages expose basic launch-readiness metadata and crawl resources consistently. It starts from one URL, discovers bounded same-origin candidates from links and/or conventional `/sitemap.xml`, audits selected pages with ShipReady's existing single-page audit logic, and reports page summaries, repeated findings, metadata consistency, skipped URL reasons, limits, limitations, and next actions.
+
+Defaults are `--max-pages 8`, `--max-depth 1`, `--source both`, and rendered audit enabled. Hard caps are `maxPages <= 25` and `maxDepth <= 2`; larger values are capped. Use `--no-render` to skip rendered page audits. Mock scenarios are deterministic: `clean-small-site`, `missing-descriptions`, `canonical-inconsistent`, `social-images-missing`, `start-unreachable`, `limit-reached`, and `mixed-readiness`.
+
+Treat crawl results as bounded sample evidence only. It is not a full-site crawler, complete SEO audit, ranking analysis, indexing guarantee, traffic-improvement tool, complete broken-link scan, security scan, accessibility audit, monitoring system, write mode, DNS/Search Console/social-platform integration, Git/GitHub workflow, or deployment path. It writes no files, requires no local repo, uses no OAuth, stores no tokens, and does not broaden `WRITE_POLICY_V1`.
+
 ## Use MCP safely
 
 Start the local stdio server with at least one explicit allowed root:
@@ -139,6 +156,7 @@ pnpm --silent shipready mcp --allow-root /absolute/workspace
 Use these read-only tools by their exact names:
 
 - `shipready.audit_site`
+- `shipready.crawl_site`
 - `shipready.inspect_repo`
 - `shipready.plan_fixes`
 - `shipready.preview_fixes`

@@ -2,7 +2,7 @@
 
 ## 1. Decision and scope
 
-This is the implementation specification and shipped boundary for roadmap Passes 5, 6, the Pass 9 read-only Search Console tool addition, the Pass 11 read-only DNS tool addition, the Pass 12 read-only post-write recheck, the Pass 13 read-only social preview simulator, and the Pass 14 read-only generated-site implementation smell detector. ShipReady remains **CLI first, MCP second, GUI third**. MCP is an agent-facing adapter over the stable CLI JSON contracts; it is not a second product engine and must not introduce independent audit, inspection, planning, preview, reporting, smell detection, or write rules.
+This is the implementation specification and shipped boundary for roadmap Passes 5, 6, the Pass 9 read-only Search Console tool addition, the Pass 11 read-only DNS tool addition, the Pass 12 read-only post-write recheck, the Pass 13 read-only social preview simulator, the Pass 14 read-only generated-site implementation smell detector, and the Pass 15 read-only bounded multi-page crawl. ShipReady remains **CLI first, MCP second, GUI third**. MCP is an agent-facing adapter over the stable CLI JSON contracts; it is not a second product engine and must not introduce independent audit, crawl, inspection, planning, preview, reporting, smell detection, or write rules.
 
 Pass 5 shipped the read-only MCP server. Pass 6 adds exactly one write tool: `shipready.write_safe_crawl_files`. It may create only current V1-eligible missing robots/sitemap files by wrapping the existing write policy with stronger MCP preconditions: authorized path, fresh signed preview receipt, exact confirmation phrase, re-authorization, regenerated current dry-run, and current write validation. It must not start the GUI, create branches/commits/PRs, deploy, mutate DNS or Search Console, or add metadata/content/JSON-LD/package/config writes. A `safeApply` field or guarded command in an existing report remains data for review only and must never be executed by the MCP server.
 
@@ -16,6 +16,8 @@ Pass 13 adds the read-only `shipready.social_preview` tool around the CLI social
 
 Pass 14 adds the read-only `shipready.generated_site_smells` tool around the CLI generated-site implementation smell detector. It requires an authorized repository path, accepts an optional URL and deterministic mock scenario, returns `shipready.generatedSiteSmells.v1`, and performs no authorship identification, auto-fix, repository mutation, deployment, Git/GitHub/provider API call, DNS/Search Console mutation, social platform API call, OAuth/token handling, or write-policy broadening.
 
+Pass 15 adds the read-only `shipready.crawl_site` tool around the CLI bounded multi-page crawl. It accepts one public URL plus optional `maxPages`, `maxDepth`, `source`, `rendered`, and deterministic `mock` inputs, needs no repository authorization, returns `shipready.crawl.v1`, and performs no full-site crawl, monitoring, write, deployment, Git/GitHub/provider API call, DNS/Search Console mutation, social platform API call, OAuth/token handling, or write-policy broadening.
+
 ### Phase boundaries
 
 | Phase | Roadmap pass | Included | Excluded |
@@ -27,7 +29,8 @@ Pass 14 adds the read-only `shipready.generated_site_smells` tool around the CLI
 | 5 | Pass 12 | Read-only post-write recheck with optional authorized repo evidence | Deployment execution/automation, hosting providers, Git/GitHub, GUI changes, broader writes |
 | 6 | Pass 13 | Read-only social preview simulator | Social platform APIs, platform preview scraping endpoints, screenshot rendering, image generation, GUI changes, writes |
 | 7 | Pass 14 | Read-only generated-site implementation smell detector | Authorship identification, generator/vendor attribution, auto-fixes, GUI changes, writes |
-| 8 | Later roadmap passes | Live Search Console design, reviewed patch export, GitHub PRs, bounded crawl, other explicitly specified integrations | Anything not separately specified, authorized, and tested |
+| 8 | Pass 15 | Read-only bounded multi-page crawl | Full-site crawling, monitoring/scheduled crawl, writes, GUI redesign, Git/GitHub/deploy behavior |
+| 9 | Later roadmap passes | Live Search Console design, reviewed patch export, GitHub PRs, other explicitly specified integrations | Anything not separately specified, authorized, and tested |
 
 No prompt grants capabilities. Tool registration and server policy are the authority boundary.
 
@@ -38,6 +41,7 @@ The source of truth is `src/types/contracts.ts`, with behavior documented in `do
 | Contract | Current CLI source | Shared application entry point | MCP tool |
 |---|---|---|---|
 | `shipready.audit.v1` | `audit <url> --json` | `auditUrl` | `shipready.audit_site` |
+| `shipready.crawl.v1` | `crawl --url <url> --json` | `crawlSite` | `shipready.crawl_site` |
 | `shipready.repoInspection.v1` | `inspect-repo <path> --json` | `inspectRepo` | `shipready.inspect_repo` |
 | `shipready.fixPlan.v1` | `plan-fixes <path> --url <url> --json` | `planFixes` | `shipready.plan_fixes` |
 | `shipready.dryRunFix.v1` | `fix <path> --url <url> --dry-run --json` | `dryRunFix` | `shipready.preview_fixes` |
@@ -134,7 +138,48 @@ On failure, a tool returns exactly once with `isError: true`, a `shipready.error
 - Cancellation/cleanup: propagate the request signal to raw fetches, crawl-resource fetches, and Playwright; close page, context, and browser in `finally`.
 - Safety: no local path input and no files written. This is one page plus current robots/sitemap checks, not a bounded crawl.
 
-### 5.2 `shipready.inspect_repo`
+### 5.2 `shipready.crawl_site`
+
+- Purpose/classification: run a bounded same-origin launch-readiness crawl; network-read-only or deterministic local mock.
+- Input schema:
+
+```json
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["url"],
+  "properties": {
+    "url": { "type": "string", "minLength": 1, "maxLength": 2048 },
+    "maxPages": { "type": "integer", "minimum": 1, "maximum": 25 },
+    "maxDepth": { "type": "integer", "minimum": 0, "maximum": 2 },
+    "source": { "type": "string", "enum": ["sitemap", "links", "both"], "default": "both" },
+    "rendered": { "type": "boolean", "default": true },
+    "mock": {
+      "type": "string",
+      "enum": [
+        "clean-small-site",
+        "missing-descriptions",
+        "canonical-inconsistent",
+        "social-images-missing",
+        "start-unreachable",
+        "limit-reached",
+        "mixed-readiness"
+      ]
+    }
+  }
+}
+```
+
+- Normalization: trim and normalize `url`; remove fragments and sensitive query output; reject embedded credentials; cap `maxPages` to 25 and `maxDepth` to 2; default `source` to `both` and `rendered` to `true`.
+- Output: exact `shipready.crawl.v1`, validated by `CrawlJsonContractSchema`.
+- Mapping: `crawl --url <url> --json [--max-pages] [--max-depth] [--source] [--no-render] [--mock]` / `crawlSite` / `formatCrawlJson`.
+- Success: `needs_attention`, `unknown`, skipped URL candidates, and limit-reached reports are successful bounded crawl results, not tool errors.
+- Errors: `invalid_url`, `invalid_mode`, `network_error`, `render_error`, `timeout`, `cancelled`, `contract_error`, or `internal_error`.
+- Timeout: 60 seconds for the whole tool call.
+- Safety: no repository path input, no allowed-root authorization requirement for the call, and no files written. This is a bounded same-origin sample, not a full-site crawler, complete SEO audit, monitoring system, ranking analysis, indexing guarantee, complete broken-link/security/accessibility scan, deployment path, Search Console live integration, DNS write, or social platform API surface.
+
+### 5.3 `shipready.inspect_repo`
 
 - Purpose/classification: inspect one explicit local project; local-read-only.
 - Input schema:
@@ -680,7 +725,7 @@ src/mcp/server.ts                   # MCP capability registration and stdio life
 src/mcp/errors.ts                   # shipready.error.v1 normalization/redaction
 src/mcp/pathAuthorization.ts        # canonical allowed-root enforcement
 src/mcp/timeouts.ts                 # deadline/client signal composition
-src/mcp/tools.ts                    # twelve read-only handlers plus one guarded write handler
+src/mcp/tools.ts                    # thirteen read-only handlers plus one guarded write handler
 src/mcp/previewReceipts.ts          # process-local signed preview receipts
 src/mcp/resources.ts                # URI/path allowlist and resource template
 src/mcp/prompts.ts                  # five prompt templates
@@ -733,7 +778,7 @@ Use temporary fixture copies only. Never execute guarded write mode against `/Us
 
 ### Pass 6 completion gates
 
-1. All twelve read-only tools, the single write tool, resources, and five prompts match this specification.
+1. All thirteen read-only tools, the single write tool, resources, and five prompts match this specification.
 2. No write tool other than `shipready.write_safe_crawl_files` is registered or present as a callable/stub handler.
 3. Named output contracts and expanded error compatibility tests pass.
 4. Path authorization and no-mutation hashes pass, including symlink escape.
@@ -744,8 +789,8 @@ Use temporary fixture copies only. Never execute guarded write mode against `/Us
 
 ## 15. Explicitly deferred
 
-Passes 6, 9, 11, 12, 13, and 14 do not implement or add secrets, authentication, accounts, billing, hosted SaaS, remote MCP transport, live Search Console/OAuth, social platform APIs, platform preview scraping endpoints, screenshot rendering, image generation, DNS provider writes/integrations, deployment execution/automation, deploy-provider integrations, Git/GitHub operations, patch export, bounded multi-page crawl, broader safe writes, metadata/content/JSON-LD/package/config writes, HTML-report file creation, GUI write execution, authorship identification, generator/vendor attribution, or detector auto-fixes.
+Passes 6, 9, 11, 12, 13, 14, and 15 do not implement or add secrets, authentication, accounts, billing, hosted SaaS, remote MCP transport, live Search Console/OAuth, social platform APIs, platform preview scraping endpoints, screenshot rendering, image generation, DNS provider writes/integrations, deployment execution/automation, deploy-provider integrations, Git/GitHub operations, patch export, full-site crawling, monitoring/scheduled crawl, broader safe writes, metadata/content/JSON-LD/package/config writes, HTML-report file creation, GUI write execution, authorship identification, generator/vendor attribution, or detector auto-fixes.
 
 Pass 7 added CLI-only `status` and `doctor` commands and their deterministic contract fixtures. Those fixtures are available through the existing exact allowlisted canonical-read surface; no MCP tool, transport, authorization, or write behavior changed.
 
-Pass 12 added only the read-only post-write recheck described above. Pass 13 added only the read-only social preview simulator described above. Pass 14 added only the read-only generated-site implementation smell detector described above. The recommended next pass is exactly: **Pass 15 — Bounded multi-page crawl**.
+Pass 12 added only the read-only post-write recheck described above. Pass 13 added only the read-only social preview simulator described above. Pass 14 added only the read-only generated-site implementation smell detector described above. Pass 15 added only the read-only bounded multi-page crawl described above. The recommended next pass is exactly: **Pass 16 — GUI polish / revisit**.

@@ -2,6 +2,8 @@
 import { Command } from "commander";
 import { z } from "zod";
 import { auditUrl } from "../audit/auditUrl";
+import { crawlSite } from "../crawl/crawl";
+import { CrawlError } from "../crawl/crawlTypes";
 import { dryRunFix } from "../fix/dryRunFix";
 import { writeFix, WriteFixExecutionError, WriteFixValidationError } from "../fix/writeFix";
 import { startGuiServer } from "../gui/startGuiServer";
@@ -57,6 +59,7 @@ import {
   formatGeneratedSiteSmellsHuman,
   formatGeneratedSiteSmellsJson,
 } from "../report/formatGeneratedSiteSmellsReport";
+import { formatCrawlHuman, formatCrawlJson } from "../report/formatCrawlReport";
 
 const program = new Command();
 
@@ -82,6 +85,71 @@ program
     const report = await runDoctor();
     process.stdout.write(options.json ? formatDoctorJson(report) : formatDoctorHuman(report));
     if (!report.ok) process.exitCode = 1;
+  });
+
+program
+  .command("crawl")
+  .description("Run a read-only bounded same-origin launch-readiness crawl.")
+  .requiredOption("--url <url>", "Public HTTP(S) URL to start from")
+  .option("--json", "Output structured JSON")
+  .option("--max-pages <n>", "Maximum pages to audit, capped at 25")
+  .option("--max-depth <n>", "Maximum link depth to discover, capped at 2")
+  .option("--source <source>", "Discovery source: sitemap, links, or both", "both")
+  .option("--no-render", "Skip the Playwright rendered pass for page audits")
+  .option("--mock <scenario>", "Deterministic mock scenario")
+  .option("--timeout <ms>", "Network and render timeout in milliseconds per page read", "15000")
+  .option("--user-agent <ua>", "Override the default user agent")
+  .action(async (options: CrawlCommandOptions) => {
+    const timeoutMs = Number(options.timeout);
+    if (!Number.isFinite(timeoutMs) || timeoutMs <= 0) {
+      writeTypedCommandError(
+        "crawl",
+        "invalid_timeout",
+        "Invalid timeout. Provide a positive number of milliseconds.",
+        options.json,
+        1,
+      );
+      return;
+    }
+
+    const maxPages = parsePositiveIntegerOption(options.maxPages, "max-pages");
+    if (maxPages instanceof Error) {
+      writeTypedCommandError("crawl", "invalid_mode", maxPages.message, options.json, 1);
+      return;
+    }
+    const maxDepth = parseNonnegativeIntegerOption(options.maxDepth, "max-depth");
+    if (maxDepth instanceof Error) {
+      writeTypedCommandError("crawl", "invalid_mode", maxDepth.message, options.json, 1);
+      return;
+    }
+
+    try {
+      const result = await crawlSite({
+        url: options.url,
+        maxPages,
+        maxDepth,
+        source: options.source,
+        rendered: options.render,
+        mock: options.mock,
+        timeoutMs,
+        userAgent: options.userAgent,
+      });
+      process.stdout.write(options.json ? formatCrawlJson(result) : formatCrawlHuman(result));
+    } catch (error) {
+      const code = error instanceof CrawlError
+        ? error.code
+        : classifyCommandError(error instanceof Error ? error.message : "");
+      const message = error instanceof Error && code !== "internal_error"
+        ? error.message
+        : "ShipReady bounded crawl could not complete.";
+      writeTypedCommandError(
+        "crawl",
+        code,
+        message,
+        options.json,
+        code === "invalid_url" || code === "invalid_mode" || code === "invalid_timeout" ? 1 : 2,
+      );
+    }
   });
 
 program
@@ -341,7 +409,7 @@ dns
 
 program
   .command("mcp")
-  .description("Start the local ShipReady MCP stdio server (twelve read-only tools, one guarded V1 write tool).")
+  .description("Start the local ShipReady MCP stdio server (thirteen read-only tools, one guarded V1 write tool).")
   .option(
     "--allow-root <absolute-path>",
     "Authorize one repository root (repeatable)",
@@ -638,6 +706,18 @@ type DoctorCommandOptions = {
   json?: boolean;
 };
 
+type CrawlCommandOptions = {
+  url: string;
+  json?: boolean;
+  maxPages?: string;
+  maxDepth?: string;
+  source?: string;
+  render: boolean;
+  mock?: string;
+  timeout: string;
+  userAgent?: string;
+};
+
 type RecheckCommandOptions = {
   url: string;
   json?: boolean;
@@ -693,6 +773,15 @@ function parsePositiveIntegerOption(value: string | undefined, name: string): nu
   const parsed = Number(value);
   if (!Number.isInteger(parsed) || parsed <= 0) {
     return new Error(`Invalid ${name}. Provide a positive integer.`);
+  }
+  return parsed;
+}
+
+function parseNonnegativeIntegerOption(value: string | undefined, name: string): number | undefined | Error {
+  if (value === undefined) return undefined;
+  const parsed = Number(value);
+  if (!Number.isInteger(parsed) || parsed < 0) {
+    return new Error(`Invalid ${name}. Provide a non-negative integer.`);
   }
   return parsed;
 }

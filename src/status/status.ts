@@ -13,6 +13,7 @@ export const STATUS_CLI_COMMANDS = [
   "search-console status",
   "dns status",
   "recheck",
+  "crawl",
   "social-preview",
   "smells",
   "audit",
@@ -63,6 +64,10 @@ export function createStatus(): StatusJsonContract {
       ],
     },
     integrations: {
+      boundedMultiPageCrawl: "read_only_bounded_sample",
+      fullSiteCrawler: "not_implemented",
+      monitoring: "not_implemented",
+      scheduledCrawls: "not_implemented",
       generatedSiteSmells: "read_only_detector",
       aiAuthorshipDetection: "not_implemented",
       smellDetectorAutoFixes: "not_implemented",
@@ -84,7 +89,7 @@ export function createStatus(): StatusJsonContract {
       fodmappVoiceover: "validation/demo-fodmapp-voiceover-final/",
     },
     nextRecommendedCommand: "pnpm shipready doctor",
-    nextRecommendedPass: "Bounded multi-page crawl",
+    nextRecommendedPass: "GUI polish / revisit",
   });
 }
 
@@ -107,6 +112,7 @@ export function formatStatusHuman(status = createStatus()): string {
     "  Search Console: spec exists, mock prototype available, live integration not implemented",
     "  DNS readiness: read-only status checks implemented; provider writes/integrations not implemented",
     "  Post-write recheck: implemented read-only; local changes still require external deployment",
+    "  Bounded multi-page crawl: implemented read-only; full-site crawler and scheduled monitoring not implemented",
     "  Social preview simulator: implemented read-only; social platform APIs and exact rendering guarantees not implemented",
     "  Generated-site implementation smell detector: implemented read-only; authorship identification and auto-fixes not implemented",
     "  Deployment automation and deploy provider integrations: not implemented",

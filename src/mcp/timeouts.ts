@@ -2,6 +2,7 @@ import { ShipReadyMcpError } from "./errors";
 
 export const DEFAULT_MCP_TIMEOUTS = {
   audit_site: 30_000,
+  crawl_site: 60_000,
   inspect_repo: 10_000,
   generated_site_smells: 45_000,
   plan_fixes: 45_000,

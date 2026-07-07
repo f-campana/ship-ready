@@ -27,6 +27,7 @@ This was low risk because CLI JSON formatting already had a dedicated Zod-valida
 | `dns status --url <url> --json` | Yes | `shipready.dnsStatus.v1` | V1 DNS readiness boundary | Read-only DNS/optional HTTP evidence |
 | `social-preview --url <url> --json` | Yes | `shipready.socialPreview.v1` | V1 simulated preview boundary | Network read only or deterministic local mock |
 | `smells <path> --json` | Yes | `shipready.generatedSiteSmells.v1` | V1 implementation-smell boundary | Local read only or optional network read with `--url` |
+| `crawl --url <url> --json` | Yes | `shipready.crawl.v1` | V1 bounded crawl boundary | Network read only or deterministic local mock |
 | JSON command failure | When the invoked command accepted `--json` | `shipready.error.v1` | V1 error boundary; Commander parse gaps remain | No additional effects |
 
 The authoritative mapping and CLI contract schemas are in `src/types/contracts.ts`.
@@ -106,6 +107,22 @@ Each finding includes `id`, `title`, `category`, `severity`, `confidence`, `stat
 Canonical fixtures cover `clean`, `vite-client-only-metadata`, `placeholder-content`, `missing-social-assets`, `hardcoded-localhost`, `unsupported-framework`, and `repo-plus-url-rendered-only`. All use deterministic local mocks and fixed timestamps. The mock provider makes no network request and writes no files.
 
 The CLI and MCP tool do not apply fixes, mutate repositories, call deploy/Git/GitHub/provider APIs, mutate DNS/Search Console, call social platform APIs, use OAuth, store tokens, or broaden `WRITE_POLICY_V1`. Findings are heuristic implementation signals that commonly appear in generated sites; they are not proof of authorship, generator identity, or site quality.
+
+## `shipready.crawl.v1`
+
+Pass 15 implements this contract for `crawl --url <url> --json` and the read-only MCP tool `shipready.crawl_site`.
+
+Top-level keys are `contract`, `checkedAt`, `mode`, `startUrl`, `origin`, `options`, `summary`, `pages`, `repeatedFindings`, `consistency`, `skipped`, `limitations`, and `nextActions`. `mode` is `live` or `mock`. `options` preserves the effective bounded limits after caps are applied: `maxPages <= 25`, `maxDepth <= 2`, `source` as `sitemap`, `links`, or `both`, and the rendered audit switch.
+
+`pages` contains compact per-page summaries only: URL, depth, discovery source, status, HTTP status, score, title, description, canonical URL, issue counts, top issues, and `auditContract` when the existing single-page audit completed. Full audit payloads and raw HTML are intentionally excluded. Page status is `ready`, `needs_attention`, `critical`, or `unknown`. Overall summary status is `ready`, `needs_attention`, or `unknown`.
+
+Discovery is same-origin and HTTP(S)-only. Fragment identifiers are ignored. Query-string candidates are skipped or normalized without exposing query values. Unsupported protocols, outside-origin URLs, asset URLs, duplicates, depth/page-limit overflows, and errors are represented in `skipped` with constrained reasons. Sitemap seeding is limited to conventional `/sitemap.xml`, small XML, direct URL entries, and same-origin pages; recursive sitemap-index expansion is not performed in V1.
+
+`repeatedFindings` groups repeated non-passing single-page audit checks by stable check ID/title and reports affected pages with review language. `consistency` reports canonical host observations, duplicate or missing title patterns, repeated missing metadata fields, and metadata consistency issues. These are bounded sample observations, not site-wide conclusions.
+
+Canonical fixtures cover `clean-small-site`, `missing-descriptions`, `canonical-inconsistent`, `social-images-missing`, `start-unreachable`, `limit-reached`, and `mixed-readiness`. All use fixed timestamps and synthetic `example.com` values. Mock fixture generation makes no external requests.
+
+The CLI and MCP tool do not require a local repository, write files, mutate DNS/Search Console, call social platform APIs, use OAuth, store tokens, run Git/GitHub/deploy behavior, broaden `WRITE_POLICY_V1`, or claim full-site crawling, complete SEO audit coverage, ranking analysis, traffic improvement, indexing, monitoring, or complete broken-link/security/accessibility scanning.
 
 ## Exact success shapes
 
@@ -207,6 +224,14 @@ Internal source and formatter: `src/smells/generatedSiteSmells.ts`, `src/smells/
 
 Consumers: CLI users, MCP clients, contract fixtures, tests, and future report/GUI work. Current GUI and HTML report surfaces do not consume this contract.
 
+### `shipready.crawl.v1`
+
+Top-level keys: `contract`, `checkedAt`, `mode`, `startUrl`, `origin`, `options`, `summary`, `pages`, `repeatedFindings`, `consistency`, `skipped`, `limitations`, and `nextActions`.
+
+Internal source and formatter: `src/crawl/crawl.ts`, `src/crawl/linkDiscovery.ts`, `src/crawl/mockCrawl.ts`, and `src/report/formatCrawlReport.ts`. Exit behavior: `0` after an emitted bounded crawl result, including `needs_attention` or `unknown`; `1` for invalid URL/source/mock/timeout/limit input; `2` for operational or contract failure.
+
+Consumers: CLI users, MCP clients, contract fixtures, tests, and future report/GUI work. Current GUI and HTML report surfaces do not consume this contract.
+
 ## Error contract
 
 `shipready.error.v1` has required keys:
@@ -249,6 +274,13 @@ Deterministic fixtures live in `validation/contracts/`:
 
 - `audit.clean.json`
 - `audit.needs-work.json`
+- `crawl.clean-small-site.json`
+- `crawl.missing-descriptions.json`
+- `crawl.canonical-inconsistent.json`
+- `crawl.social-images-missing.json`
+- `crawl.start-unreachable.json`
+- `crawl.limit-reached.json`
+- `crawl.mixed-readiness.json`
 - `inspect-repo.next-app.json`
 - `inspect-repo.vite.json`
 - `plan-fixes.safe-apply.json`
@@ -313,7 +345,7 @@ pnpm contracts:fixtures
 
 The generator is `scripts/validation/generateContractFixtures.ts`. It makes no external requests. The write fixtures run `writeFixFromDryRun` only against temporary copies under the operating-system temp directory, record the returned results, and remove the copies. They never target a real repository. Fixed timestamps and repository display paths keep fixtures reproducible.
 
-Focused drift coverage includes `tests/contracts.test.ts`, `tests/socialPreview.test.ts`, `tests/socialPreviewCli.test.ts`, `tests/mcp.socialPreview.test.ts`, `tests/generatedSiteSmells.test.ts`, `tests/generatedSiteSmellsCli.test.ts`, `tests/mcp.generatedSiteSmells.test.ts`, `tests/recheck.test.ts`, `tests/recheckCli.test.ts`, `tests/mcp.recheck.test.ts`, `tests/status.test.ts`, and `tests/doctor.test.ts`. Tests validate every fixture and formatter discriminator, constrained social-preview/recheck/generated-site smell states, mocked local/live comparisons, no-mutation behavior, allowed-root enforcement, status/doctor posture, and existing safety boundaries.
+Focused drift coverage includes `tests/contracts.test.ts`, `tests/crawl.test.ts`, `tests/crawlCli.test.ts`, `tests/mcp.crawl.test.ts`, `tests/socialPreview.test.ts`, `tests/socialPreviewCli.test.ts`, `tests/mcp.socialPreview.test.ts`, `tests/generatedSiteSmells.test.ts`, `tests/generatedSiteSmellsCli.test.ts`, `tests/mcp.generatedSiteSmells.test.ts`, `tests/recheck.test.ts`, `tests/recheckCli.test.ts`, `tests/mcp.recheck.test.ts`, `tests/status.test.ts`, and `tests/doctor.test.ts`. Tests validate every fixture and formatter discriminator, constrained crawl/social-preview/recheck/generated-site smell states, mocked local/live comparisons, no-mutation behavior, allowed-root enforcement, status/doctor posture, and existing safety boundaries.
 
 ## Downstream consumers
 
@@ -327,7 +359,7 @@ Focused drift coverage includes `tests/contracts.test.ts`, `tests/socialPreview.
 
 ## MCP mapping
 
-The implemented MCP specification is [MCP_PLAN.md](MCP_PLAN.md). Ten contract-backed read-only tools preserve their top-level CLI contract objects; two canonical-read tools expose validated fixtures and allowlisted documents. `shipready.write_safe_crawl_files` returns `shipready.writeFix.v1` and is the only MCP write tool.
+The implemented MCP specification is [MCP_PLAN.md](MCP_PLAN.md). Eleven contract-backed read-only tools preserve their top-level CLI contract objects; two canonical-read tools expose validated fixtures and allowlisted documents. `shipready.write_safe_crawl_files` returns `shipready.writeFix.v1` and is the only MCP write tool.
 
 `shipready.preview_fixes` still returns `shipready.dryRunFix.v1`; when current V1-eligible crawl-file creations exist, the MCP layer adds an agent-facing `previewReceipt` to the tool payload. The receipt is not a CLI contract field and is not write authority by itself. It is a signed, short-lived MCP precondition binding the normalized URL, authorized canonical repository path, policy, eligible paths, and stable dry-run/candidate digests.
 
@@ -335,10 +367,10 @@ The MCP write call must supply the same URL and repo path, the fresh receipt, an
 
 Ready now:
 
-- Thirteen implemented JSON-capable command surfaces have explicit V1 contract names.
+- Fourteen implemented JSON-capable command surfaces have explicit V1 contract names.
 - Success outputs retain their existing fields and add stable discriminators.
 - Action-level JSON errors have stable codes/messages and preserve the legacy `error` field.
-- Deterministic local fixtures and focused drift tests cover success, failure, dry-run, write, UI, Search Console, DNS, recheck, social preview, and generated-site smell states.
+- Deterministic local fixtures and focused drift tests cover success, failure, dry-run, write, UI, Search Console, DNS, recheck, social preview, generated-site smell, and bounded crawl states.
 - Creation-only write evidence remains explicit and policy-bound.
 - Human CLI, HTML file, and GUI server surfaces are clearly separated from CLI JSON contracts.
 

@@ -1,0 +1,210 @@
+{
+  "contract": "shipready.crawl.v1",
+  "checkedAt": "2026-06-21T12:00:00.000Z",
+  "mode": "mock",
+  "startUrl": "https://example.com/",
+  "origin": "https://example.com",
+  "options": {
+    "maxPages": 8,
+    "maxDepth": 1,
+    "source": "both",
+    "rendered": true
+  },
+  "summary": {
+    "status": "needs_attention",
+    "pagesChecked": 8,
+    "pagesDiscovered": 12,
+    "pagesSkipped": 4,
+    "criticalIssues": 0,
+    "warnings": 0,
+    "repeatedIssues": 0
+  },
+  "pages": [
+    {
+      "url": "https://example.com/",
+      "depth": 0,
+      "source": "start",
+      "status": "ready",
+      "httpStatus": 200,
+      "score": 96,
+      "title": "Launch page 1",
+      "description": "Deterministic bounded crawl page 1.",
+      "canonicalUrl": "https://example.com/",
+      "issueSummary": {
+        "critical": 0,
+        "warnings": 0,
+        "topIssueTitles": []
+      },
+      "topIssues": []
+    },
+    {
+      "url": "https://example.com/page-2",
+      "depth": 1,
+      "discoveredFrom": "https://example.com/",
+      "source": "links",
+      "status": "ready",
+      "httpStatus": 200,
+      "score": 96,
+      "title": "Launch page 2",
+      "description": "Deterministic bounded crawl page 2.",
+      "canonicalUrl": "https://example.com/page-2",
+      "issueSummary": {
+        "critical": 0,
+        "warnings": 0,
+        "topIssueTitles": []
+      },
+      "topIssues": []
+    },
+    {
+      "url": "https://example.com/page-3",
+      "depth": 1,
+      "discoveredFrom": "https://example.com/",
+      "source": "links",
+      "status": "ready",
+      "httpStatus": 200,
+      "score": 96,
+      "title": "Launch page 3",
+      "description": "Deterministic bounded crawl page 3.",
+      "canonicalUrl": "https://example.com/page-3",
+      "issueSummary": {
+        "critical": 0,
+        "warnings": 0,
+        "topIssueTitles": []
+      },
+      "topIssues": []
+    },
+    {
+      "url": "https://example.com/page-4",
+      "depth": 1,
+      "discoveredFrom": "https://example.com/",
+      "source": "links",
+      "status": "ready",
+      "httpStatus": 200,
+      "score": 96,
+      "title": "Launch page 4",
+      "description": "Deterministic bounded crawl page 4.",
+      "canonicalUrl": "https://example.com/page-4",
+      "issueSummary": {
+        "critical": 0,
+        "warnings": 0,
+        "topIssueTitles": []
+      },
+      "topIssues": []
+    },
+    {
+      "url": "https://example.com/page-5",
+      "depth": 1,
+      "discoveredFrom": "https://example.com/",
+      "source": "links",
+      "status": "ready",
+      "httpStatus": 200,
+      "score": 96,
+      "title": "Launch page 5",
+      "description": "Deterministic bounded crawl page 5.",
+      "canonicalUrl": "https://example.com/page-5",
+      "issueSummary": {
+        "critical": 0,
+        "warnings": 0,
+        "topIssueTitles": []
+      },
+      "topIssues": []
+    },
+    {
+      "url": "https://example.com/page-6",
+      "depth": 1,
+      "discoveredFrom": "https://example.com/",
+      "source": "links",
+      "status": "ready",
+      "httpStatus": 200,
+      "score": 96,
+      "title": "Launch page 6",
+      "description": "Deterministic bounded crawl page 6.",
+      "canonicalUrl": "https://example.com/page-6",
+      "issueSummary": {
+        "critical": 0,
+        "warnings": 0,
+        "topIssueTitles": []
+      },
+      "topIssues": []
+    },
+    {
+      "url": "https://example.com/page-7",
+      "depth": 1,
+      "discoveredFrom": "https://example.com/",
+      "source": "links",
+      "status": "ready",
+      "httpStatus": 200,
+      "score": 96,
+      "title": "Launch page 7",
+      "description": "Deterministic bounded crawl page 7.",
+      "canonicalUrl": "https://example.com/page-7",
+      "issueSummary": {
+        "critical": 0,
+        "warnings": 0,
+        "topIssueTitles": []
+      },
+      "topIssues": []
+    },
+    {
+      "url": "https://example.com/page-8",
+      "depth": 1,
+      "discoveredFrom": "https://example.com/",
+      "source": "links",
+      "status": "ready",
+      "httpStatus": 200,
+      "score": 96,
+      "title": "Launch page 8",
+      "description": "Deterministic bounded crawl page 8.",
+      "canonicalUrl": "https://example.com/page-8",
+      "issueSummary": {
+        "critical": 0,
+        "warnings": 0,
+        "topIssueTitles": []
+      },
+      "topIssues": []
+    }
+  ],
+  "repeatedFindings": [],
+  "consistency": {
+    "canonicalHosts": [
+      {
+        "host": "example.com",
+        "count": 8,
+        "urls": [
+          "https://example.com/",
+          "https://example.com/page-2",
+          "https://example.com/page-3",
+          "https://example.com/page-4",
+          "https://example.com/page-5",
+          "https://example.com/page-6",
+          "https://example.com/page-7",
+          "https://example.com/page-8"
+        ]
+      }
+    ],
+    "titlePatterns": {
+      "duplicateTitles": [],
+      "missingTitles": 0
+    },
+    "missingMetadata": [],
+    "issues": []
+  },
+  "skipped": [
+    {
+      "url": "https://example.com/page-9",
+      "discoveredFrom": "https://example.com/",
+      "source": "links",
+      "reason": "limit_reached",
+      "message": "Skipped because maxPages 8 was reached."
+    }
+  ],
+  "limitations": [
+    "This is a bounded same-origin launch-readiness sample, not a full-site crawl or complete SEO audit.",
+    "Only compact page summaries are returned; raw HTML and full audit payloads are not embedded.",
+    "The crawl stopped at maxPages 8; additional same-origin candidates were not audited."
+  ],
+  "nextActions": [
+    "Review page-level top issues before changing metadata or crawl resources.",
+    "Use single-page `shipready audit --json` for full details on any individual page that needs review."
+  ]
+}

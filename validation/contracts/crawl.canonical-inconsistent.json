@@ -1,0 +1,126 @@
+{
+  "contract": "shipready.crawl.v1",
+  "checkedAt": "2026-06-21T12:00:00.000Z",
+  "mode": "mock",
+  "startUrl": "https://example.com/",
+  "origin": "https://example.com",
+  "options": {
+    "maxPages": 8,
+    "maxDepth": 1,
+    "source": "both",
+    "rendered": true
+  },
+  "summary": {
+    "status": "needs_attention",
+    "pagesChecked": 3,
+    "pagesDiscovered": 3,
+    "pagesSkipped": 0,
+    "criticalIssues": 0,
+    "warnings": 0,
+    "repeatedIssues": 0
+  },
+  "pages": [
+    {
+      "url": "https://example.com/",
+      "depth": 0,
+      "source": "start",
+      "status": "ready",
+      "httpStatus": 200,
+      "score": 96,
+      "title": "Example Home",
+      "description": "Deterministic bounded crawl fixture for /.",
+      "canonicalUrl": "https://example.com/",
+      "issueSummary": {
+        "critical": 0,
+        "warnings": 0,
+        "topIssueTitles": []
+      },
+      "topIssues": []
+    },
+    {
+      "url": "https://example.com/about",
+      "depth": 1,
+      "discoveredFrom": "https://example.com/",
+      "source": "links",
+      "status": "ready",
+      "httpStatus": 200,
+      "score": 96,
+      "title": "About",
+      "description": "Deterministic bounded crawl fixture for /about.",
+      "canonicalUrl": "https://www.example.com/about",
+      "issueSummary": {
+        "critical": 0,
+        "warnings": 0,
+        "topIssueTitles": []
+      },
+      "topIssues": []
+    },
+    {
+      "url": "https://example.com/pricing",
+      "depth": 1,
+      "discoveredFrom": "https://example.com/",
+      "source": "links",
+      "status": "ready",
+      "httpStatus": 200,
+      "score": 96,
+      "title": "Pricing",
+      "description": "Deterministic bounded crawl fixture for /pricing.",
+      "canonicalUrl": "https://www.example.com/pricing",
+      "issueSummary": {
+        "critical": 0,
+        "warnings": 0,
+        "topIssueTitles": []
+      },
+      "topIssues": []
+    }
+  ],
+  "repeatedFindings": [],
+  "consistency": {
+    "canonicalHosts": [
+      {
+        "host": "example.com",
+        "count": 1,
+        "urls": [
+          "https://example.com/"
+        ]
+      },
+      {
+        "host": "www.example.com",
+        "count": 2,
+        "urls": [
+          "https://example.com/about",
+          "https://example.com/pricing"
+        ]
+      }
+    ],
+    "titlePatterns": {
+      "duplicateTitles": [],
+      "missingTitles": 0
+    },
+    "missingMetadata": [],
+    "issues": [
+      {
+        "id": "metadata.canonical.host_inconsistent",
+        "title": "Canonical hosts vary across checked pages",
+        "severity": "warning",
+        "message": "The bounded sample exposed more than one canonical host; review whether that is intentional.",
+        "affectedPages": [
+          "https://example.com/",
+          "https://example.com/about",
+          "https://example.com/pricing"
+        ]
+      }
+    ]
+  },
+  "skipped": [],
+  "limitations": [
+    "This is a bounded same-origin launch-readiness sample, not a full-site crawl or complete SEO audit.",
+    "Only compact page summaries are returned; raw HTML and full audit payloads are not embedded.",
+    "Mock scenario uses deterministic same-origin page summaries and performs no network requests."
+  ],
+  "nextActions": [
+    "Review page-level top issues before changing metadata or crawl resources.",
+    "Review metadata consistency across the checked same-origin pages.",
+    "Use single-page `shipready audit --json` for full details on any individual page that needs review."
+  ]
+}

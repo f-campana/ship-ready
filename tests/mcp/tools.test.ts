@@ -11,6 +11,7 @@ import { callReadOnlyTool, listTools, type McpToolContext } from "../../src/mcp/
 import { NetworkError } from "../../src/utils/http";
 import {
   AuditJsonContractSchema,
+  CrawlJsonContractSchema,
   DryRunFixJsonContractSchema,
   FixPlanJsonContractSchema,
   RepoInspectionJsonContractSchema,
@@ -38,10 +39,10 @@ beforeAll(async () => {
 afterAll(async () => closeServer());
 
 describe("MCP tools", () => {
-  it("registers the twelve read-only tools and exactly one write tool", () => {
+  it("registers the thirteen read-only tools and exactly one write tool", () => {
     const names = listTools().map((tool) => tool.name);
     expect(names).toEqual([
-      "shipready.audit_site", "shipready.search_console_status", "shipready.dns_status", "shipready.recheck", "shipready.social_preview", "shipready.generated_site_smells", "shipready.inspect_repo", "shipready.plan_fixes",
+      "shipready.audit_site", "shipready.crawl_site", "shipready.search_console_status", "shipready.dns_status", "shipready.recheck", "shipready.social_preview", "shipready.generated_site_smells", "shipready.inspect_repo", "shipready.plan_fixes",
       "shipready.preview_fixes", "shipready.write_safe_crawl_files", "shipready.get_ui_report",
       "shipready.get_contract_fixture", "shipready.get_policy_doc",
     ]);
@@ -79,6 +80,20 @@ describe("MCP tools", () => {
       contract: "shipready.socialPreview.v1",
       mode: "mock",
       verdict: { status: "ready" },
+    });
+  });
+
+  it("returns the bounded crawl contract without repository authorization", async () => {
+    const result = await callReadOnlyTool(context, "shipready.crawl_site", {
+      url: "https://example.com",
+      mock: "clean-small-site",
+    });
+
+    expect(() => CrawlJsonContractSchema.parse(result.structuredContent)).not.toThrow();
+    expect(result.structuredContent).toMatchObject({
+      contract: "shipready.crawl.v1",
+      mode: "mock",
+      summary: { status: "ready" },
     });
   });
 
@@ -120,6 +135,7 @@ describe("MCP tools", () => {
       ...context,
       timeouts: {
         audit_site: 20,
+        crawl_site: 60_000,
         inspect_repo: 10_000,
         generated_site_smells: 45_000,
         plan_fixes: 45_000,

@@ -86,6 +86,17 @@ describe("doctor", () => {
         docsReferenceLimitations: true,
       },
     });
+    expect(report.checks.find((check) => check.id === "bounded-crawl")).toMatchObject({
+      status: "pass",
+      details: {
+        readOnly: true,
+        networkRequired: false,
+        fullSiteCrawler: false,
+        monitoring: false,
+        fixtures: 7,
+        docsReferenceLimitations: true,
+      },
+    });
   });
 
   it("reports a missing optional FFmpeg tool as a warning", async () => {

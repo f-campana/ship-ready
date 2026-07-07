@@ -19,8 +19,8 @@ Order is contractual: harden CLI interfaces before wrapping them, ship read-only
 | 12 | Complete | Implement the external deployment handoff and read-only live recheck in [POST_WRITE_RECHECK.md](POST_WRITE_RECHECK.md). | Connects local effects to public evidence without adding deployment behavior. | Read-only | Pass 6 |
 | 13 | Complete | Add a social preview simulator. | Builds on stable audit/report metadata contracts. | Read-only | Pass 3 |
 | 14 | Complete | Detect generated-site implementation smells. | Adds bounded repository diagnostics after inspection contracts harden. | Read-only | Pass 3 |
-| 15 | Next | Add a bounded multi-page crawl. | Expands audit scope only after single-page contracts stabilize. | Read-only | Pass 3 |
-| 16 | Planned | Revisit and polish the GUI. | Lets human UX consume proven CLI/MCP/report behavior. | Read-only | Passes 7, 13–15 |
+| 15 | Complete | Add a bounded multi-page crawl. | Expands audit scope only after single-page contracts stabilize. | Read-only | Pass 3 |
+| 16 | Next | Revisit and polish the GUI. | Lets human UX consume proven CLI/MCP/report behavior. | Read-only | Passes 7, 13–15 |
 | 17 | Planned | Export reviewed patches as explicit artifacts. | Introduces a portable write surface after preview contracts mature. | Write-bearing | Passes 6, 16 |
 | 18 | Planned | Integrate GitHub PR creation with explicit authorization. | External mutation is last, after patch and policy evidence exist. | Write-bearing | Pass 17 |
 

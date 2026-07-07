@@ -1,0 +1,172 @@
+{
+  "contract": "shipready.crawl.v1",
+  "checkedAt": "2026-06-21T12:00:00.000Z",
+  "mode": "mock",
+  "startUrl": "https://example.com/",
+  "origin": "https://example.com",
+  "options": {
+    "maxPages": 8,
+    "maxDepth": 1,
+    "source": "both",
+    "rendered": true
+  },
+  "summary": {
+    "status": "needs_attention",
+    "pagesChecked": 3,
+    "pagesDiscovered": 3,
+    "pagesSkipped": 0,
+    "criticalIssues": 3,
+    "warnings": 0,
+    "repeatedIssues": 1
+  },
+  "pages": [
+    {
+      "url": "https://example.com/",
+      "depth": 0,
+      "source": "start",
+      "status": "needs_attention",
+      "httpStatus": 200,
+      "score": 68,
+      "title": "Example Home",
+      "description": "Deterministic bounded crawl fixture for /.",
+      "canonicalUrl": "https://example.com/",
+      "issueSummary": {
+        "critical": 1,
+        "warnings": 0,
+        "topIssueTitles": [
+          "Missing og:image"
+        ]
+      },
+      "topIssues": [
+        {
+          "id": "social.og.image_missing",
+          "title": "Missing og:image",
+          "severity": "critical",
+          "category": "social"
+        }
+      ]
+    },
+    {
+      "url": "https://example.com/about",
+      "depth": 1,
+      "discoveredFrom": "https://example.com/",
+      "source": "links",
+      "status": "needs_attention",
+      "httpStatus": 200,
+      "score": 68,
+      "title": "About",
+      "description": "Deterministic bounded crawl fixture for /about.",
+      "canonicalUrl": "https://example.com/about",
+      "issueSummary": {
+        "critical": 1,
+        "warnings": 0,
+        "topIssueTitles": [
+          "Missing og:image"
+        ]
+      },
+      "topIssues": [
+        {
+          "id": "social.og.image_missing",
+          "title": "Missing og:image",
+          "severity": "critical",
+          "category": "social"
+        }
+      ]
+    },
+    {
+      "url": "https://example.com/pricing",
+      "depth": 1,
+      "discoveredFrom": "https://example.com/",
+      "source": "links",
+      "status": "needs_attention",
+      "httpStatus": 200,
+      "score": 68,
+      "title": "Pricing",
+      "description": "Deterministic bounded crawl fixture for /pricing.",
+      "canonicalUrl": "https://example.com/pricing",
+      "issueSummary": {
+        "critical": 1,
+        "warnings": 0,
+        "topIssueTitles": [
+          "Missing og:image"
+        ]
+      },
+      "topIssues": [
+        {
+          "id": "social.og.image_missing",
+          "title": "Missing og:image",
+          "severity": "critical",
+          "category": "social"
+        }
+      ]
+    }
+  ],
+  "repeatedFindings": [
+    {
+      "id": "social.og.image_missing",
+      "title": "Missing og:image",
+      "category": "social",
+      "severity": "critical",
+      "count": 3,
+      "affectedPages": [
+        "https://example.com/",
+        "https://example.com/about",
+        "https://example.com/pricing"
+      ],
+      "message": "Missing og:image appears on 3/3 checked pages; review recommended."
+    }
+  ],
+  "consistency": {
+    "canonicalHosts": [
+      {
+        "host": "example.com",
+        "count": 3,
+        "urls": [
+          "https://example.com/",
+          "https://example.com/about",
+          "https://example.com/pricing"
+        ]
+      }
+    ],
+    "titlePatterns": {
+      "duplicateTitles": [],
+      "missingTitles": 0
+    },
+    "missingMetadata": [
+      {
+        "field": "og:image",
+        "count": 3,
+        "urls": [
+          "https://example.com/",
+          "https://example.com/about",
+          "https://example.com/pricing"
+        ]
+      }
+    ],
+    "issues": [
+      {
+        "id": "metadata.og.image.missing_repeated",
+        "title": "Repeated missing og:image",
+        "severity": "warning",
+        "message": "og:image is missing on 3/3 checked pages.",
+        "affectedPages": [
+          "https://example.com/",
+          "https://example.com/about",
+          "https://example.com/pricing"
+        ]
+      }
+    ]
+  },
+  "skipped": [],
+  "limitations": [
+    "This is a bounded same-origin launch-readiness sample, not a full-site crawl or complete SEO audit.",
+    "Only compact page summaries are returned; raw HTML and full audit payloads are not embedded.",
+    "Mock scenario uses deterministic same-origin page summaries and performs no network requests."
+  ],
+  "nextActions": [
+    "Review page-level top issues before changing metadata or crawl resources.",
+    "Prioritize repeated findings because the same launch-readiness issue appears on multiple checked pages.",
+    "Review metadata consistency across the checked same-origin pages.",
+    "Use single-page `shipready audit --json` for full details on any individual page that needs review."
+  ]
+}

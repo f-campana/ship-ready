@@ -1,0 +1,172 @@
+{
+  "contract": "shipready.crawl.v1",
+  "checkedAt": "2026-06-21T12:00:00.000Z",
+  "mode": "mock",
+  "startUrl": "https://example.com/",
+  "origin": "https://example.com",
+  "options": {
+    "maxPages": 8,
+    "maxDepth": 1,
+    "source": "both",
+    "rendered": true
+  },
+  "summary": {
+    "status": "needs_attention",
+    "pagesChecked": 4,
+    "pagesDiscovered": 4,
+    "pagesSkipped": 0,
+    "criticalIssues": 3,
+    "warnings": 0,
+    "repeatedIssues": 0
+  },
+  "pages": [
+    {
+      "url": "https://example.com/",
+      "depth": 0,
+      "source": "start",
+      "status": "ready",
+      "httpStatus": 200,
+      "score": 96,
+      "title": "Example Home",
+      "description": "A complete launch-readiness fixture for the home page.",
+      "canonicalUrl": "https://example.com/",
+      "issueSummary": {
+        "critical": 0,
+        "warnings": 0,
+        "topIssueTitles": []
+      },
+      "topIssues": []
+    },
+    {
+      "url": "https://example.com/about",
+      "depth": 1,
+      "discoveredFrom": "https://example.com/",
+      "source": "links",
+      "status": "needs_attention",
+      "httpStatus": 200,
+      "score": 68,
+      "title": "About",
+      "canonicalUrl": "https://example.com/about",
+      "issueSummary": {
+        "critical": 1,
+        "warnings": 0,
+        "topIssueTitles": [
+          "Missing meta description in raw HTML"
+        ]
+      },
+      "topIssues": [
+        {
+          "id": "metadata.description.missing",
+          "title": "Missing meta description in raw HTML",
+          "severity": "critical",
+          "category": "metadata"
+        }
+      ]
+    },
+    {
+      "url": "https://example.com/pricing",
+      "depth": 1,
+      "discoveredFrom": "https://example.com/",
+      "source": "links",
+      "status": "needs_attention",
+      "httpStatus": 200,
+      "score": 68,
+      "title": "Pricing",
+      "description": "Deterministic bounded crawl fixture for /pricing.",
+      "issueSummary": {
+        "critical": 1,
+        "warnings": 0,
+        "topIssueTitles": [
+          "Missing canonical URL"
+        ]
+      },
+      "topIssues": [
+        {
+          "id": "metadata.canonical.missing",
+          "title": "Missing canonical URL",
+          "severity": "critical",
+          "category": "metadata"
+        }
+      ]
+    },
+    {
+      "url": "https://example.com/blog",
+      "depth": 1,
+      "discoveredFrom": "https://example.com/",
+      "source": "links",
+      "status": "needs_attention",
+      "httpStatus": 200,
+      "score": 68,
+      "title": "Blog",
+      "description": "Deterministic bounded crawl fixture for /blog.",
+      "canonicalUrl": "https://example.com/blog",
+      "issueSummary": {
+        "critical": 1,
+        "warnings": 0,
+        "topIssueTitles": [
+          "Missing og:image"
+        ]
+      },
+      "topIssues": [
+        {
+          "id": "social.og.image_missing",
+          "title": "Missing og:image",
+          "severity": "critical",
+          "category": "social"
+        }
+      ]
+    }
+  ],
+  "repeatedFindings": [],
+  "consistency": {
+    "canonicalHosts": [
+      {
+        "host": "example.com",
+        "count": 3,
+        "urls": [
+          "https://example.com/",
+          "https://example.com/about",
+          "https://example.com/blog"
+        ]
+      }
+    ],
+    "titlePatterns": {
+      "duplicateTitles": [],
+      "missingTitles": 0
+    },
+    "missingMetadata": [
+      {
+        "field": "description",
+        "count": 1,
+        "urls": [
+          "https://example.com/about"
+        ]
+      },
+      {
+        "field": "canonical",
+        "count": 1,
+        "urls": [
+          "https://example.com/pricing"
+        ]
+      },
+      {
+        "field": "og:image",
+        "count": 1,
+        "urls": [
+          "https://example.com/blog"
+        ]
+      }
+    ],
+    "issues": []
+  },
+  "skipped": [],
+  "limitations": [
+    "This is a bounded same-origin launch-readiness sample, not a full-site crawl or complete SEO audit.",
+    "Only compact page summaries are returned; raw HTML and full audit payloads are not embedded.",
+    "Mock scenario uses deterministic same-origin page summaries and performs no network requests."
+  ],
+  "nextActions": [
+    "Review page-level top issues before changing metadata or crawl resources.",
+    "Use single-page `shipready audit --json` for full details on any individual page that needs review."
+  ]
+}

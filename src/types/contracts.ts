@@ -18,6 +18,7 @@ export const CONTRACT_NAMES = {
   recheck: "shipready.recheck.v1",
   socialPreview: "shipready.socialPreview.v1",
   generatedSiteSmells: "shipready.generatedSiteSmells.v1",
+  crawl: "shipready.crawl.v1",
   status: "shipready.status.v1",
   doctor: "shipready.doctor.v1",
   error: "shipready.error.v1",
@@ -35,6 +36,7 @@ export const CLI_JSON_CONTRACT_BY_COMMAND = {
   "recheck --json": CONTRACT_NAMES.recheck,
   "social-preview --json": CONTRACT_NAMES.socialPreview,
   "smells --json": CONTRACT_NAMES.generatedSiteSmells,
+  "crawl --json": CONTRACT_NAMES.crawl,
   "status --json": CONTRACT_NAMES.status,
   "doctor --json": CONTRACT_NAMES.doctor,
 } as const;
@@ -625,6 +627,161 @@ export const GeneratedSiteSmellsJsonContractSchema = z.object({
   }
 });
 
+const CrawlPageStatusSchema = z.enum(["ready", "needs_attention", "critical", "unknown"]);
+const CrawlIssueSeveritySchema = z.enum(["critical", "warning", "info"]);
+const CrawlSourceSchema = z.enum(["start", "links", "sitemap"]);
+const CrawlSkippedReasonSchema = z.enum([
+  "outside_origin",
+  "unsupported_protocol",
+  "asset",
+  "duplicate",
+  "limit_reached",
+  "query_skipped",
+  "robots_disallowed",
+  "error",
+]);
+
+const CrawlTopIssueSchema = z.object({
+  id: z.string().min(1),
+  title: z.string().min(1),
+  severity: CrawlIssueSeveritySchema,
+  category: z.enum([
+    "metadata",
+    "social",
+    "schema",
+    "crawlability",
+    "structure",
+    "accessibility",
+    "launch_hygiene",
+    "unknown",
+  ]),
+}).strict();
+
+const CrawlPageSummarySchema = z.object({
+  url: z.string().min(1),
+  depth: z.number().int().nonnegative(),
+  discoveredFrom: z.string().min(1).optional(),
+  source: CrawlSourceSchema,
+  status: CrawlPageStatusSchema,
+  httpStatus: z.number().int().optional(),
+  score: z.number().optional(),
+  title: z.string().min(1).max(180).optional(),
+  description: z.string().min(1).max(240).optional(),
+  canonicalUrl: z.string().min(1).optional(),
+  issueSummary: z.object({
+    critical: z.number().int().nonnegative(),
+    warnings: z.number().int().nonnegative(),
+    topIssueTitles: z.array(z.string().min(1)).max(5),
+  }).strict(),
+  topIssues: z.array(CrawlTopIssueSchema).max(5),
+  auditContract: z.literal(CONTRACT_NAMES.audit).optional(),
+}).strict();
+
+const CrawlRepeatedFindingSchema = z.object({
+  id: z.string().min(1),
+  title: z.string().min(1),
+  category: z.string().min(1),
+  severity: CrawlIssueSeveritySchema,
+  count: z.number().int().positive(),
+  affectedPages: z.array(z.string().min(1)).min(1),
+  message: z.string().min(1),
+}).strict();
+
+const CrawlConsistencyIssueSchema = z.object({
+  id: z.string().min(1),
+  title: z.string().min(1),
+  severity: CrawlIssueSeveritySchema,
+  message: z.string().min(1),
+  affectedPages: z.array(z.string().min(1)).min(1),
+}).strict();
+
+const CrawlSkippedUrlSchema = z.object({
+  url: z.string().min(1).optional(),
+  discoveredFrom: z.string().min(1).optional(),
+  source: z.enum(["links", "sitemap"]).optional(),
+  reason: CrawlSkippedReasonSchema,
+  message: z.string().min(1),
+}).strict();
+
+export const CrawlJsonContractSchema = z.object({
+  contract: z.literal(CONTRACT_NAMES.crawl),
+  checkedAt: z.string().min(1),
+  mode: z.enum(["live", "mock"]),
+  startUrl: z.string().min(1),
+  origin: z.string().min(1),
+  options: z.object({
+    maxPages: z.number().int().positive().max(25),
+    maxDepth: z.number().int().nonnegative().max(2),
+    source: z.enum(["sitemap", "links", "both"]),
+    rendered: z.boolean(),
+  }).strict(),
+  summary: z.object({
+    status: z.enum(["ready", "needs_attention", "unknown"]),
+    pagesChecked: z.number().int().nonnegative(),
+    pagesDiscovered: z.number().int().nonnegative(),
+    pagesSkipped: z.number().int().nonnegative(),
+    criticalIssues: z.number().int().nonnegative(),
+    warnings: z.number().int().nonnegative(),
+    repeatedIssues: z.number().int().nonnegative(),
+  }).strict(),
+  pages: z.array(CrawlPageSummarySchema).max(25),
+  repeatedFindings: z.array(CrawlRepeatedFindingSchema).max(20),
+  consistency: z.object({
+    canonicalHosts: z.array(z.object({
+      host: z.string().min(1),
+      count: z.number().int().positive(),
+      urls: z.array(z.string().min(1)).min(1),
+    }).strict()),
+    titlePatterns: z.object({
+      duplicateTitles: z.array(z.object({
+        title: z.string().min(1).max(180),
+        count: z.number().int().positive(),
+        urls: z.array(z.string().min(1)).min(1),
+      }).strict()),
+      missingTitles: z.number().int().nonnegative(),
+    }).strict(),
+    missingMetadata: z.array(z.object({
+      field: z.enum(["title", "description", "canonical", "og:image"]),
+      count: z.number().int().positive(),
+      urls: z.array(z.string().min(1)).min(1),
+    }).strict()),
+    issues: z.array(CrawlConsistencyIssueSchema).max(20),
+  }).strict(),
+  skipped: z.array(CrawlSkippedUrlSchema).max(50),
+  limitations: z.array(z.string().min(1)).min(1),
+  nextActions: z.array(z.string().min(1)).min(1),
+}).strict().superRefine((result, context) => {
+  if (result.summary.pagesChecked !== result.pages.length) {
+    context.addIssue({
+      code: "custom",
+      path: ["summary", "pagesChecked"],
+      message: "pagesChecked must match the compact pages array length.",
+    });
+  }
+  if (result.summary.repeatedIssues !== result.repeatedFindings.length) {
+    context.addIssue({
+      code: "custom",
+      path: ["summary", "repeatedIssues"],
+      message: "repeatedIssues must match repeatedFindings length.",
+    });
+  }
+  const serialized = JSON.stringify(result);
+  if (/<(?:!doctype|html|head|body|script|meta)\b/i.test(serialized)) {
+    context.addIssue({
+      code: "custom",
+      path: ["pages"],
+      message: "Crawl output must not embed raw HTML bodies.",
+    });
+  }
+  if (/[?&](token|secret|key|password|code|session|auth)=/i.test(serialized)) {
+    context.addIssue({
+      code: "custom",
+      path: ["pages"],
+      message: "Crawl output must not expose sensitive query strings.",
+    });
+  }
+});
+
 const NotImplementedSchema = z.literal("not_implemented");
 
 export const StatusJsonContractSchema = z.object({
@@ -656,6 +813,10 @@ export const StatusJsonContractSchema = z.object({
     forbidden: z.array(z.string().min(1)),
   }).strict(),
   integrations: z.object({
+    boundedMultiPageCrawl: z.literal("read_only_bounded_sample"),
+    fullSiteCrawler: NotImplementedSchema,
+    monitoring: NotImplementedSchema,
+    scheduledCrawls: NotImplementedSchema,
     generatedSiteSmells: z.literal("read_only_detector"),
     aiAuthorshipDetection: NotImplementedSchema,
     smellDetectorAutoFixes: NotImplementedSchema,
@@ -778,6 +939,7 @@ export type DnsStatusJsonContract = z.infer<typeof DnsStatusJsonContractSchema>;
 export type RecheckJsonContract = z.infer<typeof RecheckJsonContractSchema>;
 export type SocialPreviewJsonContract = z.infer<typeof SocialPreviewJsonContractSchema>;
 export type GeneratedSiteSmellsJsonContract = z.infer<typeof GeneratedSiteSmellsJsonContractSchema>;
+export type CrawlJsonContract = z.infer<typeof CrawlJsonContractSchema>;
 export type StatusJsonContract = z.infer<typeof StatusJsonContractSchema>;
 export type DoctorCheckStatus = z.infer<typeof DoctorCheckStatusSchema>;
 export type DoctorCheck = z.infer<typeof DoctorCheckSchema>;
