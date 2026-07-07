@@ -7,6 +7,7 @@ export const GUI_CLIENT_JS = `
   var statusPanel = document.querySelector("[data-status]");
   var errorPanel = document.querySelector("[data-error]");
   var reportRoot = document.querySelector("[data-report]");
+  var currentReview = null;
 
   if (!form || !urlOnlyButton || !statusPanel || !errorPanel || !reportRoot) {
     return;
@@ -19,6 +20,22 @@ export const GUI_CLIENT_JS = `
 
   urlOnlyButton.addEventListener("click", function () {
     runCheck(true);
+  });
+
+  reportRoot.addEventListener("click", function (event) {
+    var target = event.target;
+    if (!target || !target.closest) return;
+
+    var checkButton = target.closest("[data-run-check]");
+    if (checkButton) {
+      runReadOnlyCheck(checkButton.getAttribute("data-run-check"));
+      return;
+    }
+
+    var copyButton = target.closest("[data-copy-command]");
+    if (copyButton) {
+      copyCommand(copyButton);
+    }
   });
 
   async function runCheck(forceUrlOnly) {
@@ -37,35 +54,79 @@ export const GUI_CLIENT_JS = `
     }
 
     setBusy(true);
-    showLoading(Boolean(repoPath));
+    showLoading(Boolean(repoPath), "Checking what the internet sees...");
     hideError();
 
     try {
-      var response = await fetch("/api/ui-report", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({ url: url, repoPath: repoPath }),
+      var review = await requestReview({
+        url: url,
+        repoPath: repoPath,
+        include: { uiReport: true },
+        options: { rendered: true },
       });
-      var payload = await response.json();
-
-      if (!payload.ok) {
-        showError(payload.error || { message: "ShipReady could not generate the report.", stage: "command" });
-        reportRoot.hidden = true;
-        return;
-      }
-
+      currentReview = review;
       hideStatus();
-      renderReport(payload.report);
+      renderReview(review);
     } catch (error) {
-      showError({
-        message: "ShipReady could not reach the local UI server.",
-        stage: "network",
-        details: error && error.stack ? error.stack : String(error),
-      });
+      showError(normalizeUiError(error));
       reportRoot.hidden = true;
     } finally {
       setBusy(false);
     }
+  }
+
+  async function runReadOnlyCheck(checkName) {
+    if (!currentReview || !currentReview.input || !checkName) {
+      showError({ message: "Run the main review before loading extra evidence.", stage: "review" });
+      return;
+    }
+
+    var include = { uiReport: false };
+    include[checkName] = true;
+    showLoading(Boolean(currentReview.input.repoPath), loadingText(checkName));
+
+    try {
+      var review = await requestReview({
+        url: currentReview.input.url,
+        repoPath: currentReview.input.repoPath || "",
+        include: include,
+        options: {
+          rendered: true,
+          crawlMaxPages: 8,
+          crawlMaxDepth: 1,
+          socialPreviewSource: "both",
+        },
+      });
+      currentReview = mergeReview(currentReview, review);
+      hideStatus();
+      renderReview(currentReview);
+    } catch (error) {
+      hideStatus();
+      showError(normalizeUiError(error));
+    }
+  }
+
+  async function requestReview(payload) {
+    var response = await fetch("/api/review", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+    var body = await response.json();
+
+    if (!body.ok) {
+      throw body.error || { message: "ShipReady could not generate the review.", stage: "command" };
+    }
+
+    return body.review;
+  }
+
+  function mergeReview(previous, next) {
+    next.uiReport = next.uiReport || previous.uiReport;
+    next.checks = Object.assign({}, previous.checks || {}, next.checks || {});
+    next.commands = Object.assign({}, previous.commands || {}, next.commands || {});
+    next.safety = next.safety && next.safety.length ? next.safety : previous.safety;
+    return next;
   }
 
   function setBusy(isBusy) {
@@ -75,14 +136,12 @@ export const GUI_CLIENT_JS = `
     urlOnlyButton.disabled = isBusy;
   }
 
-  function showLoading(hasRepoPath) {
+  function showLoading(hasRepoPath, message) {
     clear(statusPanel);
     statusPanel.hidden = false;
-    statusPanel.appendChild(el("p", "decision-label", "Checking"));
-    statusPanel.appendChild(el("h2", "", "Checking what the internet sees..."));
-    if (hasRepoPath) {
-      statusPanel.appendChild(el("p", "", "Reading the local project structure..."));
-    }
+    statusPanel.appendChild(el("p", "decision-label", "Working locally"));
+    statusPanel.appendChild(el("h2", "", message || "Checking what the internet sees..."));
+    statusPanel.appendChild(el("p", "", hasRepoPath ? "Reading only the selected project folder and public evidence." : "Reading only public evidence for the URL."));
   }
 
   function hideStatus() {
@@ -109,79 +168,114 @@ export const GUI_CLIENT_JS = `
     clear(errorPanel);
   }
 
-  function renderReport(report) {
+  function renderReview(review) {
+    var report = review.uiReport;
     clear(reportRoot);
     reportRoot.hidden = false;
-    reportRoot.appendChild(renderDecisionPanel(report));
-    reportRoot.appendChild(renderReadiness(report.readiness));
-    reportRoot.appendChild(renderPreviewCards(report.previews));
-    if (report.input && report.input.repoPath) {
+
+    reportRoot.appendChild(renderHeaderSummary(review, report));
+    reportRoot.appendChild(renderGuidedActions(review));
+    reportRoot.appendChild(renderInternetView(report));
+    reportRoot.appendChild(renderSocialPreviewSection(review));
+    reportRoot.appendChild(renderCrawlSection(review));
+    reportRoot.appendChild(renderSmellsSection(review));
+    reportRoot.appendChild(renderDnsSection(review));
+    reportRoot.appendChild(renderSearchConsoleSection(review));
+
+    if (report && report.input && report.input.repoPath) {
       reportRoot.appendChild(renderProject(report.project));
     }
-    reportRoot.appendChild(renderFixPlan(report.actionGroups, report.input && report.input.mode));
-    reportRoot.appendChild(renderPatchPreview(report.patchPreview));
-    reportRoot.appendChild(renderSafeApply(report));
-    if (report.input && report.input.repoPath) {
-      reportRoot.appendChild(renderLocalVsLive(report.liveVsLocal));
-    }
-    reportRoot.appendChild(renderDeveloperDetails(report));
+    reportRoot.appendChild(renderFixPlan(report && report.actionGroups, report && report.input && report.input.mode));
+    reportRoot.appendChild(renderPatchPreview(report && report.patchPreview));
+    reportRoot.appendChild(renderSafeApply(review, report));
+    reportRoot.appendChild(renderRecheckSection(review));
+    reportRoot.appendChild(renderSafetySection(review));
+    reportRoot.appendChild(renderDeveloperDetails(review));
   }
 
-  function renderDecisionPanel(report) {
-    var readiness = report.readiness || {};
+  function renderHeaderSummary(review, report) {
+    var readiness = report && report.readiness ? report.readiness : {};
     var section = el("section", "decision-panel " + readinessClass(readiness.label));
     var summary = el("div", "decision-summary");
-    var mode = report.input && report.input.mode === "url_and_repo" ? "URL + repository" : "URL only";
-    var primaryAction = primaryNextAction(report.workflow);
+    var mode = review.input && review.input.mode === "url_and_repo" ? "URL + project folder" : "URL only";
+    var nextAction = primaryNextAction(report && report.workflow) || {};
 
-    summary.appendChild(el("p", "eyebrow", "Decision panel"));
-    summary.appendChild(el("h2", "", readiness.title || "ShipReady report"));
-    summary.appendChild(el("p", "muted-text", readiness.summary || "Review the report sections below."));
+    summary.appendChild(el("p", "eyebrow", "Local review cockpit"));
+    summary.appendChild(el("h2", "", readiness.title || "ShipReady review"));
+    summary.appendChild(el("p", "muted-text", readiness.summary || "Run the main review to see readiness evidence."));
     summary.appendChild(renderMetricGrid([
+      ["URL", review.input && review.input.url ? review.input.url : "Not set"],
       ["Mode", mode],
       ["Readiness", readinessLabel(readiness.label)],
-      ["Score", typeof readiness.score === "number" ? String(readiness.score) + " / 100" : "Not scored"],
+      ["Score", typeof readiness.score === "number" ? String(readiness.score) + " / 100" : "Secondary"],
     ]));
 
     var next = el("aside", "decision-card");
     next.appendChild(el("p", "decision-label", "Next best action"));
-    next.appendChild(el("h3", "", primaryAction.label || "Review readiness"));
-    next.appendChild(el("p", "", primaryAction.explanation || nextActionFallback(report)));
-    next.appendChild(badge(safeApplyLabel(report.safeApply, report.input), safeApplyClass(report.safeApply, report.input)));
+    next.appendChild(el("h3", "", nextAction.label || "Review the evidence"));
+    next.appendChild(el("p", "", nextAction.explanation || nextActionFallback(report)));
+    next.appendChild(badge(safeApplyLabel(report && report.safeApply, report && report.input), safeApplyClass(report && report.safeApply, report && report.input)));
+    next.appendChild(el("p", "muted-text", "Local files and the live site stay unchanged unless you run an approved command outside the GUI."));
 
     section.appendChild(summary);
     section.appendChild(next);
     return section;
   }
 
-  function renderReadiness(readiness) {
-    var section = createSection("Readiness", readiness.title || "Readiness", readiness.summary || "");
+  function renderGuidedActions(review) {
+    var section = createSection("Guided actions", "Load extra evidence on demand", "The main review runs first. Heavier checks run only when you ask for them.");
+    var grid = el("div", "guided-grid");
+    var hasRepo = Boolean(review.input && review.input.repoPath);
+    [
+      ["socialPreview", "Review social previews", "Simulated from observed metadata. Platforms may render differently.", false],
+      ["crawl", "Run bounded crawl", "Bounded same-origin sample with page and depth limits.", false],
+      ["smells", "Inspect project smells", "Heuristic implementation signals, not authorship detection.", true],
+      ["dns", "Check DNS", "Read-only resolver observations. No DNS writes.", false],
+      ["searchConsole", "Check Search Console mock", "Mock-backed status only. No Google OAuth, tokens, or live Google calls.", false],
+      ["recheck", "Recheck after deployment", "Read-only public evidence check. Deployment remains external.", false],
+    ].forEach(function (action) {
+      grid.appendChild(renderGuidedAction(action[0], action[1], action[2], action[3] && !hasRepo));
+    });
+    section.appendChild(grid);
+    return section;
+  }
+
+  function renderGuidedAction(key, title, description, disabled) {
+    var card = el("article", "card action-card");
+    var header = el("div", "card-title-row");
+    header.appendChild(el("h3", "", title));
+    header.appendChild(badge(disabled ? "Needs repo" : "Read-only", disabled ? "muted" : "info"));
+    card.appendChild(header);
+    card.appendChild(el("p", "", description));
+    var button = el("button", "secondary-action", disabled ? "Add repo path first" : "Run check");
+    button.type = "button";
+    button.disabled = disabled;
+    button.setAttribute("data-run-check", key);
+    card.appendChild(button);
+    return card;
+  }
+
+  function renderInternetView(report) {
+    var readiness = report && report.readiness ? report.readiness : {};
+    var section = createSection("What the internet sees", "Live URL and crawler-visible basics", "Top issues are kept short. Technical details stay collapsed.");
     section.appendChild(renderIssueList("Top issues", readiness.topIssues || [], "No top issues found.", false));
-    section.appendChild(renderIssueList("Passed highlights", readiness.passedHighlights || [], "No passed highlights available.", true));
-    section.appendChild(renderIssueList("Optional polish", readiness.optionalPolish || [], "No optional polish items found.", true));
+    section.appendChild(renderPreviewCards(report && report.previews));
+    section.appendChild(renderCrawlResourceSummary(report));
     return section;
   }
 
   function renderPreviewCards(previews) {
-    var section = createSection("Preview cards", "How the page appears to crawlers and preview bots", "");
-    var usesRenderedFallback = previews && (
-      (previews.google && previews.google.source === "rendered") ||
-      (previews.social && previews.social.source === "rendered") ||
-      (previews.twitter && previews.twitter.source === "rendered") ||
-      (previews.crawlerView && previews.crawlerView.renderOnlyWarnings && previews.crawlerView.renderOnlyWarnings.length > 0)
-    );
-
-    if (usesRenderedFallback) {
-      section.appendChild(notice("Some page information appears only after the app loads. Some preview bots may not see it."));
-    }
-
+    var wrapper = el("div", "section-grid");
+    wrapper.appendChild(el("h3", "", "Preview inputs from the main audit"));
+    wrapper.appendChild(notice("These cards are approximations from observed metadata, not platform output."));
     var grid = el("div", "preview-grid");
-    grid.appendChild(renderPreviewCard("Google", previews.google, [
+    previews = previews || {};
+    grid.appendChild(renderPreviewCard("Google-style", previews.google, [
       ["Title", previews.google && previews.google.title],
       ["URL", previews.google && previews.google.url],
       ["Description", previews.google && previews.google.description],
     ]));
-    grid.appendChild(renderPreviewCard("Social", previews.social, [
+    grid.appendChild(renderPreviewCard("Generic social", previews.social, [
       ["Title", previews.social && previews.social.title],
       ["URL", previews.social && previews.social.url],
       ["Description", previews.social && previews.social.description],
@@ -194,8 +288,8 @@ export const GUI_CLIENT_JS = `
       ["Image URL", previews.twitter && previews.twitter.image],
     ]));
     grid.appendChild(renderCrawlerCard(previews.crawlerView));
-    section.appendChild(grid);
-    return section;
+    wrapper.appendChild(grid);
+    return wrapper;
   }
 
   function renderPreviewCard(title, card, fields) {
@@ -204,22 +298,12 @@ export const GUI_CLIENT_JS = `
     header.appendChild(el("h3", "", title));
     header.appendChild(badge(sourceLabel(card && card.source), sourceClass(card && card.source)));
     article.appendChild(header);
-
     fields.forEach(function (field) {
       article.appendChild(renderField(field[0], field[1]));
     });
-
     if (card && card.missingFields && card.missingFields.length > 0) {
-      var missing = el("div", "missing-fields");
-      missing.appendChild(el("span", "field-label", "Missing"));
-      var row = el("div", "badge-row");
-      card.missingFields.forEach(function (field) {
-        row.appendChild(badge(String(field), "muted"));
-      });
-      missing.appendChild(row);
-      article.appendChild(missing);
+      article.appendChild(keyValue("Missing", card.missingFields.join(", ")));
     }
-
     return article;
   }
 
@@ -231,20 +315,160 @@ export const GUI_CLIENT_JS = `
     article.appendChild(header);
     article.appendChild(renderField("Raw HTML", crawlerView && crawlerView.rawHtmlSummary));
     article.appendChild(renderField("Rendered HTML", crawlerView && crawlerView.renderedHtmlSummary));
-
     var warnings = crawlerView && crawlerView.renderOnlyWarnings ? crawlerView.renderOnlyWarnings : [];
     if (warnings.length > 0) {
-      article.appendChild(renderIssueRows("Rendered fallback warnings", warnings));
+      article.appendChild(renderIssueRows("Rendered-only warnings", warnings));
     }
-
     return article;
+  }
+
+  function renderCrawlResourceSummary(report) {
+    var audit = report && report.developerDetails ? report.developerDetails.rawAudit : undefined;
+    var resources = audit && audit.resources ? audit.resources : {};
+    var grid = el("div", "section-grid two");
+    grid.appendChild(renderFactCard("robots.txt", resourceText(resources.robotsTxt)));
+    grid.appendChild(renderFactCard("sitemap.xml", resourceText(resources.sitemapXml)));
+    return grid;
+  }
+
+  function renderSocialPreviewSection(review) {
+    var section = createSection("Preview simulator", "Social and link preview surfaces", "Simulated from observed metadata. Platforms may render differently.");
+    var check = review.checks && review.checks.socialPreview;
+    if (!check) {
+      section.appendChild(emptyCheck("Run the social preview simulator when you want deeper surface-by-surface evidence.", "socialPreview"));
+      return section;
+    }
+    if (appendCheckErrorOrSkipped(section, check, "socialPreview")) return section;
+
+    var result = check.result;
+    var grid = el("div", "preview-grid");
+    [
+      ["Google-style", result.previews.google_search],
+      ["Generic social", result.previews.generic_social],
+      ["X/Twitter", result.previews.x_twitter],
+      ["Slack/Discord", result.previews.slack_discord],
+      ["LinkedIn", result.previews.linkedin],
+    ].forEach(function (entry) {
+      var card = el("article", "card preview-card");
+      card.appendChild(el("h3", "", entry[0]));
+      card.appendChild(renderField("Title", fieldValue(entry[1], "title")));
+      card.appendChild(renderField("Description", fieldValue(entry[1], "description")));
+      card.appendChild(renderField("URL", fieldValue(entry[1], "url")));
+      card.appendChild(renderField("Image", fieldValue(entry[1], "image")));
+      grid.appendChild(card);
+    });
+    section.appendChild(grid);
+    if (result.warnings && result.warnings.length) {
+      section.appendChild(renderStringDetails("Warnings", result.warnings));
+    }
+    section.appendChild(renderStringDetails("Limitations", result.limitations || []));
+    section.appendChild(renderCommandBlock("CLI equivalent", review.commands && review.commands.socialPreview));
+    return section;
+  }
+
+  function renderCrawlSection(review) {
+    var section = createSection("Small-site crawl", "Repeated issues across a bounded sample", "Bounded same-origin sample with page and depth limits. It is not exhaustive coverage.");
+    var check = review.checks && review.checks.crawl;
+    if (!check) {
+      section.appendChild(emptyCheck("Run the bounded crawl when you want to see whether several pages repeat the same issue.", "crawl"));
+      return section;
+    }
+    if (appendCheckErrorOrSkipped(section, check, "crawl")) return section;
+
+    var result = check.result;
+    section.appendChild(renderMetricGrid([
+      ["Status", result.summary.status],
+      ["Checked", String(result.summary.pagesChecked)],
+      ["Discovered", String(result.summary.pagesDiscovered)],
+      ["Skipped", String(result.summary.pagesSkipped)],
+    ]));
+    section.appendChild(renderPageList(result.pages || []));
+    section.appendChild(renderRepeatedFindings(result.repeatedFindings || []));
+    section.appendChild(renderStringDetails("Limits and limitations", result.limitations || []));
+    section.appendChild(renderCommandBlock("CLI equivalent", review.commands && review.commands.crawl));
+    return section;
+  }
+
+  function renderSmellsSection(review) {
+    var section = createSection("Project smells", "Generated-site implementation review signals", "Heuristic implementation signals, not authorship detection.");
+    var check = review.checks && review.checks.smells;
+    if (!check) {
+      section.appendChild(emptyCheck("Add a project folder and run this read-only check to inspect implementation signals.", "smells", !(review.input && review.input.repoPath)));
+      return section;
+    }
+    if (appendCheckErrorOrSkipped(section, check, "smells")) return section;
+
+    var result = check.result;
+    section.appendChild(renderMetricGrid([
+      ["Status", result.summary.status],
+      ["Findings", String(result.summary.findingCount)],
+      ["Scanned files", String(result.scanned.files)],
+      ["Framework", result.framework.name],
+    ]));
+    var list = el("div", "section-grid");
+    (result.findings || []).slice(0, 5).forEach(function (finding) {
+      var card = el("article", "card");
+      var header = el("div", "card-title-row");
+      header.appendChild(el("h3", "", finding.title));
+      header.appendChild(badge(finding.severity + " / " + finding.confidence, finding.severity === "high" || finding.severity === "medium" ? "caution" : "muted"));
+      card.appendChild(header);
+      card.appendChild(el("p", "", finding.whyItMatters || ""));
+      card.appendChild(keyValue("Next action", finding.nextAction || "Review manually."));
+      if (finding.evidence && finding.evidence[0]) {
+        card.appendChild(keyValue("Evidence", evidenceText(finding.evidence[0])));
+      }
+      list.appendChild(card);
+    });
+    section.appendChild(list);
+    section.appendChild(renderStringDetails("Limitations", result.limitations || []));
+    if (review.commands && review.commands.smells) section.appendChild(renderCommandBlock("CLI equivalent", review.commands.smells));
+    return section;
+  }
+
+  function renderDnsSection(review) {
+    var section = createSection("DNS status", "Read-only domain readiness evidence", "Resolver observations only. ShipReady does not write DNS records or call provider APIs.");
+    var check = review.checks && review.checks.dns;
+    if (!check) {
+      section.appendChild(emptyCheck("Run DNS status when you want read-only domain evidence next to the launch review.", "dns"));
+      return section;
+    }
+    if (appendCheckErrorOrSkipped(section, check, "dns")) return section;
+    var result = check.result;
+    section.appendChild(renderMetricGrid([
+      ["Verdict", result.verdict.status],
+      ["Mode", result.mode],
+      ["Domain", result.domain],
+      ["Hosts checked", String(result.hosts.length)],
+    ]));
+    section.appendChild(renderStringDetails("Limitations", result.limitations || []));
+    section.appendChild(renderCommandBlock("CLI equivalent", review.commands && review.commands.dnsStatus));
+    return section;
+  }
+
+  function renderSearchConsoleSection(review) {
+    var section = createSection("Search Console mock status", "Mock-backed indexing-readiness context", "Search Console status is mock-backed only. No Google OAuth, tokens, or live Google API calls.");
+    var check = review.checks && review.checks.searchConsole;
+    if (!check) {
+      section.appendChild(emptyCheck("Run this mock-backed status check to see how the Search Console surface is represented today.", "searchConsole"));
+      return section;
+    }
+    if (appendCheckErrorOrSkipped(section, check, "searchConsole")) return section;
+    var result = check.result;
+    section.appendChild(renderMetricGrid([
+      ["Mode", result.mode],
+      ["Authorization", result.authorization.status],
+      ["Property", result.propertyMatch.status],
+      ["Sitemaps", result.sitemaps.status],
+    ]));
+    section.appendChild(renderStringDetails("Limitations", result.limitations || []));
+    section.appendChild(renderCommandBlock("CLI equivalent", review.commands && review.commands.searchConsoleStatus));
+    return section;
   }
 
   function renderProject(project) {
     if (!project) {
       return createSection("Project understanding", "Project inspection was not available", "ShipReady could not build a local project summary for this report.");
     }
-
     var section = createSection("Project understanding", project.frameworkLabel || "Unknown project", project.explanation || "");
     var grid = el("div", "project-grid");
     grid.appendChild(renderFactCard("Framework", project.frameworkLabel || "Unknown"));
@@ -266,19 +490,18 @@ export const GUI_CLIENT_JS = `
           : "No local fix plan is available for this report."
       );
     }
-
-    var section = createSection("Fix plan", "Grouped actions", "");
+    var section = createSection("Fix plan", "Safe, review-required, and manual work", "");
     var groups = el("div", "action-groups");
-    groups.appendChild(renderActionGroup("Safe to apply", actionGroups.safeToApply || [], "No safe automatic changes.", shouldCollapseActionGroup(actionGroups.safeToApply)));
-    groups.appendChild(renderActionGroup("Needs review", actionGroups.needsReview || [], "No generated changes need review.", shouldCollapseActionGroup(actionGroups.needsReview)));
-    groups.appendChild(renderActionGroup("Manual only", actionGroups.manualOnly || [], "No manual-only actions.", shouldCollapseActionGroup(actionGroups.manualOnly)));
+    groups.appendChild(renderActionGroup("Safe to apply", actionGroups.safeToApply || [], "No safe automatic changes."));
+    groups.appendChild(renderActionGroup("Needs review", actionGroups.needsReview || [], "No generated changes need review."));
+    groups.appendChild(renderActionGroup("Manual only", actionGroups.manualOnly || [], "No manual-only actions."));
     groups.appendChild(renderIssueList("Already good", actionGroups.alreadyGood || [], "No passed checks available.", true));
     groups.appendChild(renderIssueList("Optional polish", actionGroups.optionalPolish || [], "No optional polish actions.", true));
     section.appendChild(groups);
     return section;
   }
 
-  function renderActionGroup(title, actions, emptyText, collapsed) {
+  function renderActionGroup(title, actions, emptyText) {
     var content = el("div", "group-details-content");
     if (actions.length === 0) {
       content.appendChild(el("p", "empty", emptyText));
@@ -291,156 +514,156 @@ export const GUI_CLIENT_JS = `
         card.appendChild(header);
         card.appendChild(el("p", "", action.explanation || ""));
         if (action.targetLabel) card.appendChild(keyValue("Target file", action.targetLabel));
-        card.appendChild(keyValue("Can ShipReady apply it?", action.canApplyInV1 ? "Yes, with safe apply" : "Needs review first"));
+        card.appendChild(keyValue("GUI action", action.canApplyInV1 ? "Copy guarded command only" : "Review outside the GUI"));
         if (action.reviewReason) card.appendChild(keyValue("Review note", action.reviewReason));
         content.appendChild(card);
       });
     }
-    return renderDetails(title + " (" + actions.length + ")", [content], !collapsed);
+    return renderDetails(title + " (" + actions.length + ")", [content], actions.length > 0);
   }
 
   function renderPatchPreview(patchPreview) {
     if (!patchPreview || !patchPreview.hasPreview) {
       return createSection("Patch preview", "No patch preview", "No file changes were generated for this report.");
     }
-
-    var section = createSection("Patch preview", "Files ShipReady would create or update", "Review the file list first. Diffs stay collapsed until a developer needs them.");
-    var summary = el("div", "file-summary-list");
-    (patchPreview.fileChanges || []).forEach(function (change) {
-      var row = el("div", "file-summary-row");
-      row.appendChild(badge(change.eligibleForWrite ? wouldChangeLabel(change.changeType) : "Blocked from safe apply", change.eligibleForWrite ? "positive" : "caution"));
-      row.appendChild(el("strong", "wrap-safe", change.path || "Unknown file"));
-      row.appendChild(el("span", "", change.eligibleForWrite ? "Can be applied safely" : "Needs human review"));
-      summary.appendChild(row);
-    });
-    section.appendChild(summary);
-
+    var section = createSection("Patch preview", "Files ShipReady would create or update", "No files have been changed. Diffs stay collapsed until a developer needs them.");
     var list = el("div", "patch-list");
     (patchPreview.fileChanges || []).forEach(function (change) {
-      list.appendChild(renderFileChange(change));
+      var card = el("article", "card patch-card");
+      var header = el("div", "card-title-row");
+      header.appendChild(el("h3", "wrap-safe", change.path || "Unknown file"));
+      header.appendChild(badge(change.eligibleForWrite ? wouldChangeLabel(change.changeType) : "Blocked from safe apply", change.eligibleForWrite ? "positive" : "caution"));
+      card.appendChild(header);
+      card.appendChild(keyValue("Risk", change.risk || "unknown"));
+      card.appendChild(keyValue("Review", reviewStatusLabel(change.reviewStatus)));
+      card.appendChild(keyValue("Eligibility", change.eligibleForWrite ? "Safe crawl-file candidate" : "Needs human review"));
+      if (change.writeBlockReason) card.appendChild(keyValue("Block reason", change.writeBlockReason));
+      card.appendChild(renderDetails("View diff", [pre(change.diff || "No diff was produced for this file change.")], false, "diff-details"));
+      list.appendChild(card);
     });
     section.appendChild(list);
-
     if (patchPreview.skippedActions && patchPreview.skippedActions.length > 0) {
-      var skippedContent = el("div", "group-details-content");
-      patchPreview.skippedActions.forEach(function (action) {
-        var card = el("article", "quiet-card");
-        card.appendChild(el("h4", "", action.title || "Skipped action"));
-        card.appendChild(el("p", "", action.reason || ""));
-        skippedContent.appendChild(card);
-      });
-      section.appendChild(renderDetails("Actions without a file diff (" + patchPreview.skippedActions.length + ")", [skippedContent], false));
+      section.appendChild(renderStringDetails("Actions without a file diff", patchPreview.skippedActions.map(function (action) {
+        return (action.title || "Skipped action") + ": " + (action.reason || "");
+      })));
     }
-
     return section;
   }
 
-  function renderFileChange(change) {
-    var article = el("article", "card patch-card");
-    var header = el("div", "card-title-row");
-    header.appendChild(el("h3", "wrap-safe", change.path || "Unknown file"));
-    header.appendChild(badge(change.eligibleForWrite ? wouldChangeLabel(change.changeType) : "Blocked from safe apply", change.eligibleForWrite ? "positive" : "caution"));
-    article.appendChild(header);
-
-    var meta = el("div", "patch-meta-row");
-    meta.appendChild(el("span", "", wouldChangeLabel(change.changeType)));
-    meta.appendChild(el("span", "", "Risk: " + (change.risk || "unknown")));
-    meta.appendChild(el("span", "", "Review: " + reviewStatusLabel(change.reviewStatus)));
-    article.appendChild(meta);
-
-    article.appendChild(keyValue("Eligibility", change.eligibleForWrite ? "Safe apply candidate" : "Blocked from safe apply"));
-    if (change.writeBlockReason) article.appendChild(keyValue("Block reason", change.writeBlockReason));
-    article.appendChild(renderDetails("View diff", [pre(change.diff || "No diff was produced for this file change.")], false, "diff-details"));
-    return article;
-  }
-
-  function renderSafeApply(report) {
-    var safeApply = report.safeApply;
-    var input = report.input || {};
+  function renderSafeApply(review, report) {
+    var safeApply = report && report.safeApply;
+    var input = report && report.input ? report.input : {};
 
     if (!input.repoPath) {
-      var urlOnly = createSection(
-        "Safe apply",
-        "No local files inspected",
-        "This URL-only check did not inspect a project folder or preview local file changes. Add a local project folder later to identify safe crawl-file creations."
-      );
-      urlOnly.appendChild(notice("The GUI did not change files. Safe apply remains a command you run separately after a repo-based dry run."));
+      var urlOnly = createSection("Safe-write handoff", "No local files inspected", "This URL-only check did not inspect a project folder or preview local file changes.");
+      urlOnly.appendChild(notice("The GUI did not change files. Safe crawl-file creation remains a guarded CLI workflow after a repo-based dry run."));
       return urlOnly;
     }
 
     if (!safeApply || !safeApply.available) {
-      var unavailable = createSection("Safe apply", "No safe automatic fix available", safeApply && safeApply.explanation ? safeApply.explanation : "No dry-run file change currently qualifies for V1 safe apply.");
+      var unavailable = createSection("Safe-write handoff", "No safe automatic fix available", safeApply && safeApply.explanation ? safeApply.explanation : "No dry-run file change currently qualifies for V1 safe apply.");
       unavailable.appendChild(renderTrustRow());
-      if (safeApply && safeApply.blockedFiles && safeApply.blockedFiles.length > 0) {
-        unavailable.appendChild(renderBlockedFiles(safeApply.blockedFiles));
-      }
       return unavailable;
     }
 
-    var section = createSection("Safe apply · Preview first", "Safe crawl files ready to create", "ShipReady can create these missing crawl files without overwriting existing files:", "safe-apply-section");
+    var section = createSection("Safe-write handoff", "Safe crawl files ready to create", "The GUI can only copy the guarded command. It does not execute writes.", "safe-apply-section");
     section.appendChild(renderStringList(safeApply.eligibleFiles || [], "No eligible files.", "file-chip-list"));
-    section.appendChild(notice("Demo-safe: this GUI does not write files. Review and copy the guarded CLI command when you are ready."));
     var command = "pnpm shipready fix " + formatCommandArg(input.repoPath || ".") + " --url " + formatCommandArg(input.url || "") + " --write --allow-create";
-    section.appendChild(el("p", "field-label command-label", "Guarded CLI command"));
-    var commandRow = el("div", "command-row");
-    commandRow.appendChild(pre(command));
-    var copyButton = el("button", "copy-command", "Copy command");
-    copyButton.type = "button";
-    var copyStatus = el("span", "copy-status", "");
-    copyStatus.setAttribute("aria-live", "polite");
-    copyButton.addEventListener("click", async function () {
-      if (!navigator.clipboard || !navigator.clipboard.writeText) {
-        copyStatus.textContent = "Copy unavailable — select the command manually.";
-        return;
-      }
-
-      try {
-        await navigator.clipboard.writeText(command);
-        copyButton.textContent = "Copied";
-        copyStatus.textContent = "Guarded command copied. No files were changed.";
-      } catch (_error) {
-        copyStatus.textContent = "Copy unavailable — select the command manually.";
-      }
-    });
-    commandRow.appendChild(copyButton);
-    section.appendChild(commandRow);
-    section.appendChild(copyStatus);
+    section.appendChild(renderCommandBlock("Guarded CLI command", command));
     section.appendChild(renderTrustRow());
-    if (safeApply.blockedFiles && safeApply.blockedFiles.length > 0) {
-      section.appendChild(renderBlockedFiles(safeApply.blockedFiles));
+    section.appendChild(renderStringDetails("Safe-write policy notes", safeApply.safetyNotes || []));
+    return section;
+  }
+
+  function renderRecheckSection(review) {
+    var section = createSection("Post-deploy recheck", "Verify public crawl-file evidence after external deployment", "Recheck is read-only and does not deploy. Local files do not change the live site until externally deployed.");
+    var check = review.checks && review.checks.recheck;
+    if (check) {
+      if (!appendCheckErrorOrSkipped(section, check, "recheck")) {
+        var result = check.result;
+        section.appendChild(renderMetricGrid([
+          ["Verdict", result.verdict.status],
+          ["Deployment", result.deployment.status],
+          ["Mode", result.mode],
+          ["Robots", result.live.robots.status],
+          ["Sitemap", result.live.sitemap.status],
+        ]));
+        section.appendChild(renderStringDetails("Limitations", result.limitations || []));
+      }
+    } else {
+      section.appendChild(emptyCheck("Run recheck after an external deployment to compare public evidence.", "recheck"));
     }
-    section.appendChild(renderDetails("Safe apply policy notes", [
-      renderStringList(safeApply.safetyNotes || [], "No additional safety notes.", "compact-list"),
-    ], false));
+    section.appendChild(renderCommandBlock("CLI equivalent", review.commands && review.commands.recheck));
     return section;
   }
 
-  function renderBlockedFiles(blockedFiles) {
-    var wrapper = el("div", "section-grid");
-    wrapper.appendChild(el("h3", "", "Blocked from safe apply"));
-    blockedFiles.forEach(function (file) {
-      var card = el("article", "quiet-card");
-      card.appendChild(el("h4", "wrap-safe", file.path || "Unknown file"));
-      card.appendChild(el("p", "", file.reason || "This change is outside the V1 safe-apply policy."));
-      wrapper.appendChild(card);
-    });
-    return wrapper;
-  }
-
-  function renderLocalVsLive(liveVsLocal) {
-    var section = el("section", "section");
-    var warning = el("div", "local-warning");
-    warning.appendChild(el("strong", "", "Local changes do not affect the live website until you deploy."));
-    warning.appendChild(el("p", "", liveVsLocal && liveVsLocal.message ? liveVsLocal.message : "ShipReady has not deployed anything."));
-    section.appendChild(warning);
+  function renderSafetySection(review) {
+    var section = createSection("Safety and limits", "What this local GUI will not do", "The cockpit is a read-only review surface with copy-only command handoffs.");
+    section.appendChild(renderStringList(review.safety || [
+      "No deploys.",
+      "No Git/GitHub actions.",
+      "No metadata/content/JSON-LD writes.",
+      "No DNS writes.",
+      "Search Console remains mock-backed.",
+    ], "No safety notes.", "file-chip-list"));
     return section;
   }
 
-  function renderDeveloperDetails(report) {
+  function renderDeveloperDetails(review) {
     return renderDetails("Developer details", [
-      el("p", "", "Schema version: " + (report.schemaVersion || "unknown")),
-      pre(JSON.stringify(report, null, 2)),
+      el("p", "", "Schema version: " + (review.schemaVersion || "unknown")),
+      pre(JSON.stringify(review, null, 2)),
     ], false, "developer-details");
+  }
+
+  function emptyCheck(message, checkName, disabled) {
+    var card = el("article", "quiet-card");
+    card.appendChild(el("p", "", message));
+    var button = el("button", "secondary-action", disabled ? "Add repo path first" : "Run read-only check");
+    button.type = "button";
+    button.disabled = Boolean(disabled);
+    button.setAttribute("data-run-check", checkName);
+    card.appendChild(button);
+    return card;
+  }
+
+  function appendCheckErrorOrSkipped(section, check, checkName) {
+    if (check.status === "error") {
+      section.appendChild(notice(check.error && check.error.message ? check.error.message : "Read-only check failed."));
+      section.appendChild(emptyCheck("You can retry this read-only check without changing files.", checkName));
+      return true;
+    }
+    if (check.status === "skipped") {
+      section.appendChild(notice(check.message || "This check was skipped."));
+      return true;
+    }
+    return false;
+  }
+
+  function renderPageList(pages) {
+    var content = el("div", "section-grid");
+    pages.slice(0, 6).forEach(function (page) {
+      var card = el("article", "card");
+      card.appendChild(el("h4", "wrap-safe", page.title || page.url || "Page"));
+      card.appendChild(keyValue("URL", page.url || ""));
+      card.appendChild(keyValue("Status", page.status || "unknown"));
+      card.appendChild(keyValue("Top issues", page.issueSummary && page.issueSummary.topIssueTitles ? page.issueSummary.topIssueTitles.join(", ") : "None reported"));
+      content.appendChild(card);
+    });
+    return renderDetails("Pages checked (" + pages.length + ")", [content], pages.length > 0);
+  }
+
+  function renderRepeatedFindings(findings) {
+    if (!findings.length) return notice("No repeated findings were reported across the bounded sample.");
+    var content = el("div", "section-grid");
+    findings.slice(0, 5).forEach(function (finding) {
+      var card = el("article", "card");
+      card.appendChild(el("h4", "", finding.title || "Repeated finding"));
+      card.appendChild(el("p", "", finding.message || ""));
+      card.appendChild(keyValue("Affected URLs", finding.affectedPages ? finding.affectedPages.slice(0, 5).join(", ") : "Not reported"));
+      content.appendChild(card);
+    });
+    return renderDetails("Repeated findings (" + findings.length + ")", [content], true);
   }
 
   function renderIssueList(title, issues, emptyText, collapsed) {
@@ -459,23 +682,19 @@ export const GUI_CLIENT_JS = `
         content.appendChild(card);
       });
     }
-
     return renderDetails(title + " (" + issues.length + ")", [content], !collapsed);
   }
 
   function renderIssueRows(title, issues) {
-    var wrapper = el("div", "field");
-    wrapper.appendChild(el("p", "field-label", title));
-    wrapper.appendChild(renderStringList(issues.map(function (issue) {
+    return renderStringDetails(title, issues.map(function (issue) {
       return issue.title || issue.explanation || "Warning";
-    }), "No warnings.", "compact-list"));
-    return wrapper;
+    }));
   }
 
   function renderFactCard(title, value) {
     var card = el("article", "card");
     card.appendChild(el("p", "field-label", title));
-    card.appendChild(el("h3", "wrap-safe", value));
+    card.appendChild(el("h3", "wrap-safe", value || "Not reported"));
     return card;
   }
 
@@ -501,10 +720,14 @@ export const GUI_CLIENT_JS = `
     var field = el("div", "field");
     field.appendChild(el("p", "field-label", label));
     field.appendChild(el("p", "wrap-safe", value || "Missing"));
-    if (!value) {
-      field.lastChild.classList.add("empty");
-    }
+    if (!value) field.lastChild.classList.add("empty");
     return field;
+  }
+
+  function renderStringDetails(title, items) {
+    return renderDetails(title + " (" + (items ? items.length : 0) + ")", [
+      renderStringList(items || [], "None reported.", "compact-list"),
+    ], false);
   }
 
   function renderStringList(items, emptyText, className) {
@@ -520,10 +743,46 @@ export const GUI_CLIENT_JS = `
 
   function renderTrustRow() {
     var list = el("ul", "file-chip-list");
-    ["No overwrites", "No metadata or content edits", "No Git commits", "No deploys"].forEach(function (item) {
+    ["No overwrites", "No metadata or content edits", "No Git/GitHub actions", "No deploys"].forEach(function (item) {
       list.appendChild(el("li", "", item));
     });
     return list;
+  }
+
+  function renderCommandBlock(label, command) {
+    var wrapper = el("div", "command-block");
+    wrapper.appendChild(el("p", "field-label command-label", label));
+    if (!command) {
+      wrapper.appendChild(el("p", "empty", "No command available."));
+      return wrapper;
+    }
+    var row = el("div", "command-row");
+    row.appendChild(pre(command));
+    var button = el("button", "copy-command", "Copy command");
+    button.type = "button";
+    button.setAttribute("data-copy-command", command);
+    var status = el("span", "copy-status", "");
+    status.setAttribute("aria-live", "polite");
+    row.appendChild(button);
+    wrapper.appendChild(row);
+    wrapper.appendChild(status);
+    return wrapper;
+  }
+
+  async function copyCommand(button) {
+    var command = button.getAttribute("data-copy-command") || "";
+    var status = button.parentElement && button.parentElement.nextSibling;
+    if (!navigator.clipboard || !navigator.clipboard.writeText) {
+      if (status) status.textContent = "Copy unavailable; select the command manually.";
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(command);
+      button.textContent = "Copied";
+      if (status) status.textContent = "Command copied. The GUI did not run it.";
+    } catch (_error) {
+      if (status) status.textContent = "Copy unavailable; select the command manually.";
+    }
   }
 
   function renderDetails(summaryText, children, open, className) {
@@ -553,7 +812,7 @@ export const GUI_CLIENT_JS = `
   function keyValue(key, value) {
     var item = el("p", "key-value");
     item.appendChild(el("span", "", key + ": "));
-    item.appendChild(el("span", "wrap-safe", value));
+    item.appendChild(el("span", "wrap-safe", value || "Not reported"));
     return item;
   }
 
@@ -584,13 +843,27 @@ export const GUI_CLIENT_JS = `
   }
 
   function nextActionFallback(report) {
-    if (report.safeApply && report.safeApply.available) return "Copy the safe apply command when you are ready.";
-    if (!report.input || !report.input.repoPath) return "Add a project folder to preview file-level fixes.";
+    if (report && report.safeApply && report.safeApply.available) return "Copy the safe-write command when you are ready.";
+    if (!report || !report.input || !report.input.repoPath) return "Add a project folder to preview file-level fixes.";
     return "Review the generated guidance before changing local files.";
   }
 
-  function shouldCollapseActionGroup(actions) {
-    return !actions || actions.length === 0;
+  function loadingText(checkName) {
+    if (checkName === "socialPreview") return "Simulating preview inputs...";
+    if (checkName === "crawl") return "Running the bounded same-origin sample...";
+    if (checkName === "smells") return "Scanning project review signals...";
+    if (checkName === "dns") return "Reading DNS evidence...";
+    if (checkName === "searchConsole") return "Loading mock-backed Search Console status...";
+    if (checkName === "recheck") return "Rechecking public crawl-file evidence...";
+    return "Loading read-only evidence...";
+  }
+
+  function normalizeUiError(error) {
+    return {
+      message: error && error.message ? error.message : "ShipReady could not reach the local UI server.",
+      stage: error && error.stage ? error.stage : "network",
+      details: error && error.details !== undefined ? error.details : undefined,
+    };
   }
 
   function isValidHttpUrl(value) {
@@ -603,9 +876,10 @@ export const GUI_CLIENT_JS = `
   }
 
   function readinessLabel(label) {
-    if (label === "ready") return "Ready";
+    if (label === "ready") return "Ready to share";
     if (label === "almost_ready") return "Almost ready";
-    return "Needs attention";
+    if (label === "needs_attention") return "Needs attention";
+    return "Unknown";
   }
 
   function readinessClass(label) {
@@ -662,7 +936,7 @@ export const GUI_CLIENT_JS = `
   }
 
   function safeApplyLabel(safeApply, input) {
-    if (safeApply && safeApply.available) return "Safe apply available";
+    if (safeApply && safeApply.available) return "Copy-only safe-write handoff";
     if (!input || !input.repoPath) return "URL-only check";
     return "No safe automatic fix";
   }
@@ -681,6 +955,26 @@ export const GUI_CLIENT_JS = `
     if (status === "auto_candidate") return "safe candidate";
     if (status === "review_required") return "needs review";
     return String(status || "unknown").replace(/_/g, " ");
+  }
+
+  function resourceText(resource) {
+    if (!resource) return "Not checked";
+    if (resource.exists) return "Present";
+    if (resource.statusCode) return "Not observed (HTTP " + resource.statusCode + ")";
+    if (resource.error) return "Unreachable";
+    return "Not observed";
+  }
+
+  function fieldValue(preview, field) {
+    return preview && preview.fields && preview.fields[field] ? preview.fields[field].value : undefined;
+  }
+
+  function evidenceText(evidence) {
+    var parts = [];
+    if (evidence.path) parts.push(evidence.path);
+    if (evidence.line) parts.push("line " + evidence.line);
+    if (evidence.message) parts.push(evidence.message);
+    return parts.join(" · ") || evidence.valuePreview || "Evidence reported";
   }
 
   function formatCommandArg(value) {

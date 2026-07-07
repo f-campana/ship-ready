@@ -67,7 +67,7 @@ pnpm shipready crawl --url https://example.com --mock clean-small-site --json
 - JSON contract: `shipready.crawl.v1`; fixtures are named `crawl.<scenario>.json`.
 - Output: human sections for Bounded crawl, Summary, Pages checked, Repeated findings, Metadata consistency, Skipped URLs / limits, Limitations, and Next actions. JSON preserves compact structured summaries and does not embed raw HTML or full audit payloads.
 - Exit behavior: `0` when a valid crawl result is emitted, including `needs_attention` or `unknown` page states; `1` for invalid URL/source/mock/timeout/limit input; `2` for unexpected contract or operational failure. JSON errors use `shipready.error.v1`.
-- Safety: not a full-site crawler, complete SEO audit, ranking analysis, indexing guarantee, monitoring system, complete broken-link scan, security scan, accessibility audit, write mode, deploy path, Search Console live integration, DNS write, or social platform API surface.
+- Safety: not exhaustive site coverage, broad analytics, indexing evidence, monitoring, complete broken-link scanning, security scanning, accessibility auditing, write mode, deploy path, Search Console live integration, DNS write, or social platform API surface.
 
 MCP exposes the same read-only contract as `shipready.crawl_site`. It accepts `{ url, maxPages?, maxDepth?, source?, rendered?, mock? }`, requires no repository path or allowed-root authorization for the call, and does not change the sole MCP write tool.
 
@@ -211,15 +211,17 @@ pnpm shipready gui [--host <host>] [--port <port>]
 pnpm shipready gui
 ```
 
-- Purpose: start the local human-readable UI.
-- Defaults: `127.0.0.1:4317`.
-- Behavior: serves `/`, static assets, and `POST /api/ui-report`; reads audit/repo inputs and writes no project files.
-- Surface type: local HTTP server plus a human stdout URL; the command has no `--json` option. `POST /api/ui-report` returns an internal GUI JSON envelope, not a named CLI contract.
+- Purpose: start the local read-only review cockpit for human review.
+- Defaults: `127.0.0.1:4317`; the server only binds loopback hosts (`127.0.0.1`, `localhost`, or `::1`).
+- Behavior: serves `/`, static assets, `POST /api/review`, and compatibility `POST /api/ui-report`; reads public URL and optional local repo inputs and writes no project files.
+- Surface type: local HTTP server plus a human stdout URL; the command has no `--json` option. GUI API envelopes are local UI surfaces, not named CLI JSON contracts.
+- `POST /api/review`: internal `ui-review-v1` aggregate for the cockpit. Input accepts `url`, optional `repoPath`, optional `include` booleans for `uiReport`, `socialPreview`, `crawl`, `smells`, `dns`, `searchConsole`, and `recheck`, plus bounded options such as crawl page/depth limits and social preview source. The response redacts or omits URL query strings from displayed output.
+- On-demand checks: the main review loads `ui-report-v1` first. Social preview, bounded crawl, generated-site smells, DNS status, Search Console mock status, and recheck run only when requested from the GUI.
 - Output: server URL, then the process remains active until stopped.
 - Agent use: human review, GUI validation, and recording.
-- Safety: no GUI write endpoint exists. Safe apply is preview/copy-only.
+- Safety: no GUI write endpoint exists. Safe crawl-file creation is shown as a copyable guarded CLI command only. The GUI never executes `fix --write`, never calls `shipready.write_safe_crawl_files`, never deploys, never runs Git/GitHub behavior, never writes DNS, never calls live Search Console or social platform APIs, and never writes metadata, content, JSON-LD, packages, or configuration.
 
-The GUI client fetches only `/api/ui-report`. `POST /api/fix` is not implemented and returns `404`.
+`POST /api/fix` is not implemented and returns `404`.
 
 ## JSON errors
 

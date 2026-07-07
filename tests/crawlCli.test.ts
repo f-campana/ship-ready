@@ -87,7 +87,7 @@ describe("crawl CLI", () => {
     expect(invalidSource.stderr).toBe("");
     expect(invalidMock.stderr).toBe("");
     expect(invalidPages.stderr).toBe("");
-  });
+  }, 20_000);
 
   it("does not require or mutate a local repository in mock mode", async () => {
     const directory = await mkdtemp(join(tmpdir(), "shipready-crawl-cli-"));

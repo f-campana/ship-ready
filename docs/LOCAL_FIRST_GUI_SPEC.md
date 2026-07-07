@@ -1,17 +1,48 @@
 # ShipReady Local-First GUI Spec
 
+## Pass 16 Current Implementation
+
+The shipped local GUI is a loopback-only, read-only review cockpit for humans. It is not a SaaS app, deployment control panel, DNS manager, Search Console client, GitHub tool, or GUI write executor.
+
+Current first-screen promise:
+
+```txt
+Your generated website is almost ready. Here is what the internet sees, what is missing, and what ShipReady can safely prepare.
+```
+
+Implemented GUI surfaces:
+
+- `POST /api/review` returns an internal `ui-review-v1` aggregate for the cockpit.
+- `POST /api/ui-report` remains available for the existing `ui-report-v1` compatibility model.
+- The GUI client fetches only `/api/review`.
+- The initial run loads the main `ui-report-v1` review. Social preview, bounded crawl, generated-site smells, DNS status, Search Console mock status, and recheck run only on demand.
+- Safe crawl-file creation is shown as a copyable guarded CLI command only. The GUI does not execute it.
+- `POST /api/fix` remains absent and returns `404`.
+
+Required labels and limits:
+
+- Social previews are simulated from observed metadata; platforms may render differently.
+- Crawl is a bounded same-origin sample with page/depth limits and is not exhaustive coverage.
+- Generated-site smells are heuristic implementation signals, not authorship detection.
+- Search Console status is mock-backed only; no Google OAuth, tokens, or live Google calls are implemented.
+- DNS status is read-only resolver evidence; no provider APIs or DNS writes are implemented.
+- Recheck is read-only and does not deploy; local files affect the live site only after external deployment.
+- The GUI performs no Git/GitHub, deployment, provider, social platform, metadata/content/JSON-LD/package/config, or DNS mutation.
+
 ## 1. Product Goal
 
 ShipReady's first GUI should turn the proven local CLI engine into a guided, understandable workflow for people who have generated a website and want to know whether it is ready to share, index, and deploy.
 
 The core promise:
 
-> Your generated website is almost ready. Here is what the internet sees, what is missing, and what ShipReady can safely fix.
+> Your generated website is almost ready. Here is what the internet sees, what is missing, and what ShipReady can safely prepare.
+
+For the Pass 16 cockpit, use "what ShipReady can safely prepare" instead of "fix" when describing the GUI. The only current GUI handoff is a copyable guarded command for safe crawl-file creation; the GUI itself does not write.
 
 The first UI should be a guided flow, not a dense audit dashboard. It should help the user move through:
 
 ```txt
-URL -> local repo -> audit -> explain issues -> plan fixes -> preview changes -> apply safe fixes -> re-check
+URL -> optional local repo -> overview -> on-demand evidence -> fix plan -> patch preview -> copy guarded command -> external deploy -> recheck
 ```
 
 The GUI should make abstract metadata tangible by showing what search engines, social apps, and preview bots can see. It should avoid SEO-cockpit language, ranking promises, and panic-inducing scores.
@@ -58,7 +89,9 @@ The first GUI MVP should not include:
 - Full SEO strategy.
 - CMS integrations.
 - Competitor analysis.
-- GUI-driven crawl exploration beyond the current report flow. Pass 15's `crawl` CLI/MCP contract provides a bounded same-origin sample, but wiring that contract into the GUI is a future GUI revisit.
+- GUI write execution.
+- Guarded writes from the GUI.
+- Hosted or remote GUI APIs.
 - Automated metadata, JSON-LD, content, accessibility text, package, config, Git, commit, or deploy writes.
 - A general-purpose expert SEO dashboard.
 
@@ -73,22 +106,23 @@ Recommendation: guided flow first.
 5. ShipReady inspects the local repo and explains what kind of project it appears to be.
 6. ShipReady generates a fix plan grouped by safety and review level.
 7. ShipReady previews the exact patch.
-8. ShipReady applies only safe V1 file creations when eligible.
-9. ShipReady re-checks locally and explains that the live website will not change until the user deploys.
+8. ShipReady shows a copyable guarded CLI command when V1-safe crawl-file creations are eligible.
+9. The user chooses whether to run that command outside the GUI, deploys through their own external workflow, and then uses read-only recheck.
 
-The ideal first success moment:
+The ideal first success moment for the current GUI:
 
 ```txt
-Your site is now safer to crawl.
+Your site is almost ready to share.
 
-ShipReady created:
-- app/robots.ts
-- app/sitemap.ts
+ShipReady found:
+- what the live URL exposes today
+- which previews are likely missing inputs
+- which safe crawl files can be prepared by guarded CLI command
 
 Next:
-- Review the created files.
-- Run your project tests.
-- Deploy when ready.
+- Review the patch preview.
+- Copy the guarded command only if you approve the safe crawl-file creation.
+- Deploy externally if you run it.
 - Re-run ShipReady after deployment.
 ```
 
@@ -98,7 +132,7 @@ The UI must not imply that ShipReady deployed the site or that the live URL chan
 
 Use a step-based application shell:
 
-- Left stepper: Connect, Readiness, Project, Fix plan, Preview, Apply, Re-check.
+- Top flow strip: Connect, Overview, Load read-only evidence, Copy commands only.
 - Central pane: the current task, preview, or result.
 - Right panel: safety notes, plain-language explanation, and collapsible developer details.
 - Bottom action bar: primary next action and secondary back/cancel/export actions.
@@ -107,9 +141,9 @@ Primary navigation should keep the user oriented without turning the app into a 
 
 - What ShipReady checked.
 - What is missing.
-- What can be safely applied.
+- What can be safely prepared by guarded command.
 - What needs human review.
-- Whether anything has changed on disk.
+- Whether anything has changed on disk. In the current GUI, the answer must always be no.
 - Whether the live deployed site has changed.
 
 Advanced details should be present but collapsed:
@@ -220,7 +254,7 @@ Data source:
 - `raw.metadata` for crawler-visible previews.
 - `rendered.metadata` for "after app loads" comparisons.
 - `resources.robotsTxt` and `resources.sitemapXml` for crawl resource status.
-- Pass 13's `social-preview` CLI/MCP contract provides a richer read-only simulator, but wiring that contract into the GUI is a future GUI revisit rather than part of Pass 13.
+- Pass 16 wires the `social-preview` CLI/MCP contract into the GUI as an on-demand read-only simulator.
 
 ### Screen 3 - Repo Understanding
 
@@ -330,17 +364,17 @@ Content:
 - Skipped or blocked actions.
 - Diff preview.
 - Safety notes.
-- "Apply safe fixes" button only when eligible write candidates exist.
+- Copyable guarded CLI command only when eligible write candidates exist.
 
-Apply button rules:
+Command handoff rules:
 
-- Enable only when at least one dry-run file change is an eligible V1 creation candidate.
+- Show only when at least one dry-run file change is an eligible V1 creation candidate.
 - The candidate must be a `create` change.
 - The candidate must be low risk.
 - `requiresHumanReview` must be false.
 - `reviewStatus` must be `auto_candidate`.
 - The target path must be in the V1 robots/sitemap allowlist.
-- Updates must not be included in the apply action.
+- Updates must not be included in the command handoff.
 
 Recommended safety callouts:
 
@@ -357,15 +391,13 @@ Data source:
 - `DryRunFixResult.recommendedNextStep`.
 - `DryRunFileChange.diff`, `before`, and `after` for advanced preview.
 
-### Screen 6 - Apply Result
+### Screen 6 - Command Handoff And External Apply Result
 
-Purpose: report exactly what changed and what did not.
+Purpose: report exactly what the GUI did and did not do, then explain what an externally run guarded command may do.
 
-Success content:
+Current GUI content:
 
-- Files created.
-- Files actually changed count.
-- Blocked changes.
+- Files that the guarded command may create.
 - Skipped actions.
 - Safety confirmations.
 - Recommended next steps.
@@ -373,20 +405,16 @@ Success content:
 Primary success copy:
 
 ```txt
-Your site is now safer to crawl locally.
+No files have been changed by the GUI.
 ```
 
 Required deployment warning:
 
 ```txt
-These files were created in your local project. Your live website will not change until you deploy.
+If you run the guarded command outside the GUI, those local files still will not change the live website until you deploy.
 ```
 
-When no files were written:
-
-```txt
-ShipReady did not change any files.
-```
+When no files were written, keep the copy direct: "ShipReady did not change any files."
 
 Safety statements:
 
@@ -459,7 +487,7 @@ Data source:
 | Site readiness overview | `audit <url> --json` | `score`, `status`, `checks`, `raw`, `rendered`, `comparison`, `resources` | readiness label, top issues, passed checks, visual previews, raw/rendered warnings |
 | Repo understanding | `inspect-repo <path> --json` | framework, confidence, package manager, evidence, important files, routes, metadata locations, supported fixes, limitations, warnings | project explanation, confidence, support status |
 | Fix plan | `plan-fixes <path> --url <url> --json` | audit summary, repo summary, actions, no-action checks, optional notes, limitations, recommended next step | group actions by safety/review level |
-| Patch preview | `fix <path> --url <url> --dry-run --json` | file changes, diffs, skipped actions, safety notes, recommended next step | preview create/update/skipped items and gate apply action |
+| Patch preview | `fix <path> --url <url> --dry-run --json` | file changes, diffs, skipped actions, safety notes, recommended next step | preview create/update/skipped items and gate the copy-only command handoff |
 | Apply result | `fix <path> --url <url> --write --allow-create --json` | created files, blocked changes, skipped actions, safety checks, rollback, policy, wroteFiles | report exact disk effects and safety guarantees |
 | Re-check | `fix --dry-run`, `inspect-repo`, `audit` | local dry-run after write, repo state, live URL audit | separate local fixed state from deployed live state |
 
@@ -578,7 +606,7 @@ Before apply:
 During apply:
 
 - Show the exact number of files being created.
-- Do not show metadata/content changes as part of the apply action.
+- Do not show metadata/content changes as part of the copy-only command handoff.
 - Keep the action label specific: "Create safe crawl files", not "Fix everything".
 
 After apply:
@@ -653,8 +681,8 @@ The MVP should include:
 - Repo framework detection view.
 - Fix plan grouped by safety and review level.
 - Dry-run patch preview.
-- Apply safe fixes for V1-eligible robots/sitemap creations only.
-- Apply result with created files, blocked changes, safety notes, and no-deploy warning.
+- Copy-only safe-write handoff for V1-eligible robots/sitemap creations.
+- Post-deploy recheck view that separates local state from live deployed state.
 - Re-check view that separates local state from live deployed state.
 - Collapsible developer details.
 - Copy layer that translates technical findings into plain language.
@@ -679,7 +707,6 @@ Later product directions:
 - Desktop app.
 - Small localhost server UI.
 - Future SaaS.
-- Bounded multi-page crawl presentation from the `shipready.crawl.v1` CLI/MCP contract.
 - Screenshot-based preview validation.
 - Exportable HTML/PDF report for clients.
 - Export patch file.

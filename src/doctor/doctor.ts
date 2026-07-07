@@ -410,7 +410,7 @@ export async function runDoctor(
         combined.includes("shipready crawl") &&
         combined.includes("bounded multi-page crawl") &&
         combined.includes("same-origin") &&
-        combined.includes("not a full-site crawler");
+        combined.includes("not exhaustive site coverage");
     } catch {
       crawlDocsReferenceLimitations = false;
     }

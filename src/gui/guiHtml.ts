@@ -4,7 +4,7 @@ export function renderGuiHtml(): string {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>ShipReady local UI</title>
+  <title>ShipReady local review cockpit</title>
   <link rel="stylesheet" href="/assets/gui.css">
   <script defer src="/assets/gui.js"></script>
 </head>
@@ -12,9 +12,9 @@ export function renderGuiHtml(): string {
   <main class="shell">
     <header class="connect-panel">
       <div class="connect-copy">
-        <p class="eyebrow">ShipReady local UI</p>
-        <h1>Check if your website is ready to share and index.</h1>
-        <p>Check launch-readiness, understand the local project, and preview safe crawl files before anything changes.</p>
+        <p class="eyebrow">ShipReady local review cockpit</p>
+        <h1>See what the internet sees before you launch.</h1>
+        <p>Review launch-readiness, preview-bot inputs, bounded crawl evidence, project signals, and safe crawl-file handoffs without changing files.</p>
       </div>
       <form class="connect-form" data-connect-form novalidate>
         <label>
@@ -37,19 +37,26 @@ export function renderGuiHtml(): string {
 
     <nav class="flow-strip" aria-label="Report sections">
       <span>1 · Connect</span>
-      <span>2 · Check launch-readiness</span>
-      <span>3 · Preview safe crawl files</span>
-      <span>4 · Copy guarded command</span>
+      <span>2 · Overview</span>
+      <span>3 · Load read-only evidence</span>
+      <span>4 · Copy commands only</span>
     </nav>
 
     <section class="report" data-report hidden>
-      <section class="section"><h2>Decision panel</h2></section>
-      <section class="section"><h2>Readiness</h2></section>
-      <section class="section"><h2>Preview cards</h2></section>
+      <section class="section"><h2>Local review cockpit</h2></section>
+      <section class="section"><h2>Guided actions</h2></section>
+      <section class="section"><h2>What the internet sees</h2></section>
+      <section class="section"><h2>Preview simulator</h2></section>
+      <section class="section"><h2>Small-site crawl</h2></section>
+      <section class="section"><h2>Project smells</h2></section>
+      <section class="section"><h2>DNS status</h2></section>
+      <section class="section"><h2>Search Console mock status</h2></section>
       <section class="section"><h2>Project understanding</h2></section>
       <section class="section"><h2>Fix plan</h2></section>
       <section class="section"><h2>Patch preview</h2></section>
-      <section class="section"><h2>Safe apply</h2></section>
+      <section class="section"><h2>Safe-write handoff</h2></section>
+      <section class="section"><h2>Post-deploy recheck</h2></section>
+      <section class="section"><h2>Safety and limits</h2></section>
       <details class="developer-details">
         <summary>Developer details</summary>
         <pre></pre>

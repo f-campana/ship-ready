@@ -3,6 +3,7 @@ import { GUI_CLIENT_JS } from "./guiClient";
 import { renderGuiHtml } from "./guiHtml";
 import { GUI_CSS } from "./guiStyles";
 import {
+  createReviewApiResult,
   createUiReportApiResult,
   invalidJsonApiResult,
   type GuiApiOptions,
@@ -26,8 +27,13 @@ const DEFAULT_PORT = 4317;
 const MAX_BODY_BYTES = 1_000_000;
 
 export async function startGuiServer(options: GuiServerOptions = {}): Promise<RunningGuiServer> {
-  const host = options.host ?? DEFAULT_HOST;
+  const host = normalizeLoopbackHost(options.host ?? DEFAULT_HOST);
   const port = options.port ?? DEFAULT_PORT;
+
+  if (!isLoopbackHost(host)) {
+    throw new Error("ShipReady GUI only binds to loopback hosts. Use 127.0.0.1, localhost, or ::1.");
+  }
+
   const server = createServer((request, response) => {
     handleGuiRequest(request, response, options).catch((error: unknown) => {
       sendJson(response, 500, {
@@ -66,7 +72,7 @@ export async function startGuiServer(options: GuiServerOptions = {}): Promise<Ru
     server,
     host,
     port: actualPort,
-    url: `http://${host}:${actualPort}`,
+    url: `http://${formatHostForUrl(host)}:${actualPort}`,
     close: () =>
       new Promise<void>((resolve, reject) => {
         server.close((error) => {
@@ -108,11 +114,20 @@ async function handleGuiRequest(
     return;
   }
 
-  if (requestUrl.pathname === "/api/ui-report") {
+  if (request.method === "POST" && requestUrl.pathname === "/api/review") {
+    const payload = await readJsonBody(request);
+    const result = payload.ok
+      ? await createReviewApiResult(payload.value, options)
+      : invalidJsonApiResult(payload.error);
+    sendJson(response, result.statusCode, result.body);
+    return;
+  }
+
+  if (requestUrl.pathname === "/api/ui-report" || requestUrl.pathname === "/api/review") {
     sendJson(response, 405, {
       ok: false,
       error: {
-        message: "Use POST /api/ui-report.",
+        message: `Use POST ${requestUrl.pathname}.`,
         stage: "server",
       },
     });
@@ -169,4 +184,16 @@ function sendText(
 
 function sendJson(response: ServerResponse, statusCode: number, body: unknown): void {
   sendText(response, statusCode, "application/json; charset=utf-8", `${JSON.stringify(body, null, 2)}\n`);
+}
+
+function isLoopbackHost(host: string): boolean {
+  return host === "127.0.0.1" || host === "localhost" || host === "::1";
+}
+
+function normalizeLoopbackHost(host: string): string {
+  return host === "[::1]" ? "::1" : host;
+}
+
+function formatHostForUrl(host: string): string {
+  return host === "::1" ? "[::1]" : host;
 }

@@ -89,7 +89,7 @@ export function createStatus(): StatusJsonContract {
       fodmappVoiceover: "validation/demo-fodmapp-voiceover-final/",
     },
     nextRecommendedCommand: "pnpm shipready doctor",
-    nextRecommendedPass: "GUI polish / revisit",
+    nextRecommendedPass: "Patch export",
   });
 }
 
@@ -112,7 +112,7 @@ export function formatStatusHuman(status = createStatus()): string {
     "  Search Console: spec exists, mock prototype available, live integration not implemented",
     "  DNS readiness: read-only status checks implemented; provider writes/integrations not implemented",
     "  Post-write recheck: implemented read-only; local changes still require external deployment",
-    "  Bounded multi-page crawl: implemented read-only; full-site crawler and scheduled monitoring not implemented",
+    "  Bounded multi-page crawl: implemented read-only; exhaustive crawler and scheduled monitoring not implemented",
     "  Social preview simulator: implemented read-only; social platform APIs and exact rendering guarantees not implemented",
     "  Generated-site implementation smell detector: implemented read-only; authorship identification and auto-fixes not implemented",
     "  Deployment automation and deploy provider integrations: not implemented",

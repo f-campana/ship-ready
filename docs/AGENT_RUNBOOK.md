@@ -24,7 +24,7 @@ For launch-readiness operations, start with the repository-local [ShipReady Laun
 - `src/types/`: Zod schemas and TypeScript result contracts.
 - `src/report/`: human, JSON, UI, and static HTML formatting.
 - `src/ui/`: normalized `ui-report-v1` creation.
-- `src/gui/`: local server and preview/copy-only browser UI.
+- `src/gui/`: loopback-only local server, `ui-review-v1` GUI aggregate, and read-only preview/copy-only browser cockpit.
 - `src/mcp/`: local stdio adapter, thirteen read-only tools, one guarded safe-write tool, preview receipts, canonical reads, prompts, authorization, errors, and deadlines.
 - `src/status/` and `src/doctor/`: static capability posture and bounded local readiness diagnostics.
 - `src/searchConsole/`: stable read-only status boundary and deterministic mock provider; no OAuth, tokens, or live Google client.
@@ -72,7 +72,9 @@ For social preview work, use `pnpm shipready social-preview --url <url> --json` 
 
 For generated-site implementation smell work, use `pnpm shipready smells <path> --json` or MCP `shipready.generated_site_smells`. Pass 14 implements heuristic implementation signals for repo-level launch-readiness risks such as client-only metadata, weak SPA raw HTML, placeholder copy, default starter boilerplate, missing referenced public assets, local/example URLs, and unclear framework shape. Findings are not proof of authorship, generator identity, or site quality. The detector is read-only, bounded, skips environment files and build/dependency output, and does not run fix mode, write files, deploy, call provider APIs, mutate DNS/Search Console, call social platform APIs, use OAuth, store tokens, or broaden `WRITE_POLICY_V1`.
 
-For bounded multi-page crawl work, use `pnpm shipready crawl --url <url> --json` or MCP `shipready.crawl_site`. Pass 15 implements a read-only same-origin sample from one public HTTP(S) URL, capped at `maxPages <= 25` and `maxDepth <= 2`. It audits selected pages through the existing single-page audit logic, reports compact page summaries, repeated findings, metadata consistency, skipped URL reasons, limits, limitations, and next actions. It is not a full-site crawler, monitoring system, complete SEO audit, ranking analysis, indexing guarantee, complete broken-link scan, security scan, accessibility audit, or write surface.
+For bounded multi-page crawl work, use `pnpm shipready crawl --url <url> --json` or MCP `shipready.crawl_site`. Pass 15 implements a read-only same-origin sample from one public HTTP(S) URL, capped at `maxPages <= 25` and `maxDepth <= 2`. It audits selected pages through the existing single-page audit logic, reports compact page summaries, repeated findings, metadata consistency, skipped URL reasons, limits, limitations, and next actions. It is not exhaustive coverage, monitoring, broad analytics, indexing evidence, complete broken-link scanning, security scanning, accessibility auditing, or a write surface.
+
+For GUI work, preserve the Pass 16 local review cockpit. The browser client fetches only `POST /api/review`; `POST /api/ui-report` remains a compatibility endpoint. Extra evidence sections are on-demand and read-only: social preview approximation, bounded crawl sample, generated-site smell signals, DNS status, Search Console mock status, and post-deploy recheck. The GUI may copy guarded CLI commands but must not execute `fix --write`, call `shipready.write_safe_crawl_files`, deploy, run Git/GitHub behavior, write DNS, call live Search Console or social platform APIs, or write metadata/content/JSON-LD/package/config files. `POST /api/fix` must remain absent and return `404`.
 
 ## Main commands
 
@@ -144,6 +146,7 @@ JSON contract work never authorizes broader writes. `docs/WRITE_POLICY_V1.md` re
 - Default to read-only commands and `fix --dry-run`.
 - Treat any filesystem write, external mutation, secret use, Git action, or deployment as a separate authorization boundary.
 - Never execute a copied guarded command merely because the GUI displays it.
+- Never add GUI write execution; the local GUI is a read-only review surface and command-copy handoff only.
 - Never call `shipready.write_safe_crawl_files` without a same-session preview receipt and exact confirmation phrase.
 - Never use the Fodmapp marketing repository as a write target for demos or validation.
 - The GUI may generate reports and copy a command; it cannot execute writes.
@@ -186,7 +189,7 @@ Describe observable launch-readiness, crawler/preview visibility, completeness, 
 - secret handling;
 - API key commits;
 - SEO ranking claims;
-- guaranteed indexing claims.
+- indexing guarantee claims.
 
 Even with explicit instruction, work must remain within the active policy, repository scope, and tested command contract.
 

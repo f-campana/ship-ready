@@ -286,7 +286,7 @@ summary {
 
 .metric-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   gap: 10px;
 }
 
@@ -327,11 +327,16 @@ summary {
 }
 
 .section-grid,
+.guided-grid,
 .preview-grid,
 .project-grid,
 .action-groups {
   display: grid;
   gap: 14px;
+}
+
+.guided-grid {
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
 }
 
 .section-grid.two,
@@ -552,6 +557,10 @@ summary {
   grid-template-columns: minmax(0, 1fr) auto;
   gap: 10px;
   align-items: start;
+}
+
+.command-block {
+  margin-top: 14px;
 }
 
 .command-label {

@@ -2,8 +2,8 @@ import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { createUiReportApiResult, type GuiApiResult } from "../src/gui/guiApi";
-import { startGuiServer, type RunningGuiServer } from "../src/gui/startGuiServer";
+import { createReviewApiResult, createUiReportApiResult, type GuiApiResult, type GuiReviewApiResult } from "../src/gui/guiApi";
+import { startGuiServer, type GuiServerOptions, type RunningGuiServer } from "../src/gui/startGuiServer";
 import type { CreateUiReportInput } from "../src/report/createUiReport";
 import type { UiReport } from "../src/types/uiReport";
 
@@ -30,9 +30,9 @@ describe("ShipReady local GUI", () => {
 
       expect(response.status).toBe(200);
       expect(response.headers.get("content-type")).toContain("text/html");
-      expect(html).toContain("ShipReady local UI");
-      expect(html).toContain("Check if your website is ready to share and index.");
-      expect(html).toContain("Check launch-readiness");
+      expect(html).toContain("ShipReady local review cockpit");
+      expect(html).toContain("See what the internet sees before you launch.");
+      expect(html).toContain("Load read-only evidence");
       expect(html).toContain("data-connect-form novalidate");
       expect(html).toContain('input name="url" type="text" inputmode="url"');
     });
@@ -43,13 +43,20 @@ describe("ShipReady local GUI", () => {
       const html = await fetchText(`${server.url}/`);
 
       for (const label of [
-        "Decision panel",
-        "Readiness",
-        "Preview cards",
+        "Local review cockpit",
+        "Guided actions",
+        "What the internet sees",
+        "Preview simulator",
+        "Small-site crawl",
+        "Project smells",
+        "DNS status",
+        "Search Console mock status",
         "Project understanding",
         "Fix plan",
         "Patch preview",
-        "Safe apply",
+        "Safe-write handoff",
+        "Post-deploy recheck",
+        "Safety and limits",
         "Developer details",
       ]) {
         expect(html).toContain(label);
@@ -84,6 +91,54 @@ describe("ShipReady local GUI", () => {
       expect(calls[0]).toMatchObject({
         url: "https://example.com",
         repoPath: undefined,
+      });
+    }, calls);
+  });
+
+  it("accepts URL-only aggregate review requests", async () => {
+    const calls: CreateUiReportInput[] = [];
+    await withServer(async (server) => {
+      const response = await postReview(server, {
+        url: "https://example.com",
+      });
+
+      expect(response.status).toBe(200);
+      expect(response.body.ok).toBe(true);
+      if (response.body.ok) {
+        expect(response.body.review.schemaVersion).toBe("ui-review-v1");
+        expect(response.body.review.input.mode).toBe("url_only");
+        expect(response.body.review.uiReport?.input.mode).toBe("url_only");
+        expect(response.body.review.endpoints).toEqual(expect.arrayContaining([
+          expect.objectContaining({ path: "/api/review", readOnly: true }),
+          expect.objectContaining({ path: "/api/ui-report", readOnly: true }),
+        ]));
+      }
+      expect(calls[0]).toMatchObject({
+        url: "https://example.com/",
+        repoPath: undefined,
+      });
+    }, calls);
+  });
+
+  it("accepts URL plus local repo aggregate review requests", async () => {
+    const calls: CreateUiReportInput[] = [];
+    const repoPath = join(import.meta.dirname, "fixtures", "repos", "next-app-router-dry-run");
+
+    await withServer(async (server) => {
+      const response = await postReview(server, {
+        url: "https://example.com",
+        repoPath,
+      });
+
+      expect(response.status).toBe(200);
+      expect(response.body.ok).toBe(true);
+      if (response.body.ok) {
+        expect(response.body.review.input.mode).toBe("url_and_repo");
+        expect(response.body.review.uiReport?.project?.frameworkLabel).toBe("Next.js");
+      }
+      expect(calls[0]).toMatchObject({
+        url: "https://example.com/",
+        repoPath,
       });
     }, calls);
   });
@@ -143,6 +198,37 @@ describe("ShipReady local GUI", () => {
     });
   });
 
+  it("returns a structured aggregate error for invalid URL", async () => {
+    const result = await createReviewApiResult({
+      url: "not-a-url",
+    });
+
+    expect(result.statusCode).toBe(400);
+    expect(result.body).toMatchObject({
+      ok: false,
+      error: {
+        stage: "audit",
+        message: "Invalid URL. Provide an absolute http:// or https:// URL.",
+      },
+    });
+  });
+
+  it("returns a structured aggregate error for invalid repo paths", async () => {
+    const result = await createReviewApiResult({
+      url: "https://example.com",
+      repoPath: join(tmpdir(), "shipready-missing-repo-path"),
+    });
+
+    expect(result.statusCode).toBe(400);
+    expect(result.body).toMatchObject({
+      ok: false,
+      error: {
+        stage: "repo_inspection",
+        message: "Local repo path must be an existing directory.",
+      },
+    });
+  });
+
   it("returns a structured error for invalid JSON", async () => {
     await withServer(async (server) => {
       const response = await fetch(`${server.url}/api/ui-report`, {
@@ -184,26 +270,108 @@ describe("ShipReady local GUI", () => {
     }
   });
 
+  it("does not write files from /api/review", async () => {
+    const tempRoot = await mkdtemp(join(tmpdir(), "shipready-gui-review-test-"));
+    const markerPath = join(tempRoot, "marker.txt");
+    await writeFile(markerPath, "before", "utf8");
+
+    try {
+      await withServer(async (server) => {
+        const response = await postReview(server, {
+          url: "https://example.com",
+          repoPath: tempRoot,
+        });
+        const marker = await readFile(markerPath, "utf8");
+
+        expect(response.body.ok).toBe(true);
+        expect(marker).toBe("before");
+      });
+    } finally {
+      await rm(tempRoot, { recursive: true, force: true });
+    }
+  });
+
+  it("keeps optional aggregate check failures local to that section", async () => {
+    await withServer(async (server) => {
+      const response = await postReview(server, {
+        url: "https://example.com",
+        include: {
+          uiReport: false,
+          crawl: true,
+        },
+      });
+
+      expect(response.status).toBe(200);
+      expect(response.body.ok).toBe(true);
+      if (response.body.ok) {
+        expect(response.body.review.uiReport).toBeUndefined();
+        expect(response.body.review.checks.crawl).toMatchObject({
+          status: "error",
+          error: {
+            stage: "crawl",
+            message: "bounded crawl timed out",
+          },
+        });
+      }
+    }, [], {
+      reviewOperations: {
+        crawl: async () => {
+          throw new Error("bounded crawl timed out");
+        },
+      },
+    });
+  });
+
+  it("redacts query strings from aggregate review output", async () => {
+    await withServer(async (server) => {
+      const response = await postReview(server, {
+        url: "https://example.com/page?utm_source=secret#section",
+      });
+
+      expect(response.status).toBe(200);
+      expect(response.body.ok).toBe(true);
+      if (response.body.ok) {
+        expect(response.body.review.input.url).toBe("https://example.com/page");
+        expect(JSON.stringify(response.body.review)).not.toContain("utm_source");
+        expect(JSON.stringify(response.body.review)).not.toContain("#section");
+      }
+    });
+  });
+
   it("displays safe apply as a command and does not add an execute endpoint", async () => {
     await withServer(async (server) => {
       const js = await fetchText(`${server.url}/assets/gui.js`);
 
       expect(js).toContain("pnpm shipready fix");
       expect(js).toContain("Copy command");
-      expect(js).toContain("Guarded command copied. No files were changed.");
-      expect(js).toContain("Demo-safe: this GUI does not write files.");
-      expect(js).toContain("Safe apply remains a command you run separately after a repo-based dry run.");
+      expect(js).toContain("Command copied. The GUI did not run it.");
+      expect(js).toContain("The GUI can only copy the guarded command. It does not execute writes.");
+      expect(js).toContain("Safe crawl-file creation remains a guarded CLI workflow after a repo-based dry run.");
       expect(js).not.toContain("/api/fix");
       expect(js).not.toContain("child_process");
       expect(js).not.toContain("exec(");
     });
   });
 
-  it("keeps the GUI client fetch surface limited to /api/ui-report", async () => {
+  it("keeps the GUI client fetch surface limited to the read-only aggregate endpoint", async () => {
     await withServer(async (server) => {
       const js = await fetchText(`${server.url}/assets/gui.js`);
       const paths = [...js.matchAll(/fetch\(["']([^"']+)["']/g)].map((match) => match[1]);
-      expect(paths).toEqual(["/api/ui-report"]);
+      expect(paths).toEqual(["/api/review"]);
+    });
+  });
+
+  it("contains required review-surface limitation labels in the client", async () => {
+    await withServer(async (server) => {
+      const js = await fetchText(`${server.url}/assets/gui.js`);
+
+      expect(js).toContain("Simulated from observed metadata. Platforms may render differently.");
+      expect(js).toContain("Bounded same-origin sample with page and depth limits.");
+      expect(js).toContain("Heuristic implementation signals, not authorship detection.");
+      expect(js).toContain("Search Console status is mock-backed only.");
+      expect(js).toContain("Recheck is read-only and does not deploy. Local files do not change the live site until externally deployed.");
+      expect(js).toContain("No DNS writes.");
+      expect(js).toContain("No Git/GitHub actions");
     });
   });
 
@@ -235,18 +403,26 @@ describe("ShipReady local GUI", () => {
 
       expect(js).toContain("textContent");
       expect(js).toContain("Invalid URL. Provide a full website URL that starts with http or https.");
-      expect(js).toContain("shouldCollapseActionGroup");
+      expect(js).toContain("data-run-check");
       expect(js).not.toContain("innerHTML");
       expect(js).not.toContain("insertAdjacentHTML");
     });
+  });
+
+  it("rejects non-loopback hosts for the local GUI", async () => {
+    await expect(startGuiServer({ host: "0.0.0.0", port: 0 })).rejects.toThrow(
+      "ShipReady GUI only binds to loopback hosts.",
+    );
   });
 });
 
 async function withServer(
   callback: (server: RunningGuiServer) => Promise<void>,
   calls: CreateUiReportInput[] = [],
+  options: Omit<GuiServerOptions, "port" | "createReport"> = {},
 ): Promise<void> {
   const server = await startGuiServer({
+    ...options,
     port: 0,
     createReport: async (input) => {
       calls.push(input);
@@ -272,6 +448,22 @@ async function postJson(
   payload: unknown,
 ): Promise<{ status: number; body: GuiApiResult["body"] }> {
   const response = await fetch(`${server.url}/api/ui-report`, {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+
+  return {
+    status: response.status,
+    body: await response.json(),
+  };
+}
+
+async function postReview(
+  server: RunningGuiServer,
+  payload: unknown,
+): Promise<{ status: number; body: GuiReviewApiResult["body"] }> {
+  const response = await fetch(`${server.url}/api/review`, {
     method: "POST",
     headers: { "content-type": "application/json" },
     body: JSON.stringify(payload),

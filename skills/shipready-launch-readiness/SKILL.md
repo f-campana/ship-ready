@@ -26,11 +26,11 @@ Do not use ShipReady for keyword research, rank tracking, backlink analysis, gen
 
 | State | Current capability |
 |---|---|
-| Implemented | Single-page audit; bounded multi-page crawl; bounded repo inspection; generated-site implementation smell detector; social preview simulator; planning; dry-run; status/doctor; versioned JSON; UI and HTML reports; local GUI; stdio MCP |
+| Implemented | Single-page audit; bounded multi-page crawl; bounded repo inspection; generated-site implementation smell detector; social preview simulator; planning; dry-run; status/doctor; versioned JSON; UI and HTML reports; local read-only GUI review cockpit; stdio MCP |
 | Mock-backed | Search Console status only; no Google OAuth, tokens, or live API calls |
 | Read-only | Audit, bounded crawl, inspection, social preview simulation, planning, dry-run, post-write recheck, UI report, GUI, Search Console mocks, and DNS status; live DNS uses resolver observations only |
 | Write-guarded | CLI and the sole MCP write tool may create only eligible missing robots/sitemap files under `WRITE_POLICY_V1` |
-| Future | GUI revisit, terminal output polish/TUI viewer, patch export, and GitHub PR integration |
+| Future | Terminal output polish/TUI viewer, patch export, and GitHub PR integration |
 
 Never infer future behavior from a roadmap name. A single-page audit covers one page; bounded crawl covers only a small same-origin sample under strict limits. The current social preview simulator is a metadata-based approximation, not platform output.
 
@@ -60,7 +60,7 @@ pnpm shipready html-report <path> --url <url> --output shipready-report.html
 - Use repo-backed commands for framework evidence, fix classification, and exact previews.
 - Treat `plan-fixes` automation fields as capability descriptions, not authorization.
 - Treat `social-preview` as a simulated preview from observed metadata, not a precise third-party rendering result.
-- Treat `crawl` as a bounded same-origin sample, not a full-site crawler or complete SEO audit.
+- Treat `crawl` as a bounded same-origin sample, not exhaustive site coverage or broad analytics.
 - Treat `fix --dry-run` as mandatory before a write; it writes nothing.
 - Treat JSON `contract` discriminators as versioned public boundaries. See [CONTRACTS.md](../../docs/CONTRACTS.md).
 - Separate safe candidates, review-required changes, manual actions, already-good checks, limitations, and local-versus-live state.
@@ -143,7 +143,7 @@ Use this read-only command to sample a small same-origin set of public HTTP(S) p
 
 Defaults are `--max-pages 8`, `--max-depth 1`, `--source both`, and rendered audit enabled. Hard caps are `maxPages <= 25` and `maxDepth <= 2`; larger values are capped. Use `--no-render` to skip rendered page audits. Mock scenarios are deterministic: `clean-small-site`, `missing-descriptions`, `canonical-inconsistent`, `social-images-missing`, `start-unreachable`, `limit-reached`, and `mixed-readiness`.
 
-Treat crawl results as bounded sample evidence only. It is not a full-site crawler, complete SEO audit, ranking analysis, indexing guarantee, traffic-improvement tool, complete broken-link scan, security scan, accessibility audit, monitoring system, write mode, DNS/Search Console/social-platform integration, Git/GitHub workflow, or deployment path. It writes no files, requires no local repo, uses no OAuth, stores no tokens, and does not broaden `WRITE_POLICY_V1`.
+Treat crawl results as bounded sample evidence only. It is not exhaustive site coverage, broad analytics, indexing evidence, traffic forecasting, complete broken-link scanning, security scanning, accessibility auditing, monitoring, write mode, DNS/Search Console/social-platform integration, Git/GitHub workflow, or deployment path. It writes no files, requires no local repo, uses no OAuth, stores no tokens, and does not broaden `WRITE_POLICY_V1`.
 
 ## Use MCP safely
 
@@ -180,7 +180,7 @@ pnpm shipready gui
 pnpm shipready html-report <path> --url <url> --output report.html
 ```
 
-Use the GUI for local human review. Keep it preview/copy-only: it writes no project files, and `POST /api/fix` remains unavailable with `404`. Treat copied guarded commands as text, not authorization.
+Use the GUI for local human review. Keep it read-only and preview/copy-only: it writes no project files, and `POST /api/fix` remains unavailable with `404`. The browser client uses `POST /api/review`, while `POST /api/ui-report` remains available for compatibility. The main review loads first; social preview, bounded crawl, generated-site smells, DNS status, Search Console mock status, and recheck are on-demand read-only sections. Treat copied guarded commands as text, not authorization.
 
 Use HTML reports as explicit, self-contained static artifacts. The command writes only the named report file; it does not modify the inspected repository.
 

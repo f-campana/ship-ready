@@ -122,7 +122,7 @@ Discovery is same-origin and HTTP(S)-only. Fragment identifiers are ignored. Que
 
 Canonical fixtures cover `clean-small-site`, `missing-descriptions`, `canonical-inconsistent`, `social-images-missing`, `start-unreachable`, `limit-reached`, and `mixed-readiness`. All use fixed timestamps and synthetic `example.com` values. Mock fixture generation makes no external requests.
 
-The CLI and MCP tool do not require a local repository, write files, mutate DNS/Search Console, call social platform APIs, use OAuth, store tokens, run Git/GitHub/deploy behavior, broaden `WRITE_POLICY_V1`, or claim full-site crawling, complete SEO audit coverage, ranking analysis, traffic improvement, indexing, monitoring, or complete broken-link/security/accessibility scanning.
+The CLI and MCP tool do not require a local repository, write files, mutate DNS/Search Console, call social platform APIs, use OAuth, store tokens, run Git/GitHub/deploy behavior, broaden `WRITE_POLICY_V1`, or claim exhaustive coverage, broad analytics, traffic forecasting, indexing evidence, monitoring, or complete broken-link/security/accessibility scanning.
 
 ## Exact success shapes
 
@@ -254,9 +254,13 @@ Known gap: errors raised by Commander before a command action runs, such as miss
 
 `html-report` has no `--json` option and exposes no JSON contract. It is a file surface: it writes one explicitly named, self-contained HTML file derived from `ui-report-v1`, then prints the resolved path. Its source is `src/report/renderHtmlReport.ts` and `src/report/writeHtmlReport.ts`.
 
-`gui` has no `--json` option. The command starts a local HTTP server and prints its URL. The server has a machine-readable local endpoint, `POST /api/ui-report`, whose success shape is `{ "ok": true, "report": UiReport }` and whose API/parse errors use `{ "ok": false, "error": { ... } }`. This is a GUI server surface, not one of the named CLI JSON contracts. The report inside that envelope retains `schemaVersion: "ui-report-v1"`; the GUI API does not add the CLI-only `contract` field. `POST /api/fix` is absent and returns `404`.
+`gui` has no `--json` option. The command starts a loopback-only local HTTP server and prints its URL. The GUI client uses `POST /api/review`, whose success shape is `{ "ok": true, "review": GuiReview }` with `schemaVersion: "ui-review-v1"`. This is a compact GUI-internal aggregate model, not a public CLI JSON contract. It can embed the existing `ui-report-v1` model and on-demand summaries or raw contract payloads from the read-only social preview, crawl, generated-site smells, DNS status, Search Console mock status, and recheck application functions. The aggregate redacts or omits URL query strings from GUI output.
 
-Sources: `src/gui/guiApi.ts`, `src/gui/startGuiServer.ts`, and `src/gui/guiClient.ts`. The client fetches only `/api/ui-report`.
+The compatibility endpoint `POST /api/ui-report` remains available with success shape `{ "ok": true, "report": UiReport }`; the report inside that envelope retains `schemaVersion: "ui-report-v1"` and the GUI API does not add the CLI-only `contract` field. API/parse errors on both GUI endpoints use `{ "ok": false, "error": { ... } }`.
+
+Both GUI endpoints are local, read-only surfaces. They never execute `fix --write`, never call `shipready.write_safe_crawl_files`, never deploy, never run Git/GitHub behavior, never write DNS, never call live Search Console or social platform APIs, and never write metadata, content, JSON-LD, packages, or configuration. `POST /api/fix` is absent and returns `404`.
+
+Sources: `src/gui/guiApi.ts`, `src/gui/guiReview.ts`, `src/gui/startGuiServer.ts`, and `src/gui/guiClient.ts`. The client fetches only `/api/review`; `/api/ui-report` remains available for compatibility.
 
 ## Compatibility policy
 
