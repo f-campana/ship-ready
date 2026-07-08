@@ -111,6 +111,7 @@ export const POLICY_DOCS = {
   "agent-runbook": { uri: "shipready://docs/agent-runbook", path: "docs/AGENT_RUNBOOK.md" },
   status: { uri: "shipready://docs/status", path: "docs/STATUS.md" },
   roadmap: { uri: "shipready://docs/roadmap", path: "docs/ROADMAP.md" },
+  distribution: { uri: "shipready://docs/distribution", path: "docs/DISTRIBUTION.md" },
   "mcp-plan": { uri: "shipready://docs/mcp-plan", path: "docs/MCP_PLAN.md" },
   "search-console-readiness-spec": { uri: "shipready://docs/search-console-readiness-spec", path: "docs/SEARCH_CONSOLE_READINESS_SPEC.md" },
   "dns-readiness-spec": { uri: "shipready://docs/dns-readiness-spec", path: "docs/DNS_READINESS_SPEC.md" },

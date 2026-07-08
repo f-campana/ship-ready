@@ -41,17 +41,18 @@ For launch-readiness operations, start with the repository-local [ShipReady Laun
 3. `docs/AGENT_RUNBOOK.md`
 4. `docs/STATUS.md`
 5. `docs/RELEASE_READINESS.md`
-6. `docs/COMMANDS.md`
-7. `docs/CONTRACTS.md`
-8. `docs/MCP_PLAN.md` before any MCP work
-9. `docs/WRITE_POLICY_V1.md` for any fix or write work
-10. `docs/CLAIMS_POLICY.md` for UI, demo, report, or public copy
-11. `docs/SEARCH_CONSOLE_READINESS_SPEC.md` before any Search Console or Google OAuth work
-12. `docs/DNS_READINESS_SPEC.md` before any DNS/domain-readiness work
-13. `docs/POST_WRITE_RECHECK.md` before post-write follow-up work
-14. `docs/LOCAL_FIRST_GUI_SPEC.md` for GUI direction
-15. `docs/DEMO.md` for demo work
-16. `docs/ROADMAP.md` for sequencing
+6. `docs/DISTRIBUTION.md`
+7. `docs/COMMANDS.md`
+8. `docs/CONTRACTS.md`
+9. `docs/MCP_PLAN.md` before any MCP work
+10. `docs/WRITE_POLICY_V1.md` for any fix or write work
+11. `docs/CLAIMS_POLICY.md` for UI, demo, report, or public copy
+12. `docs/SEARCH_CONSOLE_READINESS_SPEC.md` before any Search Console or Google OAuth work
+13. `docs/DNS_READINESS_SPEC.md` before any DNS/domain-readiness work
+14. `docs/POST_WRITE_RECHECK.md` before post-write follow-up work
+15. `docs/LOCAL_FIRST_GUI_SPEC.md` for GUI direction
+16. `docs/DEMO.md` for demo work
+17. `docs/ROADMAP.md` for sequencing
 
 ## Before any implementation
 
@@ -83,9 +84,13 @@ For GitHub PR draft work, use `pnpm shipready github-pr-draft <path> --url <url>
 
 For GUI work, preserve the Pass 16 local review cockpit. The browser client fetches only `POST /api/review`; `POST /api/ui-report` remains a compatibility endpoint. Extra evidence sections are on-demand and read-only: social preview approximation, bounded crawl sample, generated-site smell signals, DNS status, Search Console mock status, and post-deploy recheck. The GUI may copy guarded CLI commands but must not execute `fix --write`, call `shipready.write_safe_crawl_files`, deploy, run Git/GitHub behavior, write DNS, call live Search Console or social platform APIs, or write metadata/content/JSON-LD/package/config files. `POST /api/fix` must remain absent and return `404`.
 
+For distribution or installation questions, read [DISTRIBUTION.md](DISTRIBUTION.md). V0 remains source-checkout-only. Do not recommend `pnpm dlx shipready` or npm/global install as supported distribution. Use `pnpm --dir /Users/fabiencampana/Documents/ship-ready shipready ...` from outside the checkout. `pnpm link --global` is verified only as a developer-local symlink after `pnpm build`.
+
 ## Main commands
 
 ```bash
+cd /Users/fabiencampana/Documents/ship-ready
+pnpm install
 pnpm shipready status --json
 pnpm shipready doctor --json
 pnpm shipready search-console status --url https://example.com --mock ready_sitemap_ok --json
@@ -103,7 +108,8 @@ pnpm shipready github-pr-draft <path> --url <url> --output /tmp/shipready-pr.md 
 pnpm shipready ui-report [path] --url <url> --json
 pnpm shipready html-report [path] --url <url> --output <file>
 pnpm shipready gui
-pnpm --silent shipready mcp --allow-root /absolute/workspace
+pnpm --dir /Users/fabiencampana/Documents/ship-ready shipready audit https://example.com --json
+pnpm --dir /Users/fabiencampana/Documents/ship-ready --silent shipready mcp --allow-root /absolute/workspace
 ```
 
 Use `status` before assuming a capability or integration exists. Use `doctor` after installation and before workflows that require Playwright or MCP canonical content. Both are read-only, non-networked, require no target path, and must not be treated as evidence of indexing, DNS/Search Console state, deployment state, or live-site readiness.

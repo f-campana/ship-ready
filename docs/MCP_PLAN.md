@@ -424,6 +424,7 @@ On failure, a tool returns exactly once with `isError: true`, a `shipready.error
         "claims-policy",
         "status",
         "roadmap",
+        "distribution",
         "mcp-plan",
         "search-console-readiness-spec",
         "dns-readiness-spec",
@@ -541,6 +542,7 @@ All static paths are resolved from the installed ShipReady package root through 
 | `shipready://docs/claims-policy` | Product-copy and outcome-claim constraints | `docs/CLAIMS_POLICY.md` | Static `text/markdown` | Apply it to generated explanations |
 | `shipready://docs/status` | Implemented/deferred capability status | `docs/STATUS.md` | Static `text/markdown` | Planned items are not callable capabilities |
 | `shipready://docs/roadmap` | Ordered pass/dependency reference | `docs/ROADMAP.md` | Static `text/markdown` | Pass order does not grant authority |
+| `shipready://docs/distribution` | Source-checkout v0 distribution decision | `docs/DISTRIBUTION.md` | Static `text/markdown` | Installation docs do not publish packages or add transports |
 | `shipready://docs/mcp-plan` | MCP implementation and safety boundary | `docs/MCP_PLAN.md` | Static `text/markdown` | Documentation does not grant capabilities beyond registered tools |
 | `shipready://docs/search-console-readiness-spec` | Search Console mock/live authority boundary | `docs/SEARCH_CONSOLE_READINESS_SPEC.md` | Static `text/markdown` | Mock status is not live Google evidence |
 | `shipready://docs/dns-readiness-spec` | DNS readiness authority and claim boundary | `docs/DNS_READINESS_SPEC.md` | Static `text/markdown` | DNS status is read-only evidence, not provider mutation |
@@ -558,13 +560,13 @@ Path authorization is mandatory before any repository function runs.
 Primary command:
 
 ```bash
-pnpm --silent shipready mcp --allow-root /absolute/workspaces --allow-root /absolute/other-root
+pnpm --dir /Users/fabiencampana/Documents/ship-ready --silent shipready mcp --allow-root /absolute/workspaces --allow-root /absolute/other-root
 ```
 
 `--allow-root <absolute-path>` is repeatable. Non-interactive configuration may use a JSON array:
 
 ```bash
-SHIPREADY_MCP_ALLOWED_ROOTS='["/absolute/workspaces","/absolute/other-root"]' pnpm --silent shipready mcp
+SHIPREADY_MCP_ALLOWED_ROOTS='["/absolute/workspaces","/absolute/other-root"]' pnpm --dir /Users/fabiencampana/Documents/ship-ready --silent shipready mcp
 ```
 
 If one or more CLI flags are present, they replace the environment value completely. Otherwise the environment value is used. There is no CWD, home-directory, workspace-discovery, prose, or GUI-input fallback. With no configured roots, the server fails startup before opening the MCP transport. Filesystem roots and the user's home directory are rejected as overbroad allow roots; configure specific descendants instead.
@@ -786,10 +788,10 @@ tests/mcp.generatedSiteSmells.test.ts
 Implemented canonical command:
 
 ```bash
-pnpm --silent shipready mcp --allow-root /absolute/workspace
+pnpm --dir /Users/fabiencampana/Documents/ship-ready --silent shipready mcp --allow-root /absolute/workspace
 ```
 
-The CLI subcommand is canonical. In source checkouts, use `pnpm --silent` for MCP stdio so package-manager script output cannot appear on stdout. No separate package alias exists.
+The CLI subcommand is canonical. In source checkouts, use `pnpm --dir /Users/fabiencampana/Documents/ship-ready --silent` for MCP stdio so package-manager script output cannot appear on stdout. No separate package alias exists and no remote MCP transport is implemented.
 
 Use local stdio transport only. It matches local-agent use, avoids authentication/listener/CORS exposure, and has the smallest lifecycle surface. HTTP, SSE, and Streamable HTTP are deferred until a separate remote-host/auth/threat specification exists.
 
@@ -834,4 +836,4 @@ Passes 6, 9, 11, 12, 13, 14, 15, 17, and 18 do not implement or add secrets, aut
 
 Pass 7 added CLI-only `status` and `doctor` commands and their deterministic contract fixtures. Those fixtures are available through the existing exact allowlisted canonical-read surface; no MCP tool, transport, authorization, or write behavior changed.
 
-Pass 12 added only the read-only post-write recheck described above. Pass 13 added only the read-only social preview simulator described above. Pass 14 added only the read-only generated-site implementation smell detector described above. Pass 15 added only the read-only bounded multi-page crawl described above. Pass 17 added only the review-only patch export described above. Pass 18 added only the review-only GitHub PR draft handoff described above. The roadmap closure / release-readiness review is complete in [RELEASE_READINESS.md](RELEASE_READINESS.md). The recommended next pass is **Packaging / distribution decision**.
+Pass 12 added only the read-only post-write recheck described above. Pass 13 added only the read-only social preview simulator described above. Pass 14 added only the read-only generated-site implementation smell detector described above. Pass 15 added only the read-only bounded multi-page crawl described above. Pass 17 added only the review-only patch export described above. Pass 18 added only the review-only GitHub PR draft handoff described above. The roadmap closure / release-readiness review is complete in [RELEASE_READINESS.md](RELEASE_READINESS.md). The v0 distribution decision is complete in [DISTRIBUTION.md](DISTRIBUTION.md): MCP remains source-checkout stdio-only. The recommended next pass is **Terminal output polish / TUI viewer**.

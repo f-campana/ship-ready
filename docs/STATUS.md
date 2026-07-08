@@ -6,6 +6,8 @@ ShipReady is a CLI-first, agent-friendly launch-readiness engine for generated w
 
 Release classification: **v0 local/agent release candidate**. The original 18-pass roadmap is closed; see [RELEASE_READINESS.md](RELEASE_READINESS.md) for the checkpoint, command matrix, contract matrix, validation status, and next roadmap.
 
+Distribution classification: **source-checkout-only v0**. ShipReady is not published to npm, `pnpm dlx shipready` is not expected to work, and default global installation is not part of v0. See [DISTRIBUTION.md](DISTRIBUTION.md).
+
 ## What exists
 
 - Public single-page audit with raw and Playwright-rendered metadata comparison.
@@ -31,6 +33,7 @@ Release classification: **v0 local/agent release candidate**. The original 18-pa
 - Official-source-backed [DNS readiness specification](DNS_READINESS_SPEC.md) defining read-only DNS checks and DNS claim boundaries.
 - Repository-local [ShipReady Launch Readiness skill](../skills/shipready-launch-readiness/SKILL.md) packaging current CLI, MCP, GUI/report, Search Console mock, DNS, write-policy, claims, reporting, and troubleshooting workflows for agents.
 - Practical [post-write recheck guide](POST_WRITE_RECHECK.md) that keeps deployment external and classifies network uncertainty without overclaiming.
+- Source-checkout distribution decision with from-anywhere `pnpm --dir /Users/fabiencampana/Documents/ship-ready shipready ...` usage and a verified developer-local `pnpm link --global` path after `pnpm build`.
 
 When present, `validation/e2e-project-review/` supplies preserved end-to-end evidence for earlier surfaces, including its summary, feature matrix, safety report, and screenshot index. Treat [RELEASE_READINESS.md](RELEASE_READINESS.md) plus the latest validation run as the current v0 checkpoint. The skill references validation evidence without treating disposable-fixture writes as authorization for real repositories.
 
@@ -46,6 +49,7 @@ When present, `validation/e2e-project-review/` supplies preserved end-to-end evi
 - Authorship identification, generator/vendor attribution, or auto-fixes from generated-site smell findings.
 - Social platform APIs, platform-specific preview scraping endpoints, screenshot rendering, image generation, and third-party rendering guarantees for preview simulation.
 - Authentication, accounts, billing, hosted SaaS, or secret-management product features.
+- npm package publication, `pnpm dlx` usage, standalone binaries, remote MCP, hosted wrappers, auto-update behavior, or a default global install path.
 
 ## Latest approved demo artifacts
 
@@ -62,4 +66,4 @@ Read-only inspection and preview are the default. CLI write mode requires `fix -
 
 ## Next pass
 
-**Packaging / distribution decision.** Decide whether v0 remains source-checkout-only, ships a packaged binary, supports `pnpm dlx`, or uses another installation path. Live GitHub PR creation, live Search Console, hosted SaaS, and broader framework/write support remain future work and require separate explicit designs, authorization boundaries, and tests.
+**Terminal output polish / TUI viewer.** The packaging/distribution decision is complete for v0: stay source-checkout-only, document `pnpm --dir` for from-anywhere usage, and treat local linking as developer-local only. npm package publication, standalone binaries, live GitHub PR creation, live Search Console, hosted SaaS, and broader framework/write support remain future work and require separate explicit designs, authorization boundaries, and tests.

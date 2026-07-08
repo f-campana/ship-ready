@@ -30,7 +30,8 @@ describe("release-readiness documentation", () => {
     expect(doc).toContain("v0 local/agent release candidate");
     expect(doc).toContain("shipready.write_safe_crawl_files");
     expect(doc).toContain("POST /api/fix");
-    expect(doc).toContain("Packaging / distribution decision");
+    expect(doc).toContain("DISTRIBUTION.md");
+    expect(doc).toContain("Terminal output polish / TUI viewer");
   });
 
   it("documents source-checkout command usage without implying distribution", async () => {
@@ -38,9 +39,12 @@ describe("release-readiness documentation", () => {
     const commands = await readFile(join(root, "docs", "COMMANDS.md"), "utf8");
     const combined = `${readme}\n${commands}`;
 
-    expect(combined).toContain("cd /Users/fabiencampana/Documents/ship-ready && pnpm shipready status");
+    expect(combined).toContain("cd /Users/fabiencampana/Documents/ship-ready");
+    expect(combined).toContain("pnpm shipready status");
     expect(combined).toContain("pnpm --dir /Users/fabiencampana/Documents/ship-ready shipready status");
     expect(combined).toContain("does not imply a global install");
+    expect(combined).toContain("pnpm dlx");
+    expect(combined).toContain("not expected to work");
   });
 
   it("marks the original roadmap closed and future integrations as future", async () => {
@@ -48,6 +52,7 @@ describe("release-readiness documentation", () => {
 
     expect(roadmap).toContain("The original 18-pass ShipReady roadmap is **complete and closed**");
     expect(roadmap).toContain("| 18 | Complete | Add GitHub PR draft / PR handoff artifacts.");
+    expect(roadmap).toContain("| Distribution | Complete |");
     expect(roadmap).toContain("These candidates are future work only.");
     expect(roadmap).toContain("Live Search Console integration with explicit OAuth/token custody design");
   });

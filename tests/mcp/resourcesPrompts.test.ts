@@ -25,6 +25,7 @@ describe("MCP canonical resources and prompts", () => {
       "shipready://docs/claims-policy",
       "shipready://docs/status",
       "shipready://docs/roadmap",
+      "shipready://docs/distribution",
       "shipready://docs/mcp-plan",
       "shipready://docs/search-console-readiness-spec",
       "shipready://docs/dns-readiness-spec",

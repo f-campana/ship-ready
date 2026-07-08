@@ -98,7 +98,7 @@ export function createStatus(): StatusJsonContract {
       fodmappVoiceover: "validation/demo-fodmapp-voiceover-final/",
     },
     nextRecommendedCommand: "pnpm shipready doctor",
-    nextRecommendedPass: "Packaging / distribution decision",
+    nextRecommendedPass: "Terminal output polish / TUI viewer",
   });
 }
 
@@ -127,6 +127,7 @@ export function formatStatusHuman(status = createStatus()): string {
     "  Social preview simulator: implemented read-only; social platform APIs and exact rendering guarantees not implemented",
     "  Generated-site implementation smell detector: implemented read-only; authorship identification and auto-fixes not implemented",
     "  Deployment automation and deploy provider integrations: not implemented",
+    "  Distribution: source-checkout-only v0; npm, pnpm dlx, standalone binaries, hosted wrappers, and remote MCP are not implemented",
     "  Remote MCP and live GitHub integrations: not implemented",
     "",
     "Demo artifacts",

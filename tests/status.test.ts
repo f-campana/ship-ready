@@ -35,6 +35,7 @@ describe("status", () => {
     expect(output).toContain("Social preview simulator: implemented read-only");
     expect(output).toContain("Generated-site implementation smell detector: implemented read-only");
     expect(output).toContain("Deployment automation and deploy provider integrations: not implemented");
+    expect(output).toContain("Distribution: source-checkout-only v0");
   });
 
   it("emits the stable JSON capability and safety contract", async () => {
@@ -77,6 +78,7 @@ describe("status", () => {
       deployProviderIntegrations: "not_implemented",
     });
     expect(status.writePolicy.id).toBe(WRITE_POLICY_V1);
+    expect(status.nextRecommendedPass).toBe("Terminal output polish / TUI viewer");
   });
 
   it("stays synchronized with the MCP registry", () => {

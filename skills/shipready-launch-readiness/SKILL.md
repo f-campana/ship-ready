@@ -15,7 +15,7 @@ Do not use ShipReady for keyword research, rank tracking, backlink analysis, gen
 
 ## Establish prerequisites
 
-1. Work from an installed ShipReady checkout after `pnpm install`.
+1. Work from a source ShipReady checkout after `pnpm install`; v0 is not published to npm and `pnpm dlx shipready` is not expected to work.
 2. Obtain a public HTTP(S) URL.
 3. Obtain a repository path only for repo inspection, planning, previews, or guarded creation.
 4. Run `pnpm shipready doctor --json` when local readiness is uncertain.
@@ -31,7 +31,8 @@ Do not use ShipReady for keyword research, rank tracking, backlink analysis, gen
 | Mock-backed | Search Console status only; no Google OAuth, tokens, or live API calls |
 | Read-only | Audit, bounded crawl, inspection, social preview simulation, planning, dry-run, post-write recheck, UI report, GUI, Search Console mocks, and DNS status; live DNS uses resolver observations only |
 | Write-guarded | CLI and the sole MCP write tool may create only eligible missing robots/sitemap files under `WRITE_POLICY_V1` |
-| Future | Packaging/distribution decision, terminal output polish/TUI viewer, live GitHub with explicit opt-in, live Search Console with OAuth/token design, hosted SaaS exploration, broader framework support, and stronger demos/reporting |
+| Distribution | Source-checkout-only v0; `pnpm --dir /Users/fabiencampana/Documents/ship-ready shipready ...` is the supported from-anywhere form; `pnpm link --global` is developer-local only after `pnpm build` |
+| Future | Terminal output polish/TUI viewer, npm/package publish preparation, standalone binary exploration, live GitHub with explicit opt-in, live Search Console with OAuth/token design, hosted SaaS exploration, broader framework support, and stronger demos/reporting |
 
 Never infer future behavior from a roadmap name. A single-page audit covers one page; bounded crawl covers only a small same-origin sample under strict limits. The current social preview simulator is a metadata-based approximation, not platform output.
 
@@ -66,7 +67,10 @@ When running from outside the checkout, use a repository-local form:
 ```bash
 cd /Users/fabiencampana/Documents/ship-ready && pnpm shipready status --json
 pnpm --dir /Users/fabiencampana/Documents/ship-ready shipready status --json
+pnpm --dir /Users/fabiencampana/Documents/ship-ready shipready audit https://example.com --json
 ```
+
+Do not use `pnpm dlx shipready` for v0. It is not a supported path until a future package-publish pass is completed and verified.
 
 - Use URL-only `audit` and `ui-report` when no repository is available; do not claim local fixes can be planned.
 - Use repo-backed commands for framework evidence, fix classification, and exact previews.
@@ -208,8 +212,10 @@ Treat crawl results as bounded sample evidence only. It is not exhaustive site c
 Start the local stdio server with at least one explicit allowed root:
 
 ```bash
-pnpm --silent shipready mcp --allow-root /absolute/workspace
+pnpm --dir /Users/fabiencampana/Documents/ship-ready --silent shipready mcp --allow-root /absolute/workspace
 ```
+
+Use `--silent` for stdio MCP so package-manager script output cannot corrupt JSON-RPC traffic.
 
 Use these read-only tools by their exact names:
 
@@ -240,7 +246,7 @@ MCP remains stdio-only. Do not add or imply remote transport, arbitrary file wri
 ## Produce GUI and HTML reports
 
 ```bash
-pnpm shipready gui
+pnpm --dir /Users/fabiencampana/Documents/ship-ready shipready gui
 pnpm shipready html-report <path> --url <url> --output report.html
 ```
 

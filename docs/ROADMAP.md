@@ -2,7 +2,7 @@
 
 ## Original Roadmap Status
 
-The original 18-pass ShipReady roadmap is **complete and closed**. The closure/release-readiness pass is also complete as the v0 checkpoint in [RELEASE_READINESS.md](RELEASE_READINESS.md).
+The original 18-pass ShipReady roadmap is **complete and closed**. The closure/release-readiness pass is complete as the v0 checkpoint in [RELEASE_READINESS.md](RELEASE_READINESS.md), and the v0 packaging/distribution decision is complete in [DISTRIBUTION.md](DISTRIBUTION.md).
 
 Order remains contractual for future work: harden CLI interfaces before wrapping them, ship read-only integrations before mutation, and defer broader write surfaces until policy and evidence exist. “Write-bearing” means a future pass can create project artifacts or mutate external state after explicit design and authorization; it does not authorize that work now.
 
@@ -30,6 +30,7 @@ Order remains contractual for future work: harden CLI interfaces before wrapping
 | 17 | Complete | Export reviewed patches as explicit artifacts. | Write-bearing artifact | Passes 6, 16 |
 | 18 | Complete | Add GitHub PR draft / PR handoff artifacts. | Read-only artifact | Pass 17 |
 | Closure | Complete | Add the v0 release-readiness checkpoint and align docs/status with current product state. | Read-only/docs | Pass 18 |
+| Distribution | Complete | Decide v0 remains source-checkout-only, document from-anywhere usage, verify developer-local linking, and defer npm/binary/hosted distribution. | Read-only/docs | Closure |
 
 ## V0 Release Position
 
@@ -41,13 +42,14 @@ Do not present v0 as hosted SaaS, production SaaS, fully automated SEO repair, d
 
 These candidates are future work only. None is implemented by the closed roadmap unless explicitly listed above.
 
-1. Packaging / distribution decision.
-2. Terminal output polish / TUI viewer.
-3. Live GitHub integration with explicit opt-in, GitHub auth/token design, Git worktree safety checks, and mutation tests.
-4. Live Search Console integration with explicit OAuth/token custody design and read-only scope review.
-5. Hosted SaaS exploration with separate auth, data custody, remote execution, billing, and account-boundary design.
-6. More framework support, without broadening `WRITE_POLICY_V1` by default.
-7. Stronger demo/reporting package for the local/agent release story.
+1. Terminal output polish / TUI viewer.
+2. npm/package publish preparation with the checklist in [DISTRIBUTION.md](DISTRIBUTION.md), packed-tarball smoke tests, and explicit publish authorization.
+3. Standalone binary exploration, including Playwright/browser, GUI asset, MCP stdio, artifact, and signing implications.
+4. Live GitHub integration with explicit opt-in, GitHub auth/token design, Git worktree safety checks, and mutation tests.
+5. Live Search Console integration with explicit OAuth/token custody design and read-only scope review.
+6. Hosted SaaS exploration with separate auth, data custody, remote execution, billing, and account-boundary design.
+7. More framework support, without broadening `WRITE_POLICY_V1` by default.
+8. Stronger demo/reporting package for the local/agent release story.
 
 ## Future-Pass Rules
 

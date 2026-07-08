@@ -1,13 +1,29 @@
 # Commands
 
-Run source commands from the repository with `pnpm shipready`. The built binary name is `shipready`, but this checkout does not imply a global install, package publish, or `pnpm dlx` distribution path.
+Run source commands from the repository with `pnpm shipready`. The built binary name is `shipready`, but this checkout does not imply a global install, package publish, or `pnpm dlx` distribution path. ShipReady v0 is repository-local; `pnpm dlx shipready` is not expected to work until a future package-publish pass.
 
 Repository-local examples:
 
 ```bash
-cd /Users/fabiencampana/Documents/ship-ready && pnpm shipready status
+cd /Users/fabiencampana/Documents/ship-ready
+pnpm install
+pnpm shipready status
+pnpm shipready audit https://example.com
 pnpm --dir /Users/fabiencampana/Documents/ship-ready shipready status
+pnpm --dir /Users/fabiencampana/Documents/ship-ready shipready audit https://example.com
 ```
+
+Developer-local link usage has been verified after `pnpm build`:
+
+```bash
+cd /Users/fabiencampana/Documents/ship-ready
+pnpm install
+pnpm build
+pnpm link --global
+shipready status
+```
+
+This is a local symlink to the checkout, not npm distribution. See [DISTRIBUTION.md](DISTRIBUTION.md) for the v0 decision and future publish checklist.
 
 `--timeout` defaults to `15000` milliseconds. `--no-render` skips Playwright rendering; `--user-agent <ua>` overrides the default user agent.
 
@@ -377,14 +393,14 @@ See [DEMO.md](DEMO.md) before recording. None of these scripts executes the disp
 ## `mcp`
 
 ```bash
-pnpm --silent shipready mcp --allow-root /Users/fabiencampana/Documents
-pnpm --silent shipready mcp --allow-root /absolute/workspace-a --allow-root /absolute/workspace-b
-SHIPREADY_MCP_ALLOWED_ROOTS='["/absolute/workspace-a","/absolute/workspace-b"]' pnpm --silent shipready mcp
+pnpm --dir /Users/fabiencampana/Documents/ship-ready --silent shipready mcp --allow-root /Users/fabiencampana/Documents
+pnpm --dir /Users/fabiencampana/Documents/ship-ready --silent shipready mcp --allow-root /absolute/workspace-a --allow-root /absolute/workspace-b
+SHIPREADY_MCP_ALLOWED_ROOTS='["/absolute/workspace-a","/absolute/workspace-b"]' pnpm --dir /Users/fabiencampana/Documents/ship-ready --silent shipready mcp
 ```
 
-- Purpose: start the local MCP stdio server. Stdout is reserved for MCP protocol frames; use `pnpm --silent` in source checkouts so package-manager script output cannot pollute stdio.
+- Purpose: start the local MCP stdio server. Stdout is reserved for MCP protocol frames; use `pnpm --dir /Users/fabiencampana/Documents/ship-ready --silent` in source checkouts so package-manager script output cannot pollute stdio.
 - Authorization: at least one explicit root is required. Repeat `--allow-root` for multiple roots; CLI roots replace the JSON-array environment fallback. Relative, missing, home, filesystem-root, traversal, and symlink-escape paths fail closed.
-- Surface: fifteen read-only tools, one guarded write tool, twelve canonical documentation resources plus allowlisted contract fixtures, and five prompt templates. `shipready.search_console_status`, `shipready.dns_status`, `shipready.crawl_site`, and `shipready.social_preview` accept no repository-path input. `shipready.export_patch`, `shipready.github_pr_draft`, `shipready.generated_site_smells`, and other repo tools authorize `repoPath` before inspection. `shipready.recheck` authorizes a repository only when optional `repoPath` is supplied. The server's existing allowed-root startup requirement remains unchanged. See [MCP_PLAN.md](MCP_PLAN.md) for the exact lists.
+- Surface: fifteen read-only tools, one guarded write tool, thirteen canonical documentation resources plus allowlisted contract fixtures, and five prompt templates. `shipready.search_console_status`, `shipready.dns_status`, `shipready.crawl_site`, and `shipready.social_preview` accept no repository-path input. `shipready.export_patch`, `shipready.github_pr_draft`, `shipready.generated_site_smells`, and other repo tools authorize `repoPath` before inspection. `shipready.recheck` authorizes a repository only when optional `repoPath` is supplied. The server's existing allowed-root startup requirement remains unchanged. See [MCP_PLAN.md](MCP_PLAN.md) for the exact lists.
 - Safe write tool: `shipready.write_safe_crawl_files` can create only current V1-eligible missing robots/sitemap files. Required flow: call `shipready.preview_fixes`, review `shipready.dryRunFix.v1` and its fresh `previewReceipt`, then call the write tool with the same URL, same authorized repo path, that receipt, and `confirmation: "CREATE_SAFE_CRAWL_FILES_ONLY"`.
 - Safety: the write tool re-authorizes the path, validates the receipt signature/expiry/bindings, regenerates the current dry-run, revalidates `WRITE_POLICY_V1`, and returns `shipready.writeFix.v1`. It never accepts arbitrary file paths or client-supplied file lists as authority. The server does not start the GUI or write an HTML report.
 - Limitation: request deadlines and client cancellation are bounded at the MCP boundary. Existing synchronous repository scans and application operations do not yet accept `AbortSignal`, so already-started underlying work may finish its own bounded cleanup after the MCP response.

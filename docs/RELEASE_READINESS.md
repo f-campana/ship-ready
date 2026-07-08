@@ -12,6 +12,7 @@ ShipReady v0 is a local, skill-guided launch-readiness engine for generated webs
 - MCP second: the local stdio MCP server wraps stable CLI contracts and has exactly one guarded V1 crawl-file write tool.
 - GUI third: the loopback-only review cockpit makes the engine understandable to humans and remains read-only.
 - Write policy: `WRITE_POLICY_V1` is canonical and remains limited to creation-only missing robots/sitemap files.
+- Distribution: v0 is source-checkout-only; npm, `pnpm dlx`, standalone binaries, hosted wrappers, remote MCP, and auto-update behavior are not implemented. See [DISTRIBUTION.md](DISTRIBUTION.md).
 - Release posture: ready to present as a v0 local/agent release candidate after the validation matrix in this checkpoint passed.
 
 `agents/openai.yaml` was requested for inspection but is absent in this checkout. No agent integration file was added during this closure pass.
@@ -35,6 +36,7 @@ ShipReady v0 is a local, skill-guided launch-readiness engine for generated webs
 - Local read-only GUI review cockpit.
 - Local stdio MCP server with read-only tools, canonical reads, prompts, and one safe-write wrapper.
 - Repository-local ShipReady Launch Readiness skill.
+- Source-checkout-only distribution decision with verified developer-local link guidance.
 
 ## Command matrix
 
@@ -45,7 +47,7 @@ cd /Users/fabiencampana/Documents/ship-ready && pnpm shipready <command>
 pnpm --dir /Users/fabiencampana/Documents/ship-ready shipready <command>
 ```
 
-Do not imply `pnpm dlx`, global installation, or package publishing for this checkout.
+Do not imply `pnpm dlx`, npm publication, or default global installation for this checkout. A verified `pnpm link --global` path exists only as a developer-local symlink to the source tree; it is not distribution.
 
 | Command | Purpose | Read/write class | Contract | Network behavior | Repo behavior and safety boundary | Status |
 |---|---|---|---|---|---|---|
@@ -158,7 +160,7 @@ Repo-capable tools require allowed-root authorization before local inspection or
 
 ## Known limitations
 
-- No package distribution decision is complete for global or `pnpm dlx` usage.
+- No npm package, `pnpm dlx` path, standalone binary, hosted wrapper, remote MCP transport, auto-update behavior, or default global install exists.
 - No hosted SaaS, accounts, billing, auth, or remote workspace model exists.
 - No live Search Console provider exists.
 - No DNS provider integration or DNS mutation exists.
@@ -176,11 +178,11 @@ Release-readiness validation for this checkpoint passed on 2026-07-08:
 
 | Check | Status |
 |---|---|
-| `pnpm test` | Passed, 47 files and 400 tests |
+| `pnpm test` | Passed, 48 files and 403 tests |
 | `pnpm typecheck` | Passed |
 | `pnpm build` | Passed |
 | `git diff --check` | Passed before staging; staged check required before commit |
-| `pnpm shipready status --json` | Passed; reports next pass as `Packaging / distribution decision` |
+| `pnpm shipready status --json` | Passed; distribution decision documented; next pass should not imply published/global usage |
 | `pnpm shipready doctor --json` | Passed; `ok: true`, 20 pass, 0 warn/fail/skip |
 | Representative CLI smokes | Passed: `audit`, `social-preview`, `crawl`, `smells`, `patch-export --stdout`, and `github-pr-draft --stdout` |
 | MCP smoke | Passed: initialized stdio server, listed 16 tools, verified 15 read-only and sole write tool, called `shipready.crawl_site` |
@@ -209,6 +211,8 @@ pnpm --dir /Users/fabiencampana/Documents/ship-ready --silent shipready mcp --al
 
 Use disposable temp repositories for patch export and PR draft validation. Do not use Fodmapp as a write target.
 
+For source-checkout, from-anywhere, verified local-link, MCP, GUI, npm, and binary distribution decisions, see [DISTRIBUTION.md](DISTRIBUTION.md).
+
 ## Release blockers
 
 No product-scope release blocker is known in the current codebase. The validation matrix passed and the existing safety boundaries were preserved.
@@ -223,8 +227,8 @@ Do not describe v0 as hosted SaaS, production SaaS, fully automated SEO repair, 
 
 ## Next roadmap
 
-1. Packaging / distribution decision.
-2. Terminal output polish / TUI viewer.
+1. Terminal output polish / TUI viewer.
+2. npm/package publish preparation with packed-tarball smoke tests and a reviewed publish checklist.
 3. Live GitHub integration with explicit opt-in, auth, Git worktree safety, and mutation tests.
 4. Live Search Console integration with explicit OAuth/token design and read-only scope review.
 5. Hosted SaaS exploration with a separate auth, data custody, and remote execution design.
@@ -233,4 +237,4 @@ Do not describe v0 as hosted SaaS, production SaaS, fully automated SEO repair, 
 
 ## Recommended immediate next pass
 
-Packaging / distribution decision. Decide whether v0 stays source-checkout-only, ships a packaged binary, supports `pnpm dlx`, or exposes another installation path. Do this before implying global install, package publish, hosted access, or remote agent availability.
+Terminal output polish / TUI viewer. Keep v0 source-checkout-only unless a separate package publish preparation pass completes the checklist in [DISTRIBUTION.md](DISTRIBUTION.md).
