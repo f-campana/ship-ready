@@ -13,6 +13,8 @@ ShipReady reports evidence and prepares bounded local work. It can detect launch
 - **metadata completeness** — observed presence or absence, not outcome prediction.
 - **structured data recommendation** — advice that requires factual review.
 - **review-required change** — previewed but not eligible for V1 write.
+- **review patch export** — a portable artifact generated from the current dry-run preview for human review outside ShipReady.
+- **exported patch artifact** — a review-only patch file or inline/stdout patch output; not a repository mutation.
 - **preview first** — inspect proposed effects before any authorized action.
 - **guarded command** — an explicit CLI command with policy gates.
 - **local changes require deployment** — local files do not alter the live site by themselves.
@@ -62,6 +64,7 @@ Do not use close paraphrases that imply the same certainty or capability.
 - Metadata and structured data can improve completeness; external systems decide display and eligibility.
 - Indexing and ranking depend on third parties and factors outside ShipReady.
 - A preview is not a write. A local write is not a deployment. A deployment is not proof that live resources changed until re-checked.
+- A patch export is not write mode. It is generated from the current dry-run preview, must be reviewed before use with other tools, and does not modify the inspected target repository by itself.
 - A positive recheck is public crawl-file evidence only; it does not guarantee provider state, propagation, crawling, indexing, or future availability. An unreachable recheck is unknown, not proof of absence.
 - Only deterministic mock-backed Search Console status is implemented; live Google Search Console/OAuth is not implemented. DNS readiness is implemented as read-only resolver evidence; DNS provider writes and provider integrations are not implemented. MCP remains local stdio with one guarded write tool. Future live Search Console or mutation-bearing work must remain visibly labeled **Planned** until shipped and validated.
 - Future Search Console output must distinguish live unauthenticated checks, authenticated Google-reported status, and ownership verification. “No accessible property” must be scoped to the authorized account.
@@ -69,7 +72,7 @@ Do not use close paraphrases that imply the same certainty or capability.
 - Social preview simulator output must use approximation language. It can report likely input fields from observed metadata and raw-versus-rendered caveats, but it must not claim platform-specific rendering, cache behavior, share-card refresh, or official preview API results.
 - Generated-site smell output must use heuristic and review language. It can report evidence-backed implementation smells and why they may affect crawler, preview, sharing, and launch-readiness behavior, but it must not identify an authoring tool, infer who produced the site, grade quality because a site appears generated, or apply fixes automatically.
 - Bounded crawl output must use sample and limit language. It can report same-origin page summaries, repeated findings, skipped candidates, and observed metadata consistency across checked pages, but it must not claim exhaustive coverage, broad analytics, traffic forecasting, indexing evidence, monitoring, complete broken-link scanning, security scanning, accessibility auditing, or any write/remediation behavior.
-- GUI copy must describe the local UI as a read-only review cockpit and command-copy handoff. It may say social previews are simulated from observed metadata, crawl evidence is bounded, smell findings are heuristic implementation signals, DNS is read-only, Search Console is mock-backed, and recheck requires external deployment. It must not imply GUI write execution, deployment, provider mutation, official platform rendering, authorship detection, or guaranteed third-party outcomes.
+- GUI copy must describe the local UI as a read-only review cockpit and command-copy handoff. It may say social previews are simulated from observed metadata, crawl evidence is bounded, smell findings are heuristic implementation signals, DNS is read-only, Search Console is mock-backed, patch export is a review-only dry-run artifact, and recheck requires external deployment. It must not imply GUI write execution, patch application, deployment, provider mutation, official platform rendering, authorship detection, or guaranteed third-party outcomes.
 
 See [SEARCH_CONSOLE_READINESS_SPEC.md](SEARCH_CONSOLE_READINESS_SPEC.md) for the Pass 8 source-backed claim and authority boundaries.
 See [DNS_READINESS_SPEC.md](DNS_READINESS_SPEC.md) for the Pass 10/11 source-backed DNS claim and authority boundaries.

@@ -20,12 +20,13 @@ For launch-readiness operations, start with the repository-local [ShipReady Laun
 - `src/repo/`: bounded read-only repository inspection.
 - `src/plan/`: audit-to-fix planning.
 - `src/fix/`: dry-run previews and guarded V1 creation-only writes.
+- `src/patchExport/`: review-only patch artifacts generated from the current dry-run preview.
 - `src/recheck/`: read-only local-versus-live crawl-file comparison after external deployment.
 - `src/types/`: Zod schemas and TypeScript result contracts.
 - `src/report/`: human, JSON, UI, and static HTML formatting.
 - `src/ui/`: normalized `ui-report-v1` creation.
 - `src/gui/`: loopback-only local server, `ui-review-v1` GUI aggregate, and read-only preview/copy-only browser cockpit.
-- `src/mcp/`: local stdio adapter, thirteen read-only tools, one guarded safe-write tool, preview receipts, canonical reads, prompts, authorization, errors, and deadlines.
+- `src/mcp/`: local stdio adapter, fourteen read-only tools, one guarded safe-write tool, preview receipts, canonical reads, prompts, authorization, errors, and deadlines.
 - `src/status/` and `src/doctor/`: static capability posture and bounded local readiness diagnostics.
 - `src/searchConsole/`: stable read-only status boundary and deterministic mock provider; no OAuth, tokens, or live Google client.
 - `src/dns/`: read-only DNS readiness status, live Node DNS resolver, deterministic mock scenarios, redacted TXT evidence, and no provider integration or DNS writes.
@@ -74,6 +75,8 @@ For generated-site implementation smell work, use `pnpm shipready smells <path> 
 
 For bounded multi-page crawl work, use `pnpm shipready crawl --url <url> --json` or MCP `shipready.crawl_site`. Pass 15 implements a read-only same-origin sample from one public HTTP(S) URL, capped at `maxPages <= 25` and `maxDepth <= 2`. It audits selected pages through the existing single-page audit logic, reports compact page summaries, repeated findings, metadata consistency, skipped URL reasons, limits, limitations, and next actions. It is not exhaustive coverage, monitoring, broad analytics, indexing evidence, complete broken-link scanning, security scanning, accessibility auditing, or a write surface.
 
+For patch export work, use `pnpm shipready patch-export <path> --url <url> --output /tmp/shipready.patch --json` or MCP `shipready.export_patch`. Pass 17 implements review-only unified-diff artifacts generated from the current dry-run preview. CLI file output must be an explicit path outside the inspected repository, while `--stdout` and MCP inline output write no files. Patch export never invokes write mode, applies patches, mutates the target repository, stages/commits/pushes, opens pull requests, deploys, writes DNS, calls provider APIs, calls live Search Console, handles OAuth/tokens, or broadens `WRITE_POLICY_V1`. Review-required changes may be exported because nothing is applied; they remain human-review items.
+
 For GUI work, preserve the Pass 16 local review cockpit. The browser client fetches only `POST /api/review`; `POST /api/ui-report` remains a compatibility endpoint. Extra evidence sections are on-demand and read-only: social preview approximation, bounded crawl sample, generated-site smell signals, DNS status, Search Console mock status, and post-deploy recheck. The GUI may copy guarded CLI commands but must not execute `fix --write`, call `shipready.write_safe_crawl_files`, deploy, run Git/GitHub behavior, write DNS, call live Search Console or social platform APIs, or write metadata/content/JSON-LD/package/config files. `POST /api/fix` must remain absent and return `404`.
 
 ## Main commands
@@ -91,6 +94,7 @@ pnpm shipready recheck [path] --url <url> --json
 pnpm shipready inspect-repo <path> --json
 pnpm shipready plan-fixes <path> --url <url> --json
 pnpm shipready fix <path> --url <url> --dry-run --json
+pnpm shipready patch-export <path> --url <url> --output /tmp/shipready.patch --json
 pnpm shipready ui-report [path] --url <url> --json
 pnpm shipready html-report [path] --url <url> --output <file>
 pnpm shipready gui
@@ -100,6 +104,8 @@ pnpm --silent shipready mcp --allow-root /absolute/workspace
 Use `status` before assuming a capability or integration exists. Use `doctor` after installation and before workflows that require Playwright or MCP canonical content. Both are read-only, non-networked, require no target path, and must not be treated as evidence of indexing, DNS/Search Console state, deployment state, or live-site readiness.
 
 `dns status` is implemented as read-only advisory evidence. Use `--mock <scenario>` for deterministic tests and fixtures. Live mode reads DNS through Node built-ins; it does not write records, call provider APIs, use provider credentials, verify Search Console ownership, deploy, or mutate repositories.
+
+`patch-export` is implemented as review-only artifact generation. Use `--output` only outside the inspected repository, or `--stdout` when no file should be written. It is not a patch application, Git, GitHub, PR, or deployment workflow.
 
 The guarded write command exists but is not a routine validation command. Use it only with explicit instruction and the checks in the canonical write policy.
 
@@ -141,9 +147,12 @@ Treat every implemented `--json` output as a versioned public boundary:
 
 JSON contract work never authorizes broader writes. `docs/WRITE_POLICY_V1.md` remains canonical: eligibility, target paths, effects, and authorization must not change as a side effect of formatting. The GUI remains a read-only report/preview/copy surface; do not infer that a CLI field should add GUI write execution or a new endpoint.
 
+Patch export contract work must preserve the dry-run source boundary. Do not add target-repo writes, patch application, Git/GitHub/PR/deploy behavior, provider calls, OAuth/token handling, or output paths inside inspected repositories by default.
+
 ## Safety boundaries
 
 - Default to read-only commands and `fix --dry-run`.
+- Use `patch-export` only for review artifacts generated from dry-run previews; do not treat it as write authorization.
 - Treat any filesystem write, external mutation, secret use, Git action, or deployment as a separate authorization boundary.
 - Never execute a copied guarded command merely because the GUI displays it.
 - Never add GUI write execution; the local GUI is a read-only review surface and command-copy handoff only.

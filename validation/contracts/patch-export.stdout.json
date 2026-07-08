@@ -1,0 +1,71 @@
+{
+  "contract": "shipready.patchExport.v1",
+  "generatedAt": "2026-06-21T12:00:00.000Z",
+  "url": "https://example.com/",
+  "repoPath": "tests/fixtures/repos/next-app-router-dry-run",
+  "mode": "patch_export",
+  "format": "unified-diff",
+  "options": {
+    "safeOnly": false,
+    "includeReviewRequired": true
+  },
+  "output": {
+    "kind": "stdout",
+    "wroteArtifact": false,
+    "bytes": 1267,
+    "bytesWritten": 0,
+    "sha256": "f6e388e30a610e946447e684808838948e684477e4e3adc46dcaef0aaf642db4",
+    "content": "# ShipReady patch export manifest\n# Generated at: 2026-06-21T12:00:00.000Z\n# URL: https://example.com/\n# Repo: tests/fixtures/repos/next-app-router-dry-run\n# Source: shipready.dryRunFix.v1\n# Source dry-run generated at: 2026-06-21T12:00:00.000Z\n# Policy: review_export_only\n# Safety: review-only artifact; not applied, not committed, not deployed.\n# Safety: ShipReady did not modify the inspected target repository.\n# Review: human review is required before using this patch with other tools.\n# Included changes: 2\n# Skipped changes: 0\n#\n\ndiff --git a/src/app/robots.ts b/src/app/robots.ts\nnew file mode 100644\n--- /dev/null\n+++ b/src/app/robots.ts\n@@ -0,0 +1,11 @@\n+import type { MetadataRoute } from \"next\";\n+\n+export default function robots(): MetadataRoute.Robots {\n+  return {\n+    rules: {\n+      userAgent: \"*\",\n+      allow: \"/\",\n+    },\n+    sitemap: \"https://example.com/sitemap.xml\",\n+  };\n+}\n\ndiff --git a/src/app/sitemap.ts b/src/app/sitemap.ts\nnew file mode 100644\n--- /dev/null\n+++ b/src/app/sitemap.ts\n@@ -0,0 +1,11 @@\n+import type { MetadataRoute } from \"next\";\n+\n+export default function sitemap(): MetadataRoute.Sitemap {\n+  return [\n+    {\n+      url: \"https://example.com/\",\n+      changeFrequency: \"weekly\",\n+      priority: 1,\n+    },\n+  ];\n+}\n"
+  },
+  "source": {
+    "dryRunContract": "shipready.dryRunFix.v1",
+    "dryRunGeneratedAt": "2026-06-21T12:00:00.000Z",
+    "policy": "review_export_only"
+  },
+  "summary": {
+    "exportedChanges": 2,
+    "skippedChanges": 0,
+    "safeAutoCandidates": 2,
+    "reviewRequired": 0,
+    "manualOnly": 0
+  },
+  "exportedChanges": [
+    {
+      "path": "src/app/robots.ts",
+      "changeType": "create",
+      "risk": "low",
+      "reviewStatus": "auto_candidate",
+      "requiresHumanReview": false,
+      "included": true,
+      "reason": "Create an App Router robots.ts route that allows crawling and points to the sitemap.",
+      "sourceActionIds": [
+        "next_app_router.robots"
+      ]
+    },
+    {
+      "path": "src/app/sitemap.ts",
+      "changeType": "create",
+      "risk": "low",
+      "reviewStatus": "auto_candidate",
+      "requiresHumanReview": false,
+      "included": true,
+      "reason": "Create an App Router sitemap.ts route for the audited URL.",
+      "sourceActionIds": [
+        "next_app_router.sitemap"
+      ]
+    }
+  ],
+  "skippedChanges": [],
+  "warnings": [],
+  "limitations": [
+    "Patch export is generated only from the current ShipReady dry-run preview.",
+    "Patch export is not write mode and does not modify the inspected target repository.",
+    "ShipReady does not apply this patch, stage files, commit, push, open pull requests, deploy, write DNS, or call provider APIs.",
+    "Review-required changes may contain placeholders or factual assumptions that require human review before use."
+  ],
+  "nextActions": [
+    "Review the exported patch artifact with a human before using it with other tools.",
+    "Use your own tooling outside ShipReady for any repository changes, tests, commits, pushes, pull requests, or deployments.",
+    "Run ShipReady read-only checks again after any external deployment you perform."
+  ]
+}

@@ -7,6 +7,7 @@ import { CrawlError } from "../crawl/crawlTypes";
 import { dryRunFix } from "../fix/dryRunFix";
 import { writeFix, WriteFixExecutionError, WriteFixValidationError } from "../fix/writeFix";
 import { startGuiServer } from "../gui/startGuiServer";
+import { exportPatch, PatchExportError } from "../patchExport/patchExport";
 import { planFixes } from "../plan/planFixes";
 import { inspectRepo } from "../repo/inspectRepo";
 import { formatDryRunFixHumanReport } from "../report/formatDryRunFixHumanReport";
@@ -16,6 +17,7 @@ import { formatFixPlanHumanReport } from "../report/formatFixPlanHumanReport";
 import { formatFixPlanJsonReport } from "../report/formatFixPlanJsonReport";
 import { formatHumanReport } from "../report/formatHumanReport";
 import { formatJsonReport } from "../report/formatJsonReport";
+import { formatPatchExportHumanReport, formatPatchExportJsonReport } from "../report/formatPatchExportReport";
 import { formatRepoInspectionHumanReport } from "../report/formatRepoInspectionHumanReport";
 import { formatRepoInspectionJsonReport } from "../report/formatRepoInspectionJsonReport";
 import { formatUiReportJsonReport } from "../report/formatUiReportJsonReport";
@@ -409,7 +411,7 @@ dns
 
 program
   .command("mcp")
-  .description("Start the local ShipReady MCP stdio server (thirteen read-only tools, one guarded V1 write tool).")
+  .description("Start the local ShipReady MCP stdio server (fourteen read-only tools, one guarded V1 write tool).")
   .option(
     "--allow-root <absolute-path>",
     "Authorize one repository root (repeatable)",
@@ -520,6 +522,88 @@ program
 
       const message = error instanceof Error ? error.message : "Unexpected dry-run fix failure.";
       writeCommandError("fix", message, options.json, isInputError(message) ? 1 : 2);
+    }
+  });
+
+program
+  .command("patch-export")
+  .argument("<path>", "Local repository path to inspect")
+  .requiredOption("--url <url>", "Public page URL to audit and export a dry-run patch against")
+  .option("--output <file>", "Write the review-only patch artifact to this file outside the inspected repository")
+  .option("--stdout", "Print the review-only patch artifact to stdout and write no files")
+  .option("--json", "Output structured JSON metadata instead of a human report")
+  .option("--format <format>", "Export format: unified-diff", "unified-diff")
+  .option("--include-review-required", "Include review-required dry-run changes in the review-only export", true)
+  .option("--safe-only", "Export only low-risk dry-run automation candidates")
+  .option("--timeout <ms>", "Network and render timeout in milliseconds", "15000")
+  .option("--no-render", "Skip the Playwright rendered pass")
+  .option("--user-agent <ua>", "Override the default user agent")
+  .action(async (path: string, options: PatchExportCommandOptions) => {
+    const timeoutMs = Number(options.timeout);
+    if (!Number.isFinite(timeoutMs) || timeoutMs <= 0) {
+      writeTypedCommandError(
+        "patch-export",
+        "invalid_timeout",
+        "Invalid timeout. Provide a positive number of milliseconds.",
+        options.json,
+        1,
+      );
+      return;
+    }
+
+    if (Boolean(options.output) === Boolean(options.stdout)) {
+      writeTypedCommandError(
+        "patch-export",
+        "invalid_output_path",
+        "Patch export requires exactly one of --output <file> or --stdout.",
+        options.json,
+        1,
+      );
+      return;
+    }
+
+    try {
+      const execution = await exportPatch(path, options.url, {
+        format: options.format,
+        safeOnly: Boolean(options.safeOnly),
+        includeReviewRequired: options.includeReviewRequired !== false,
+        output: options.stdout
+          ? { kind: "stdout", includeContent: Boolean(options.json) }
+          : { kind: "file", path: options.output as string },
+        dryRunOptions: {
+          timeoutMs,
+          userAgent: options.userAgent,
+          render: options.render,
+        },
+      });
+
+      if (options.stdout && !options.json) {
+        process.stdout.write(execution.artifactContent);
+        return;
+      }
+
+      process.stdout.write(
+        options.json
+          ? formatPatchExportJsonReport(execution.result)
+          : formatPatchExportHumanReport(execution.result),
+      );
+    } catch (error) {
+      if (error instanceof PatchExportError) {
+        writeTypedCommandError("patch-export", error.code, error.message, options.json, error.exitCode);
+        return;
+      }
+      if (error instanceof z.ZodError) {
+        writeTypedCommandError(
+          "patch-export",
+          "contract_error",
+          "ShipReady produced data that did not match its published patch export contract.",
+          options.json,
+          2,
+        );
+        return;
+      }
+      const message = error instanceof Error ? error.message : "Unexpected patch export failure.";
+      writeCommandError("patch-export", message, options.json, isInputError(message) ? 1 : 2);
     }
   });
 
@@ -798,6 +882,19 @@ type PlanFixesCommandOptions = {
   userAgent?: string;
 };
 
+type PatchExportCommandOptions = {
+  url: string;
+  output?: string;
+  stdout?: boolean;
+  json?: boolean;
+  format: "unified-diff" | "bundle";
+  includeReviewRequired?: boolean;
+  safeOnly?: boolean;
+  timeout: string;
+  render: boolean;
+  userAgent?: string;
+};
+
 type FixCommandOptions = {
   url: string;
   dryRun?: boolean;
@@ -896,6 +993,7 @@ function classifyCommandError(message: string): CliErrorCode {
   if (message.startsWith("Invalid URL")) return "invalid_url";
   if (message.startsWith("Invalid timeout")) return "invalid_timeout";
   if (message.startsWith("Repository path")) return "invalid_repo_path";
+  if (message.startsWith("Invalid output path")) return "invalid_output_path";
   return "command_failed";
 }
 
@@ -903,6 +1001,7 @@ function isInputError(message: string): boolean {
   return (
     message.startsWith("Invalid URL") ||
     message.startsWith("Invalid timeout") ||
-    message.startsWith("Repository path")
+    message.startsWith("Repository path") ||
+    message.startsWith("Invalid output path")
   );
 }

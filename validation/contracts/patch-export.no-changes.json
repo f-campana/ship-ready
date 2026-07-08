@@ -1,0 +1,48 @@
+{
+  "contract": "shipready.patchExport.v1",
+  "generatedAt": "2026-06-21T12:00:00.000Z",
+  "url": "https://example.com/",
+  "repoPath": "tests/fixtures/repos/vite-react",
+  "mode": "patch_export",
+  "format": "unified-diff",
+  "options": {
+    "safeOnly": false,
+    "includeReviewRequired": true
+  },
+  "output": {
+    "kind": "file",
+    "path": "validation/patches/shipready.no-changes.patch",
+    "wroteArtifact": true,
+    "bytes": 583,
+    "bytesWritten": 583,
+    "sha256": "36e312c6db40532caa612a74e7812a21d87f0d6df3003da0e4990ce77b80eba4"
+  },
+  "source": {
+    "dryRunContract": "shipready.dryRunFix.v1",
+    "dryRunGeneratedAt": "2026-06-21T12:00:00.000Z",
+    "policy": "review_export_only"
+  },
+  "summary": {
+    "exportedChanges": 0,
+    "skippedChanges": 0,
+    "safeAutoCandidates": 0,
+    "reviewRequired": 0,
+    "manualOnly": 0
+  },
+  "exportedChanges": [],
+  "skippedChanges": [],
+  "warnings": [
+    "No file changes were exported from the current dry-run."
+  ],
+  "limitations": [
+    "Patch export is generated only from the current ShipReady dry-run preview.",
+    "Patch export is not write mode and does not modify the inspected target repository.",
+    "ShipReady does not apply this patch, stage files, commit, push, open pull requests, deploy, write DNS, or call provider APIs.",
+    "Review-required changes may contain placeholders or factual assumptions that require human review before use."
+  ],
+  "nextActions": [
+    "Review the exported patch artifact with a human before using it with other tools.",
+    "Use your own tooling outside ShipReady for any repository changes, tests, commits, pushes, pull requests, or deployments.",
+    "Run ShipReady read-only checks again after any external deployment you perform."
+  ]
+}

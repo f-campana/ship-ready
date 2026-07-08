@@ -144,6 +144,7 @@ export async function runDoctor(
       ["social-preview-simulator", "Social preview simulator"],
       ["generated-site-smells", "Generated-site smell detector"],
       ["bounded-crawl", "Bounded multi-page crawl"],
+      ["patch-export", "Patch export"],
       ["write-policy", "WRITE_POLICY_V1"],
       ["local-gui-spec", "LOCAL_FIRST_GUI_SPEC"],
       ["demo-artifacts", "Demo artifacts"],
@@ -430,6 +431,53 @@ export async function runDoctor(
       fixtures: crawlFixtures.length,
       missing: missingCrawlContent,
       docsReferenceLimitations: crawlDocsReferenceLimitations,
+    },
+  });
+
+  const patchExportSkill = "skills/shipready-launch-readiness/SKILL.md";
+  const patchExportDocs = ["docs/COMMANDS.md", "docs/CONTRACTS.md", "docs/MCP_PLAN.md"];
+  const patchExportFixtures = FIXTURE_NAMES.filter((name) => name.startsWith("patch-export."));
+  const missingPatchExportContent = [
+    ...(!dependencies.pathExists(join(packageRoot, patchExportSkill)) ? [patchExportSkill] : []),
+    ...patchExportDocs.filter((path) => !dependencies.pathExists(join(packageRoot, path))),
+    ...patchExportFixtures
+      .map((name) => `validation/contracts/${name}`)
+      .filter((path) => !dependencies.pathExists(join(packageRoot, path))),
+  ];
+  let patchExportDocsReferenceLimitations = false;
+  if (missingPatchExportContent.length === 0) {
+    try {
+      const [skill, commands, contracts, mcpPlan] = await Promise.all([
+        dependencies.readText(join(packageRoot, patchExportSkill)),
+        dependencies.readText(join(packageRoot, "docs/COMMANDS.md")),
+        dependencies.readText(join(packageRoot, "docs/CONTRACTS.md")),
+        dependencies.readText(join(packageRoot, "docs/MCP_PLAN.md")),
+      ]);
+      const combined = `${skill}\n${commands}\n${contracts}\n${mcpPlan}`;
+      patchExportDocsReferenceLimitations =
+        combined.includes("shipready patch-export") &&
+        combined.includes("shipready.patchExport.v1") &&
+        combined.includes("review-only") &&
+        combined.includes("never applies patches");
+    } catch {
+      patchExportDocsReferenceLimitations = false;
+    }
+  }
+  checks.push({
+    id: "patch-export",
+    label: "Patch export",
+    status: missingPatchExportContent.length === 0 && patchExportDocsReferenceLimitations ? "pass" : "fail",
+    message: missingPatchExportContent.length === 0 && patchExportDocsReferenceLimitations
+      ? `The review-only patch export guidance and ${patchExportFixtures.length} deterministic fixtures are present; doctor writes no patch artifacts.`
+      : `Patch export content is incomplete or inconsistent; missing: ${missingPatchExportContent.join(", ") || "safe patch-export guidance"}.`,
+    details: {
+      reviewOnly: true,
+      writesArtifacts: false,
+      appliesPatches: false,
+      gitOrDeploy: false,
+      fixtures: patchExportFixtures.length,
+      missing: missingPatchExportContent,
+      docsReferenceLimitations: patchExportDocsReferenceLimitations,
     },
   });
 

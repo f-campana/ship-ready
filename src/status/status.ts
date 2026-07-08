@@ -16,6 +16,7 @@ export const STATUS_CLI_COMMANDS = [
   "crawl",
   "social-preview",
   "smells",
+  "patch-export",
   "audit",
   "inspect-repo",
   "plan-fixes",
@@ -68,6 +69,8 @@ export function createStatus(): StatusJsonContract {
       fullSiteCrawler: "not_implemented",
       monitoring: "not_implemented",
       scheduledCrawls: "not_implemented",
+      patchExport: "review_only_export",
+      patchApply: "not_implemented",
       generatedSiteSmells: "read_only_detector",
       aiAuthorshipDetection: "not_implemented",
       smellDetectorAutoFixes: "not_implemented",
@@ -89,7 +92,7 @@ export function createStatus(): StatusJsonContract {
       fodmappVoiceover: "validation/demo-fodmapp-voiceover-final/",
     },
     nextRecommendedCommand: "pnpm shipready doctor",
-    nextRecommendedPass: "Patch export",
+    nextRecommendedPass: "GitHub PR integration",
   });
 }
 
@@ -113,6 +116,7 @@ export function formatStatusHuman(status = createStatus()): string {
     "  DNS readiness: read-only status checks implemented; provider writes/integrations not implemented",
     "  Post-write recheck: implemented read-only; local changes still require external deployment",
     "  Bounded multi-page crawl: implemented read-only; exhaustive crawler and scheduled monitoring not implemented",
+    "  Patch export: implemented as review-only artifact generation; patch application is not implemented",
     "  Social preview simulator: implemented read-only; social platform APIs and exact rendering guarantees not implemented",
     "  Generated-site implementation smell detector: implemented read-only; authorship identification and auto-fixes not implemented",
     "  Deployment automation and deploy provider integrations: not implemented",

@@ -54,7 +54,7 @@ describe("MCP startup and stdio transport", () => {
       const resources = await client.listResources();
       const templates = await client.listResourceTemplates();
       const prompts = await client.listPrompts();
-      expect(tools.tools).toHaveLength(14);
+      expect(tools.tools).toHaveLength(15);
       expect(tools.tools.map((tool) => tool.name).filter((name) => name.includes("write"))).toEqual([
         "shipready.write_safe_crawl_files",
       ]);
@@ -131,6 +131,19 @@ describe("MCP startup and stdio transport", () => {
         contract: "shipready.generatedSiteSmells.v1",
         mode: "mock",
         summary: { status: "clean" },
+      });
+      const patchExport = await client.callTool({
+        name: "shipready.export_patch",
+        arguments: { url: recheckUrl, repoPath: join(fixtureRoot, "vite-react"), rendered: false },
+      });
+      expect(patchExport.structuredContent).toMatchObject({
+        contract: "shipready.patchExport.v1",
+        mode: "patch_export",
+        output: {
+          kind: "inline",
+          wroteArtifact: false,
+          bytesWritten: 0,
+        },
       });
       const resource = await client.readResource({ uri: "shipready://docs/contracts" });
       expect(resource.contents[0]).toMatchObject({ mimeType: "text/markdown" });

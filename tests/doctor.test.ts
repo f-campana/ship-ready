@@ -97,6 +97,17 @@ describe("doctor", () => {
         docsReferenceLimitations: true,
       },
     });
+    expect(report.checks.find((check) => check.id === "patch-export")).toMatchObject({
+      status: "pass",
+      details: {
+        reviewOnly: true,
+        writesArtifacts: false,
+        appliesPatches: false,
+        gitOrDeploy: false,
+        fixtures: 5,
+        docsReferenceLimitations: true,
+      },
+    });
   });
 
   it("reports a missing optional FFmpeg tool as a warning", async () => {

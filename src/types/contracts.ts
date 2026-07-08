@@ -19,6 +19,7 @@ export const CONTRACT_NAMES = {
   socialPreview: "shipready.socialPreview.v1",
   generatedSiteSmells: "shipready.generatedSiteSmells.v1",
   crawl: "shipready.crawl.v1",
+  patchExport: "shipready.patchExport.v1",
   status: "shipready.status.v1",
   doctor: "shipready.doctor.v1",
   error: "shipready.error.v1",
@@ -37,6 +38,7 @@ export const CLI_JSON_CONTRACT_BY_COMMAND = {
   "social-preview --json": CONTRACT_NAMES.socialPreview,
   "smells --json": CONTRACT_NAMES.generatedSiteSmells,
   "crawl --json": CONTRACT_NAMES.crawl,
+  "patch-export --json": CONTRACT_NAMES.patchExport,
   "status --json": CONTRACT_NAMES.status,
   "doctor --json": CONTRACT_NAMES.doctor,
 } as const;
@@ -55,6 +57,150 @@ export const FixPlanJsonContractSchema = FixPlanResultSchema.extend({
 
 export const DryRunFixJsonContractSchema = DryRunFixResultSchema.extend({
   contract: z.literal(CONTRACT_NAMES.dryRunFix),
+});
+
+export const PatchExportFormatSchema = z.enum(["unified-diff", "bundle"]);
+export const PatchExportOutputKindSchema = z.enum(["file", "stdout", "inline"]);
+
+const PatchExportOutputSchema = z.object({
+  kind: PatchExportOutputKindSchema,
+  path: z.string().min(1).optional(),
+  wroteArtifact: z.boolean(),
+  bytes: z.number().int().nonnegative(),
+  bytesWritten: z.number().int().nonnegative(),
+  sha256: z.string().regex(/^[a-f0-9]{64}$/),
+  content: z.string().optional(),
+}).strict().superRefine((output, context) => {
+  if (output.kind === "file") {
+    if (!output.path) {
+      context.addIssue({
+        code: "custom",
+        path: ["path"],
+        message: "File patch exports require an output path.",
+      });
+    }
+    if (!output.wroteArtifact) {
+      context.addIssue({
+        code: "custom",
+        path: ["wroteArtifact"],
+        message: "File patch exports must report the explicit artifact write.",
+      });
+    }
+    if (output.bytesWritten !== output.bytes) {
+      context.addIssue({
+        code: "custom",
+        path: ["bytesWritten"],
+        message: "File patch exports must report the written artifact byte count.",
+      });
+    }
+    if (output.content !== undefined) {
+      context.addIssue({
+        code: "custom",
+        path: ["content"],
+        message: "File patch export JSON must not embed patch content by default.",
+      });
+    }
+  } else {
+    if (output.wroteArtifact) {
+      context.addIssue({
+        code: "custom",
+        path: ["wroteArtifact"],
+        message: "Stdout and inline patch exports must not report file writes.",
+      });
+    }
+    if (output.bytesWritten !== 0) {
+      context.addIssue({
+        code: "custom",
+        path: ["bytesWritten"],
+        message: "Stdout and inline patch exports must not report filesystem writes.",
+      });
+    }
+  }
+  if (output.kind === "inline" && output.content === undefined) {
+    context.addIssue({
+      code: "custom",
+      path: ["content"],
+      message: "Inline MCP patch exports must include patch content.",
+    });
+  }
+});
+
+const PatchExportChangeSchema = z.object({
+  path: z.string().min(1),
+  changeType: z.enum(["create", "update"]),
+  risk: z.enum(["low", "medium", "high"]),
+  reviewStatus: z.enum(["auto_candidate", "review_required"]),
+  requiresHumanReview: z.boolean(),
+  included: z.literal(true),
+  reason: z.string().min(1),
+  sourceActionIds: z.array(z.string().min(1)),
+}).strict();
+
+const PatchExportSkippedChangeSchema = z.object({
+  kind: z.enum(["file_change", "dry_run_action"]),
+  path: z.string().min(1).optional(),
+  actionId: z.string().min(1).optional(),
+  title: z.string().min(1).optional(),
+  changeType: z.enum(["create", "update"]).optional(),
+  risk: z.enum(["low", "medium", "high"]),
+  reviewStatus: z.enum(["auto_candidate", "review_required"]).optional(),
+  requiresHumanReview: z.boolean().optional(),
+  included: z.literal(false),
+  reason: z.string().min(1),
+  sourceActionIds: z.array(z.string().min(1)),
+}).strict();
+
+export const PatchExportJsonContractSchema = z.object({
+  contract: z.literal(CONTRACT_NAMES.patchExport),
+  generatedAt: z.string().min(1),
+  url: z.string().min(1),
+  repoPath: z.string().min(1),
+  mode: z.literal("patch_export"),
+  format: PatchExportFormatSchema,
+  options: z.object({
+    safeOnly: z.boolean(),
+    includeReviewRequired: z.boolean(),
+  }).strict(),
+  output: PatchExportOutputSchema,
+  source: z.object({
+    dryRunContract: z.literal(CONTRACT_NAMES.dryRunFix),
+    dryRunGeneratedAt: z.string().min(1),
+    policy: z.literal("review_export_only"),
+  }).strict(),
+  summary: z.object({
+    exportedChanges: z.number().int().nonnegative(),
+    skippedChanges: z.number().int().nonnegative(),
+    safeAutoCandidates: z.number().int().nonnegative(),
+    reviewRequired: z.number().int().nonnegative(),
+    manualOnly: z.number().int().nonnegative(),
+  }).strict(),
+  exportedChanges: z.array(PatchExportChangeSchema),
+  skippedChanges: z.array(PatchExportSkippedChangeSchema),
+  warnings: z.array(z.string().min(1)),
+  limitations: z.array(z.string().min(1)).min(1),
+  nextActions: z.array(z.string().min(1)).min(1),
+}).strict().superRefine((result, context) => {
+  if (result.summary.exportedChanges !== result.exportedChanges.length) {
+    context.addIssue({
+      code: "custom",
+      path: ["summary", "exportedChanges"],
+      message: "exportedChanges count must match the exportedChanges array length.",
+    });
+  }
+  if (result.summary.skippedChanges !== result.skippedChanges.length) {
+    context.addIssue({
+      code: "custom",
+      path: ["summary", "skippedChanges"],
+      message: "skippedChanges count must match the skippedChanges array length.",
+    });
+  }
+  if (result.mode !== "patch_export" || result.source.policy !== "review_export_only") {
+    context.addIssue({
+      code: "custom",
+      path: ["mode"],
+      message: "Patch export must remain a review-only export mode.",
+    });
+  }
 });
 
 export const WriteFixJsonContractSchema = WriteFixResultSchema.extend({
@@ -817,6 +963,8 @@ export const StatusJsonContractSchema = z.object({
     fullSiteCrawler: NotImplementedSchema,
     monitoring: NotImplementedSchema,
     scheduledCrawls: NotImplementedSchema,
+    patchExport: z.literal("review_only_export"),
+    patchApply: NotImplementedSchema,
     generatedSiteSmells: z.literal("read_only_detector"),
     aiAuthorshipDetection: NotImplementedSchema,
     smellDetectorAutoFixes: NotImplementedSchema,
@@ -886,6 +1034,7 @@ export const CliErrorCodeSchema = z.enum([
   "invalid_url",
   "invalid_timeout",
   "invalid_repo_path",
+  "invalid_output_path",
   "path_not_authorized",
   "fixture_not_found",
   "doc_not_found",
@@ -933,6 +1082,7 @@ export type RepoInspectionJsonContract = z.infer<typeof RepoInspectionJsonContra
 export type FixPlanJsonContract = z.infer<typeof FixPlanJsonContractSchema>;
 export type DryRunFixJsonContract = z.infer<typeof DryRunFixJsonContractSchema>;
 export type WriteFixJsonContract = z.infer<typeof WriteFixJsonContractSchema>;
+export type PatchExportJsonContract = z.infer<typeof PatchExportJsonContractSchema>;
 export type UiReportJsonContract = z.infer<typeof UiReportJsonContractSchema>;
 export type SearchConsoleStatusJsonContract = z.infer<typeof SearchConsoleStatusJsonContractSchema>;
 export type DnsStatusJsonContract = z.infer<typeof DnsStatusJsonContractSchema>;

@@ -28,6 +28,7 @@ This was low risk because CLI JSON formatting already had a dedicated Zod-valida
 | `social-preview --url <url> --json` | Yes | `shipready.socialPreview.v1` | V1 simulated preview boundary | Network read only or deterministic local mock |
 | `smells <path> --json` | Yes | `shipready.generatedSiteSmells.v1` | V1 implementation-smell boundary | Local read only or optional network read with `--url` |
 | `crawl --url <url> --json` | Yes | `shipready.crawl.v1` | V1 bounded crawl boundary | Network read only or deterministic local mock |
+| `patch-export <path> --url <url> --json` | Yes | `shipready.patchExport.v1` | V1 review patch export boundary | Dry-run-derived artifact export; no target repo mutation |
 | JSON command failure | When the invoked command accepted `--json` | `shipready.error.v1` | V1 error boundary; Commander parse gaps remain | No additional effects |
 
 The authoritative mapping and CLI contract schemas are in `src/types/contracts.ts`.
@@ -123,6 +124,20 @@ Discovery is same-origin and HTTP(S)-only. Fragment identifiers are ignored. Que
 Canonical fixtures cover `clean-small-site`, `missing-descriptions`, `canonical-inconsistent`, `social-images-missing`, `start-unreachable`, `limit-reached`, and `mixed-readiness`. All use fixed timestamps and synthetic `example.com` values. Mock fixture generation makes no external requests.
 
 The CLI and MCP tool do not require a local repository, write files, mutate DNS/Search Console, call social platform APIs, use OAuth, store tokens, run Git/GitHub/deploy behavior, broaden `WRITE_POLICY_V1`, or claim exhaustive coverage, broad analytics, traffic forecasting, indexing evidence, monitoring, or complete broken-link/security/accessibility scanning.
+
+## `shipready.patchExport.v1`
+
+Pass 17 implements this contract for `patch-export --json` and the read-only MCP tool `shipready.export_patch`.
+
+Top-level keys are `contract`, `generatedAt`, `url`, `repoPath`, `mode`, `format`, `options`, `output`, `source`, `summary`, `exportedChanges`, `skippedChanges`, `warnings`, `limitations`, and `nextActions`. Stable discriminators are `mode: "patch_export"`, `format: "unified-diff"`, and `source.policy: "review_export_only"`. `source.dryRunContract` is always `shipready.dryRunFix.v1`, because patch export is generated only from the current dry-run preview.
+
+`output.kind` is `file`, `stdout`, or `inline`. File output includes a path, reports `wroteArtifact: true`, and does not embed full patch content in JSON. Stdout and inline output report `wroteArtifact: false` and `bytesWritten: 0`; inline MCP output includes `content` with the patch text. Every output reports artifact `bytes` and `sha256`.
+
+`summary` counts exported changes, skipped changes, safe automation candidates, review-required dry-run changes, and manual-only dry-run actions. `exportedChanges[]` records path, change type, risk, review status, human-review requirement, inclusion, reason, and source action IDs. `skippedChanges[]` records either omitted dry-run file changes or dry-run skipped actions, with an explicit reason. A dry-run file change is never silently omitted.
+
+Unified diff artifacts include a short review-only manifest header followed by `diff --git` sections. Create changes use `/dev/null` and new-file hunks. Update changes preserve the dry-run hunk text instead of inventing context.
+
+The CLI writes only the explicit `--output` artifact path, rejects output paths inside the inspected repository by default, and writes no files in `--stdout` mode. The MCP tool always returns inline content and writes no artifacts. Neither surface invokes write mode, applies patches, mutates the inspected target repository, stages/commits/pushes, opens pull requests, deploys, writes DNS, calls provider APIs, calls live Search Console, handles OAuth/tokens, or broadens `WRITE_POLICY_V1`.
 
 ## Exact success shapes
 
@@ -232,6 +247,14 @@ Internal source and formatter: `src/crawl/crawl.ts`, `src/crawl/linkDiscovery.ts
 
 Consumers: CLI users, MCP clients, contract fixtures, tests, and future report/GUI work. Current GUI and HTML report surfaces do not consume this contract.
 
+### `shipready.patchExport.v1`
+
+Top-level keys: `contract`, `generatedAt`, `url`, `repoPath`, `mode`, `format`, `options`, `output`, `source`, `summary`, `exportedChanges`, `skippedChanges`, `warnings`, `limitations`, and `nextActions`.
+
+Internal source and formatter: `src/patchExport/patchExport.ts`, `src/patchExport/unifiedDiff.ts`, and `src/report/formatPatchExportReport.ts`. Exit behavior: `0` after a valid export, `1` for invalid URL/repo/output/format/timeout input, and `2` for contract or unexpected operational failure.
+
+Consumers: CLI users, MCP clients, contract fixtures, tests, and external human/tool review workflows. Current GUI and HTML report surfaces do not apply patches or write patch artifacts.
+
 ## Error contract
 
 `shipready.error.v1` has required keys:
@@ -246,7 +269,7 @@ Consumers: CLI users, MCP clients, contract fixtures, tests, and future report/G
 }
 ```
 
-`error` is a compatibility alias for existing consumers and equals `message`. Stable codes are `invalid_url`, `invalid_timeout`, `invalid_repo_path`, `invalid_mode`, `write_validation_failed`, `write_execution_failed`, and `command_failed`. A write validation/execution error may also contain `result: shipready.writeFix.v1`.
+`error` is a compatibility alias for existing consumers and equals `message`. Stable codes are `invalid_url`, `invalid_timeout`, `invalid_repo_path`, `invalid_output_path`, `invalid_mode`, `write_validation_failed`, `write_execution_failed`, and `command_failed`. A write validation/execution error may also contain `result: shipready.writeFix.v1`.
 
 Known gap: errors raised by Commander before a command action runs, such as missing required arguments or an unknown option, still use Commander's stderr text and are not guaranteed to emit `shipready.error.v1`. Exit `5` remains reserved for an uncaught `parseAsync` failure and is also plain stderr.
 
@@ -340,6 +363,11 @@ Deterministic fixtures live in `validation/contracts/`:
 - `generated-site-smells.hardcoded-localhost.json`
 - `generated-site-smells.unsupported-framework.json`
 - `generated-site-smells.repo-plus-url-rendered-only.json`
+- `patch-export.safe-creations.json`
+- `patch-export.review-required.json`
+- `patch-export.no-changes.json`
+- `patch-export.skipped.json`
+- `patch-export.stdout.json`
 
 Regenerate them from local test repositories and deterministic in-memory audit results:
 
@@ -349,7 +377,7 @@ pnpm contracts:fixtures
 
 The generator is `scripts/validation/generateContractFixtures.ts`. It makes no external requests. The write fixtures run `writeFixFromDryRun` only against temporary copies under the operating-system temp directory, record the returned results, and remove the copies. They never target a real repository. Fixed timestamps and repository display paths keep fixtures reproducible.
 
-Focused drift coverage includes `tests/contracts.test.ts`, `tests/crawl.test.ts`, `tests/crawlCli.test.ts`, `tests/mcp.crawl.test.ts`, `tests/socialPreview.test.ts`, `tests/socialPreviewCli.test.ts`, `tests/mcp.socialPreview.test.ts`, `tests/generatedSiteSmells.test.ts`, `tests/generatedSiteSmellsCli.test.ts`, `tests/mcp.generatedSiteSmells.test.ts`, `tests/recheck.test.ts`, `tests/recheckCli.test.ts`, `tests/mcp.recheck.test.ts`, `tests/status.test.ts`, and `tests/doctor.test.ts`. Tests validate every fixture and formatter discriminator, constrained crawl/social-preview/recheck/generated-site smell states, mocked local/live comparisons, no-mutation behavior, allowed-root enforcement, status/doctor posture, and existing safety boundaries.
+Focused drift coverage includes `tests/contracts.test.ts`, `tests/patchExport.test.ts`, `tests/patchExportCli.test.ts`, `tests/crawl.test.ts`, `tests/crawlCli.test.ts`, `tests/mcp.crawl.test.ts`, `tests/socialPreview.test.ts`, `tests/socialPreviewCli.test.ts`, `tests/mcp.socialPreview.test.ts`, `tests/generatedSiteSmells.test.ts`, `tests/generatedSiteSmellsCli.test.ts`, `tests/mcp.generatedSiteSmells.test.ts`, `tests/recheck.test.ts`, `tests/recheckCli.test.ts`, `tests/mcp.recheck.test.ts`, `tests/status.test.ts`, and `tests/doctor.test.ts`. Tests validate every fixture and formatter discriminator, constrained patch-export/crawl/social-preview/recheck/generated-site smell states, mocked local/live comparisons, no-mutation behavior, allowed-root enforcement, status/doctor posture, and existing safety boundaries.
 
 ## Downstream consumers
 
@@ -359,11 +387,11 @@ Focused drift coverage includes `tests/contracts.test.ts`, `tests/crawl.test.ts`
 - Static HTML: renders the internal `UiReport` model.
 - GUI: serves the internal `UiReport` model through a local API; it does not execute write mode.
 - Demo tooling: drives the GUI server surface and captures report artifacts.
-- MCP: wraps the named CLI contracts through the existing application functions and JSON formatters; it does not expose ad-hoc internal models.
+- MCP: wraps the named CLI contracts through the existing application functions and JSON formatters; it does not expose ad-hoc internal models. Patch export is returned inline by `shipready.export_patch` and writes no artifact files.
 
 ## MCP mapping
 
-The implemented MCP specification is [MCP_PLAN.md](MCP_PLAN.md). Eleven contract-backed read-only tools preserve their top-level CLI contract objects; two canonical-read tools expose validated fixtures and allowlisted documents. `shipready.write_safe_crawl_files` returns `shipready.writeFix.v1` and is the only MCP write tool.
+The implemented MCP specification is [MCP_PLAN.md](MCP_PLAN.md). Twelve contract-backed read-only tools preserve their top-level CLI contract objects; two canonical-read tools expose validated fixtures and allowlisted documents. `shipready.write_safe_crawl_files` returns `shipready.writeFix.v1` and is the only MCP write tool.
 
 `shipready.preview_fixes` still returns `shipready.dryRunFix.v1`; when current V1-eligible crawl-file creations exist, the MCP layer adds an agent-facing `previewReceipt` to the tool payload. The receipt is not a CLI contract field and is not write authority by itself. It is a signed, short-lived MCP precondition binding the normalized URL, authorized canonical repository path, policy, eligible paths, and stable dry-run/candidate digests.
 
@@ -371,11 +399,12 @@ The MCP write call must supply the same URL and repo path, the fresh receipt, an
 
 Ready now:
 
-- Fourteen implemented JSON-capable command surfaces have explicit V1 contract names.
+- Fifteen implemented JSON-capable command surfaces have explicit V1 contract names.
 - Success outputs retain their existing fields and add stable discriminators.
 - Action-level JSON errors have stable codes/messages and preserve the legacy `error` field.
 - Deterministic local fixtures and focused drift tests cover success, failure, dry-run, write, UI, Search Console, DNS, recheck, social preview, generated-site smell, and bounded crawl states.
 - Creation-only write evidence remains explicit and policy-bound.
+- Review-only patch export evidence remains dry-run-derived and never mutates the inspected target repository.
 - Human CLI, HTML file, and GUI server surfaces are clearly separated from CLI JSON contracts.
 
 The compatible `shipready.error.v1` enum now also covers MCP boundary codes: `path_not_authorized`, `fixture_not_found`, `doc_not_found`, `network_error`, `render_error`, `timeout`, `cancelled`, `contract_error`, `write_forbidden`, `unsupported_command`, and `internal_error`. Optional `retryable` and safe `details` fields are additive; `error === message` remains required.

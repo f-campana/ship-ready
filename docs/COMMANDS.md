@@ -26,7 +26,7 @@ pnpm shipready doctor --json
 ```
 
 - Purpose: check local runtime readiness without requiring a URL or repository path.
-- Checks: Node.js, pnpm, the Playwright Chromium executable, optional FFmpeg, package content, MCP SDK/configurability, parsed contract fixtures, canonical docs, Search Console mock content, DNS readiness content/API availability, post-write recheck docs/fixtures/skill guidance, social preview simulator fixtures/skill guidance, bounded crawl fixtures/docs/skill guidance, `WRITE_POLICY_V1`, `LOCAL_FIRST_GUI_SPEC`, and expected demo artifacts.
+- Checks: Node.js, pnpm, the Playwright Chromium executable, optional FFmpeg, package content, MCP SDK/configurability, parsed contract fixtures, canonical docs, Search Console mock content, DNS readiness content/API availability, post-write recheck docs/fixtures/skill guidance, social preview simulator fixtures/skill guidance, bounded crawl fixtures/docs/skill guidance, patch export docs/fixtures/skill guidance, `WRITE_POLICY_V1`, `LOCAL_FIRST_GUI_SPEC`, and expected demo artifacts.
 - Behavior: uses bounded local executable/file/dependency probes only. It does not access the network, inspect an arbitrary repository, start the MCP/GUI server, or mutate files.
 - Classification: every check is `pass`, `warn`, `fail`, or `skip`. Missing optional FFmpeg/demo artifacts warn rather than fail. `ok` is true exactly when no required check fails.
 - JSON contract: `shipready.doctor.v1`; normalized fixture: [`doctor.default.json`](../validation/contracts/doctor.default.json).
@@ -173,6 +173,29 @@ pnpm shipready fix ./fixture-copy --url https://example.com --write --allow-crea
 - Safety: `--write` without `--allow-create` is rejected. Existing files, overwrites, review-required changes, unsupported paths, metadata/content/JSON-LD, Git, and deployment are excluded. Read [WRITE_POLICY_V1.md](WRITE_POLICY_V1.md) first.
 
 The example target is intentionally a fixture copy. Never replace it with a real repository or infer authorization from a copied command.
+
+## `patch-export`
+
+```bash
+pnpm shipready patch-export <path> --url https://example.com --output /tmp/shipready.patch
+pnpm shipready patch-export <path> --url https://example.com --output /tmp/shipready.patch --json
+pnpm shipready patch-export <path> --url https://example.com --stdout
+pnpm shipready patch-export <path> --url https://example.com --safe-only --output /tmp/shipready.patch
+```
+
+- Purpose: regenerate the current dry-run preview and export a portable review-only patch artifact for human or external-tool review.
+- Required: local repository `<path>`, `--url <http-or-https-url>`, and exactly one of `--output <file>` or `--stdout`.
+- Optional: `--json`, `--format unified-diff`, `--include-review-required`, `--safe-only`, `--timeout <ms>`, `--no-render`, and `--user-agent <ua>`.
+- Default behavior: `--format unified-diff`, `--include-review-required` enabled, and `--safe-only` disabled because export is review-only. Review-required dry-run changes may be included, but they are clearly marked and require human review before use.
+- Output path policy: `--output` must point to a file outside the inspected repository. The output directory must already exist. Existing symlink or directory output targets are rejected. ShipReady writes only the requested artifact file.
+- Stdout mode: `--stdout` writes no files and prints the patch artifact to stdout. With `--json`, stdout contains `shipready.patchExport.v1` metadata and inline patch content instead of raw patch text.
+- JSON contract: `shipready.patchExport.v1`; fixtures: `patch-export.safe-creations.json`, `patch-export.review-required.json`, `patch-export.no-changes.json`, `patch-export.skipped.json`, and `patch-export.stdout.json`.
+- Human output sections: Patch export, Source dry-run, Output artifact, Included changes, Skipped changes, Safety, and Next actions.
+- Safety: generated from the current `shipready.dryRunFix.v1` preview; never invokes `fix --write`; never applies patches; never modifies the inspected target repository; never stages, commits, pushes, opens pull requests, deploys, writes DNS, calls Search Console live APIs, calls provider APIs, or broadens `WRITE_POLICY_V1`.
+- Exit behavior: `0` when a valid patch export is emitted or the requested artifact is written; `1` for invalid URL/path/output/format/timeout input; `2` for contract or unexpected operational failure. JSON errors use `shipready.error.v1`; `invalid_output_path` covers missing/conflicting output mode, inside-repo output, unwritable output directories, directory targets, and symlink targets.
+- Agent use: prefer `--output` outside the target repository when handing a patch to a human. Use `--stdout` only when another tool is consuming stdout directly. Treat review-required exported changes as review targets, not write authorization.
+
+MCP exposes the same review-only export as `shipready.export_patch`, returning `shipready.patchExport.v1` inline with `output.kind: "inline"` and `wroteArtifact: false`. It requires allowed-root authorization for `repoPath` and writes no artifact files.
 
 ## `ui-report`
 
@@ -326,7 +349,7 @@ SHIPREADY_MCP_ALLOWED_ROOTS='["/absolute/workspace-a","/absolute/workspace-b"]' 
 
 - Purpose: start the local MCP stdio server. Stdout is reserved for MCP protocol frames; use `pnpm --silent` in source checkouts so package-manager script output cannot pollute stdio.
 - Authorization: at least one explicit root is required. Repeat `--allow-root` for multiple roots; CLI roots replace the JSON-array environment fallback. Relative, missing, home, filesystem-root, traversal, and symlink-escape paths fail closed.
-- Surface: thirteen read-only tools, one guarded write tool, twelve canonical documentation resources plus allowlisted contract fixtures, and five prompt templates. `shipready.search_console_status`, `shipready.dns_status`, `shipready.crawl_site`, and `shipready.social_preview` accept no repository-path input. `shipready.generated_site_smells` and other repo tools authorize `repoPath` before inspection. `shipready.recheck` authorizes a repository only when optional `repoPath` is supplied. The server's existing allowed-root startup requirement remains unchanged. See [MCP_PLAN.md](MCP_PLAN.md) for the exact lists.
+- Surface: fourteen read-only tools, one guarded write tool, twelve canonical documentation resources plus allowlisted contract fixtures, and five prompt templates. `shipready.search_console_status`, `shipready.dns_status`, `shipready.crawl_site`, and `shipready.social_preview` accept no repository-path input. `shipready.export_patch`, `shipready.generated_site_smells`, and other repo tools authorize `repoPath` before inspection. `shipready.recheck` authorizes a repository only when optional `repoPath` is supplied. The server's existing allowed-root startup requirement remains unchanged. See [MCP_PLAN.md](MCP_PLAN.md) for the exact lists.
 - Safe write tool: `shipready.write_safe_crawl_files` can create only current V1-eligible missing robots/sitemap files. Required flow: call `shipready.preview_fixes`, review `shipready.dryRunFix.v1` and its fresh `previewReceipt`, then call the write tool with the same URL, same authorized repo path, that receipt, and `confirmation: "CREATE_SAFE_CRAWL_FILES_ONLY"`.
 - Safety: the write tool re-authorizes the path, validates the receipt signature/expiry/bindings, regenerates the current dry-run, revalidates `WRITE_POLICY_V1`, and returns `shipready.writeFix.v1`. It never accepts arbitrary file paths or client-supplied file lists as authority. The server does not start the GUI or write an HTML report.
 - Limitation: request deadlines and client cancellation are bounded at the MCP boundary. Existing synchronous repository scans and application operations do not yet accept `AbortSignal`, so already-started underlying work may finish its own bounded cleanup after the MCP response.

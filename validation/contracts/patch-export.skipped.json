@@ -1,0 +1,61 @@
+{
+  "contract": "shipready.patchExport.v1",
+  "generatedAt": "2026-06-21T12:00:00.000Z",
+  "url": "https://example.com/",
+  "repoPath": "tests/fixtures/repos/next-app-router-dry-run",
+  "mode": "patch_export",
+  "format": "unified-diff",
+  "options": {
+    "safeOnly": false,
+    "includeReviewRequired": true
+  },
+  "output": {
+    "kind": "file",
+    "path": "validation/patches/shipready.skipped.patch",
+    "wroteArtifact": true,
+    "bytes": 596,
+    "bytesWritten": 596,
+    "sha256": "b8a2a43816d50e9cb5be91904480e12acf3a60108b216d64ea233b3a86d540d9"
+  },
+  "source": {
+    "dryRunContract": "shipready.dryRunFix.v1",
+    "dryRunGeneratedAt": "2026-06-21T12:00:00.000Z",
+    "policy": "review_export_only"
+  },
+  "summary": {
+    "exportedChanges": 0,
+    "skippedChanges": 1,
+    "safeAutoCandidates": 0,
+    "reviewRequired": 0,
+    "manualOnly": 1
+  },
+  "exportedChanges": [],
+  "skippedChanges": [
+    {
+      "kind": "dry_run_action",
+      "actionId": "next_app_router.json_ld_review",
+      "title": "Add JSON-LD with review",
+      "risk": "medium",
+      "included": false,
+      "reason": "Next.js App Router JSON-LD preview requires a reviewed structured-data component and factual schema details.",
+      "sourceActionIds": [
+        "schema.jsonld.missing"
+      ]
+    }
+  ],
+  "warnings": [
+    "Some dry-run actions or file changes were not included; review skippedChanges before using the artifact.",
+    "No file changes were exported from the current dry-run."
+  ],
+  "limitations": [
+    "Patch export is generated only from the current ShipReady dry-run preview.",
+    "Patch export is not write mode and does not modify the inspected target repository.",
+    "ShipReady does not apply this patch, stage files, commit, push, open pull requests, deploy, write DNS, or call provider APIs.",
+    "Review-required changes may contain placeholders or factual assumptions that require human review before use."
+  ],
+  "nextActions": [
+    "Review the exported patch artifact with a human before using it with other tools.",
+    "Use your own tooling outside ShipReady for any repository changes, tests, commits, pushes, pull requests, or deployments.",
+    "Run ShipReady read-only checks again after any external deployment you perform."
+  ]
+}

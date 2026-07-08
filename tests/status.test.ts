@@ -30,6 +30,7 @@ describe("status", () => {
     expect(output).toContain("DNS readiness: read-only status checks implemented");
     expect(output).toContain("Post-write recheck: implemented read-only");
     expect(output).toContain("Bounded multi-page crawl: implemented read-only");
+    expect(output).toContain("Patch export: implemented as review-only artifact generation");
     expect(output).toContain("Social preview simulator: implemented read-only");
     expect(output).toContain("Generated-site implementation smell detector: implemented read-only");
     expect(output).toContain("Deployment automation and deploy provider integrations: not implemented");
@@ -51,6 +52,8 @@ describe("status", () => {
       fullSiteCrawler: "not_implemented",
       monitoring: "not_implemented",
       scheduledCrawls: "not_implemented",
+      patchExport: "review_only_export",
+      patchApply: "not_implemented",
       generatedSiteSmells: "read_only_detector",
       aiAuthorshipDetection: "not_implemented",
       smellDetectorAutoFixes: "not_implemented",

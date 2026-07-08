@@ -1,0 +1,61 @@
+{
+  "contract": "shipready.patchExport.v1",
+  "generatedAt": "2026-06-21T12:00:00.000Z",
+  "url": "https://example.com/",
+  "repoPath": "tests/fixtures/repos/vite-react",
+  "mode": "patch_export",
+  "format": "unified-diff",
+  "options": {
+    "safeOnly": false,
+    "includeReviewRequired": true
+  },
+  "output": {
+    "kind": "file",
+    "path": "validation/patches/shipready.review-required.patch",
+    "wroteArtifact": true,
+    "bytes": 1981,
+    "bytesWritten": 1981,
+    "sha256": "ace4835ff844b1ea4e150bc55901f455e854c3c0a1de3acf2f8297d3f0af2753"
+  },
+  "source": {
+    "dryRunContract": "shipready.dryRunFix.v1",
+    "dryRunGeneratedAt": "2026-06-21T12:00:00.000Z",
+    "policy": "review_export_only"
+  },
+  "summary": {
+    "exportedChanges": 1,
+    "skippedChanges": 0,
+    "safeAutoCandidates": 0,
+    "reviewRequired": 1,
+    "manualOnly": 0
+  },
+  "exportedChanges": [
+    {
+      "path": "index.html",
+      "changeType": "update",
+      "risk": "medium",
+      "reviewStatus": "review_required",
+      "requiresHumanReview": true,
+      "included": true,
+      "reason": "Add or update Vite app-shell fallback metadata.",
+      "sourceActionIds": [
+        "vite_react.metadata_review"
+      ]
+    }
+  ],
+  "skippedChanges": [],
+  "warnings": [
+    "Review-required dry-run changes are included because patch export is review-only."
+  ],
+  "limitations": [
+    "Patch export is generated only from the current ShipReady dry-run preview.",
+    "Patch export is not write mode and does not modify the inspected target repository.",
+    "ShipReady does not apply this patch, stage files, commit, push, open pull requests, deploy, write DNS, or call provider APIs.",
+    "Review-required changes may contain placeholders or factual assumptions that require human review before use."
+  ],
+  "nextActions": [
+    "Review the exported patch artifact with a human before using it with other tools.",
+    "Use your own tooling outside ShipReady for any repository changes, tests, commits, pushes, pull requests, or deployments.",
+    "Run ShipReady read-only checks again after any external deployment you perform."
+  ]
+}

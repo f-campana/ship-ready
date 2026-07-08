@@ -55,9 +55,9 @@
       "id": "contract-fixtures",
       "label": "Contract fixtures",
       "status": "pass",
-      "message": "64 canonical contract fixtures exist and parse.",
+      "message": "69 canonical contract fixtures exist and parse.",
       "details": {
-        "count": 64
+        "count": 69
       }
     },
     {
@@ -156,6 +156,21 @@
       }
     },
     {
+      "id": "patch-export",
+      "label": "Patch export",
+      "status": "pass",
+      "message": "The review-only patch export guidance and 5 deterministic fixtures are present; doctor writes no patch artifacts.",
+      "details": {
+        "reviewOnly": true,
+        "writesArtifacts": false,
+        "appliesPatches": false,
+        "gitOrDeploy": false,
+        "fixtures": 5,
+        "missing": [],
+        "docsReferenceLimitations": true
+      }
+    },
+    {
       "id": "write-policy",
       "label": "WRITE_POLICY_V1",
       "status": "pass",
@@ -180,7 +195,7 @@
     }
   ],
   "summary": {
-    "pass": 16,
+    "pass": 17,
     "warn": 2,
     "fail": 0,
     "skip": 0

@@ -1,0 +1,71 @@
+{
+  "contract": "shipready.patchExport.v1",
+  "generatedAt": "2026-06-21T12:00:00.000Z",
+  "url": "https://example.com/",
+  "repoPath": "tests/fixtures/repos/next-app-router-dry-run",
+  "mode": "patch_export",
+  "format": "unified-diff",
+  "options": {
+    "safeOnly": false,
+    "includeReviewRequired": true
+  },
+  "output": {
+    "kind": "file",
+    "path": "validation/patches/shipready.safe-creations.patch",
+    "wroteArtifact": true,
+    "bytes": 1267,
+    "bytesWritten": 1267,
+    "sha256": "f6e388e30a610e946447e684808838948e684477e4e3adc46dcaef0aaf642db4"
+  },
+  "source": {
+    "dryRunContract": "shipready.dryRunFix.v1",
+    "dryRunGeneratedAt": "2026-06-21T12:00:00.000Z",
+    "policy": "review_export_only"
+  },
+  "summary": {
+    "exportedChanges": 2,
+    "skippedChanges": 0,
+    "safeAutoCandidates": 2,
+    "reviewRequired": 0,
+    "manualOnly": 0
+  },
+  "exportedChanges": [
+    {
+      "path": "src/app/robots.ts",
+      "changeType": "create",
+      "risk": "low",
+      "reviewStatus": "auto_candidate",
+      "requiresHumanReview": false,
+      "included": true,
+      "reason": "Create an App Router robots.ts route that allows crawling and points to the sitemap.",
+      "sourceActionIds": [
+        "next_app_router.robots"
+      ]
+    },
+    {
+      "path": "src/app/sitemap.ts",
+      "changeType": "create",
+      "risk": "low",
+      "reviewStatus": "auto_candidate",
+      "requiresHumanReview": false,
+      "included": true,
+      "reason": "Create an App Router sitemap.ts route for the audited URL.",
+      "sourceActionIds": [
+        "next_app_router.sitemap"
+      ]
+    }
+  ],
+  "skippedChanges": [],
+  "warnings": [],
+  "limitations": [
+    "Patch export is generated only from the current ShipReady dry-run preview.",
+    "Patch export is not write mode and does not modify the inspected target repository.",
+    "ShipReady does not apply this patch, stage files, commit, push, open pull requests, deploy, write DNS, or call provider APIs.",
+    "Review-required changes may contain placeholders or factual assumptions that require human review before use."
+  ],
+  "nextActions": [
+    "Review the exported patch artifact with a human before using it with other tools.",
+    "Use your own tooling outside ShipReady for any repository changes, tests, commits, pushes, pull requests, or deployments.",
+    "Run ShipReady read-only checks again after any external deployment you perform."
+  ]
+}

@@ -14,6 +14,7 @@ import {
   CrawlJsonContractSchema,
   DryRunFixJsonContractSchema,
   FixPlanJsonContractSchema,
+  PatchExportJsonContractSchema,
   RepoInspectionJsonContractSchema,
   SearchConsoleStatusJsonContractSchema,
   SocialPreviewJsonContractSchema,
@@ -39,10 +40,10 @@ beforeAll(async () => {
 afterAll(async () => closeServer());
 
 describe("MCP tools", () => {
-  it("registers the thirteen read-only tools and exactly one write tool", () => {
+  it("registers the fourteen read-only tools and exactly one write tool", () => {
     const names = listTools().map((tool) => tool.name);
     expect(names).toEqual([
-      "shipready.audit_site", "shipready.crawl_site", "shipready.search_console_status", "shipready.dns_status", "shipready.recheck", "shipready.social_preview", "shipready.generated_site_smells", "shipready.inspect_repo", "shipready.plan_fixes",
+      "shipready.audit_site", "shipready.crawl_site", "shipready.search_console_status", "shipready.dns_status", "shipready.recheck", "shipready.social_preview", "shipready.generated_site_smells", "shipready.export_patch", "shipready.inspect_repo", "shipready.plan_fixes",
       "shipready.preview_fixes", "shipready.write_safe_crawl_files", "shipready.get_ui_report",
       "shipready.get_contract_fixture", "shipready.get_policy_doc",
     ]);
@@ -67,6 +68,35 @@ describe("MCP tools", () => {
     expect(() => FixPlanJsonContractSchema.parse(plan.structuredContent)).not.toThrow();
     expect(DryRunFixJsonContractSchema.parse(preview.structuredContent)).toMatchObject({ mode: "dry_run", wroteFiles: false });
     expect(() => UiReportJsonContractSchema.parse(report.structuredContent)).not.toThrow();
+  });
+
+  it("returns an inline patch export contract without writing artifacts", async () => {
+    const tempRoot = await mkdtemp(join(tmpdir(), "shipready-mcp-patch-export-"));
+    const repoPath = join(tempRoot, "repo");
+    await cp(join(fixtureRoot, "next-app-router-dry-run"), repoPath, { recursive: true });
+    try {
+      const isolated = { ...context, authorizer: await PathAuthorizer.create([tempRoot]) };
+      const before = await treeDigest(repoPath);
+      const result = await callReadOnlyTool(isolated, "shipready.export_patch", { url, repoPath, rendered: false });
+      const after = await treeDigest(repoPath);
+      const contract = PatchExportJsonContractSchema.parse(result.structuredContent);
+
+      expect("isError" in result ? result.isError : false).toBe(false);
+      expect(contract).toMatchObject({
+        contract: "shipready.patchExport.v1",
+        mode: "patch_export",
+        output: {
+          kind: "inline",
+          wroteArtifact: false,
+          bytesWritten: 0,
+          content: expect.stringContaining("ShipReady patch export manifest"),
+        },
+      });
+      expect(after).toBe(before);
+      expect(await readdir(tempRoot)).toEqual(["repo"]);
+    } finally {
+      await rm(tempRoot, { recursive: true, force: true });
+    }
   });
 
   it("returns the social preview contract without repository authorization", async () => {
@@ -131,6 +161,11 @@ describe("MCP tools", () => {
     const invalid = await callReadOnlyTool(context, "shipready.audit_site", { url: "not-a-url" });
     const unknown = await callReadOnlyTool(context, "shipready.audit_site", { url, extra: true });
     const outside = await callReadOnlyTool(context, "shipready.inspect_repo", { repoPath: tmpdir() });
+    const outsidePatchExport = await callReadOnlyTool(context, "shipready.export_patch", {
+      url,
+      repoPath: tmpdir(),
+      rendered: false,
+    });
     const timeoutContext: McpToolContext = {
       ...context,
       timeouts: {
@@ -150,6 +185,7 @@ describe("MCP tools", () => {
     expect(invalid).toMatchObject({ isError: true, structuredContent: { contract: "shipready.error.v1", code: "invalid_url" } });
     expect(unknown).toMatchObject({ isError: true, structuredContent: { code: "unsupported_command" } });
     expect(outside).toMatchObject({ isError: true, structuredContent: { code: "path_not_authorized" } });
+    expect(outsidePatchExport).toMatchObject({ isError: true, structuredContent: { code: "path_not_authorized" } });
     expect(timedOut).toMatchObject({ isError: true, structuredContent: { code: "timeout", retryable: true, details: { timeoutMs: 20 } } });
   });
 

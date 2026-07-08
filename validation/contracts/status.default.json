@@ -16,6 +16,7 @@
       "crawl",
       "social-preview",
       "smells",
+      "patch-export",
       "audit",
       "inspect-repo",
       "plan-fixes",
@@ -36,6 +37,7 @@
         "shipready.recheck",
         "shipready.social_preview",
         "shipready.generated_site_smells",
+        "shipready.export_patch",
         "shipready.inspect_repo",
         "shipready.plan_fixes",
         "shipready.preview_fixes",
@@ -72,6 +74,8 @@
     "fullSiteCrawler": "not_implemented",
     "monitoring": "not_implemented",
     "scheduledCrawls": "not_implemented",
+    "patchExport": "review_only_export",
+    "patchApply": "not_implemented",
     "generatedSiteSmells": "read_only_detector",
     "aiAuthorshipDetection": "not_implemented",
     "smellDetectorAutoFixes": "not_implemented",
@@ -93,5 +97,5 @@
     "fodmappVoiceover": "validation/demo-fodmapp-voiceover-final/"
   },
   "nextRecommendedCommand": "pnpm shipready doctor",
-  "nextRecommendedPass": "Patch export"
+  "nextRecommendedPass": "GitHub PR integration"
 }

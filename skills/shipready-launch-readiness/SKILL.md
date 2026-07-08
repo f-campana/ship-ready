@@ -26,11 +26,11 @@ Do not use ShipReady for keyword research, rank tracking, backlink analysis, gen
 
 | State | Current capability |
 |---|---|
-| Implemented | Single-page audit; bounded multi-page crawl; bounded repo inspection; generated-site implementation smell detector; social preview simulator; planning; dry-run; status/doctor; versioned JSON; UI and HTML reports; local read-only GUI review cockpit; stdio MCP |
+| Implemented | Single-page audit; bounded multi-page crawl; bounded repo inspection; generated-site implementation smell detector; social preview simulator; planning; dry-run; review-only patch export; status/doctor; versioned JSON; UI and HTML reports; local read-only GUI review cockpit; stdio MCP |
 | Mock-backed | Search Console status only; no Google OAuth, tokens, or live API calls |
 | Read-only | Audit, bounded crawl, inspection, social preview simulation, planning, dry-run, post-write recheck, UI report, GUI, Search Console mocks, and DNS status; live DNS uses resolver observations only |
 | Write-guarded | CLI and the sole MCP write tool may create only eligible missing robots/sitemap files under `WRITE_POLICY_V1` |
-| Future | Terminal output polish/TUI viewer, patch export, and GitHub PR integration |
+| Future | Terminal output polish/TUI viewer and GitHub PR integration |
 
 Never infer future behavior from a roadmap name. A single-page audit covers one page; bounded crawl covers only a small same-origin sample under strict limits. The current social preview simulator is a metadata-based approximation, not platform output.
 
@@ -46,6 +46,8 @@ pnpm shipready recheck --url <url> --json
 pnpm shipready inspect-repo <path> --json
 pnpm shipready plan-fixes <path> --url <url> --json
 pnpm shipready fix <path> --url <url> --dry-run --json
+pnpm shipready patch-export <path> --url <url> --output /tmp/shipready.patch --json
+pnpm shipready patch-export <path> --url <url> --stdout
 pnpm shipready dns status --url <url> --json
 pnpm shipready social-preview --url <url> --json
 pnpm shipready smells <path> --json
@@ -62,6 +64,7 @@ pnpm shipready html-report <path> --url <url> --output shipready-report.html
 - Treat `social-preview` as a simulated preview from observed metadata, not a precise third-party rendering result.
 - Treat `crawl` as a bounded same-origin sample, not exhaustive site coverage or broad analytics.
 - Treat `fix --dry-run` as mandatory before a write; it writes nothing.
+- Treat `patch-export` as a review-only dry-run artifact; it does not apply patches, mutate the target repository, commit, push, open pull requests, or deploy.
 - Treat JSON `contract` discriminators as versioned public boundaries. See [CONTRACTS.md](../../docs/CONTRACTS.md).
 - Separate safe candidates, review-required changes, manual actions, already-good checks, limitations, and local-versus-live state.
 
@@ -88,6 +91,28 @@ Confirm every item before writing:
 9. Exclude metadata, content, configuration, Git, deployment, and all other forbidden effects.
 
 Stop if any check fails. Never run guarded write mode merely to validate this skill. After a permitted write, report exact local creations, tell the user to deploy through their external workflow, and then use `shipready recheck` for read-only live evidence. Do not deploy.
+
+## Export review patches
+
+```bash
+pnpm shipready patch-export <path> --url https://example.com --output /tmp/shipready.patch
+pnpm shipready patch-export <path> --url https://example.com --output /tmp/shipready.patch --json
+pnpm shipready patch-export <path> --url https://example.com --stdout
+```
+
+Use patch export when a human or external tool needs the proposed dry-run file changes without letting ShipReady write to the inspected repository. The command regenerates the current `shipready.dryRunFix.v1` preview, converts included file changes into a unified-diff artifact, and returns `shipready.patchExport.v1` with exported/skipped changes, review status, output hash, limitations, and next actions.
+
+Rules:
+
+1. Require a repository path and URL.
+2. Require exactly one of `--output` or `--stdout`.
+3. Prefer `--output` outside the inspected repository.
+4. Reject output paths inside the inspected repository by default.
+5. Use `--stdout` when no file should be written.
+6. Keep review-required changes clearly marked.
+7. Review the artifact before using it with other tools.
+
+Patch export is not write mode. It never invokes `fix --write`, applies patches, mutates the target repository, stages/commits/pushes, opens pull requests, deploys, writes DNS, calls provider APIs, calls live Search Console, handles OAuth/tokens, or broadens `WRITE_POLICY_V1`.
 
 ## Recheck after external deployment
 
@@ -168,10 +193,13 @@ Use these read-only tools by their exact names:
 - `shipready.recheck`
 - `shipready.social_preview`
 - `shipready.generated_site_smells`
+- `shipready.export_patch`
 
 Treat `shipready.write_safe_crawl_files` as the only MCP write tool. Before calling it, require an authorized repository path, a fresh receipt from `shipready.preview_fixes`, the same normalized URL and canonical repo path, and exact confirmation `CREATE_SAFE_CRAWL_FILES_ONLY`. The server must re-authorize and revalidate current V1 candidates.
 
-MCP remains stdio-only. Do not add or imply remote transport, arbitrary file writes, client-supplied write paths, detector auto-fixes, or DNS, Search Console, GitHub, Git, or deployment mutation. Read [MCP_PLAN.md](../../docs/MCP_PLAN.md) for schemas, resources, prompts, and failure behavior.
+`shipready.export_patch` is read-only and returns inline `shipready.patchExport.v1` content with `wroteArtifact: false`; it writes no artifact file and still requires allowed-root authorization for `repoPath`.
+
+MCP remains stdio-only. Do not add or imply remote transport, arbitrary file writes, client-supplied write paths, detector auto-fixes, patch application, or DNS, Search Console, GitHub, Git, or deployment mutation. Read [MCP_PLAN.md](../../docs/MCP_PLAN.md) for schemas, resources, prompts, and failure behavior.
 
 ## Produce GUI and HTML reports
 

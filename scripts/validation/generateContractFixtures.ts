@@ -2,6 +2,7 @@ import { cpSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, relative, resolve } from "node:path";
 import { dryRunFixFromPlan } from "../../src/fix/dryRunFix";
+import { createPatchExportFromDryRun } from "../../src/patchExport/patchExport";
 import { writeFixFromDryRun } from "../../src/fix/writeFix";
 import { planFixesFromResults } from "../../src/plan/planFixes";
 import { inspectRepo } from "../../src/repo/inspectRepo";
@@ -10,6 +11,7 @@ import { formatCliErrorJson } from "../../src/report/formatCliErrorJson";
 import { formatDryRunFixJsonReport } from "../../src/report/formatDryRunFixJsonReport";
 import { formatFixPlanJsonReport } from "../../src/report/formatFixPlanJsonReport";
 import { formatJsonReport } from "../../src/report/formatJsonReport";
+import { formatPatchExportJsonReport } from "../../src/report/formatPatchExportReport";
 import { formatRepoInspectionJsonReport } from "../../src/report/formatRepoInspectionJsonReport";
 import { formatUiReportJsonReport } from "../../src/report/formatUiReportJsonReport";
 import { formatWriteFixJsonReport } from "../../src/report/formatWriteFixJsonReport";
@@ -90,6 +92,10 @@ const skippedPlan = {
   ),
   plannedAt: FIXED_AT,
 };
+const cleanPlan = {
+  ...planFixesFromResults(cleanAudit, viteInspection),
+  plannedAt: FIXED_AT,
+};
 const safeDryRun = dryRunFixFromPlan(safePlan, {
   repoRoot: join(REPOS, "next-app-router-dry-run"),
   generatedAt: FIXED_AT,
@@ -100,6 +106,10 @@ const reviewDryRun = dryRunFixFromPlan(reviewPlan, {
 });
 const skippedDryRun = dryRunFixFromPlan(skippedPlan, {
   repoRoot: join(REPOS, "next-app-router-dry-run"),
+  generatedAt: FIXED_AT,
+});
+const cleanDryRun = dryRunFixFromPlan(cleanPlan, {
+  repoRoot: join(REPOS, "vite-react"),
   generatedAt: FIXED_AT,
 });
 
@@ -127,6 +137,46 @@ write("plan-fixes.review-required.json", formatFixPlanJsonReport(reviewPlan));
 write("fix-dry-run.safe-apply.json", formatDryRunFixJsonReport(safeDryRun));
 write("fix-dry-run.review-required.json", formatDryRunFixJsonReport(reviewDryRun));
 write("fix-dry-run.skipped.json", formatDryRunFixJsonReport(skippedDryRun));
+write("patch-export.safe-creations.json", formatPatchExportJsonReport(createPatchExportFromDryRun(safeDryRun, {
+  generatedAt: FIXED_AT,
+  output: {
+    kind: "file",
+    path: "validation/patches/shipready.safe-creations.patch",
+    wroteArtifact: true,
+  },
+}).result));
+write("patch-export.review-required.json", formatPatchExportJsonReport(createPatchExportFromDryRun(reviewDryRun, {
+  generatedAt: FIXED_AT,
+  output: {
+    kind: "file",
+    path: "validation/patches/shipready.review-required.patch",
+    wroteArtifact: true,
+  },
+}).result));
+write("patch-export.no-changes.json", formatPatchExportJsonReport(createPatchExportFromDryRun(cleanDryRun, {
+  generatedAt: FIXED_AT,
+  output: {
+    kind: "file",
+    path: "validation/patches/shipready.no-changes.patch",
+    wroteArtifact: true,
+  },
+}).result));
+write("patch-export.skipped.json", formatPatchExportJsonReport(createPatchExportFromDryRun(skippedDryRun, {
+  generatedAt: FIXED_AT,
+  output: {
+    kind: "file",
+    path: "validation/patches/shipready.skipped.patch",
+    wroteArtifact: true,
+  },
+}).result));
+write("patch-export.stdout.json", formatPatchExportJsonReport(createPatchExportFromDryRun(safeDryRun, {
+  generatedAt: FIXED_AT,
+  output: {
+    kind: "stdout",
+    wroteArtifact: false,
+    includeContent: true,
+  },
+}).result));
 
 writeFixtureFromDryRun("fix-write.safe-create.json", safeDryRun, "next-app-router-dry-run");
 writeFixtureFromDryRun("fix-write.blocked.json", reviewDryRun, "vite-react");
@@ -295,6 +345,7 @@ write("doctor.default.json", formatDoctorJson(createDoctorReport([
   doctorCheck("social-preview-simulator", "Social preview simulator", "pass", "The read-only social preview simulator guidance and 9 deterministic fixtures are present; no social platform credentials or network checks are required by doctor.", { readOnly: true, socialPlatformApis: false, exactRenderingGuarantee: false, networkRequired: false, fixtures: 9, missing: [], skillReferencesSocialPreview: true }),
   doctorCheck("generated-site-smells", "Generated-site smell detector", "pass", "The read-only generated-site smell detector guidance and 7 deterministic fixtures are present; no repo input or network is required by doctor.", { readOnly: true, autoFixes: false, authorshipIdentification: false, networkRequired: false, fixtures: 7, missing: [], docsReferenceLimitations: true }),
   doctorCheck("bounded-crawl", "Bounded multi-page crawl", "pass", "The read-only bounded crawl guidance and 7 deterministic fixtures are present; doctor performs no network crawl.", { readOnly: true, networkRequired: false, fullSiteCrawler: false, monitoring: false, fixtures: 7, missing: [], docsReferenceLimitations: true }),
+  doctorCheck("patch-export", "Patch export", "pass", "The review-only patch export guidance and 5 deterministic fixtures are present; doctor writes no patch artifacts.", { reviewOnly: true, writesArtifacts: false, appliesPatches: false, gitOrDeploy: false, fixtures: 5, missing: [], docsReferenceLimitations: true }),
   doctorCheck("write-policy", "WRITE_POLICY_V1", "pass", "The canonical creation_only_robots_sitemap_v1 policy document is present."),
   doctorCheck("local-gui-spec", "LOCAL_FIRST_GUI_SPEC", "pass", "The canonical local-first GUI specification is present."),
   doctorCheck("demo-artifacts", "Demo artifacts", "warn", "Optional demo artifacts are incomplete; core CLI operation is unaffected.", { missing: ["validation/example.mp4"] }),

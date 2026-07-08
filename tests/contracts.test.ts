@@ -7,6 +7,7 @@ import { formatCliErrorJson } from "../src/report/formatCliErrorJson";
 import { formatDryRunFixJsonReport } from "../src/report/formatDryRunFixJsonReport";
 import { formatFixPlanJsonReport } from "../src/report/formatFixPlanJsonReport";
 import { formatJsonReport } from "../src/report/formatJsonReport";
+import { formatPatchExportJsonReport } from "../src/report/formatPatchExportReport";
 import { formatRepoInspectionJsonReport } from "../src/report/formatRepoInspectionJsonReport";
 import { formatUiReportJsonReport } from "../src/report/formatUiReportJsonReport";
 import { formatWriteFixJsonReport } from "../src/report/formatWriteFixJsonReport";
@@ -27,6 +28,7 @@ import {
   DryRunFixJsonContractSchema,
   FixPlanJsonContractSchema,
   GeneratedSiteSmellsJsonContractSchema,
+  PatchExportJsonContractSchema,
   RepoInspectionJsonContractSchema,
   RecheckJsonContractSchema,
   SearchConsoleStatusJsonContractSchema,
@@ -112,6 +114,11 @@ describe("CLI JSON contracts", () => {
     ["generated-site-smells.hardcoded-localhost.json", GeneratedSiteSmellsJsonContractSchema, CONTRACT_NAMES.generatedSiteSmells],
     ["generated-site-smells.unsupported-framework.json", GeneratedSiteSmellsJsonContractSchema, CONTRACT_NAMES.generatedSiteSmells],
     ["generated-site-smells.repo-plus-url-rendered-only.json", GeneratedSiteSmellsJsonContractSchema, CONTRACT_NAMES.generatedSiteSmells],
+    ["patch-export.safe-creations.json", PatchExportJsonContractSchema, CONTRACT_NAMES.patchExport],
+    ["patch-export.review-required.json", PatchExportJsonContractSchema, CONTRACT_NAMES.patchExport],
+    ["patch-export.no-changes.json", PatchExportJsonContractSchema, CONTRACT_NAMES.patchExport],
+    ["patch-export.skipped.json", PatchExportJsonContractSchema, CONTRACT_NAMES.patchExport],
+    ["patch-export.stdout.json", PatchExportJsonContractSchema, CONTRACT_NAMES.patchExport],
   ] as const)("parses %s and preserves its discriminator", (name, schema, contract) => {
     const fixture = readFixture(name);
 
@@ -133,6 +140,7 @@ describe("CLI JSON contracts", () => {
       "social-preview --json": "shipready.socialPreview.v1",
       "smells --json": "shipready.generatedSiteSmells.v1",
       "crawl --json": "shipready.crawl.v1",
+      "patch-export --json": "shipready.patchExport.v1",
       "status --json": "shipready.status.v1",
       "doctor --json": "shipready.doctor.v1",
     });
@@ -175,6 +183,49 @@ describe("CLI JSON contracts", () => {
     expect(contractOf(formatCrawlJson(
       CrawlJsonContractSchema.parse(readFixture("crawl.clean-small-site.json")),
     ))).toBe(CONTRACT_NAMES.crawl);
+    expect(contractOf(formatPatchExportJsonReport(
+      PatchExportJsonContractSchema.parse(readFixture("patch-export.safe-creations.json")),
+    ))).toBe(CONTRACT_NAMES.patchExport);
+  });
+
+  it("keeps patch export fixtures review-only and constrained", () => {
+    const safe = PatchExportJsonContractSchema.parse(readFixture("patch-export.safe-creations.json"));
+    const review = PatchExportJsonContractSchema.parse(readFixture("patch-export.review-required.json"));
+    const noChanges = PatchExportJsonContractSchema.parse(readFixture("patch-export.no-changes.json"));
+    const skipped = PatchExportJsonContractSchema.parse(readFixture("patch-export.skipped.json"));
+    const stdout = PatchExportJsonContractSchema.parse(readFixture("patch-export.stdout.json"));
+
+    expect(safe).toMatchObject({
+      mode: "patch_export",
+      format: "unified-diff",
+      source: { dryRunContract: "shipready.dryRunFix.v1", policy: "review_export_only" },
+      output: { kind: "file", wroteArtifact: true },
+    });
+    expect(safe.exportedChanges.map((change) => change.path).sort()).toEqual([
+      "src/app/robots.ts",
+      "src/app/sitemap.ts",
+    ]);
+    expect(safe.output).not.toHaveProperty("content");
+    expect(review.exportedChanges.some((change) => change.reviewStatus === "review_required")).toBe(true);
+    expect(review.warnings).toEqual(expect.arrayContaining([
+      expect.stringContaining("Review-required dry-run changes are included"),
+    ]));
+    expect(noChanges.summary.exportedChanges).toBe(0);
+    expect(skipped.skippedChanges).toEqual(expect.arrayContaining([
+      expect.objectContaining({ kind: "dry_run_action", included: false }),
+    ]));
+    expect(stdout.output).toMatchObject({
+      kind: "stdout",
+      wroteArtifact: false,
+      bytesWritten: 0,
+      content: expect.stringContaining("diff --git a/src/app/robots.ts b/src/app/robots.ts"),
+    });
+    for (const fixture of [safe, review, noChanges, skipped, stdout]) {
+      expect(fixture.output.sha256).toMatch(/^[a-f0-9]{64}$/);
+      expect(fixture.repoPath).not.toContain("/Users/");
+      expect(fixture.limitations.join("\n")).toContain("does not modify the inspected target repository");
+      expect(fixture.limitations.join("\n")).toContain("does not apply this patch");
+    }
   });
 
   it("keeps crawl fixtures deterministic, bounded, and constrained", () => {

@@ -5,11 +5,13 @@ import { CRAWL_MOCK_SCENARIOS } from "../crawl/mockCrawl";
 import { CRAWL_SOURCE_MODES } from "../crawl/crawlTypes";
 import { dryRunFix } from "../fix/dryRunFix";
 import { writeFixFromDryRun } from "../fix/writeFix";
+import { exportPatch } from "../patchExport/patchExport";
 import { planFixes } from "../plan/planFixes";
 import { inspectRepo } from "../repo/inspectRepo";
 import { formatDryRunFixJsonReport } from "../report/formatDryRunFixJsonReport";
 import { formatFixPlanJsonReport } from "../report/formatFixPlanJsonReport";
 import { formatJsonReport } from "../report/formatJsonReport";
+import { formatPatchExportJsonReport } from "../report/formatPatchExportReport";
 import { formatRepoInspectionJsonReport } from "../report/formatRepoInspectionJsonReport";
 import { formatUiReportJsonReport } from "../report/formatUiReportJsonReport";
 import { formatWriteFixJsonReport } from "../report/formatWriteFixJsonReport";
@@ -39,6 +41,7 @@ import {
   DryRunFixJsonContractSchema,
   FixPlanJsonContractSchema,
   GeneratedSiteSmellsJsonContractSchema,
+  PatchExportJsonContractSchema,
   RepoInspectionJsonContractSchema,
   RecheckJsonContractSchema,
   SearchConsoleStatusJsonContractSchema,
@@ -117,6 +120,10 @@ const GeneratedSiteSmellsInputSchema = z.object({
   url: z.string().trim().min(1).max(2048).optional(),
   mock: z.enum(GENERATED_SITE_SMELL_MOCK_SCENARIOS).optional(),
 }).strict();
+const ExportPatchInputSchema = UrlRepoInputSchema.extend({
+  safeOnly: z.boolean().optional().default(false),
+  includeReviewRequired: z.boolean().optional().default(true),
+}).strict();
 const FixtureInputSchema = z.object({ fixtureName: z.enum(FIXTURE_NAMES) }).strict();
 const PolicyInputSchema = z.object({ name: z.enum(Object.keys(POLICY_DOCS) as [keyof typeof POLICY_DOCS, ...(keyof typeof POLICY_DOCS)[]]) }).strict();
 
@@ -128,6 +135,7 @@ export type McpOperations = {
   recheck: typeof recheck;
   socialPreview: typeof getSocialPreview;
   generatedSiteSmells: typeof getGeneratedSiteSmells;
+  exportPatch: typeof exportPatch;
   inspectRepo: typeof inspectRepo;
   planFixes: typeof planFixes;
   previewFixes: typeof dryRunFix;
@@ -151,6 +159,7 @@ const DEFAULT_OPERATIONS: McpOperations = {
   recheck,
   socialPreview: getSocialPreview,
   generatedSiteSmells: getGeneratedSiteSmells,
+  exportPatch,
   inspectRepo,
   planFixes,
   previewFixes: dryRunFix,
@@ -206,6 +215,13 @@ export function listTools() {
       url: stringSchema(2048),
       mock: { type: "string", enum: [...GENERATED_SITE_SMELL_MOCK_SCENARIOS] },
     }, ["repoPath"]), { ...readOnly, openWorldHint: true }),
+    tool("shipready.export_patch", "Export a review-only patch artifact inline from the current dry-run; writes no files and never applies patches.", schema({
+      url: stringSchema(2048),
+      repoPath: stringSchema(4096),
+      rendered: { type: "boolean", default: true },
+      safeOnly: { type: "boolean", default: false },
+      includeReviewRequired: { type: "boolean", default: true },
+    }, ["url", "repoPath"]), { ...readOnly, openWorldHint: true }),
     tool("shipready.inspect_repo", "Inspect one explicitly authorized repository without writes.", schema({
       repoPath: stringSchema(4096),
     }, ["repoPath"]), { ...readOnly, openWorldHint: false }),
@@ -378,6 +394,18 @@ async function executeTool(
     });
     return contractResult(formatGeneratedSiteSmellsJson(result), GeneratedSiteSmellsJsonContractSchema);
   }
+  if (name === "shipready.export_patch") {
+    const input = parseInput(ExportPatchInputSchema, args, "invalid_url");
+    const url = normalizeAuditUrl(input.url);
+    const repoPath = await context.authorizer.authorizeRepoPath(input.repoPath);
+    const execution = await operations.exportPatch(repoPath, url, {
+      safeOnly: input.safeOnly,
+      includeReviewRequired: input.includeReviewRequired,
+      output: { kind: "inline", includeContent: true },
+      dryRunOptions: { timeoutMs, render: input.rendered },
+    });
+    return contractResult(formatPatchExportJsonReport(execution.result), PatchExportJsonContractSchema);
+  }
   if (name === "shipready.inspect_repo") {
     const input = parseInput(RepoInputSchema, args, "invalid_repo_path");
     const repoPath = await context.authorizer.authorizeRepoPath(input.repoPath);
@@ -543,6 +571,7 @@ function timeoutFor(name: ToolName, timeouts: McpTimeouts): number {
   if (name === "shipready.recheck") return timeouts.audit_site;
   if (name === "shipready.social_preview") return timeouts.audit_site;
   if (name === "shipready.generated_site_smells") return timeouts.generated_site_smells;
+  if (name === "shipready.export_patch") return timeouts.preview_fixes;
   if (name === "shipready.inspect_repo") return timeouts.inspect_repo;
   if (name === "shipready.plan_fixes") return timeouts.plan_fixes;
   if (name === "shipready.preview_fixes") return timeouts.preview_fixes;
