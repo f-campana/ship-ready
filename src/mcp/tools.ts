@@ -5,11 +5,13 @@ import { CRAWL_MOCK_SCENARIOS } from "../crawl/mockCrawl";
 import { CRAWL_SOURCE_MODES } from "../crawl/crawlTypes";
 import { dryRunFix } from "../fix/dryRunFix";
 import { writeFixFromDryRun } from "../fix/writeFix";
+import { githubPrDraft } from "../githubPrDraft/githubPrDraft";
 import { exportPatch } from "../patchExport/patchExport";
 import { planFixes } from "../plan/planFixes";
 import { inspectRepo } from "../repo/inspectRepo";
 import { formatDryRunFixJsonReport } from "../report/formatDryRunFixJsonReport";
 import { formatFixPlanJsonReport } from "../report/formatFixPlanJsonReport";
+import { formatGithubPrDraftJsonReport } from "../report/formatGithubPrDraftReport";
 import { formatJsonReport } from "../report/formatJsonReport";
 import { formatPatchExportJsonReport } from "../report/formatPatchExportReport";
 import { formatRepoInspectionJsonReport } from "../report/formatRepoInspectionJsonReport";
@@ -41,6 +43,7 @@ import {
   DryRunFixJsonContractSchema,
   FixPlanJsonContractSchema,
   GeneratedSiteSmellsJsonContractSchema,
+  GithubPrDraftJsonContractSchema,
   PatchExportJsonContractSchema,
   RepoInspectionJsonContractSchema,
   RecheckJsonContractSchema,
@@ -124,6 +127,12 @@ const ExportPatchInputSchema = UrlRepoInputSchema.extend({
   safeOnly: z.boolean().optional().default(false),
   includeReviewRequired: z.boolean().optional().default(true),
 }).strict();
+const GithubPrDraftInputSchema = UrlRepoInputSchema.extend({
+  githubRepo: z.string().trim().min(1).max(256).optional(),
+  baseBranch: z.string().trim().min(1).max(240).optional(),
+  suggestedBranch: z.string().trim().min(1).max(240).optional(),
+  includeGhCommand: z.boolean().optional().default(false),
+}).strict();
 const FixtureInputSchema = z.object({ fixtureName: z.enum(FIXTURE_NAMES) }).strict();
 const PolicyInputSchema = z.object({ name: z.enum(Object.keys(POLICY_DOCS) as [keyof typeof POLICY_DOCS, ...(keyof typeof POLICY_DOCS)[]]) }).strict();
 
@@ -136,6 +145,7 @@ export type McpOperations = {
   socialPreview: typeof getSocialPreview;
   generatedSiteSmells: typeof getGeneratedSiteSmells;
   exportPatch: typeof exportPatch;
+  githubPrDraft: typeof githubPrDraft;
   inspectRepo: typeof inspectRepo;
   planFixes: typeof planFixes;
   previewFixes: typeof dryRunFix;
@@ -160,6 +170,7 @@ const DEFAULT_OPERATIONS: McpOperations = {
   socialPreview: getSocialPreview,
   generatedSiteSmells: getGeneratedSiteSmells,
   exportPatch,
+  githubPrDraft,
   inspectRepo,
   planFixes,
   previewFixes: dryRunFix,
@@ -221,6 +232,15 @@ export function listTools() {
       rendered: { type: "boolean", default: true },
       safeOnly: { type: "boolean", default: false },
       includeReviewRequired: { type: "boolean", default: true },
+    }, ["url", "repoPath"]), { ...readOnly, openWorldHint: true }),
+    tool("shipready.github_pr_draft", "Return an inline review-only GitHub PR draft handoff; writes no files, runs no Git, and calls no GitHub APIs.", schema({
+      url: stringSchema(2048),
+      repoPath: stringSchema(4096),
+      rendered: { type: "boolean", default: true },
+      githubRepo: stringSchema(256),
+      baseBranch: stringSchema(240),
+      suggestedBranch: stringSchema(240),
+      includeGhCommand: { type: "boolean", default: false },
     }, ["url", "repoPath"]), { ...readOnly, openWorldHint: true }),
     tool("shipready.inspect_repo", "Inspect one explicitly authorized repository without writes.", schema({
       repoPath: stringSchema(4096),
@@ -406,6 +426,20 @@ async function executeTool(
     });
     return contractResult(formatPatchExportJsonReport(execution.result), PatchExportJsonContractSchema);
   }
+  if (name === "shipready.github_pr_draft") {
+    const input = parseInput(GithubPrDraftInputSchema, args, "invalid_url");
+    const url = normalizeAuditUrl(input.url);
+    const repoPath = await context.authorizer.authorizeRepoPath(input.repoPath);
+    const execution = await operations.githubPrDraft(repoPath, url, {
+      githubRepo: input.githubRepo,
+      baseBranch: input.baseBranch,
+      suggestedBranch: input.suggestedBranch,
+      includeGhCommand: input.includeGhCommand,
+      output: { kind: "inline", wroteArtifact: false },
+      dryRunOptions: { timeoutMs, render: input.rendered },
+    });
+    return contractResult(formatGithubPrDraftJsonReport(execution.result), GithubPrDraftJsonContractSchema);
+  }
   if (name === "shipready.inspect_repo") {
     const input = parseInput(RepoInputSchema, args, "invalid_repo_path");
     const repoPath = await context.authorizer.authorizeRepoPath(input.repoPath);
@@ -490,22 +524,35 @@ async function executeTool(
 function parseInput<T extends z.ZodType>(
   schema: T,
   input: unknown,
-  code: "invalid_url" | "invalid_mode" | "invalid_repo_path" | "fixture_not_found" | "doc_not_found",
+  code: "invalid_url" | "invalid_mode" | "invalid_repo_path" | "invalid_github_repo" | "fixture_not_found" | "doc_not_found",
 ): z.infer<T> {
   const parsed = schema.safeParse(input);
   if (parsed.success) return parsed.data;
   const unknownField = parsed.error.issues.some((issue) => issue.code === "unrecognized_keys");
   const invalidRepoPath = parsed.error.issues.some((issue) => issue.path[0] === "repoPath");
+  const invalidGithubRepo = parsed.error.issues.some((issue) => issue.path[0] === "githubRepo");
   const invalidMode = parsed.error.issues.some((issue) =>
     issue.path[0] === "mock" ||
     issue.path[0] === "expectedWwwMode" ||
     issue.path[0] === "source" ||
     issue.path[0] === "maxPages" ||
-    issue.path[0] === "maxDepth");
+    issue.path[0] === "maxDepth" ||
+    issue.path[0] === "baseBranch" ||
+    issue.path[0] === "suggestedBranch");
   throw new ShipReadyMcpError(
-    unknownField ? "unsupported_command" : invalidRepoPath ? "invalid_repo_path" : invalidMode ? "invalid_mode" : code,
+    unknownField
+      ? "unsupported_command"
+      : invalidRepoPath
+        ? "invalid_repo_path"
+        : invalidGithubRepo
+          ? "invalid_github_repo"
+          : invalidMode
+            ? "invalid_mode"
+            : code,
     unknownField
       ? "Tool input contains unsupported fields."
+      : invalidGithubRepo
+        ? "Tool input contains an invalid GitHub repository metadata value."
       : invalidMode
         ? "Tool input contains an unsupported mode or mock scenario."
         : "Tool input is missing or invalid.",
@@ -572,6 +619,7 @@ function timeoutFor(name: ToolName, timeouts: McpTimeouts): number {
   if (name === "shipready.social_preview") return timeouts.audit_site;
   if (name === "shipready.generated_site_smells") return timeouts.generated_site_smells;
   if (name === "shipready.export_patch") return timeouts.preview_fixes;
+  if (name === "shipready.github_pr_draft") return timeouts.preview_fixes;
   if (name === "shipready.inspect_repo") return timeouts.inspect_repo;
   if (name === "shipready.plan_fixes") return timeouts.plan_fixes;
   if (name === "shipready.preview_fixes") return timeouts.preview_fixes;

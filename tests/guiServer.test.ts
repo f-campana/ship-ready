@@ -54,6 +54,7 @@ describe("ShipReady local GUI", () => {
         "Project understanding",
         "Fix plan",
         "Patch preview",
+        "PR draft handoff",
         "Safe-write handoff",
         "Post-deploy recheck",
         "Safety and limits",
@@ -339,10 +340,19 @@ describe("ShipReady local GUI", () => {
   });
 
   it("displays safe apply as a command and does not add an execute endpoint", async () => {
+    const repoPath = join(import.meta.dirname, "fixtures", "repos", "next-app-router-dry-run");
+
     await withServer(async (server) => {
       const js = await fetchText(`${server.url}/assets/gui.js`);
+      const review = await postReview(server, {
+        url: "https://example.com",
+        repoPath,
+      });
 
       expect(js).toContain("pnpm shipready fix");
+      expect(js).toContain("GitHub PR draft CLI command");
+      expect(js).toContain("GitHub PR creation is not implemented in the GUI.");
+      expect(js).toContain("Live GitHub PR creation is not implemented.");
       expect(js).toContain("Copy command");
       expect(js).toContain("Command copied. The GUI did not run it.");
       expect(js).toContain("The GUI can only copy the guarded command. It does not execute writes.");
@@ -350,6 +360,11 @@ describe("ShipReady local GUI", () => {
       expect(js).not.toContain("/api/fix");
       expect(js).not.toContain("child_process");
       expect(js).not.toContain("exec(");
+      expect(review.status).toBe(200);
+      expect(review.body.ok).toBe(true);
+      if (review.body.ok) {
+        expect(review.body.review.commands.githubPrDraft).toContain("pnpm shipready github-pr-draft");
+      }
     });
   });
 
@@ -372,6 +387,7 @@ describe("ShipReady local GUI", () => {
       expect(js).toContain("Recheck is read-only and does not deploy. Local files do not change the live site until externally deployed.");
       expect(js).toContain("No DNS writes.");
       expect(js).toContain("No Git/GitHub actions");
+      expect(js).toContain("No GitHub PR creation.");
     });
   });
 

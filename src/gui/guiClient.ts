@@ -183,10 +183,11 @@ export const GUI_CLIENT_JS = `
     reportRoot.appendChild(renderSearchConsoleSection(review));
 
     if (report && report.input && report.input.repoPath) {
-      reportRoot.appendChild(renderProject(report.project));
+    reportRoot.appendChild(renderProject(report.project));
     }
     reportRoot.appendChild(renderFixPlan(report && report.actionGroups, report && report.input && report.input.mode));
     reportRoot.appendChild(renderPatchPreview(report && report.patchPreview));
+    reportRoot.appendChild(renderPrDraftHandoff(review));
     reportRoot.appendChild(renderSafeApply(review, report));
     reportRoot.appendChild(renderRecheckSection(review));
     reportRoot.appendChild(renderSafetySection(review));
@@ -550,6 +551,23 @@ export const GUI_CLIENT_JS = `
     return section;
   }
 
+  function renderPrDraftHandoff(review) {
+    if (!(review.input && review.input.repoPath)) {
+      var urlOnly = createSection("PR draft handoff", "No local project folder", "Add a project folder before preparing a pull request draft handoff.");
+      urlOnly.appendChild(notice("GitHub PR creation is not implemented in the GUI."));
+      return urlOnly;
+    }
+    var section = createSection("PR draft handoff", "Copy a review-only PR draft command", "This prepares PR title/body/checklists as a local review artifact. It does not create a PR, branch, commit, push, deployment, or GitHub update.");
+    section.appendChild(renderCommandBlock("GitHub PR draft CLI command", review.commands && review.commands.githubPrDraft));
+    section.appendChild(renderStringList([
+      "Copy-only command handoff.",
+      "Live GitHub PR creation is not implemented.",
+      "No GitHub API calls, Git commands, branch creation, commits, pushes, or deploys.",
+      "Patch export remains review-only and requires human review.",
+    ], "No PR draft safety notes.", "file-chip-list"));
+    return section;
+  }
+
   function renderSafeApply(review, report) {
     var safeApply = report && report.safeApply;
     var input = report && report.input ? report.input : {};
@@ -602,6 +620,7 @@ export const GUI_CLIENT_JS = `
     section.appendChild(renderStringList(review.safety || [
       "No deploys.",
       "No Git/GitHub actions.",
+      "No GitHub PR creation.",
       "No metadata/content/JSON-LD writes.",
       "No DNS writes.",
       "Search Console remains mock-backed.",

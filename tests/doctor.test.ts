@@ -108,6 +108,18 @@ describe("doctor", () => {
         docsReferenceLimitations: true,
       },
     });
+    expect(report.checks.find((check) => check.id === "github-pr-draft")).toMatchObject({
+      status: "pass",
+      details: {
+        reviewOnly: true,
+        githubAuthRequired: false,
+        githubApiCalls: false,
+        gitCommands: false,
+        writesArtifacts: false,
+        fixtures: 4,
+        docsReferenceLimitations: true,
+      },
+    });
   });
 
   it("reports a missing optional FFmpeg tool as a warning", async () => {

@@ -41,7 +41,7 @@ export async function createMcpServer(options: McpStartupOptions): Promise<Serve
     { name: "shipready", version: "0.1.0" },
     {
       capabilities: { tools: {}, resources: {}, prompts: {} },
-      instructions: "ShipReady local stdio adapter. Tools are read-only except shipready.write_safe_crawl_files, which can create only current V1-eligible missing robots/sitemap files after a fresh signed preview receipt and exact confirmation phrase. shipready.export_patch is read-only and returns inline review patch content only.",
+      instructions: "ShipReady local stdio adapter. Tools are read-only except shipready.write_safe_crawl_files, which can create only current V1-eligible missing robots/sitemap files after a fresh signed preview receipt and exact confirmation phrase. shipready.export_patch and shipready.github_pr_draft are read-only review handoffs and write no MCP artifacts.",
     },
   );
 

@@ -6,6 +6,7 @@ import { crawlSite } from "../crawl/crawl";
 import { CrawlError } from "../crawl/crawlTypes";
 import { dryRunFix } from "../fix/dryRunFix";
 import { writeFix, WriteFixExecutionError, WriteFixValidationError } from "../fix/writeFix";
+import { githubPrDraft, GithubPrDraftError } from "../githubPrDraft/githubPrDraft";
 import { startGuiServer } from "../gui/startGuiServer";
 import { exportPatch, PatchExportError } from "../patchExport/patchExport";
 import { planFixes } from "../plan/planFixes";
@@ -61,6 +62,10 @@ import {
   formatGeneratedSiteSmellsHuman,
   formatGeneratedSiteSmellsJson,
 } from "../report/formatGeneratedSiteSmellsReport";
+import {
+  formatGithubPrDraftHumanReport,
+  formatGithubPrDraftJsonReport,
+} from "../report/formatGithubPrDraftReport";
 import { formatCrawlHuman, formatCrawlJson } from "../report/formatCrawlReport";
 
 const program = new Command();
@@ -411,7 +416,7 @@ dns
 
 program
   .command("mcp")
-  .description("Start the local ShipReady MCP stdio server (fourteen read-only tools, one guarded V1 write tool).")
+  .description("Start the local ShipReady MCP stdio server (fifteen read-only tools, one guarded V1 write tool).")
   .option(
     "--allow-root <absolute-path>",
     "Authorize one repository root (repeatable)",
@@ -604,6 +609,95 @@ program
       }
       const message = error instanceof Error ? error.message : "Unexpected patch export failure.";
       writeCommandError("patch-export", message, options.json, isInputError(message) ? 1 : 2);
+    }
+  });
+
+program
+  .command("github-pr-draft")
+  .description("Create a review-only GitHub PR draft handoff artifact without calling GitHub or running Git.")
+  .argument("<path>", "Local repository path to inspect")
+  .requiredOption("--url <url>", "Public page URL to audit and draft the PR handoff against")
+  .option("--patch <file>", "Existing review-only patch artifact to reference")
+  .option("--output <file>", "Write the PR draft markdown artifact to this file outside the inspected repository")
+  .option("--stdout", "Print the PR draft markdown artifact to stdout and write no files")
+  .option("--github-repo <owner/repo>", "GitHub repository metadata for copyable commands only")
+  .option("--base <branch>", "Base branch metadata for copyable commands only", "main")
+  .option("--branch <branch>", "Suggested branch name for copyable commands only", "shipready/launch-readiness")
+  .option("--title <title>", "PR draft title")
+  .option("--include-gh-command", "Include a copyable gh pr create command string")
+  .option("--json", "Output structured JSON metadata instead of a human report")
+  .option("--timeout <ms>", "Network and render timeout in milliseconds", "15000")
+  .option("--no-render", "Skip the Playwright rendered pass")
+  .option("--user-agent <ua>", "Override the default user agent")
+  .action(async (path: string, options: GithubPrDraftCommandOptions) => {
+    const timeoutMs = Number(options.timeout);
+    if (!Number.isFinite(timeoutMs) || timeoutMs <= 0) {
+      writeTypedCommandError(
+        "github-pr-draft",
+        "invalid_timeout",
+        "Invalid timeout. Provide a positive number of milliseconds.",
+        options.json,
+        1,
+      );
+      return;
+    }
+
+    if (Boolean(options.output) === Boolean(options.stdout)) {
+      writeTypedCommandError(
+        "github-pr-draft",
+        "invalid_output_path",
+        "GitHub PR draft requires exactly one of --output <file> or --stdout.",
+        options.json,
+        1,
+      );
+      return;
+    }
+
+    try {
+      const execution = await githubPrDraft(path, options.url, {
+        patchPath: options.patch,
+        githubRepo: options.githubRepo,
+        baseBranch: options.base,
+        suggestedBranch: options.branch,
+        title: options.title,
+        includeGhCommand: Boolean(options.includeGhCommand),
+        output: options.stdout
+          ? { kind: "stdout", wroteArtifact: false }
+          : { kind: "file", path: options.output as string, wroteArtifact: true },
+        dryRunOptions: {
+          timeoutMs,
+          userAgent: options.userAgent,
+          render: options.render,
+        },
+      });
+
+      if (options.stdout && !options.json) {
+        process.stdout.write(execution.artifactContent);
+        return;
+      }
+
+      process.stdout.write(
+        options.json
+          ? formatGithubPrDraftJsonReport(execution.result)
+          : formatGithubPrDraftHumanReport(execution.result),
+      );
+    } catch (error) {
+      if (error instanceof GithubPrDraftError) {
+        writeTypedCommandError("github-pr-draft", error.code, error.message, options.json, error.exitCode);
+        return;
+      }
+      if (error instanceof z.ZodError) {
+        writeTypedCommandError(
+          "github-pr-draft",
+          "contract_error",
+          "ShipReady produced data that did not match its published GitHub PR draft contract.",
+          options.json,
+          2,
+        );
+        return;
+      }
+      const message = error instanceof Error ? error.message : "Unexpected GitHub PR draft failure.";
+      writeCommandError("github-pr-draft", message, options.json, isInputError(message) ? 1 : 2);
     }
   });
 
@@ -890,6 +984,22 @@ type PatchExportCommandOptions = {
   format: "unified-diff" | "bundle";
   includeReviewRequired?: boolean;
   safeOnly?: boolean;
+  timeout: string;
+  render: boolean;
+  userAgent?: string;
+};
+
+type GithubPrDraftCommandOptions = {
+  url: string;
+  patch?: string;
+  output?: string;
+  stdout?: boolean;
+  githubRepo?: string;
+  base?: string;
+  branch?: string;
+  title?: string;
+  includeGhCommand?: boolean;
+  json?: boolean;
   timeout: string;
   render: boolean;
   userAgent?: string;

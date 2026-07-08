@@ -2,7 +2,7 @@
 
 ## Pass 16 Current Implementation
 
-The shipped local GUI is a loopback-only, read-only review cockpit for humans. It is not a SaaS app, deployment control panel, DNS manager, Search Console client, GitHub tool, or GUI write executor.
+The shipped local GUI is a loopback-only, read-only review cockpit for humans. It is not a SaaS app, deployment control panel, DNS manager, Search Console client, live GitHub automation tool, or GUI write executor.
 
 Current first-screen promise:
 
@@ -18,6 +18,7 @@ Implemented GUI surfaces:
 - The initial run loads the main `ui-report-v1` review. Social preview, bounded crawl, generated-site smells, DNS status, Search Console mock status, and recheck run only on demand.
 - Safe crawl-file creation is shown as a copyable guarded CLI command only. The GUI does not execute it.
 - Review-only patch export exists in the CLI and MCP, but the current GUI does not write patch artifacts or apply patches.
+- Review-only GitHub PR draft handoff exists in the CLI and MCP; the GUI may show a copyable `github-pr-draft` command only.
 - `POST /api/fix` remains absent and returns `404`.
 
 Required labels and limits:
@@ -28,7 +29,7 @@ Required labels and limits:
 - Search Console status is mock-backed only; no Google OAuth, tokens, or live Google calls are implemented.
 - DNS status is read-only resolver evidence; no provider APIs or DNS writes are implemented.
 - Recheck is read-only and does not deploy; local files affect the live site only after external deployment.
-- The GUI performs no patch application, Git/GitHub, deployment, provider, social platform, metadata/content/JSON-LD/package/config, or DNS mutation.
+- The GUI performs no patch application, Git/GitHub command execution, live PR creation, branch creation, commit/push, deployment, provider, social platform, metadata/content/JSON-LD/package/config, or DNS mutation.
 
 ## 1. Product Goal
 
@@ -93,6 +94,7 @@ The first GUI MVP should not include:
 - GUI write execution.
 - Guarded writes from the GUI.
 - GUI patch artifact writes or patch application.
+- GUI PR draft artifact writes.
 - Hosted or remote GUI APIs.
 - Automated metadata, JSON-LD, content, accessibility text, package, config, Git, commit, or deploy writes.
 - A general-purpose expert SEO dashboard.
@@ -366,6 +368,7 @@ Content:
 - Skipped or blocked actions.
 - Diff preview.
 - Optional CLI/MCP patch export handoff for review outside the GUI.
+- Optional CLI/MCP PR draft handoff as a copyable command only.
 - Safety notes.
 - Copyable guarded CLI command only when eligible write candidates exist.
 
@@ -395,6 +398,7 @@ Data source:
 - `DryRunFixResult.recommendedNextStep`.
 - `DryRunFileChange.diff`, `before`, and `after` for advanced preview.
 - `shipready patch-export` / `shipready.export_patch` for review-only artifacts outside the GUI. The current GUI should not write patch files.
+- `shipready github-pr-draft` / `shipready.github_pr_draft` for review-only PR draft handoff. The current GUI should not write PR draft files, call GitHub, run Git, or create PRs.
 
 ### Screen 6 - Command Handoff And External Apply Result
 
@@ -687,6 +691,7 @@ The MVP should include:
 - Fix plan grouped by safety and review level.
 - Dry-run patch preview.
 - Copy-only safe-write handoff for V1-eligible robots/sitemap creations.
+- Copy-only PR draft handoff command for humans to run outside the GUI.
 - Post-deploy recheck view that separates local state from live deployed state.
 - Re-check view that separates local state from live deployed state.
 - Collapsible developer details.
@@ -717,6 +722,7 @@ Later product directions:
 - Export patch file.
 - Git worktree safety checks.
 - GitHub PR creation.
+- GitHub API calls, branch creation, commits, or pushes.
 - Deployment provider integrations.
 - Re-run after deployment with before/after history.
 - Share preview image validation and image-size guidance.

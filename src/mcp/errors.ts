@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { GithubPrDraftError } from "../githubPrDraft/githubPrDraft";
 import {
   CliErrorContractSchema,
   CONTRACT_NAMES,
@@ -67,6 +68,13 @@ function classifyError(error: unknown): ShipReadyMcpError {
       "ShipReady could not read the requested network resource.",
       { stage: "network", retryable: true },
     );
+  }
+
+  if (error instanceof GithubPrDraftError) {
+    return new ShipReadyMcpError(error.code, error.message, {
+      stage: error.code === "contract_error" ? "contract" : "input",
+      retryable: false,
+    });
   }
 
   if (error instanceof WriteFixValidationError) {

@@ -29,6 +29,7 @@ This was low risk because CLI JSON formatting already had a dedicated Zod-valida
 | `smells <path> --json` | Yes | `shipready.generatedSiteSmells.v1` | V1 implementation-smell boundary | Local read only or optional network read with `--url` |
 | `crawl --url <url> --json` | Yes | `shipready.crawl.v1` | V1 bounded crawl boundary | Network read only or deterministic local mock |
 | `patch-export <path> --url <url> --json` | Yes | `shipready.patchExport.v1` | V1 review patch export boundary | Dry-run-derived artifact export; no target repo mutation |
+| `github-pr-draft <path> --url <url> --json` | Yes | `shipready.githubPrDraft.v1` | V1 PR draft handoff boundary | Dry-run/patch-export-derived review artifact; no GitHub/Git/deploy behavior |
 | JSON command failure | When the invoked command accepted `--json` | `shipready.error.v1` | V1 error boundary; Commander parse gaps remain | No additional effects |
 
 The authoritative mapping and CLI contract schemas are in `src/types/contracts.ts`.
@@ -139,6 +140,24 @@ Unified diff artifacts include a short review-only manifest header followed by `
 
 The CLI writes only the explicit `--output` artifact path, rejects output paths inside the inspected repository by default, and writes no files in `--stdout` mode. The MCP tool always returns inline content and writes no artifacts. Neither surface invokes write mode, applies patches, mutates the inspected target repository, stages/commits/pushes, opens pull requests, deploys, writes DNS, calls provider APIs, calls live Search Console, handles OAuth/tokens, or broadens `WRITE_POLICY_V1`.
 
+## `shipready.githubPrDraft.v1`
+
+Pass 18 implements this contract for `github-pr-draft --json` and the read-only MCP tool `shipready.github_pr_draft`.
+
+Top-level keys are `contract`, `generatedAt`, `url`, `repoPath`, `github`, `source`, `draft`, `commands`, `summary`, `files`, `output`, `safety`, `warnings`, `limitations`, and `nextActions`. Stable discriminators are `contract: "shipready.githubPrDraft.v1"` and `source.policy: "review_handoff_only"`. `source.dryRunContract` is always `shipready.dryRunFix.v1`; when ShipReady internally regenerates patch evidence, `source.patchExportContract` is `shipready.patchExport.v1`.
+
+`draft` contains a conservative PR title, PR body, review checklist, validation checklist items, and labels. The PR body states that ShipReady did not create a PR, branch, commit, push, deploy, GitHub update, or applied fix. It also states that patch export is review-only, local changes require external deployment, and recheck after deployment is required for read-only public evidence.
+
+`commands` contains copyable command strings only. `commands.gh` is present only when `--include-gh-command` or the MCP input requests it. `commands.git[]` may include manual Git and `gh pr create` examples, but those strings are not executed by ShipReady. GitHub repository, base branch, and suggested branch inputs are metadata only. Future live GitHub PR creation would require a separately reviewed authorization boundary.
+
+`summary` counts proposed changes, safe auto candidates, review-required changes, manual-only actions, and skipped actions. `files[]` mirrors dry-run file-change paths, change types, risks, review statuses, and human-review requirements. `source.patchPath` is present only when an existing patch artifact was supplied; otherwise patch evidence is regenerated inline and no patch file is written.
+
+`output.kind` is `file`, `stdout`, or `inline`. File output writes only the explicit markdown draft artifact outside the inspected repository and reports `wroteArtifact: true`, `bytesWritten`, and SHA-256. Stdout and inline output report `wroteArtifact: false` and `bytesWritten: 0`. MCP always uses inline output and writes no artifact files.
+
+`safety` contains false booleans for live mutation fields: PR creation, branch creation, Git command execution, commit, push, deployment, GitHub API calls, patch application, target-repository mutation, DNS writes, and live Search Console calls. The schema rejects provider-token-like strings in serialized output.
+
+The CLI validates output paths outside the inspected repository by default. It never invokes write mode, applies patches, mutates the inspected target repository, runs Git, runs `gh`, creates branches/commits/pushes, opens pull requests, deploys, writes DNS, calls provider APIs, calls live Search Console, handles OAuth/tokens, or broadens `WRITE_POLICY_V1`.
+
 ## Exact success shapes
 
 All outputs are one JSON object followed by a newline and do not use a generic success envelope. `shipready.doctor.v1` has an `ok` readiness boolean because failed local checks are part of its valid report model; that field is not a data wrapper.
@@ -147,7 +166,7 @@ All outputs are one JSON object followed by a newline and do not use a generic s
 
 Top-level keys: `contract`, `version`, `mode`, `capabilities`, `writePolicy`, `integrations`, `demos`, `nextRecommendedCommand`, and `nextRecommendedPass`.
 
-Stable posture fields report `cliFirst: true`, `mcpSecond: true`, `guiThird: true`, local stdio MCP with `remoteTransport: false`, exactly one MCP write tool (`shipready.write_safe_crawl_files`), and a local GUI with `writeEndpoint: false`. Search Console is `mock_prototype`; DNS is `read_only_status`; post-write recheck is `read_only`; DNS/provider writes, GitHub, deployment, deployment automation, and deploy-provider integrations remain `not_implemented`. `writePolicy.id` remains `creation_only_robots_sitemap_v1`; this report does not redefine policy semantics.
+Stable posture fields report `cliFirst: true`, `mcpSecond: true`, `guiThird: true`, local stdio MCP with `remoteTransport: false`, exactly one MCP write tool (`shipready.write_safe_crawl_files`), and a local GUI with `writeEndpoint: false`. Search Console is `mock_prototype`; DNS is `read_only_status`; post-write recheck is `read_only`; GitHub PR draft is `review_only_handoff`; DNS/provider writes, live GitHub PR creation, Git command execution, branch creation, commit/push, deployment, deployment automation, and deploy-provider integrations remain `not_implemented`. `writePolicy.id` remains `creation_only_robots_sitemap_v1`; this report does not redefine policy semantics.
 
 Internal source and formatter: `src/status/status.ts`. Exit behavior: `0`. The command is static/read-only, makes no network request, and does not inspect a target repository.
 
@@ -255,6 +274,14 @@ Internal source and formatter: `src/patchExport/patchExport.ts`, `src/patchExpor
 
 Consumers: CLI users, MCP clients, contract fixtures, tests, and external human/tool review workflows. Current GUI and HTML report surfaces do not apply patches or write patch artifacts.
 
+### `shipready.githubPrDraft.v1`
+
+Top-level keys: `contract`, `generatedAt`, `url`, `repoPath`, `github`, `source`, `draft`, `commands`, `summary`, `files`, `output`, `safety`, `warnings`, `limitations`, and `nextActions`.
+
+Internal source and formatter: `src/githubPrDraft/githubPrDraft.ts` and `src/report/formatGithubPrDraftReport.ts`. Exit behavior: `0` after a valid draft, `1` for invalid URL/repo/output/GitHub metadata/timeout input, and `2` for contract or unexpected operational failure.
+
+Consumers: CLI users, MCP clients, contract fixtures, tests, and external human/tool review workflows. The GUI may display a copyable `github-pr-draft` command only; it does not write PR draft artifacts, run Git/GitHub commands, or create PRs.
+
 ## Error contract
 
 `shipready.error.v1` has required keys:
@@ -269,7 +296,7 @@ Consumers: CLI users, MCP clients, contract fixtures, tests, and external human/
 }
 ```
 
-`error` is a compatibility alias for existing consumers and equals `message`. Stable codes are `invalid_url`, `invalid_timeout`, `invalid_repo_path`, `invalid_output_path`, `invalid_mode`, `write_validation_failed`, `write_execution_failed`, and `command_failed`. A write validation/execution error may also contain `result: shipready.writeFix.v1`.
+`error` is a compatibility alias for existing consumers and equals `message`. Stable codes are `invalid_url`, `invalid_timeout`, `invalid_repo_path`, `invalid_output_path`, `invalid_github_repo`, `invalid_mode`, `write_validation_failed`, `write_execution_failed`, and `command_failed`. A write validation/execution error may also contain `result: shipready.writeFix.v1`.
 
 Known gap: errors raised by Commander before a command action runs, such as missing required arguments or an unknown option, still use Commander's stderr text and are not guaranteed to emit `shipready.error.v1`. Exit `5` remains reserved for an uncaught `parseAsync` failure and is also plain stderr.
 
@@ -281,7 +308,7 @@ Known gap: errors raised by Commander before a command action runs, such as miss
 
 The compatibility endpoint `POST /api/ui-report` remains available with success shape `{ "ok": true, "report": UiReport }`; the report inside that envelope retains `schemaVersion: "ui-report-v1"` and the GUI API does not add the CLI-only `contract` field. API/parse errors on both GUI endpoints use `{ "ok": false, "error": { ... } }`.
 
-Both GUI endpoints are local, read-only surfaces. They never execute `fix --write`, never call `shipready.write_safe_crawl_files`, never deploy, never run Git/GitHub behavior, never write DNS, never call live Search Console or social platform APIs, and never write metadata, content, JSON-LD, packages, or configuration. `POST /api/fix` is absent and returns `404`.
+Both GUI endpoints are local, read-only surfaces. They never execute `fix --write`, never call `shipready.write_safe_crawl_files`, never deploy, never run Git/GitHub behavior, never create pull requests, never write DNS, never call live Search Console or social platform APIs, and never write metadata, content, JSON-LD, packages, or configuration. `POST /api/fix` is absent and returns `404`.
 
 Sources: `src/gui/guiApi.ts`, `src/gui/guiReview.ts`, `src/gui/startGuiServer.ts`, and `src/gui/guiClient.ts`. The client fetches only `/api/review`; `/api/ui-report` remains available for compatibility.
 
@@ -368,6 +395,10 @@ Deterministic fixtures live in `validation/contracts/`:
 - `patch-export.no-changes.json`
 - `patch-export.skipped.json`
 - `patch-export.stdout.json`
+- `github-pr-draft.safe-creations.json`
+- `github-pr-draft.review-required.json`
+- `github-pr-draft.no-changes.json`
+- `github-pr-draft.stdout.json`
 
 Regenerate them from local test repositories and deterministic in-memory audit results:
 
@@ -377,7 +408,7 @@ pnpm contracts:fixtures
 
 The generator is `scripts/validation/generateContractFixtures.ts`. It makes no external requests. The write fixtures run `writeFixFromDryRun` only against temporary copies under the operating-system temp directory, record the returned results, and remove the copies. They never target a real repository. Fixed timestamps and repository display paths keep fixtures reproducible.
 
-Focused drift coverage includes `tests/contracts.test.ts`, `tests/patchExport.test.ts`, `tests/patchExportCli.test.ts`, `tests/crawl.test.ts`, `tests/crawlCli.test.ts`, `tests/mcp.crawl.test.ts`, `tests/socialPreview.test.ts`, `tests/socialPreviewCli.test.ts`, `tests/mcp.socialPreview.test.ts`, `tests/generatedSiteSmells.test.ts`, `tests/generatedSiteSmellsCli.test.ts`, `tests/mcp.generatedSiteSmells.test.ts`, `tests/recheck.test.ts`, `tests/recheckCli.test.ts`, `tests/mcp.recheck.test.ts`, `tests/status.test.ts`, and `tests/doctor.test.ts`. Tests validate every fixture and formatter discriminator, constrained patch-export/crawl/social-preview/recheck/generated-site smell states, mocked local/live comparisons, no-mutation behavior, allowed-root enforcement, status/doctor posture, and existing safety boundaries.
+Focused drift coverage includes `tests/contracts.test.ts`, `tests/patchExport.test.ts`, `tests/patchExportCli.test.ts`, `tests/githubPrDraft.test.ts`, `tests/githubPrDraftCli.test.ts`, `tests/mcp.githubPrDraft.test.ts`, `tests/crawl.test.ts`, `tests/crawlCli.test.ts`, `tests/mcp.crawl.test.ts`, `tests/socialPreview.test.ts`, `tests/socialPreviewCli.test.ts`, `tests/mcp.socialPreview.test.ts`, `tests/generatedSiteSmells.test.ts`, `tests/generatedSiteSmellsCli.test.ts`, `tests/mcp.generatedSiteSmells.test.ts`, `tests/recheck.test.ts`, `tests/recheckCli.test.ts`, `tests/mcp.recheck.test.ts`, `tests/status.test.ts`, and `tests/doctor.test.ts`. Tests validate every fixture and formatter discriminator, constrained patch-export/PR-draft/crawl/social-preview/recheck/generated-site smell states, mocked local/live comparisons, no-mutation behavior, allowed-root enforcement, status/doctor posture, and existing safety boundaries.
 
 ## Downstream consumers
 
@@ -387,11 +418,11 @@ Focused drift coverage includes `tests/contracts.test.ts`, `tests/patchExport.te
 - Static HTML: renders the internal `UiReport` model.
 - GUI: serves the internal `UiReport` model through a local API; it does not execute write mode.
 - Demo tooling: drives the GUI server surface and captures report artifacts.
-- MCP: wraps the named CLI contracts through the existing application functions and JSON formatters; it does not expose ad-hoc internal models. Patch export is returned inline by `shipready.export_patch` and writes no artifact files.
+- MCP: wraps the named CLI contracts through the existing application functions and JSON formatters; it does not expose ad-hoc internal models. Patch export is returned inline by `shipready.export_patch` and writes no artifact files. GitHub PR draft is returned inline by `shipready.github_pr_draft` and writes no artifact files.
 
 ## MCP mapping
 
-The implemented MCP specification is [MCP_PLAN.md](MCP_PLAN.md). Twelve contract-backed read-only tools preserve their top-level CLI contract objects; two canonical-read tools expose validated fixtures and allowlisted documents. `shipready.write_safe_crawl_files` returns `shipready.writeFix.v1` and is the only MCP write tool.
+The implemented MCP specification is [MCP_PLAN.md](MCP_PLAN.md). Thirteen contract-backed read-only tools preserve their top-level CLI contract objects; two canonical-read tools expose validated fixtures and allowlisted documents. `shipready.write_safe_crawl_files` returns `shipready.writeFix.v1` and is the only MCP write tool.
 
 `shipready.preview_fixes` still returns `shipready.dryRunFix.v1`; when current V1-eligible crawl-file creations exist, the MCP layer adds an agent-facing `previewReceipt` to the tool payload. The receipt is not a CLI contract field and is not write authority by itself. It is a signed, short-lived MCP precondition binding the normalized URL, authorized canonical repository path, policy, eligible paths, and stable dry-run/candidate digests.
 
@@ -399,12 +430,13 @@ The MCP write call must supply the same URL and repo path, the fresh receipt, an
 
 Ready now:
 
-- Fifteen implemented JSON-capable command surfaces have explicit V1 contract names.
+- Sixteen implemented JSON-capable command surfaces have explicit V1 contract names.
 - Success outputs retain their existing fields and add stable discriminators.
 - Action-level JSON errors have stable codes/messages and preserve the legacy `error` field.
 - Deterministic local fixtures and focused drift tests cover success, failure, dry-run, write, UI, Search Console, DNS, recheck, social preview, generated-site smell, and bounded crawl states.
 - Creation-only write evidence remains explicit and policy-bound.
 - Review-only patch export evidence remains dry-run-derived and never mutates the inspected target repository.
+- Review-only GitHub PR draft evidence remains dry-run/patch-export-derived and never creates PRs, branches, commits, pushes, deployments, or GitHub updates.
 - Human CLI, HTML file, and GUI server surfaces are clearly separated from CLI JSON contracts.
 
 The compatible `shipready.error.v1` enum now also covers MCP boundary codes: `path_not_authorized`, `fixture_not_found`, `doc_not_found`, `network_error`, `render_error`, `timeout`, `cancelled`, `contract_error`, `write_forbidden`, `unsupported_command`, and `internal_error`. Optional `retryable` and safe `details` fields are additive; `error === message` remains required.

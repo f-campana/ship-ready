@@ -54,7 +54,8 @@ describe("MCP startup and stdio transport", () => {
       const resources = await client.listResources();
       const templates = await client.listResourceTemplates();
       const prompts = await client.listPrompts();
-      expect(tools.tools).toHaveLength(15);
+      expect(tools.tools).toHaveLength(16);
+      expect(tools.tools.map((tool) => tool.name)).toContain("shipready.github_pr_draft");
       expect(tools.tools.map((tool) => tool.name).filter((name) => name.includes("write"))).toEqual([
         "shipready.write_safe_crawl_files",
       ]);
@@ -143,6 +144,29 @@ describe("MCP startup and stdio transport", () => {
           kind: "inline",
           wroteArtifact: false,
           bytesWritten: 0,
+        },
+      });
+      const prDraft = await client.callTool({
+        name: "shipready.github_pr_draft",
+        arguments: {
+          url: recheckUrl,
+          repoPath: join(fixtureRoot, "vite-react"),
+          githubRepo: "f-campana/ship-ready",
+          includeGhCommand: true,
+          rendered: false,
+        },
+      });
+      expect(prDraft.structuredContent).toMatchObject({
+        contract: "shipready.githubPrDraft.v1",
+        output: {
+          kind: "inline",
+          wroteArtifact: false,
+          bytesWritten: 0,
+        },
+        safety: {
+          createdPullRequest: false,
+          ranGitCommands: false,
+          calledGitHubApi: false,
         },
       });
       const resource = await client.readResource({ uri: "shipready://docs/contracts" });

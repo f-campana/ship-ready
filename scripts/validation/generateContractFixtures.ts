@@ -30,6 +30,8 @@ import { getGeneratedSiteSmells } from "../../src/smells/generatedSiteSmells";
 import { formatGeneratedSiteSmellsJson } from "../../src/report/formatGeneratedSiteSmellsReport";
 import { crawlSite } from "../../src/crawl/crawl";
 import { formatCrawlJson } from "../../src/report/formatCrawlReport";
+import { createGithubPrDraftFromDryRun } from "../../src/githubPrDraft/githubPrDraft";
+import { formatGithubPrDraftJsonReport } from "../../src/report/formatGithubPrDraftReport";
 import type { DoctorCheck } from "../../src/types/contracts";
 import type { AuditCheck, AuditResult, ExtractedPageMetadata } from "../../src/types/audit";
 import { DOC_RESOURCES, FIXTURE_NAMES } from "../../src/mcp/resources";
@@ -177,6 +179,41 @@ write("patch-export.stdout.json", formatPatchExportJsonReport(createPatchExportF
     includeContent: true,
   },
 }).result));
+write("github-pr-draft.safe-creations.json", formatGithubPrDraftJsonReport((await createGithubPrDraftFromDryRun(safeDryRun, {
+  generatedAt: FIXED_AT,
+  githubRepo: "f-campana/ship-ready",
+  includeGhCommand: true,
+  output: {
+    kind: "file",
+    path: "validation/pr-drafts/shipready.safe-creations.md",
+    wroteArtifact: true,
+  },
+})).result));
+write("github-pr-draft.review-required.json", formatGithubPrDraftJsonReport((await createGithubPrDraftFromDryRun(reviewDryRun, {
+  generatedAt: FIXED_AT,
+  githubRepo: "f-campana/ship-ready",
+  includeGhCommand: true,
+  output: {
+    kind: "file",
+    path: "validation/pr-drafts/shipready.review-required.md",
+    wroteArtifact: true,
+  },
+})).result));
+write("github-pr-draft.no-changes.json", formatGithubPrDraftJsonReport((await createGithubPrDraftFromDryRun(cleanDryRun, {
+  generatedAt: FIXED_AT,
+  output: {
+    kind: "file",
+    path: "validation/pr-drafts/shipready.no-changes.md",
+    wroteArtifact: true,
+  },
+})).result));
+write("github-pr-draft.stdout.json", formatGithubPrDraftJsonReport((await createGithubPrDraftFromDryRun(safeDryRun, {
+  generatedAt: FIXED_AT,
+  output: {
+    kind: "stdout",
+    wroteArtifact: false,
+  },
+})).result));
 
 writeFixtureFromDryRun("fix-write.safe-create.json", safeDryRun, "next-app-router-dry-run");
 writeFixtureFromDryRun("fix-write.blocked.json", reviewDryRun, "vite-react");
@@ -346,6 +383,7 @@ write("doctor.default.json", formatDoctorJson(createDoctorReport([
   doctorCheck("generated-site-smells", "Generated-site smell detector", "pass", "The read-only generated-site smell detector guidance and 7 deterministic fixtures are present; no repo input or network is required by doctor.", { readOnly: true, autoFixes: false, authorshipIdentification: false, networkRequired: false, fixtures: 7, missing: [], docsReferenceLimitations: true }),
   doctorCheck("bounded-crawl", "Bounded multi-page crawl", "pass", "The read-only bounded crawl guidance and 7 deterministic fixtures are present; doctor performs no network crawl.", { readOnly: true, networkRequired: false, fullSiteCrawler: false, monitoring: false, fixtures: 7, missing: [], docsReferenceLimitations: true }),
   doctorCheck("patch-export", "Patch export", "pass", "The review-only patch export guidance and 5 deterministic fixtures are present; doctor writes no patch artifacts.", { reviewOnly: true, writesArtifacts: false, appliesPatches: false, gitOrDeploy: false, fixtures: 5, missing: [], docsReferenceLimitations: true }),
+  doctorCheck("github-pr-draft", "GitHub PR draft", "pass", "The review-only GitHub PR draft guidance and 4 deterministic fixtures are present; doctor requires no GitHub auth, Git, network, or artifact writes.", { reviewOnly: true, githubAuthRequired: false, githubApiCalls: false, gitCommands: false, writesArtifacts: false, fixtures: 4, missing: [], docsReferenceLimitations: true }),
   doctorCheck("write-policy", "WRITE_POLICY_V1", "pass", "The canonical creation_only_robots_sitemap_v1 policy document is present."),
   doctorCheck("local-gui-spec", "LOCAL_FIRST_GUI_SPEC", "pass", "The canonical local-first GUI specification is present."),
   doctorCheck("demo-artifacts", "Demo artifacts", "warn", "Optional demo artifacts are incomplete; core CLI operation is unaffected.", { missing: ["validation/example.mp4"] }),

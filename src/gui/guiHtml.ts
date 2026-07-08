@@ -54,6 +54,7 @@ export function renderGuiHtml(): string {
       <section class="section"><h2>Project understanding</h2></section>
       <section class="section"><h2>Fix plan</h2></section>
       <section class="section"><h2>Patch preview</h2></section>
+      <section class="section"><h2>PR draft handoff</h2></section>
       <section class="section"><h2>Safe-write handoff</h2></section>
       <section class="section"><h2>Post-deploy recheck</h2></section>
       <section class="section"><h2>Safety and limits</h2></section>

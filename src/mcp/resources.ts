@@ -10,6 +10,7 @@ import {
   DryRunFixJsonContractSchema,
   FixPlanJsonContractSchema,
   GeneratedSiteSmellsJsonContractSchema,
+  GithubPrDraftJsonContractSchema,
   PatchExportJsonContractSchema,
   RepoInspectionJsonContractSchema,
   SearchConsoleStatusJsonContractSchema,
@@ -94,6 +95,10 @@ export const FIXTURE_NAMES = [
   "patch-export.no-changes.json",
   "patch-export.skipped.json",
   "patch-export.stdout.json",
+  "github-pr-draft.safe-creations.json",
+  "github-pr-draft.review-required.json",
+  "github-pr-draft.no-changes.json",
+  "github-pr-draft.stdout.json",
 ] as const;
 
 export type FixtureName = (typeof FIXTURE_NAMES)[number];
@@ -288,6 +293,7 @@ const FIXTURE_SCHEMAS: Readonly<Record<string, ZodType>> = {
   "shipready.socialPreview.v1": SocialPreviewJsonContractSchema,
   "shipready.generatedSiteSmells.v1": GeneratedSiteSmellsJsonContractSchema,
   "shipready.patchExport.v1": PatchExportJsonContractSchema,
+  "shipready.githubPrDraft.v1": GithubPrDraftJsonContractSchema,
 };
 
 async function readCanonicalFile(packageRoot: string, relativePath: string): Promise<string> {

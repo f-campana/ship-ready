@@ -121,6 +121,7 @@ export type GuiReview = {
     searchConsoleStatus: string;
     recheck: string;
     smells?: string;
+    githubPrDraft?: string;
   };
   safety: string[];
 };
@@ -291,6 +292,7 @@ export async function createGuiReview(
       "GUI endpoints are local and read-only.",
       "The GUI does not run fix --write or shipready.write_safe_crawl_files.",
       "Safe crawl-file candidates are previewed as copyable CLI commands only.",
+      "GitHub PR draft handoff is copy-only; no PR, branch, commit, push, deployment, GitHub API call, or Git command is executed by the GUI.",
       "No metadata, content, JSON-LD, package, configuration, DNS, Search Console, Git, GitHub, provider, or deployment action is executed by the GUI.",
       "Search Console status is mock-backed; DNS, social preview, crawl, smell review, and recheck surfaces are read-only.",
     ],
@@ -379,7 +381,10 @@ function buildCommands(url: string, repoPath: string | undefined): GuiReview["co
       ? `pnpm shipready recheck ${formatCommandArg(repoPath)} --url ${formatCommandArg(url)} --json`
       : `pnpm shipready recheck --url ${formatCommandArg(url)} --json`,
     ...(repoPath
-      ? { smells: `pnpm shipready smells ${formatCommandArg(repoPath)} --url ${formatCommandArg(url)} --json` }
+      ? {
+          smells: `pnpm shipready smells ${formatCommandArg(repoPath)} --url ${formatCommandArg(url)} --json`,
+          githubPrDraft: `pnpm shipready github-pr-draft ${formatCommandArg(repoPath)} --url ${formatCommandArg(url)} --output /tmp/shipready-pr.md --include-gh-command`,
+        }
       : {}),
   };
 }

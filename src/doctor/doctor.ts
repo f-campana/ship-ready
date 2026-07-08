@@ -145,6 +145,7 @@ export async function runDoctor(
       ["generated-site-smells", "Generated-site smell detector"],
       ["bounded-crawl", "Bounded multi-page crawl"],
       ["patch-export", "Patch export"],
+      ["github-pr-draft", "GitHub PR draft"],
       ["write-policy", "WRITE_POLICY_V1"],
       ["local-gui-spec", "LOCAL_FIRST_GUI_SPEC"],
       ["demo-artifacts", "Demo artifacts"],
@@ -478,6 +479,56 @@ export async function runDoctor(
       fixtures: patchExportFixtures.length,
       missing: missingPatchExportContent,
       docsReferenceLimitations: patchExportDocsReferenceLimitations,
+    },
+  });
+
+  const githubPrDraftSkill = "skills/shipready-launch-readiness/SKILL.md";
+  const githubPrDraftDocs = ["docs/COMMANDS.md", "docs/CONTRACTS.md", "docs/MCP_PLAN.md", "docs/CLAIMS_POLICY.md"];
+  const githubPrDraftFixtures = FIXTURE_NAMES.filter((name) => name.startsWith("github-pr-draft."));
+  const missingGithubPrDraftContent = [
+    ...(!dependencies.pathExists(join(packageRoot, githubPrDraftSkill)) ? [githubPrDraftSkill] : []),
+    ...githubPrDraftDocs.filter((path) => !dependencies.pathExists(join(packageRoot, path))),
+    ...githubPrDraftFixtures
+      .map((name) => `validation/contracts/${name}`)
+      .filter((path) => !dependencies.pathExists(join(packageRoot, path))),
+  ];
+  let githubPrDraftDocsReferenceLimitations = false;
+  if (missingGithubPrDraftContent.length === 0) {
+    try {
+      const [skill, commands, contracts, mcpPlan, claims] = await Promise.all([
+        dependencies.readText(join(packageRoot, githubPrDraftSkill)),
+        dependencies.readText(join(packageRoot, "docs/COMMANDS.md")),
+        dependencies.readText(join(packageRoot, "docs/CONTRACTS.md")),
+        dependencies.readText(join(packageRoot, "docs/MCP_PLAN.md")),
+        dependencies.readText(join(packageRoot, "docs/CLAIMS_POLICY.md")),
+      ]);
+      const combined = `${skill}\n${commands}\n${contracts}\n${mcpPlan}\n${claims}`;
+      githubPrDraftDocsReferenceLimitations =
+        combined.includes("shipready github-pr-draft") &&
+        combined.includes("shipready.githubPrDraft.v1") &&
+        combined.includes("review-only") &&
+        combined.includes("did not create a PR") &&
+        combined.includes("no GitHub API");
+    } catch {
+      githubPrDraftDocsReferenceLimitations = false;
+    }
+  }
+  checks.push({
+    id: "github-pr-draft",
+    label: "GitHub PR draft",
+    status: missingGithubPrDraftContent.length === 0 && githubPrDraftDocsReferenceLimitations ? "pass" : "fail",
+    message: missingGithubPrDraftContent.length === 0 && githubPrDraftDocsReferenceLimitations
+      ? `The review-only GitHub PR draft guidance and ${githubPrDraftFixtures.length} deterministic fixtures are present; doctor requires no GitHub auth, Git, network, or artifact writes.`
+      : `GitHub PR draft content is incomplete or inconsistent; missing: ${missingGithubPrDraftContent.join(", ") || "safe PR draft guidance"}.`,
+    details: {
+      reviewOnly: true,
+      githubAuthRequired: false,
+      githubApiCalls: false,
+      gitCommands: false,
+      writesArtifacts: false,
+      fixtures: githubPrDraftFixtures.length,
+      missing: missingGithubPrDraftContent,
+      docsReferenceLimitations: githubPrDraftDocsReferenceLimitations,
     },
   });
 

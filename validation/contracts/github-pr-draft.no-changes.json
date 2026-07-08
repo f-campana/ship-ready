@@ -1,0 +1,97 @@
+{
+  "contract": "shipready.githubPrDraft.v1",
+  "generatedAt": "2026-06-21T12:00:00.000Z",
+  "url": "https://example.com/",
+  "repoPath": "tests/fixtures/repos/vite-react",
+  "github": {
+    "baseBranch": "main",
+    "suggestedBranch": "shipready/launch-readiness"
+  },
+  "source": {
+    "dryRunContract": "shipready.dryRunFix.v1",
+    "dryRunGeneratedAt": "2026-06-21T12:00:00.000Z",
+    "patchExportContract": "shipready.patchExport.v1",
+    "patchSha256": "36e312c6db40532caa612a74e7812a21d87f0d6df3003da0e4990ce77b80eba4",
+    "patchBytes": 583,
+    "patchSource": "regenerated_inline",
+    "policy": "review_handoff_only"
+  },
+  "draft": {
+    "title": "Document ShipReady launch-readiness review",
+    "body": "## Summary\n\nThis PR draft was generated from a ShipReady dry-run and review-only patch export handoff.\nShipReady did not create this PR, create a branch, run Git commands, commit, push, deploy, call GitHub, or apply the patch.\n\n## Proposed Changes\n\n- No file changes were proposed by the current dry-run.\n\n## Classification\n\n- Safe auto candidates: 0\n- Review-required changes: 0\n- Manual-only actions: 0\n- Skipped actions: 0\n\n## Files\n\n- No file changes were proposed.\n\n## Patch Artifact\n\n- Path: regenerated inline by ShipReady for this handoff; no patch file was written.\n- SHA-256: 36e312c6db40532caa612a74e7812a21d87f0d6df3003da0e4990ce77b80eba4\n- Patch export is review-only and requires human review before use.\n\n## Validation Checklist\n\n- [ ] Confirm no repository changes are needed before opening a PR.\n- [ ] Review the ShipReady dry-run output and patch artifact before applying anything.\n- [ ] Confirm review-required changes are factually correct for the site and business.\n- [ ] Run the project test/build commands after applying changes outside ShipReady.\n- [ ] Confirm no unrelated files are staged before a human commit.\n- [ ] Deploy through the normal external workflow if the changes are approved.\n- [ ] Run ShipReady recheck after deployment to compare public crawl-file evidence.\n\n## Safety Limitations\n\n- ShipReady did not create a PR, branch, commit, push, or deployment.\n- ShipReady did not call GitHub APIs, validate GitHub auth, run `gh`, or run `git`.\n- ShipReady did not mutate the inspected repository or apply exported patches.\n- Local changes require deployment through an external workflow before the live site can change.\n- Recheck after external deployment is required for read-only public evidence.\n",
+    "checklist": [
+      "Confirm no repository changes are needed before opening a PR.",
+      "Review the ShipReady dry-run output and patch artifact before applying anything.",
+      "Confirm review-required changes are factually correct for the site and business.",
+      "Run the project test/build commands after applying changes outside ShipReady.",
+      "Confirm no unrelated files are staged before a human commit.",
+      "Deploy through the normal external workflow if the changes are approved.",
+      "Run ShipReady recheck after deployment to compare public crawl-file evidence."
+    ],
+    "labels": [
+      "shipready",
+      "launch-readiness",
+      "review-required"
+    ]
+  },
+  "commands": {
+    "git": [
+      "git checkout -b shipready/launch-readiness",
+      "pnpm shipready patch-export <repo-path> --url <url> --output /tmp/shipready.patch && git apply /tmp/shipready.patch",
+      "git status",
+      "git add <reviewed-files>",
+      "git commit -m 'Document ShipReady launch-readiness review'",
+      "git push -u origin shipready/launch-readiness",
+      "gh pr create --base main --head shipready/launch-readiness --title 'Document ShipReady launch-readiness review' --body-file validation/pr-drafts/shipready.no-changes.md"
+    ],
+    "notes": [
+      "Copyable commands only. Not executed by ShipReady.",
+      "Review the patch and working tree before running any command.",
+      "Future live GitHub integration requires separate authorization."
+    ]
+  },
+  "summary": {
+    "proposedChanges": [],
+    "safeAutoCandidates": 0,
+    "reviewRequired": 0,
+    "manualOnly": 0,
+    "skipped": 0
+  },
+  "files": [],
+  "output": {
+    "kind": "file",
+    "path": "validation/pr-drafts/shipready.no-changes.md",
+    "wroteArtifact": true,
+    "bytesWritten": 3779,
+    "sha256": "8b973a7caa1552927101ced9d8dab63873aedc0680b68bef768d60df065f1034"
+  },
+  "safety": {
+    "createdPullRequest": false,
+    "createdBranch": false,
+    "ranGitCommands": false,
+    "committed": false,
+    "pushed": false,
+    "deployed": false,
+    "calledGitHubApi": false,
+    "appliedPatch": false,
+    "mutatedTargetRepo": false,
+    "wroteDns": false,
+    "calledSearchConsoleLive": false
+  },
+  "warnings": [
+    "No file changes were proposed by the current dry-run."
+  ],
+  "limitations": [
+    "This is a PR draft and handoff artifact only; ShipReady did not create a pull request.",
+    "ShipReady did not create a branch, run Git commands, commit, push, deploy, or call the GitHub API.",
+    "Patch export remains review-only and is not applied by ShipReady.",
+    "Local repository changes require a separate human-reviewed workflow and external deployment before the live site can change.",
+    "Run ShipReady recheck after any external deployment to collect read-only public crawl-file evidence."
+  ],
+  "nextActions": [
+    "Review the proposed changes and patch artifact before using any copied commands.",
+    "If the draft is acceptable, a human may run the copied Git/GitHub commands outside ShipReady.",
+    "Run project tests and ShipReady read-only checks after applying changes outside ShipReady.",
+    "Deploy through the owner-controlled external workflow, then run ShipReady recheck."
+  ]
+}

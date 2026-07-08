@@ -20,6 +20,7 @@ export const CONTRACT_NAMES = {
   generatedSiteSmells: "shipready.generatedSiteSmells.v1",
   crawl: "shipready.crawl.v1",
   patchExport: "shipready.patchExport.v1",
+  githubPrDraft: "shipready.githubPrDraft.v1",
   status: "shipready.status.v1",
   doctor: "shipready.doctor.v1",
   error: "shipready.error.v1",
@@ -39,6 +40,7 @@ export const CLI_JSON_CONTRACT_BY_COMMAND = {
   "smells --json": CONTRACT_NAMES.generatedSiteSmells,
   "crawl --json": CONTRACT_NAMES.crawl,
   "patch-export --json": CONTRACT_NAMES.patchExport,
+  "github-pr-draft --json": CONTRACT_NAMES.githubPrDraft,
   "status --json": CONTRACT_NAMES.status,
   "doctor --json": CONTRACT_NAMES.doctor,
 } as const;
@@ -199,6 +201,127 @@ export const PatchExportJsonContractSchema = z.object({
       code: "custom",
       path: ["mode"],
       message: "Patch export must remain a review-only export mode.",
+    });
+  }
+});
+
+const GithubPrDraftOutputKindSchema = z.enum(["file", "stdout", "inline"]);
+
+const GithubPrDraftFileSchema = z.object({
+  path: z.string().min(1),
+  changeType: z.enum(["create", "update"]),
+  risk: z.enum(["low", "medium", "high"]),
+  reviewStatus: z.enum(["auto_candidate", "review_required"]),
+  requiresHumanReview: z.boolean(),
+}).strict();
+
+export const GithubPrDraftJsonContractSchema = z.object({
+  contract: z.literal(CONTRACT_NAMES.githubPrDraft),
+  generatedAt: z.string().min(1),
+  url: z.string().min(1),
+  repoPath: z.string().min(1),
+  github: z.object({
+    repository: z.string().min(1).optional(),
+    baseBranch: z.string().min(1),
+    suggestedBranch: z.string().min(1),
+  }).strict(),
+  source: z.object({
+    dryRunContract: z.literal(CONTRACT_NAMES.dryRunFix),
+    dryRunGeneratedAt: z.string().min(1),
+    patchExportContract: z.literal(CONTRACT_NAMES.patchExport).optional(),
+    patchPath: z.string().min(1).optional(),
+    patchSha256: z.string().regex(/^[a-f0-9]{64}$/),
+    patchBytes: z.number().int().nonnegative(),
+    patchSource: z.enum(["existing_file", "regenerated_inline"]),
+    policy: z.literal("review_handoff_only"),
+  }).strict(),
+  draft: z.object({
+    title: z.string().min(1),
+    body: z.string().min(1),
+    checklist: z.array(z.string().min(1)).min(1),
+    labels: z.array(z.string().min(1)),
+  }).strict(),
+  commands: z.object({
+    gh: z.string().min(1).optional(),
+    git: z.array(z.string().min(1)),
+    notes: z.array(z.string().min(1)).min(1),
+  }).strict(),
+  summary: z.object({
+    proposedChanges: z.array(z.string().min(1)),
+    safeAutoCandidates: z.number().int().nonnegative(),
+    reviewRequired: z.number().int().nonnegative(),
+    manualOnly: z.number().int().nonnegative(),
+    skipped: z.number().int().nonnegative(),
+  }).strict(),
+  files: z.array(GithubPrDraftFileSchema),
+  output: z.object({
+    kind: GithubPrDraftOutputKindSchema,
+    path: z.string().min(1).optional(),
+    wroteArtifact: z.boolean(),
+    bytesWritten: z.number().int().nonnegative(),
+    sha256: z.string().regex(/^[a-f0-9]{64}$/),
+  }).strict(),
+  safety: z.object({
+    createdPullRequest: z.literal(false),
+    createdBranch: z.literal(false),
+    ranGitCommands: z.literal(false),
+    committed: z.literal(false),
+    pushed: z.literal(false),
+    deployed: z.literal(false),
+    calledGitHubApi: z.literal(false),
+    appliedPatch: z.literal(false),
+    mutatedTargetRepo: z.literal(false),
+    wroteDns: z.literal(false),
+    calledSearchConsoleLive: z.literal(false),
+  }).strict(),
+  warnings: z.array(z.string().min(1)),
+  limitations: z.array(z.string().min(1)).min(1),
+  nextActions: z.array(z.string().min(1)).min(1),
+}).strict().superRefine((result, context) => {
+  if (result.output.kind === "file") {
+    if (!result.output.path) {
+      context.addIssue({
+        code: "custom",
+        path: ["output", "path"],
+        message: "File PR draft output requires an output path.",
+      });
+    }
+    if (!result.output.wroteArtifact || result.output.bytesWritten === 0) {
+      context.addIssue({
+        code: "custom",
+        path: ["output"],
+        message: "File PR draft output must report the explicit artifact write.",
+      });
+    }
+  } else {
+    if (result.output.wroteArtifact || result.output.bytesWritten !== 0) {
+      context.addIssue({
+        code: "custom",
+        path: ["output"],
+        message: "Stdout and inline PR draft output must not report filesystem writes.",
+      });
+    }
+  }
+  if (result.source.patchSource === "existing_file" && !result.source.patchPath) {
+    context.addIssue({
+      code: "custom",
+      path: ["source", "patchPath"],
+      message: "Existing patch source requires a patch path.",
+    });
+  }
+  if (result.source.patchSource === "regenerated_inline" && result.source.patchPath) {
+    context.addIssue({
+      code: "custom",
+      path: ["source", "patchPath"],
+      message: "Regenerated inline patch source must not claim a patch file path.",
+    });
+  }
+  const serialized = JSON.stringify(result);
+  if (/(ghp_|github_pat_|xox[baprs]-|google-site-verification=)/i.test(serialized)) {
+    context.addIssue({
+      code: "custom",
+      path: ["draft"],
+      message: "GitHub PR draft output must not expose provider tokens or verification secrets.",
     });
   }
 });
@@ -965,6 +1088,11 @@ export const StatusJsonContractSchema = z.object({
     scheduledCrawls: NotImplementedSchema,
     patchExport: z.literal("review_only_export"),
     patchApply: NotImplementedSchema,
+    githubPrDraft: z.literal("review_only_handoff"),
+    liveGithubPrCreation: NotImplementedSchema,
+    gitCommandsExecution: NotImplementedSchema,
+    branchCreation: NotImplementedSchema,
+    commitPush: NotImplementedSchema,
     generatedSiteSmells: z.literal("read_only_detector"),
     aiAuthorshipDetection: NotImplementedSchema,
     smellDetectorAutoFixes: NotImplementedSchema,
@@ -1035,6 +1163,7 @@ export const CliErrorCodeSchema = z.enum([
   "invalid_timeout",
   "invalid_repo_path",
   "invalid_output_path",
+  "invalid_github_repo",
   "path_not_authorized",
   "fixture_not_found",
   "doc_not_found",
@@ -1083,6 +1212,7 @@ export type FixPlanJsonContract = z.infer<typeof FixPlanJsonContractSchema>;
 export type DryRunFixJsonContract = z.infer<typeof DryRunFixJsonContractSchema>;
 export type WriteFixJsonContract = z.infer<typeof WriteFixJsonContractSchema>;
 export type PatchExportJsonContract = z.infer<typeof PatchExportJsonContractSchema>;
+export type GithubPrDraftJsonContract = z.infer<typeof GithubPrDraftJsonContractSchema>;
 export type UiReportJsonContract = z.infer<typeof UiReportJsonContractSchema>;
 export type SearchConsoleStatusJsonContract = z.infer<typeof SearchConsoleStatusJsonContractSchema>;
 export type DnsStatusJsonContract = z.infer<typeof DnsStatusJsonContractSchema>;

@@ -55,9 +55,9 @@
       "id": "contract-fixtures",
       "label": "Contract fixtures",
       "status": "pass",
-      "message": "69 canonical contract fixtures exist and parse.",
+      "message": "73 canonical contract fixtures exist and parse.",
       "details": {
-        "count": 69
+        "count": 73
       }
     },
     {
@@ -171,6 +171,22 @@
       }
     },
     {
+      "id": "github-pr-draft",
+      "label": "GitHub PR draft",
+      "status": "pass",
+      "message": "The review-only GitHub PR draft guidance and 4 deterministic fixtures are present; doctor requires no GitHub auth, Git, network, or artifact writes.",
+      "details": {
+        "reviewOnly": true,
+        "githubAuthRequired": false,
+        "githubApiCalls": false,
+        "gitCommands": false,
+        "writesArtifacts": false,
+        "fixtures": 4,
+        "missing": [],
+        "docsReferenceLimitations": true
+      }
+    },
+    {
       "id": "write-policy",
       "label": "WRITE_POLICY_V1",
       "status": "pass",
@@ -195,7 +211,7 @@
     }
   ],
   "summary": {
-    "pass": 17,
+    "pass": 18,
     "warn": 2,
     "fail": 0,
     "skip": 0

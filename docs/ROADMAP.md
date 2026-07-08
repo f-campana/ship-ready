@@ -22,6 +22,8 @@ Order is contractual: harden CLI interfaces before wrapping them, ship read-only
 | 15 | Complete | Add a bounded multi-page crawl. | Expands audit scope only after single-page contracts stabilize. | Read-only | Pass 3 |
 | 16 | Complete | Revisit and polish the GUI. | Lets human UX consume proven CLI/MCP/report behavior. | Read-only | Passes 7, 13–15 |
 | 17 | Complete | Export reviewed patches as explicit artifacts. | Introduces a portable review artifact after preview contracts mature. | Write-bearing | Passes 6, 16 |
-| 18 | Next | Integrate GitHub PR creation with explicit authorization. | External mutation is last, after patch and policy evidence exist. | Write-bearing | Pass 17 |
+| 18 | Complete | Add GitHub PR draft / PR handoff artifacts. | Gives humans a PR-ready review artifact after patch export without adding live GitHub or Git mutation. | Read-only artifact | Pass 17 |
+| 19 | Planned | Roadmap closure / release-readiness review. | Consolidates docs, contracts, demos, and validation after the launch-readiness surface is broad enough to package. | Read-only review | Pass 18 |
+| Later | Planned | Live GitHub PR creation, if explicitly approved. | External repository-host mutation requires separate GitHub auth/token design, Git worktree safety checks, and explicit authorization. | Write-bearing | Pass 18 |
 
 Planned names are goals, not implemented commands or interfaces. Each pass must update [STATUS.md](STATUS.md), [COMMANDS.md](COMMANDS.md), [CONTRACTS.md](CONTRACTS.md), applicable policy, tests, and validation evidence when it ships.

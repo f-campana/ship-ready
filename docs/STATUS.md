@@ -15,12 +15,13 @@ ShipReady is a CLI-first, agent-friendly launch-readiness engine for generated w
 - Bounded read-only repository inspection.
 - Read-only fix planning and exact dry-run previews.
 - Review-only patch export with `shipready.patchExport.v1`, unified-diff artifacts generated from the current dry-run, explicit output path/stdout modes, outside-target output guard, and MCP inline export.
+- Review-only GitHub PR draft / PR handoff with `shipready.githubPrDraft.v1`, PR title/body/checklists, patch references, copyable command strings, explicit output path/stdout modes, outside-target output guard, and MCP inline output.
 - Strict V1 creation-only writes for eligible missing crawl files.
 - Read-only `recheck` in URL-only and repo-backed modes, with conservative local expected-file versus live crawl-resource evidence.
 - Human and Zod-validated JSON outputs.
 - Versioned `ui-report-v1` normalization and self-contained HTML reports.
 - Local read-only GUI review cockpit with `POST /api/review`, compatibility `POST /api/ui-report`, on-demand social preview, bounded crawl, project smells, DNS, Search Console mock status, and recheck sections; safe crawl-file creation is copy-only and no write endpoint exists.
-- Local MCP stdio server with fourteen read-only tools, one guarded safe-write tool for V1 crawl-file creations, canonical docs/fixtures, five prompts, explicit allowed roots, stable errors, preview receipts, and bounded deadlines.
+- Local MCP stdio server with fifteen read-only tools, one guarded safe-write tool for V1 crawl-file creations, canonical docs/fixtures, five prompts, explicit allowed roots, stable errors, preview receipts, and bounded deadlines.
 - Fodmapp demo scripts, approved silent/captioned media, optional approved voiced media, thumbnail, captions, and review evidence.
 - Stable `shipready.searchConsoleStatus.v1`, `search-console status`, seven deterministic mock scenarios, opt-in mock indexed-version inspection, and the read-only `shipready.search_console_status` MCP tool.
 - Official-source-backed [Search Console readiness specification](SEARCH_CONSOLE_READINESS_SPEC.md) defining claim boundaries and the future live provider/OAuth boundary.
@@ -35,7 +36,7 @@ When present, `validation/e2e-project-review/` supplies current end-to-end evide
 
 - Any MCP write tool beyond `shipready.write_safe_crawl_files`, or any remote MCP transport.
 - Live Google Search Console/OAuth/token custody, DNS provider writes, or DNS provider integrations. Search Console remains a local deterministic mock prototype; DNS readiness is read-only resolver evidence only.
-- GitHub/PR integration, deployment execution, deployment automation, or deploy-provider integration.
+- Live GitHub PR creation, Git command execution, branch creation, commit/push, deployment execution, deployment automation, or deploy-provider integration.
 - GUI write execution.
 - Patch application.
 - Broader safe apply or writes to metadata, content, JSON-LD, packages, configuration, or existing files.
@@ -59,4 +60,4 @@ Read-only inspection and preview are the default. CLI write mode requires `fix -
 
 ## Next pass
 
-**Pass 18: GitHub PR integration.** External repository-host mutation remains planned and requires explicit authorization after review-only patch export.
+**Roadmap closure / release-readiness review.** Pass 18 shipped review-only GitHub PR draft / handoff. Live GitHub PR creation remains future work and would require explicit authorization, GitHub auth/token design, Git worktree safety checks, and separate mutation tests.

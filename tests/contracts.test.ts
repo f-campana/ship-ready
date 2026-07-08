@@ -17,6 +17,7 @@ import { formatRecheckJson } from "../src/report/formatRecheckReport";
 import { formatSocialPreviewJson } from "../src/report/formatSocialPreviewReport";
 import { formatGeneratedSiteSmellsJson } from "../src/report/formatGeneratedSiteSmellsReport";
 import { formatCrawlJson } from "../src/report/formatCrawlReport";
+import { formatGithubPrDraftJsonReport } from "../src/report/formatGithubPrDraftReport";
 import { AuditResultSchema } from "../src/types/audit";
 import {
   AuditJsonContractSchema,
@@ -28,6 +29,7 @@ import {
   DryRunFixJsonContractSchema,
   FixPlanJsonContractSchema,
   GeneratedSiteSmellsJsonContractSchema,
+  GithubPrDraftJsonContractSchema,
   PatchExportJsonContractSchema,
   RepoInspectionJsonContractSchema,
   RecheckJsonContractSchema,
@@ -119,6 +121,10 @@ describe("CLI JSON contracts", () => {
     ["patch-export.no-changes.json", PatchExportJsonContractSchema, CONTRACT_NAMES.patchExport],
     ["patch-export.skipped.json", PatchExportJsonContractSchema, CONTRACT_NAMES.patchExport],
     ["patch-export.stdout.json", PatchExportJsonContractSchema, CONTRACT_NAMES.patchExport],
+    ["github-pr-draft.safe-creations.json", GithubPrDraftJsonContractSchema, CONTRACT_NAMES.githubPrDraft],
+    ["github-pr-draft.review-required.json", GithubPrDraftJsonContractSchema, CONTRACT_NAMES.githubPrDraft],
+    ["github-pr-draft.no-changes.json", GithubPrDraftJsonContractSchema, CONTRACT_NAMES.githubPrDraft],
+    ["github-pr-draft.stdout.json", GithubPrDraftJsonContractSchema, CONTRACT_NAMES.githubPrDraft],
   ] as const)("parses %s and preserves its discriminator", (name, schema, contract) => {
     const fixture = readFixture(name);
 
@@ -141,6 +147,7 @@ describe("CLI JSON contracts", () => {
       "smells --json": "shipready.generatedSiteSmells.v1",
       "crawl --json": "shipready.crawl.v1",
       "patch-export --json": "shipready.patchExport.v1",
+      "github-pr-draft --json": "shipready.githubPrDraft.v1",
       "status --json": "shipready.status.v1",
       "doctor --json": "shipready.doctor.v1",
     });
@@ -186,6 +193,55 @@ describe("CLI JSON contracts", () => {
     expect(contractOf(formatPatchExportJsonReport(
       PatchExportJsonContractSchema.parse(readFixture("patch-export.safe-creations.json")),
     ))).toBe(CONTRACT_NAMES.patchExport);
+    expect(contractOf(formatGithubPrDraftJsonReport(
+      GithubPrDraftJsonContractSchema.parse(readFixture("github-pr-draft.safe-creations.json")),
+    ))).toBe(CONTRACT_NAMES.githubPrDraft);
+  });
+
+  it("keeps GitHub PR draft fixtures review-only and mutation-free", () => {
+    const safe = GithubPrDraftJsonContractSchema.parse(readFixture("github-pr-draft.safe-creations.json"));
+    const review = GithubPrDraftJsonContractSchema.parse(readFixture("github-pr-draft.review-required.json"));
+    const noChanges = GithubPrDraftJsonContractSchema.parse(readFixture("github-pr-draft.no-changes.json"));
+    const stdout = GithubPrDraftJsonContractSchema.parse(readFixture("github-pr-draft.stdout.json"));
+
+    expect(safe).toMatchObject({
+      contract: "shipready.githubPrDraft.v1",
+      source: {
+        dryRunContract: "shipready.dryRunFix.v1",
+        patchExportContract: "shipready.patchExport.v1",
+        policy: "review_handoff_only",
+      },
+      output: { kind: "file", wroteArtifact: true },
+      safety: {
+        createdPullRequest: false,
+        createdBranch: false,
+        ranGitCommands: false,
+        committed: false,
+        pushed: false,
+        deployed: false,
+        calledGitHubApi: false,
+        appliedPatch: false,
+        mutatedTargetRepo: false,
+      },
+    });
+    expect(safe.draft.body).toContain("ShipReady did not create this PR");
+    expect(safe.draft.body).toContain("Patch export is review-only");
+    expect(safe.draft.body).toContain("Run ShipReady recheck after deployment");
+    expect(safe.commands.gh).toContain("gh pr create");
+    expect(safe.commands.notes.join("\n")).toContain("Not executed by ShipReady");
+    expect(review.summary.reviewRequired).toBeGreaterThan(0);
+    expect(review.draft.body).toContain("Review-required changes");
+    expect(noChanges.summary.proposedChanges).toEqual([]);
+    expect(noChanges.draft.body).toContain("No file changes were proposed");
+    expect(stdout.output).toMatchObject({ kind: "stdout", wroteArtifact: false, bytesWritten: 0 });
+    for (const fixture of [safe, review, noChanges, stdout]) {
+      expect(fixture.output.sha256).toMatch(/^[a-f0-9]{64}$/);
+      expect(fixture.source.patchSha256).toMatch(/^[a-f0-9]{64}$/);
+      expect(fixture.repoPath).not.toContain("/Users/");
+      expect(fixture.limitations.join("\n")).toContain("did not create a pull request");
+      expect(fixture.limitations.join("\n")).toContain("did not create a branch");
+      expect(fixture.limitations.join("\n")).toContain("did not create a branch, run Git commands, commit, push, deploy, or call the GitHub API");
+    }
   });
 
   it("keeps patch export fixtures review-only and constrained", () => {

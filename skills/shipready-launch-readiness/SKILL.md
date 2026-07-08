@@ -1,6 +1,6 @@
 ---
 name: shipready-launch-readiness
-description: Use ShipReady to check whether a generated website is ready to share, crawl, preview, and safely prepare for deployment. Use for live URL audits, bounded multi-page launch-readiness crawls, local repository inspection, generated-site implementation smell detection, fix planning, dry-run previews, guarded crawl-file creation, post-write rechecks after external deployment, UI or HTML reports, stdio MCP workflows, mock-backed Search Console status, read-only DNS checks, metadata or crawlability review, link-preview diagnosis, and launch-readiness reporting.
+description: Use ShipReady to check whether a generated website is ready to share, crawl, preview, and safely prepare for deployment. Use for live URL audits, bounded multi-page launch-readiness crawls, local repository inspection, generated-site implementation smell detection, fix planning, dry-run previews, review-only patch export, review-only GitHub PR draft handoff, guarded crawl-file creation, post-write rechecks after external deployment, UI or HTML reports, stdio MCP workflows, mock-backed Search Console status, read-only DNS checks, metadata or crawlability review, link-preview diagnosis, and launch-readiness reporting.
 ---
 
 # ShipReady Launch Readiness
@@ -11,7 +11,7 @@ Treat ShipReady as a CLI-first, agent-friendly launch-readiness engine for gener
 
 Use this skill when reviewing a generated site, checking metadata or crawl resources, diagnosing weak link-preview inputs, identifying generated-site implementation smells, safely creating eligible missing robots/sitemap files, or preparing a launch-readiness report with DNS and Search Console context.
 
-Do not use ShipReady for keyword research, rank tracking, backlink analysis, general SEO strategy, deployment, DNS writes, live Search Console mutation, GitHub pull requests, broad content rewriting, or metadata/content writes. Do not present it as an SEO suite, deployment system, DNS manager, Search Console automation system, PR bot, or SaaS dashboard.
+Do not use ShipReady for keyword research, rank tracking, backlink analysis, general SEO strategy, deployment, DNS writes, live Search Console mutation, live GitHub pull request creation, broad content rewriting, or metadata/content writes. Do not present it as an SEO suite, deployment system, DNS manager, Search Console automation system, PR bot, or SaaS dashboard.
 
 ## Establish prerequisites
 
@@ -26,11 +26,11 @@ Do not use ShipReady for keyword research, rank tracking, backlink analysis, gen
 
 | State | Current capability |
 |---|---|
-| Implemented | Single-page audit; bounded multi-page crawl; bounded repo inspection; generated-site implementation smell detector; social preview simulator; planning; dry-run; review-only patch export; status/doctor; versioned JSON; UI and HTML reports; local read-only GUI review cockpit; stdio MCP |
+| Implemented | Single-page audit; bounded multi-page crawl; bounded repo inspection; generated-site implementation smell detector; social preview simulator; planning; dry-run; review-only patch export; review-only GitHub PR draft handoff; status/doctor; versioned JSON; UI and HTML reports; local read-only GUI review cockpit; stdio MCP |
 | Mock-backed | Search Console status only; no Google OAuth, tokens, or live API calls |
 | Read-only | Audit, bounded crawl, inspection, social preview simulation, planning, dry-run, post-write recheck, UI report, GUI, Search Console mocks, and DNS status; live DNS uses resolver observations only |
 | Write-guarded | CLI and the sole MCP write tool may create only eligible missing robots/sitemap files under `WRITE_POLICY_V1` |
-| Future | Terminal output polish/TUI viewer and GitHub PR integration |
+| Future | Terminal output polish/TUI viewer and live GitHub PR creation only if explicitly approved |
 
 Never infer future behavior from a roadmap name. A single-page audit covers one page; bounded crawl covers only a small same-origin sample under strict limits. The current social preview simulator is a metadata-based approximation, not platform output.
 
@@ -48,6 +48,8 @@ pnpm shipready plan-fixes <path> --url <url> --json
 pnpm shipready fix <path> --url <url> --dry-run --json
 pnpm shipready patch-export <path> --url <url> --output /tmp/shipready.patch --json
 pnpm shipready patch-export <path> --url <url> --stdout
+pnpm shipready github-pr-draft <path> --url <url> --output /tmp/shipready-pr.md --json
+pnpm shipready github-pr-draft <path> --url <url> --stdout
 pnpm shipready dns status --url <url> --json
 pnpm shipready social-preview --url <url> --json
 pnpm shipready smells <path> --json
@@ -65,6 +67,7 @@ pnpm shipready html-report <path> --url <url> --output shipready-report.html
 - Treat `crawl` as a bounded same-origin sample, not exhaustive site coverage or broad analytics.
 - Treat `fix --dry-run` as mandatory before a write; it writes nothing.
 - Treat `patch-export` as a review-only dry-run artifact; it does not apply patches, mutate the target repository, commit, push, open pull requests, or deploy.
+- Treat `github-pr-draft` as a review-only PR draft handoff; it did not create a PR, call a GitHub API, run Git commands, create a branch, commit, push, deploy, apply patches, or mutate the target repository.
 - Treat JSON `contract` discriminators as versioned public boundaries. See [CONTRACTS.md](../../docs/CONTRACTS.md).
 - Separate safe candidates, review-required changes, manual actions, already-good checks, limitations, and local-versus-live state.
 
@@ -113,6 +116,28 @@ Rules:
 7. Review the artifact before using it with other tools.
 
 Patch export is not write mode. It never invokes `fix --write`, applies patches, mutates the target repository, stages/commits/pushes, opens pull requests, deploys, writes DNS, calls provider APIs, calls live Search Console, handles OAuth/tokens, or broadens `WRITE_POLICY_V1`.
+
+## Prepare a GitHub PR draft handoff
+
+```bash
+pnpm shipready github-pr-draft <path> --url https://example.com --patch /tmp/shipready.patch --output /tmp/shipready-pr.md
+pnpm shipready github-pr-draft <path> --url https://example.com --output /tmp/shipready-pr.md --json
+pnpm shipready github-pr-draft <path> --url https://example.com --stdout
+```
+
+Use PR draft handoff when a human needs a PR-ready review artifact after ShipReady dry-run and patch-export evidence. The artifact includes PR title, PR body, proposed-change summary, safe/review-required/manual classifications, patch artifact reference, review checklist, validation checklist, copyable GitHub CLI command strings when requested, copyable manual Git command strings, and safety limitations.
+
+Rules:
+
+1. Require a repository path and URL.
+2. Require exactly one of `--output` or `--stdout`.
+3. Prefer `--output` outside the inspected repository.
+4. Reject output paths inside the inspected repository by default.
+5. Use `--patch` to reference an existing review-only patch artifact; otherwise ShipReady regenerates patch-export evidence internally without writing a patch file.
+6. Treat `--github-repo`, `--base`, `--branch`, and `--include-gh-command` as generated-text metadata only.
+7. Review the draft and patch before running any copied command outside ShipReady.
+
+PR draft handoff is not GitHub automation. ShipReady did not create a PR, branch, commit, push, deployment, GitHub update, or applied fix. There is no GitHub API call, no `gh` execution, no Git command execution, no GitHub auth requirement, no token storage, no patch application, no target-repository mutation, no DNS write, no live Search Console call, and no `WRITE_POLICY_V1` broadening.
 
 ## Recheck after external deployment
 
@@ -194,12 +219,15 @@ Use these read-only tools by their exact names:
 - `shipready.social_preview`
 - `shipready.generated_site_smells`
 - `shipready.export_patch`
+- `shipready.github_pr_draft`
 
 Treat `shipready.write_safe_crawl_files` as the only MCP write tool. Before calling it, require an authorized repository path, a fresh receipt from `shipready.preview_fixes`, the same normalized URL and canonical repo path, and exact confirmation `CREATE_SAFE_CRAWL_FILES_ONLY`. The server must re-authorize and revalidate current V1 candidates.
 
 `shipready.export_patch` is read-only and returns inline `shipready.patchExport.v1` content with `wroteArtifact: false`; it writes no artifact file and still requires allowed-root authorization for `repoPath`.
 
-MCP remains stdio-only. Do not add or imply remote transport, arbitrary file writes, client-supplied write paths, detector auto-fixes, patch application, or DNS, Search Console, GitHub, Git, or deployment mutation. Read [MCP_PLAN.md](../../docs/MCP_PLAN.md) for schemas, resources, prompts, and failure behavior.
+`shipready.github_pr_draft` is read-only and returns inline `shipready.githubPrDraft.v1` content with `wroteArtifact: false`; it writes no artifact file, runs no Git, calls no GitHub API, and still requires allowed-root authorization for `repoPath`.
+
+MCP remains stdio-only. Do not add or imply remote transport, arbitrary file writes, client-supplied write paths, detector auto-fixes, patch application, live PR creation, or DNS, Search Console, GitHub, Git, or deployment mutation. Read [MCP_PLAN.md](../../docs/MCP_PLAN.md) for schemas, resources, prompts, and failure behavior.
 
 ## Produce GUI and HTML reports
 
@@ -208,7 +236,7 @@ pnpm shipready gui
 pnpm shipready html-report <path> --url <url> --output report.html
 ```
 
-Use the GUI for local human review. Keep it read-only and preview/copy-only: it writes no project files, and `POST /api/fix` remains unavailable with `404`. The browser client uses `POST /api/review`, while `POST /api/ui-report` remains available for compatibility. The main review loads first; social preview, bounded crawl, generated-site smells, DNS status, Search Console mock status, and recheck are on-demand read-only sections. Treat copied guarded commands as text, not authorization.
+Use the GUI for local human review. Keep it read-only and preview/copy-only: it writes no project files, and `POST /api/fix` remains unavailable with `404`. The browser client uses `POST /api/review`, while `POST /api/ui-report` remains available for compatibility. The main review loads first; social preview, bounded crawl, generated-site smells, DNS status, Search Console mock status, and recheck are on-demand read-only sections. Treat copied guarded commands and copied PR draft commands as text, not authorization.
 
 Use HTML reports as explicit, self-contained static artifacts. The command writes only the named report file; it does not modify the inspected repository.
 

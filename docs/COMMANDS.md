@@ -26,7 +26,7 @@ pnpm shipready doctor --json
 ```
 
 - Purpose: check local runtime readiness without requiring a URL or repository path.
-- Checks: Node.js, pnpm, the Playwright Chromium executable, optional FFmpeg, package content, MCP SDK/configurability, parsed contract fixtures, canonical docs, Search Console mock content, DNS readiness content/API availability, post-write recheck docs/fixtures/skill guidance, social preview simulator fixtures/skill guidance, bounded crawl fixtures/docs/skill guidance, patch export docs/fixtures/skill guidance, `WRITE_POLICY_V1`, `LOCAL_FIRST_GUI_SPEC`, and expected demo artifacts.
+- Checks: Node.js, pnpm, the Playwright Chromium executable, optional FFmpeg, package content, MCP SDK/configurability, parsed contract fixtures, canonical docs, Search Console mock content, DNS readiness content/API availability, post-write recheck docs/fixtures/skill guidance, social preview simulator fixtures/skill guidance, bounded crawl fixtures/docs/skill guidance, patch export docs/fixtures/skill guidance, GitHub PR draft docs/fixtures/skill guidance, `WRITE_POLICY_V1`, `LOCAL_FIRST_GUI_SPEC`, and expected demo artifacts.
 - Behavior: uses bounded local executable/file/dependency probes only. It does not access the network, inspect an arbitrary repository, start the MCP/GUI server, or mutate files.
 - Classification: every check is `pass`, `warn`, `fail`, or `skip`. Missing optional FFmpeg/demo artifacts warn rather than fail. `ok` is true exactly when no required check fails.
 - JSON contract: `shipready.doctor.v1`; normalized fixture: [`doctor.default.json`](../validation/contracts/doctor.default.json).
@@ -197,6 +197,30 @@ pnpm shipready patch-export <path> --url https://example.com --safe-only --outpu
 
 MCP exposes the same review-only export as `shipready.export_patch`, returning `shipready.patchExport.v1` inline with `output.kind: "inline"` and `wroteArtifact: false`. It requires allowed-root authorization for `repoPath` and writes no artifact files.
 
+## `github-pr-draft`
+
+```bash
+pnpm shipready github-pr-draft <path> --url https://example.com --patch /tmp/shipready.patch --output /tmp/shipready-pr.md
+pnpm shipready github-pr-draft <path> --url https://example.com --patch /tmp/shipready.patch --stdout
+pnpm shipready github-pr-draft <path> --url https://example.com --output /tmp/shipready-pr.md --json
+pnpm shipready github-pr-draft <path> --url https://example.com --github-repo f-campana/ship-ready --base main --branch shipready/launch-readiness --include-gh-command --output /tmp/shipready-pr.md
+```
+
+- Purpose: generate a review-only GitHub PR draft / PR handoff artifact from the current ShipReady dry-run and patch-export evidence. It answers what pull request a human should review and open outside ShipReady.
+- Required: local repository `<path>`, `--url <http-or-https-url>`, and exactly one of `--output <file>` or `--stdout`.
+- Optional: `--patch <file>`, `--github-repo <owner/repo>`, `--base <branch>`, `--branch <branch>`, `--title <title>`, `--include-gh-command`, `--json`, `--timeout <ms>`, `--no-render`, and `--user-agent <ua>`.
+- Metadata only: `--github-repo`, `--base`, and `--branch` are used only in generated text. `--branch` is a suggested branch name only. Default base is `main`; default suggested branch is `shipready/launch-readiness`.
+- Patch reference: when `--patch` is provided, ShipReady reads that existing artifact path only to compute path/size/SHA-256 metadata. When omitted, ShipReady regenerates patch-export evidence internally without writing a patch file.
+- Output path policy: `--output` must point to a file outside the inspected repository. The output directory must already exist. Existing symlink or directory output targets are rejected. ShipReady writes only the requested PR draft markdown artifact.
+- Stdout mode: `--stdout` writes no files and prints the markdown handoff artifact. With `--json`, stdout contains `shipready.githubPrDraft.v1` metadata and draft body/checklist fields.
+- JSON contract: `shipready.githubPrDraft.v1`; fixtures: `github-pr-draft.safe-creations.json`, `github-pr-draft.review-required.json`, `github-pr-draft.no-changes.json`, and `github-pr-draft.stdout.json`.
+- Artifact content: PR title, PR body, proposed-change summary, safe/review-required/manual classifications, patch artifact reference, review checklist, validation checklist, copyable GitHub CLI command strings when requested, copyable manual Git command strings, and safety limitations.
+- Safety: review-only. It did not create a PR, branch, commit, push, deployment, GitHub update, or applied fix. It does not call the GitHub API, validate GitHub auth, run `gh`, run `git`, apply patches, mutate the inspected target repository, write DNS, call provider APIs, call live Search Console, handle OAuth/tokens, or broaden `WRITE_POLICY_V1`.
+- Exit behavior: `0` when a valid draft is emitted or the requested markdown artifact is written; `1` for invalid URL/path/output/GitHub metadata/timeout input; `2` for contract or unexpected operational failure. JSON errors use `shipready.error.v1`; `invalid_output_path` covers missing/conflicting output mode and inside-repo output, while `invalid_github_repo` covers malformed `owner/repo` metadata.
+- Agent use: treat generated commands as copyable text only. A human must review the patch and draft before running anything outside ShipReady.
+
+MCP exposes the same review-only handoff as `shipready.github_pr_draft`, returning `shipready.githubPrDraft.v1` inline with `output.kind: "inline"` and `wroteArtifact: false`. It requires allowed-root authorization for `repoPath` and writes no artifact files.
+
 ## `ui-report`
 
 ```bash
@@ -242,7 +266,7 @@ pnpm shipready gui
 - On-demand checks: the main review loads `ui-report-v1` first. Social preview, bounded crawl, generated-site smells, DNS status, Search Console mock status, and recheck run only when requested from the GUI.
 - Output: server URL, then the process remains active until stopped.
 - Agent use: human review, GUI validation, and recording.
-- Safety: no GUI write endpoint exists. Safe crawl-file creation is shown as a copyable guarded CLI command only. The GUI never executes `fix --write`, never calls `shipready.write_safe_crawl_files`, never deploys, never runs Git/GitHub behavior, never writes DNS, never calls live Search Console or social platform APIs, and never writes metadata, content, JSON-LD, packages, or configuration.
+- Safety: no GUI write endpoint exists. Safe crawl-file creation and GitHub PR draft handoff are shown as copyable CLI commands only. The GUI never executes `fix --write`, never calls `shipready.write_safe_crawl_files`, never creates PRs, never deploys, never runs Git/GitHub behavior, never writes DNS, never calls live Search Console or social platform APIs, and never writes metadata, content, JSON-LD, packages, or configuration.
 
 `POST /api/fix` is not implemented and returns `404`.
 
@@ -349,9 +373,9 @@ SHIPREADY_MCP_ALLOWED_ROOTS='["/absolute/workspace-a","/absolute/workspace-b"]' 
 
 - Purpose: start the local MCP stdio server. Stdout is reserved for MCP protocol frames; use `pnpm --silent` in source checkouts so package-manager script output cannot pollute stdio.
 - Authorization: at least one explicit root is required. Repeat `--allow-root` for multiple roots; CLI roots replace the JSON-array environment fallback. Relative, missing, home, filesystem-root, traversal, and symlink-escape paths fail closed.
-- Surface: fourteen read-only tools, one guarded write tool, twelve canonical documentation resources plus allowlisted contract fixtures, and five prompt templates. `shipready.search_console_status`, `shipready.dns_status`, `shipready.crawl_site`, and `shipready.social_preview` accept no repository-path input. `shipready.export_patch`, `shipready.generated_site_smells`, and other repo tools authorize `repoPath` before inspection. `shipready.recheck` authorizes a repository only when optional `repoPath` is supplied. The server's existing allowed-root startup requirement remains unchanged. See [MCP_PLAN.md](MCP_PLAN.md) for the exact lists.
+- Surface: fifteen read-only tools, one guarded write tool, twelve canonical documentation resources plus allowlisted contract fixtures, and five prompt templates. `shipready.search_console_status`, `shipready.dns_status`, `shipready.crawl_site`, and `shipready.social_preview` accept no repository-path input. `shipready.export_patch`, `shipready.github_pr_draft`, `shipready.generated_site_smells`, and other repo tools authorize `repoPath` before inspection. `shipready.recheck` authorizes a repository only when optional `repoPath` is supplied. The server's existing allowed-root startup requirement remains unchanged. See [MCP_PLAN.md](MCP_PLAN.md) for the exact lists.
 - Safe write tool: `shipready.write_safe_crawl_files` can create only current V1-eligible missing robots/sitemap files. Required flow: call `shipready.preview_fixes`, review `shipready.dryRunFix.v1` and its fresh `previewReceipt`, then call the write tool with the same URL, same authorized repo path, that receipt, and `confirmation: "CREATE_SAFE_CRAWL_FILES_ONLY"`.
 - Safety: the write tool re-authorizes the path, validates the receipt signature/expiry/bindings, regenerates the current dry-run, revalidates `WRITE_POLICY_V1`, and returns `shipready.writeFix.v1`. It never accepts arbitrary file paths or client-supplied file lists as authority. The server does not start the GUI or write an HTML report.
 - Limitation: request deadlines and client cancellation are bounded at the MCP boundary. Existing synchronous repository scans and application operations do not yet accept `AbortSignal`, so already-started underlying work may finish its own bounded cleanup after the MCP response.
 
-HTTP, SSE, remote auth, live Search Console/OAuth, timeout overrides, broader MCP writes, GUI write execution, Git/GitHub, deploy, DNS provider integrations, and DNS writes are not implemented.
+HTTP, SSE, remote auth, live Search Console/OAuth, timeout overrides, broader MCP writes, GUI write execution, live GitHub PR creation, Git command execution, branch creation, commit/push, deploy, DNS provider integrations, and DNS writes are not implemented.
