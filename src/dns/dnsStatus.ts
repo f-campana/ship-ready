@@ -12,6 +12,11 @@ import {
   type DnsStatusInput,
   type ExpectedWwwMode,
 } from "./dnsTypes";
+import {
+  formatJsonMoreLine,
+  formatTerminalReviewHeader,
+  type TerminalReviewStatus,
+} from "../report/terminalReview";
 
 type ResolutionStatus = DnsStatus["hosts"][number]["resolution"]["status"];
 type HostRole = DnsStatus["hosts"][number]["role"];
@@ -119,9 +124,12 @@ export function formatDnsStatusJson(status: DnsStatusJsonContract): string {
 
 export function formatDnsStatusHuman(status: DnsStatusJsonContract): string {
   const lines = [
-    "DNS readiness",
-    `Mode: ${status.mode} (read-only)`,
-    `URL: ${status.url}`,
+    ...formatTerminalReviewHeader("ShipReady DNS readiness", {
+      target: status.url,
+      mode: `${status.mode} (read-only)`,
+      status: formatDnsTerminalStatus(status.verdict.status),
+      next: status.nextActions[0],
+    }),
     `Domain: ${status.domain}`,
     "",
     "Resolution",
@@ -149,8 +157,12 @@ export function formatDnsStatusHuman(status: DnsStatusJsonContract): string {
     "Canonical host",
     `  ${status.canonical?.status ?? "not_checked"}: ${status.canonical?.message ?? "HTTP canonical host was not checked."}`,
     "",
-    "Verdict",
+    "DNS verdict",
     `  ${status.verdict.status}: ${status.verdict.summary}`,
+    "",
+    "Safety",
+    "  - Read-only DNS evidence. No DNS provider writes, registrar changes, deployment, OAuth, or tokens.",
+    "  - DNS evidence does not guarantee propagation, certificate issuance, crawling, indexing, ranking, or approval.",
     "",
     "Limitations",
     ...status.limitations.map((item) => `  - ${item}`),
@@ -158,9 +170,17 @@ export function formatDnsStatusHuman(status: DnsStatusJsonContract): string {
     "Next actions",
     ...status.nextActions.map((item) => `  - ${item}`),
     "",
+    formatJsonMoreLine(),
+    "",
   );
 
   return lines.join("\n");
+}
+
+function formatDnsTerminalStatus(status: DnsStatus["verdict"]["status"]): TerminalReviewStatus {
+  if (status === "ready") return "Ready";
+  if (status === "needs_attention" || status === "blocked") return "Needs attention";
+  return "Unknown";
 }
 
 function normalizeDnsStatusUrl(input: string): string {

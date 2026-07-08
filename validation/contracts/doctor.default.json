@@ -64,9 +64,9 @@
       "id": "canonical-docs",
       "label": "Canonical docs",
       "status": "pass",
-      "message": "12 canonical documentation files are present.",
+      "message": "13 canonical documentation files are present.",
       "details": {
-        "checked": 12,
+        "checked": 13,
         "missing": []
       }
     },

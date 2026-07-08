@@ -3,6 +3,11 @@ import {
   PatchExportJsonContractSchema,
   type PatchExportJsonContract,
 } from "../types/contracts";
+import {
+  formatJsonMoreLine,
+  formatTerminalReviewHeader,
+  type TerminalReviewStatus,
+} from "./terminalReview";
 
 export function formatPatchExportJsonReport(result: PatchExportJsonContract): string {
   const contract = PatchExportJsonContractSchema.parse({
@@ -14,9 +19,12 @@ export function formatPatchExportJsonReport(result: PatchExportJsonContract): st
 
 export function formatPatchExportHumanReport(result: PatchExportJsonContract): string {
   const lines = [
-    "Patch export",
-    `URL: ${result.url}`,
-    `Repo: ${result.repoPath}`,
+    ...formatTerminalReviewHeader("ShipReady patch export", {
+      target: result.url,
+      repo: result.repoPath,
+      status: formatPatchExportStatus(result),
+      next: result.nextActions[0],
+    }),
     "",
     "Source dry-run",
     `- Contract: ${result.source.dryRunContract}`,
@@ -38,10 +46,14 @@ export function formatPatchExportHumanReport(result: PatchExportJsonContract): s
     ...formatSkippedChanges(result),
     "",
     "Safety",
+    "- Review-only. Not applied. Target repo not modified.",
+    "- ShipReady did not stage, commit, push, open a PR, deploy, write DNS, call providers, or broaden WRITE_POLICY_V1.",
     ...result.limitations.map((item) => `- ${item}`),
     "",
     "Next actions",
     ...result.nextActions.map((item) => `- ${item}`),
+    "",
+    formatJsonMoreLine(),
     "",
   ];
   return `${lines.join("\n")}`;
@@ -63,4 +75,10 @@ function formatSkippedChanges(result: PatchExportJsonContract): string[] {
 
 function formatReviewStatus(status: "auto_candidate" | "review_required"): string {
   return status === "review_required" ? "review required" : "automation candidate";
+}
+
+function formatPatchExportStatus(result: PatchExportJsonContract): TerminalReviewStatus {
+  if (result.summary.reviewRequired > 0 || result.summary.manualOnly > 0) return "Manual review";
+  if (result.summary.exportedChanges > 0) return "Needs attention";
+  return "Ready";
 }

@@ -2,6 +2,12 @@ import {
   GeneratedSiteSmellsJsonContractSchema,
   type GeneratedSiteSmellsJsonContract,
 } from "../types/contracts";
+import {
+  formatJsonMoreLine,
+  formatTerminalReviewHeader,
+  truncateTerminalValue,
+  type TerminalReviewStatus,
+} from "./terminalReview";
 
 const SECTION_CATEGORIES: Array<{
   title: string;
@@ -24,13 +30,15 @@ export function formatGeneratedSiteSmellsHuman(
   result: GeneratedSiteSmellsJsonContract,
 ): string {
   const lines = [
-    "Generated-site implementation smells",
-    "Heuristic implementation signals only; this is not proof of who or what produced the site.",
+    ...formatTerminalReviewHeader("ShipReady implementation smell review", {
+      target: result.url ?? result.repoPath,
+      repo: result.repoPath,
+      mode: result.mode,
+      status: formatStatus(result.summary.status),
+      next: result.nextActions[0],
+    }),
     "",
     "Summary",
-    `  Status: ${result.summary.status}`,
-    `  Mode: ${result.mode}`,
-    `  Repo: ${result.repoPath}`,
     ...(result.url ? [`  URL: ${result.url}`] : []),
     `  Framework: ${result.framework.name} (${result.framework.confidence} confidence)`,
     `  Findings: ${result.summary.findingCount} total; high ${result.summary.severityCounts.high}, medium ${result.summary.severityCounts.medium}, low ${result.summary.severityCounts.low}, info ${result.summary.severityCounts.info}`,
@@ -47,11 +55,17 @@ export function formatGeneratedSiteSmellsHuman(
 
   lines.push(
     "",
+    "Safety",
+    "  - Heuristic implementation signals only. Not authorship proof, generator identity, or site quality proof.",
+    "  - Read-only. No fixes, Git/GitHub, deploy, DNS, Search Console, social platform, OAuth, or token behavior is used.",
+    "",
     "Limitations",
     ...result.limitations.map((item) => `  - ${item}`),
     "",
     "Next actions",
     ...result.nextActions.map((item) => `  - ${item}`),
+    "",
+    formatJsonMoreLine(),
     "",
   );
 
@@ -76,6 +90,13 @@ function formatEvidence(evidence: GeneratedSiteSmellsJsonContract["findings"][nu
     ? `${evidence.path}${evidence.line ? `:${evidence.line}` : ""}`
     : evidence.source;
   const field = evidence.field ? ` ${evidence.field}` : "";
-  const preview = evidence.valuePreview ? ` "${evidence.valuePreview}"` : "";
+  const preview = evidence.valuePreview ? ` "${truncateTerminalValue(evidence.valuePreview, 88)}"` : "";
   return `${location}${field}${preview}`;
+}
+
+function formatStatus(status: GeneratedSiteSmellsJsonContract["summary"]["status"]): TerminalReviewStatus {
+  if (status === "clean") return "Ready";
+  if (status === "manual_review") return "Manual review";
+  if (status === "needs_attention") return "Needs attention";
+  return "Unknown";
 }

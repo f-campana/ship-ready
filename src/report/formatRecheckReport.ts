@@ -2,6 +2,11 @@ import {
   RecheckJsonContractSchema,
   type RecheckJsonContract,
 } from "../types/contracts";
+import {
+  formatJsonMoreLine,
+  formatTerminalReviewHeader,
+  type TerminalReviewStatus,
+} from "./terminalReview";
 
 export function formatRecheckJson(result: RecheckJsonContract): string {
   return `${JSON.stringify(RecheckJsonContractSchema.parse(result), null, 2)}\n`;
@@ -10,9 +15,12 @@ export function formatRecheckJson(result: RecheckJsonContract): string {
 export function formatRecheckHuman(result: RecheckJsonContract): string {
   const report = RecheckJsonContractSchema.parse(result);
   const lines = [
-    "ShipReady post-write recheck",
-    `URL: ${report.url}`,
-    `Mode: ${report.mode === "repo_backed" ? "repo-backed" : "URL-only"}`,
+    ...formatTerminalReviewHeader("ShipReady post-write recheck", {
+      target: report.url,
+      mode: report.mode === "repo_backed" ? "repo-backed" : "URL-only",
+      status: formatStatus(report.verdict.status),
+      next: report.nextActions[0],
+    }),
     "",
     "Live evidence",
     `  robots.txt: ${report.live.robots.status} — ${report.live.robots.message}`,
@@ -34,8 +42,12 @@ export function formatRecheckHuman(result: RecheckJsonContract): string {
     "",
     `Deployment: ${report.deployment.status}`,
     `  ${report.deployment.message}`,
-    `Verdict: ${report.verdict.status}`,
+    `Recheck verdict: ${report.verdict.status}`,
     `  ${report.verdict.summary}`,
+    "",
+    "Safety",
+    "  - Read-only. No deploy, Git, provider, DNS, Search Console, or repository write is performed.",
+    "  - Local files affect the live site only after external deployment.",
     "",
     "Next actions",
     ...report.nextActions.map((action) => `  - ${action}`),
@@ -43,6 +55,14 @@ export function formatRecheckHuman(result: RecheckJsonContract): string {
     "Limitations",
     ...report.limitations.map((limitation) => `  - ${limitation}`),
     "",
+    formatJsonMoreLine(),
+    "",
   );
   return lines.join("\n");
+}
+
+function formatStatus(status: RecheckJsonContract["verdict"]["status"]): TerminalReviewStatus {
+  if (status === "ready") return "Ready";
+  if (status === "needs_attention" || status === "needs_deploy") return "Needs attention";
+  return "Unknown";
 }

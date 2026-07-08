@@ -80,7 +80,7 @@
     "kind": "stdout",
     "wroteArtifact": false,
     "bytesWritten": 0,
-    "sha256": "5e2389ceabcdad16f311394669d8df90c50b9e5656cf893b296d9e37d6e79d92"
+    "sha256": "8a633711c311021a80f10c54a88de69f4f434afc39ff27df3b04e075ebe1b474"
   },
   "safety": {
     "createdPullRequest": false,

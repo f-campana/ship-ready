@@ -196,9 +196,10 @@ describe("planFixesFromResults", () => {
     const report = formatFixPlanHumanReport(plan);
 
     expect(report).toContain("ShipReady fix plan");
-    expect(report).toContain("Safe automated later");
+    expect(report).toContain("Status: Needs attention");
+    expect(report).toContain("Safe candidates");
     expect(report).toContain("Add sitemap.ts");
-    expect(report).toContain("Recommended next step");
+    expect(report).toContain("Next: Review the plan");
   });
 });
 

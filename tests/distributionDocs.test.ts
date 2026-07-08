@@ -58,6 +58,7 @@ describe("distribution documentation", () => {
     expect(status).toContain("Distribution classification: **source-checkout-only v0**");
     expect(roadmap).toContain("| Distribution | Complete |");
     expect(status).not.toContain("Packaging / distribution decision.");
-    expect(releaseReadiness).toContain("Terminal output polish / TUI viewer");
+    expect(releaseReadiness).toContain("TUI viewer feasibility / implementation");
+    expect(releaseReadiness).toContain("Terminal output polish is complete");
   });
 });

@@ -62,8 +62,8 @@
     "kind": "file",
     "path": "validation/pr-drafts/shipready.no-changes.md",
     "wroteArtifact": true,
-    "bytesWritten": 3779,
-    "sha256": "8b973a7caa1552927101ced9d8dab63873aedc0680b68bef768d60df065f1034"
+    "bytesWritten": 4038,
+    "sha256": "847aa44af9d44820b104cd643f61f056563ea725d70c398a916e9038828c4d0c"
   },
   "safety": {
     "createdPullRequest": false,

@@ -27,8 +27,11 @@ describe("social-preview CLI", () => {
 
     expect(stderr).toBe("");
     for (const section of [
-      "Social preview simulator",
-      "Verdict",
+      "ShipReady social preview",
+      "Target: https://example.com/",
+      "Status: Ready",
+      "Next:",
+      "Top findings",
       "Google-style search preview",
       "Generic social preview",
       "X/Twitter preview",
@@ -40,6 +43,9 @@ describe("social-preview CLI", () => {
     ]) {
       expect(stdout).toContain(section);
     }
+    expect(stdout).toContain("Approximation from observed metadata. Platforms may differ.");
+    expect(stdout).toContain("No social platform APIs");
+    expect(stdout).toContain("More: Run with --json for full contract output.");
   });
 
   it("emits stable JSON for mock, source, and warning scenarios", async () => {

@@ -106,6 +106,8 @@ describe("github-pr-draft CLI", () => {
       expect(stderr).toBe("");
       expect(stdout).toContain("# ShipReady GitHub PR Draft");
       expect(stdout).toContain("ShipReady did not create a live pull request");
+      expect(stdout).toContain("Draft only. No PR created. No Git or GitHub command executed.");
+      expect(stdout).toContain("## Terminal Review");
       expect(stdout).toContain("git checkout -b shipready/launch-readiness");
       expect(await treeDigest(repoPath)).toBe(beforeRepo);
       expect(await fileNames(tempRoot)).toEqual(beforeRoot);

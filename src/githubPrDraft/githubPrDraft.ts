@@ -441,10 +441,23 @@ function warningsForDraft(summary: DraftPayload["summary"]): string[] {
 }
 
 function formatGithubPrDraftMarkdownPayload(payload: DraftPayload | GithubPrDraftResult, output: GithubPrDraftOutputRequest): string {
+  const status = payload.summary.reviewRequired > 0 || payload.summary.manualOnly > 0
+    ? "Manual review"
+    : payload.summary.proposedChanges.length > 0
+      ? "Needs attention"
+      : "Ready";
   return [
     "# ShipReady GitHub PR Draft",
     "",
     "This is a review artifact. ShipReady did not create a live pull request, branch, commit, push, deployment, or GitHub update.",
+    "Draft only. No PR created. No Git or GitHub command executed.",
+    "",
+    "## Terminal Review",
+    "",
+    `- Target: ${payload.url}`,
+    `- Repo: ${payload.repoPath}`,
+    `- Status: ${status}`,
+    `- Next: ${payload.nextActions[0]}`,
     "",
     "## PR Title",
     "",

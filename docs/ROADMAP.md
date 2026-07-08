@@ -31,6 +31,7 @@ Order remains contractual for future work: harden CLI interfaces before wrapping
 | 18 | Complete | Add GitHub PR draft / PR handoff artifacts. | Read-only artifact | Pass 17 |
 | Closure | Complete | Add the v0 release-readiness checkpoint and align docs/status with current product state. | Read-only/docs | Pass 18 |
 | Distribution | Complete | Decide v0 remains source-checkout-only, document from-anywhere usage, verify developer-local linking, and defer npm/binary/hosted distribution. | Read-only/docs | Closure |
+| Terminal output polish | Complete | Polish existing human terminal output with verdict/target/next-action headers, compact findings, safety labels, and source-checkout-friendly plain text. No new dependency, aggregate command, or interactive TUI was added. | Read-only | Distribution |
 
 ## V0 Release Position
 
@@ -42,7 +43,7 @@ Do not present v0 as hosted SaaS, production SaaS, fully automated SEO repair, d
 
 These candidates are future work only. None is implemented by the closed roadmap unless explicitly listed above.
 
-1. Terminal output polish / TUI viewer.
+1. TUI viewer feasibility / implementation for a true interactive terminal interface, with dependency, non-TTY fallback, accessibility, snapshot, and maintenance review.
 2. npm/package publish preparation with the checklist in [DISTRIBUTION.md](DISTRIBUTION.md), packed-tarball smoke tests, and explicit publish authorization.
 3. Standalone binary exploration, including Playwright/browser, GUI asset, MCP stdio, artifact, and signing implications.
 4. Live GitHub integration with explicit opt-in, GitHub auth/token design, Git worktree safety checks, and mutation tests.

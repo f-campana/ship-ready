@@ -27,7 +27,10 @@ describe("crawl CLI", () => {
 
     expect(stderr).toBe("");
     for (const section of [
-      "Bounded crawl",
+      "ShipReady bounded crawl",
+      "Target: https://example.com/",
+      "Status: Ready",
+      "Next:",
       "Summary",
       "Pages checked",
       "Repeated findings",
@@ -38,6 +41,8 @@ describe("crawl CLI", () => {
     ]) {
       expect(stdout).toContain(section);
     }
+    expect(stdout).toContain("Bounded same-origin sample. Not exhaustive");
+    expect(stdout).toContain("More: Run with --json for full contract output.");
   });
 
   it("emits stable JSON for mock scenarios and caps max flags", async () => {

@@ -73,8 +73,8 @@
     "kind": "file",
     "path": "validation/pr-drafts/shipready.review-required.md",
     "wroteArtifact": true,
-    "bytesWritten": 4010,
-    "sha256": "6c5ad6bd1b78d17118e5d25fd9c4f98e75afe9cbf3debed933b9ab77554889ff"
+    "bytesWritten": 4277,
+    "sha256": "ad7cefb3b0cafbdb57ae6b45dd2e4963e1da4395d41a73de55816dd18ba959c8"
   },
   "safety": {
     "createdPullRequest": false,

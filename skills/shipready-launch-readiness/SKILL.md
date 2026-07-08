@@ -32,9 +32,11 @@ Do not use ShipReady for keyword research, rank tracking, backlink analysis, gen
 | Read-only | Audit, bounded crawl, inspection, social preview simulation, planning, dry-run, post-write recheck, UI report, GUI, Search Console mocks, and DNS status; live DNS uses resolver observations only |
 | Write-guarded | CLI and the sole MCP write tool may create only eligible missing robots/sitemap files under `WRITE_POLICY_V1` |
 | Distribution | Source-checkout-only v0; `pnpm --dir /Users/fabiencampana/Documents/ship-ready shipready ...` is the supported from-anywhere form; `pnpm link --global` is developer-local only after `pnpm build` |
-| Future | Terminal output polish/TUI viewer, npm/package publish preparation, standalone binary exploration, live GitHub with explicit opt-in, live Search Console with OAuth/token design, hosted SaaS exploration, broader framework support, and stronger demos/reporting |
+| Future | Interactive TUI viewer, npm/package publish preparation, standalone binary exploration, live GitHub with explicit opt-in, live Search Console with OAuth/token design, hosted SaaS exploration, broader framework support, and stronger demos/reporting |
 
 Never infer future behavior from a roadmap name. A single-page audit covers one page; bounded crawl covers only a small same-origin sample under strict limits. The current social preview simulator is a metadata-based approximation, not platform output.
+
+Default human CLI output is the terminal review experience in v0. It is plain text and should surface target, status, next action, top findings, safety labels, and a `--json` pointer. Use `--json` when a stable contract is needed. Do not infer an aggregate `review` command or interactive TUI; neither is implemented in this pass.
 
 ## Run the canonical CLI workflow
 

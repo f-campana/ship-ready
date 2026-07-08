@@ -1,46 +1,104 @@
 import type { AuditCheck, AuditResult } from "../types/audit";
+import {
+  formatCountSummary,
+  formatJsonMoreLine,
+  formatTerminalReviewHeader,
+  truncateTerminalValue,
+  type TerminalReviewStatus,
+} from "./terminalReview";
 
 export function formatHumanReport(result: AuditResult): string {
   const critical = result.checks.filter((check) => check.severity === "critical");
   const warnings = result.checks.filter((check) => check.severity === "warning");
   const info = result.checks.filter((check) => check.severity === "info");
   const passed = result.checks.filter((check) => check.severity === "passed");
+  const nextAction = formatRecommendedNextAction(critical, warnings, info);
 
   const lines: string[] = [
-    `ShipReady audit: ${result.url}`,
-    "",
+    ...formatTerminalReviewHeader("ShipReady audit", {
+      target: result.url,
+      status: formatReviewStatus(result.status),
+      next: nextAction,
+    }),
     `Score: ${result.score}/100`,
-    `Status: ${formatStatus(result.status)}`,
   ];
 
   if (result.finalUrl !== result.url) {
     lines.push(`Final URL: ${result.finalUrl}`);
   }
 
-  lines.push("", "Critical", ...formatChecks(critical));
-  lines.push("", "Warnings", ...formatChecks(warnings));
-  lines.push("", "Notes", ...formatChecks(info));
-  lines.push("", "Passed", ...formatChecks(passed));
+  lines.push("", "Top findings", ...formatTopFindings(critical, warnings, info));
+  lines.push("", "Evidence");
+  lines.push(`- Critical issues: ${critical.length}`);
+  lines.push(`- Warnings: ${warnings.length}`);
+  lines.push(`- Notes: ${info.length}`);
+  lines.push("", "Critical", ...formatChecks(critical, 5));
+  lines.push("", "Warnings", ...formatChecks(warnings, 6));
+  lines.push("", "Notes", ...formatChecks(info, 4));
+  lines.push("", "Passed checks", ...formatPassedChecks(passed));
   lines.push("", "Raw vs rendered", ...formatRawRendered(result));
-  lines.push("", "Recommended next action", formatRecommendedNextAction(critical, warnings, info));
+  lines.push(
+    "",
+    "Safety",
+    "- Read-only single-page audit. No files were modified.",
+    "- This is not a full-site crawl, Search Console proof, DNS proof, deployment proof, indexing guarantee, or ranking claim.",
+    "",
+    formatJsonMoreLine(),
+  );
 
   return `${lines.join("\n")}\n`;
 }
 
-function formatChecks(checks: AuditCheck[]): string[] {
+function formatTopFindings(
+  critical: AuditCheck[],
+  warnings: AuditCheck[],
+  info: AuditCheck[],
+): string[] {
+  const top = [...critical, ...warnings, ...info].slice(0, 5);
+  if (top.length === 0) {
+    return ["- No metadata or crawlability findings need attention."];
+  }
+
+  const hidden = critical.length + warnings.length + info.length - top.length;
+  return [
+    ...top.map((check) => `- ${formatSeverity(check)}: ${check.title}${evidenceSuffix(check)}`),
+    ...(hidden > 0 ? [`- ${hidden} additional finding(s) hidden from this summary.`] : []),
+  ];
+}
+
+function formatChecks(checks: AuditCheck[], maxVisible: number): string[] {
   if (checks.length === 0) {
     return ["- None"];
   }
 
-  return checks.map((check) => {
+  const visible = checks.slice(0, maxVisible).map((check) => {
     const suffix = evidenceSuffix(check);
     return `- ${check.title}${suffix}`;
   });
+
+  if (checks.length > maxVisible) {
+    visible.push(`- ${checks.length - maxVisible} more not shown in the human summary.`);
+  }
+
+  return visible;
+}
+
+function formatPassedChecks(checks: AuditCheck[]): string[] {
+  if (checks.length === 0) {
+    return ["- None"];
+  }
+
+  const visible = checks.slice(0, 5).map((check) => `- ${check.title}`);
+  return [
+    `- ${formatCountSummary(checks.length, "passed", 5)}`,
+    ...visible,
+    ...(checks.length > 5 ? ["- Remaining passed checks are available with --json."] : []),
+  ];
 }
 
 function evidenceSuffix(check: AuditCheck): string {
   if (check.id === "structure.h1.multiple" && Array.isArray(check.evidence?.h1)) {
-    return `: ${check.evidence.h1.map((value) => JSON.stringify(value)).join(", ")}`;
+    return `: ${check.evidence.h1.map((value) => JSON.stringify(truncateTerminalValue(value))).join(", ")}`;
   }
 
   if (check.id === "crawl.raw_render.metadata_render_only" && Array.isArray(check.evidence?.fields)) {
@@ -69,8 +127,11 @@ function formatRawRendered(result: AuditResult): string[] {
       return `- ${formatFieldLabel(field)}: not set in raw or rendered HTML`;
     }
 
-    const rawValue = comparison.rawValue ?? "missing";
-    const renderedValue = comparison.renderedValue ?? "missing";
+    const rawValue = comparison.rawValue ? truncateTerminalValue(comparison.rawValue) : "missing";
+    const renderedValue = comparison.renderedValue ? truncateTerminalValue(comparison.renderedValue) : "missing";
+    if (rawValue === renderedValue) {
+      return `- ${formatFieldLabel(field)}: raw/rendered=${rawValue}`;
+    }
     return `- ${formatFieldLabel(field)}: raw=${rawValue}; rendered=${renderedValue}`;
   });
 }
@@ -100,8 +161,15 @@ function formatRecommendedNextAction(
   return "No immediate metadata or crawlability action is needed. Keep this report as a baseline and rerun before launch.";
 }
 
-function formatStatus(status: AuditResult["status"]): string {
-  if (status === "good") return "Good";
-  if (status === "needs_work") return "Needs work";
-  return "Critical";
+function formatReviewStatus(status: AuditResult["status"]): TerminalReviewStatus {
+  if (status === "good") return "Ready";
+  if (status === "needs_work") return "Needs attention";
+  return "Needs attention";
+}
+
+function formatSeverity(check: AuditCheck): string {
+  if (check.severity === "critical") return "critical";
+  if (check.severity === "warning") return "warning";
+  if (check.severity === "info") return "note";
+  return "passed";
 }

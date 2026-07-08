@@ -31,6 +31,12 @@ Agents should use [ShipReady Launch Readiness](../skills/shipready-launch-readin
 
 For the v0 command, contract, MCP, and GUI matrices, see [RELEASE_READINESS.md](RELEASE_READINESS.md).
 
+## Terminal review output
+
+Default human output is the terminal review experience for v0 source-checkout users. Existing commands now put the verdict/status, target, and one next action near the top; summarize passed checks instead of dumping every success; truncate long raw/rendered metadata values; and keep safety/limitation copy close to the evidence that could be misunderstood.
+
+No new aggregate `review` command was added in this pass. No interactive TUI was added. Human output remains plain text without ANSI color, so non-TTY logs and redirected output stay readable. Use `--json` for full versioned contract output.
+
 ## `status`
 
 ```bash
@@ -40,6 +46,7 @@ pnpm shipready status --json
 
 - Purpose: report the installed version, CLI/MCP/GUI ordering, implemented command/tool surfaces, write-policy posture, absent integrations, demo artifact locations, and a copyable next command.
 - Behavior: reads no target repository, makes no network request, starts no server, and writes nothing.
+- Human output: compact terminal review summary with current source-checkout status, safety boundaries, and the next pass. It reports terminal output polish as complete and interactive TUI as deferred.
 - JSON contract: `shipready.status.v1`; fixture: [`status.default.json`](../validation/contracts/status.default.json).
 - Exit behavior: `0` after the status report is emitted.
 - Agent use: run before selecting a ShipReady workflow or assuming an integration exists; follow with `pnpm shipready doctor` when local readiness matters.
@@ -56,6 +63,7 @@ pnpm shipready doctor --json
 - Checks: Node.js, pnpm, the Playwright Chromium executable, optional FFmpeg, package content, MCP SDK/configurability, parsed contract fixtures, canonical docs, Search Console mock content, DNS readiness content/API availability, post-write recheck docs/fixtures/skill guidance, social preview simulator fixtures/skill guidance, bounded crawl fixtures/docs/skill guidance, patch export docs/fixtures/skill guidance, GitHub PR draft docs/fixtures/skill guidance, `WRITE_POLICY_V1`, `LOCAL_FIRST_GUI_SPEC`, and expected demo artifacts.
 - Behavior: uses bounded local executable/file/dependency probes only. It does not access the network, inspect an arbitrary repository, start the MCP/GUI server, or mutate files.
 - Classification: every check is `pass`, `warn`, `fail`, or `skip`. Missing optional FFmpeg/demo artifacts warn rather than fail. `ok` is true exactly when no required check fails.
+- Human output: verdict first, summary counts second, failures/warnings before a compact passed-check summary. Use `--json` to inspect every check.
 - JSON contract: `shipready.doctor.v1`; normalized fixture: [`doctor.default.json`](../validation/contracts/doctor.default.json).
 - Exit behavior: `0` when required checks pass, including warning-only reports; `1` when one or more required checks fail. A valid doctor report is still emitted.
 - Agent use: run after `status`, after installation, and before rendered audit/MCP work. Resolve failed checks using their messages.
@@ -72,6 +80,7 @@ pnpm shipready audit https://example.com --json
 - Behavior: reads network resources; writes no files.
 - JSON contract: `shipready.audit.v1`; representative fixtures: [`audit.clean.json`](../validation/contracts/audit.clean.json) and [`audit.needs-work.json`](../validation/contracts/audit.needs-work.json).
 - Output: human report by default; the existing `AuditResult` fields plus `contract` with `--json`.
+- Human output: terminal review summary with target, status, one next action, top findings, compact evidence, collapsed passed checks, truncated raw/rendered values, read-only safety copy, and a `--json` pointer.
 - Exit behavior: `0` when an audit result is emitted regardless of readiness status, `1` for invalid input, `2` for operational failure. JSON action errors use `shipready.error.v1`.
 - Agent use: first live-site check and source for downstream planning.
 - Safety: this is a single-page check, not a crawler; private/authenticated pages are out of scope.
@@ -92,7 +101,7 @@ pnpm shipready crawl --url https://example.com --mock clean-small-site --json
 - Discovery sources: `sitemap`, `links`, or `both`. Sitemap handling is intentionally bounded: conventional `/sitemap.xml`, small XML only, direct URL entries only, same-origin pages only, and no recursive sitemap-index expansion.
 - Mock scenarios: `clean-small-site`, `missing-descriptions`, `canonical-inconsistent`, `social-images-missing`, `start-unreachable`, `limit-reached`, and `mixed-readiness`.
 - JSON contract: `shipready.crawl.v1`; fixtures are named `crawl.<scenario>.json`.
-- Output: human sections for Bounded crawl, Summary, Pages checked, Repeated findings, Metadata consistency, Skipped URLs / limits, Limitations, and Next actions. JSON preserves compact structured summaries and does not embed raw HTML or full audit payloads.
+- Output: human terminal review sections for target/status/next action, summary, pages checked, repeated findings, metadata consistency, skipped URLs / limits, safety, limitations, and next actions. JSON preserves compact structured summaries and does not embed raw HTML or full audit payloads.
 - Exit behavior: `0` when a valid crawl result is emitted, including `needs_attention` or `unknown` page states; `1` for invalid URL/source/mock/timeout/limit input; `2` for unexpected contract or operational failure. JSON errors use `shipready.error.v1`.
 - Safety: not exhaustive site coverage, broad analytics, indexing evidence, monitoring, complete broken-link scanning, security scanning, accessibility auditing, write mode, deploy path, Search Console live integration, DNS write, or social platform API surface.
 
@@ -114,7 +123,7 @@ pnpm shipready social-preview --url https://example.com --mock complete --json
 - Surfaces: `google_search`, `generic_social`, `x_twitter`, `slack_discord`, and `linkedin`. These are approximations from observed metadata, not official platform API outputs.
 - Mock scenarios: `complete`, `missing-image`, `rendered-only-metadata`, `twitter-fallback`, `missing-description`, `missing-og-url`, `raw-rendered-different`, `image-unreachable`, and `minimal-title-only`.
 - JSON contract: `shipready.socialPreview.v1`; fixtures are named `social-preview.<scenario>.json`.
-- Output: human sections for verdict, each simulated preview surface, raw-vs-rendered differences, limitations, and next actions; JSON preserves full field values while human output truncates long values.
+- Output: human terminal review sections for target/status/next action, top findings, each simulated preview surface, raw-vs-rendered differences, safety, limitations, and next actions; JSON preserves full field values while human output truncates long values.
 - Exit behavior: `0` when a valid simulation is emitted; `1` for invalid URL/source/mock/timeout input; `2` for operational or contract failure. JSON errors use `shipready.error.v1`.
 - Safety: no local repository is required; no files are written; no screenshots, image generation, platform preview APIs, social scraping endpoints, Git, deployment, DNS writes, Search Console live calls, OAuth, token storage, or provider integrations are used.
 
@@ -129,7 +138,7 @@ pnpm shipready recheck <path> --url https://example.com --json
 - Purpose: read live `robots.txt` and `sitemap.xml` evidence after deployment performed outside ShipReady; optional repo-backed mode compares that evidence with inferred V1-safe local expected files.
 - Behavior: reuses the single-page audit with rendering disabled and optional bounded repository inspection. It never invokes `fix`, writes files, runs Git, deploys, or calls hosting-provider APIs.
 - JSON contract: `shipready.recheck.v1`; fixtures cover URL-only ready/needs-attention, repo-backed appears-deployed/needs-deploy/partial, and unknown evidence.
-- Output: human report or one JSON contract with `live`, optional `local`, conservative `deployment`, `verdict`, `limitations`, and `nextActions` sections.
+- Output: human terminal review report or one JSON contract with `live`, optional `local`, conservative `deployment`, `verdict`, `limitations`, and `nextActions` sections.
 - Exit behavior: `0` when a valid recheck result is emitted, including missing/unreachable live evidence; `1` for invalid URL/path/timeout; `2` for unexpected internal or contract failure. Network unavailability is normally represented as `unknown`/`unreachable` evidence rather than a command error.
 - URL-only boundary: deployment is `not_checked` because local repository state is unknown.
 - Repo-backed boundary: only static HTML, Vite React, and Next.js App Router V1-safe expected paths are inferred. Unsupported frameworks return an unknown comparison.
@@ -162,7 +171,7 @@ pnpm shipready plan-fixes . --url https://example.com --json
 - Purpose: combine a live audit and repo inspection into prioritized, risk- and confidence-labeled actions.
 - Behavior: reads the URL and repository; writes nothing.
 - JSON contract: `shipready.fixPlan.v1`; fixtures: [`plan-fixes.safe-apply.json`](../validation/contracts/plan-fixes.safe-apply.json) and [`plan-fixes.review-required.json`](../validation/contracts/plan-fixes.review-required.json).
-- Output: human report or the existing `FixPlanResult` fields plus `contract`.
+- Output: human terminal review report or the existing `FixPlanResult` fields plus `contract`.
 - Exit behavior: `0` when a plan is emitted, including manual-review/unsupported recommendations; `1` for invalid input; `2` for operational failure.
 - Agent use: decide which changes are safe candidates, review-required, manual, or unsupported.
 - Safety: plan automation fields describe capability; they do not execute changes.
@@ -177,7 +186,7 @@ pnpm shipready fix . --url https://example.com --dry-run --json
 - Purpose: generate exact create/update previews, diffs, skipped actions, and safety notes.
 - Behavior: reads the URL and repository; `mode` is `dry_run`, `wroteFiles` is `false`; writes nothing.
 - JSON contract: `shipready.dryRunFix.v1`; fixtures: [`fix-dry-run.safe-apply.json`](../validation/contracts/fix-dry-run.safe-apply.json), [`fix-dry-run.review-required.json`](../validation/contracts/fix-dry-run.review-required.json), and [`fix-dry-run.skipped.json`](../validation/contracts/fix-dry-run.skipped.json).
-- Output: human report or the existing `DryRunFixResult` fields plus `contract`.
+- Output: human terminal review report or the existing `DryRunFixResult` fields plus `contract`.
 - Exit behavior: `0` when a dry-run result is emitted; `1` for a missing/conflicting mode or invalid input; `2` for operational failure.
 - Agent use: mandatory preview before considering any write.
 - Safety: metadata, content, and JSON-LD may appear as review-required previews; preview presence does not make them writable.
@@ -217,7 +226,7 @@ pnpm shipready patch-export <path> --url https://example.com --safe-only --outpu
 - Output path policy: `--output` must point to a file outside the inspected repository. The output directory must already exist. Existing symlink or directory output targets are rejected. ShipReady writes only the requested artifact file.
 - Stdout mode: `--stdout` writes no files and prints the patch artifact to stdout. With `--json`, stdout contains `shipready.patchExport.v1` metadata and inline patch content instead of raw patch text.
 - JSON contract: `shipready.patchExport.v1`; fixtures: `patch-export.safe-creations.json`, `patch-export.review-required.json`, `patch-export.no-changes.json`, `patch-export.skipped.json`, and `patch-export.stdout.json`.
-- Human output sections: Patch export, Source dry-run, Output artifact, Included changes, Skipped changes, Safety, and Next actions.
+- Human output sections for file output: terminal review header, Source dry-run, Output artifact, Included changes, Skipped changes, Safety, and Next actions. `--stdout` without `--json` continues to print the raw review-only patch artifact for tool compatibility.
 - Safety: generated from the current `shipready.dryRunFix.v1` preview; never invokes `fix --write`; never applies patches; never modifies the inspected target repository; never stages, commits, pushes, opens pull requests, deploys, writes DNS, calls Search Console live APIs, calls provider APIs, or broadens `WRITE_POLICY_V1`.
 - Exit behavior: `0` when a valid patch export is emitted or the requested artifact is written; `1` for invalid URL/path/output/format/timeout input; `2` for contract or unexpected operational failure. JSON errors use `shipready.error.v1`; `invalid_output_path` covers missing/conflicting output mode, inside-repo output, unwritable output directories, directory targets, and symlink targets.
 - Agent use: prefer `--output` outside the target repository when handing a patch to a human. Use `--stdout` only when another tool is consuming stdout directly. Treat review-required exported changes as review targets, not write authorization.
@@ -241,7 +250,7 @@ pnpm shipready github-pr-draft <path> --url https://example.com --github-repo f-
 - Output path policy: `--output` must point to a file outside the inspected repository. The output directory must already exist. Existing symlink or directory output targets are rejected. ShipReady writes only the requested PR draft markdown artifact.
 - Stdout mode: `--stdout` writes no files and prints the markdown handoff artifact. With `--json`, stdout contains `shipready.githubPrDraft.v1` metadata and draft body/checklist fields.
 - JSON contract: `shipready.githubPrDraft.v1`; fixtures: `github-pr-draft.safe-creations.json`, `github-pr-draft.review-required.json`, `github-pr-draft.no-changes.json`, and `github-pr-draft.stdout.json`.
-- Artifact content: PR title, PR body, proposed-change summary, safe/review-required/manual classifications, patch artifact reference, review checklist, validation checklist, copyable GitHub CLI command strings when requested, copyable manual Git command strings, and safety limitations.
+- Artifact content: terminal review summary, PR title, PR body, proposed-change summary, safe/review-required/manual classifications, patch artifact reference, review checklist, validation checklist, copyable GitHub CLI command strings when requested, copyable manual Git command strings, and safety limitations.
 - Safety: review-only. It did not create a PR, branch, commit, push, deployment, GitHub update, or applied fix. It does not call the GitHub API, validate GitHub auth, run `gh`, run `git`, apply patches, mutate the inspected target repository, write DNS, call provider APIs, call live Search Console, handle OAuth/tokens, or broaden `WRITE_POLICY_V1`.
 - Exit behavior: `0` when a valid draft is emitted or the requested markdown artifact is written; `1` for invalid URL/path/output/GitHub metadata/timeout input; `2` for contract or unexpected operational failure. JSON errors use `shipready.error.v1`; `invalid_output_path` covers missing/conflicting output mode and inside-repo output, while `invalid_github_repo` covers malformed `owner/repo` metadata.
 - Agent use: treat generated commands as copyable text only. A human must review the patch and draft before running anything outside ShipReady.
@@ -259,7 +268,7 @@ pnpm shipready ui-report --url https://example.com --json
 - Purpose: normalize URL-only or URL-plus-repo results into `ui-report-v1`.
 - Behavior: reads network/repo inputs; writes nothing.
 - JSON contract: `shipready.uiReport.v1`, retaining `schemaVersion: "ui-report-v1"`; fixtures: [`ui-report.safe-apply.json`](../validation/contracts/ui-report.safe-apply.json) and [`ui-report.url-only.json`](../validation/contracts/ui-report.url-only.json).
-- Output: structured report with `--json`; otherwise a short generation message.
+- Output: structured report with `--json`; otherwise a compact terminal review summary of the UI report. The human summary is read-only and does not start the GUI.
 - Exit behavior: `0` when `errors` is empty; `1` when a report is emitted with normalized stage errors. Invalid timeout/action failures use `shipready.error.v1`.
 - Agent use: stable current input for GUI/report consumers and contract fixtures.
 - Safety: safe-apply fields describe eligibility and a guarded CLI command workflow; this command never applies changes.

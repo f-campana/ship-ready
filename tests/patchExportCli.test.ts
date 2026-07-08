@@ -84,12 +84,46 @@ describe("patch-export CLI", () => {
       expect(stderr).toBe("");
       expect(stdout).toContain("# ShipReady patch export manifest");
       expect(stdout).toContain("diff --git a/public/sitemap.xml b/public/sitemap.xml");
+      expect(stdout).toContain("review-only artifact; not applied");
+      expect(stdout).toContain("ShipReady did not modify the inspected target repository.");
       expect(await treeDigest(repoPath)).toBe(beforeRepo);
       expect(await fileNames(tempRoot)).toEqual(beforeRoot);
     } finally {
       await server.close();
     }
   });
+
+  it("emits a compact review-only human summary for file output", async () => {
+    const server = await crawlServer();
+    try {
+      const tempRoot = await temp("shipready-patch-export-human-");
+      const repoPath = await copyRepo("vite-react", tempRoot);
+      const outputPath = join(tempRoot, "shipready.patch");
+      const beforeRepo = await treeDigest(repoPath);
+
+      const { stdout, stderr } = await execFileAsync("pnpm", [
+        "--silent",
+        "shipready",
+        "patch-export",
+        repoPath,
+        "--url",
+        server.url,
+        "--output",
+        outputPath,
+        "--no-render",
+      ], { cwd: root, timeout: 20_000 });
+
+      expect(stderr).toBe("");
+      expect(stdout).toContain("ShipReady patch export");
+      expect(stdout).toContain("Status:");
+      expect(stdout).toContain("Next:");
+      expect(stdout).toContain("Review-only. Not applied. Target repo not modified.");
+      expect(stdout).toContain("More: Run with --json for full contract output.");
+      expect(await treeDigest(repoPath)).toBe(beforeRepo);
+    } finally {
+      await server.close();
+    }
+  }, 20_000);
 
   it("rejects output paths inside the inspected target repo", async () => {
     const server = await crawlServer();

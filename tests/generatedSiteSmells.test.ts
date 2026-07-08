@@ -135,9 +135,10 @@ describe("generated-site implementation smell detector", () => {
     ]));
 
     const human = formatGeneratedSiteSmellsHuman(renderedOnly);
-    expect(human).toContain("Generated-site implementation smells");
+    expect(human).toContain("ShipReady implementation smell review");
+    expect(human).toContain("Status: Needs attention");
     expect(human).toContain("Metadata / preview risks");
-    expect(human).toContain("not proof");
+    expect(human).toContain("Not authorship proof");
     expect(formatGeneratedSiteSmellsJson(renderedOnly)).toContain("shipready.generatedSiteSmells.v1");
   });
 });

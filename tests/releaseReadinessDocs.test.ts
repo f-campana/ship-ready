@@ -31,7 +31,7 @@ describe("release-readiness documentation", () => {
     expect(doc).toContain("shipready.write_safe_crawl_files");
     expect(doc).toContain("POST /api/fix");
     expect(doc).toContain("DISTRIBUTION.md");
-    expect(doc).toContain("Terminal output polish / TUI viewer");
+    expect(doc).toContain("TUI viewer feasibility / implementation");
   });
 
   it("documents source-checkout command usage without implying distribution", async () => {
@@ -53,6 +53,7 @@ describe("release-readiness documentation", () => {
     expect(roadmap).toContain("The original 18-pass ShipReady roadmap is **complete and closed**");
     expect(roadmap).toContain("| 18 | Complete | Add GitHub PR draft / PR handoff artifacts.");
     expect(roadmap).toContain("| Distribution | Complete |");
+    expect(roadmap).toContain("| Terminal output polish | Complete |");
     expect(roadmap).toContain("These candidates are future work only.");
     expect(roadmap).toContain("Live Search Console integration with explicit OAuth/token custody design");
   });

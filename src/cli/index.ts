@@ -21,6 +21,7 @@ import { formatJsonReport } from "../report/formatJsonReport";
 import { formatPatchExportHumanReport, formatPatchExportJsonReport } from "../report/formatPatchExportReport";
 import { formatRepoInspectionHumanReport } from "../report/formatRepoInspectionHumanReport";
 import { formatRepoInspectionJsonReport } from "../report/formatRepoInspectionJsonReport";
+import { formatUiReportHumanReport } from "../report/formatUiReportHumanReport";
 import { formatUiReportJsonReport } from "../report/formatUiReportJsonReport";
 import { formatWriteFixHumanReport } from "../report/formatWriteFixHumanReport";
 import { formatWriteFixJsonReport } from "../report/formatWriteFixJsonReport";
@@ -778,7 +779,7 @@ program
       if (options.json) {
         process.stdout.write(formatUiReportJsonReport(result));
       } else {
-        process.stdout.write("ShipReady UI report generated. Use --json for structured GUI data.\n");
+        process.stdout.write(formatUiReportHumanReport(result));
       }
 
       if (result.errors.length > 0) {

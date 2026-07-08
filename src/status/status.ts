@@ -6,6 +6,7 @@ import {
 import { WRITE_POLICY_V1 } from "../types/writeFix";
 import { MCP_READ_ONLY_TOOL_NAMES, MCP_WRITE_TOOL_NAMES } from "../mcp/toolNames";
 import { SHIPREADY_VERSION } from "../version";
+import { formatTerminalReviewHeader } from "../report/terminalReview";
 
 export const STATUS_CLI_COMMANDS = [
   "status",
@@ -98,7 +99,7 @@ export function createStatus(): StatusJsonContract {
       fodmappVoiceover: "validation/demo-fodmapp-voiceover-final/",
     },
     nextRecommendedCommand: "pnpm shipready doctor",
-    nextRecommendedPass: "Terminal output polish / TUI viewer",
+    nextRecommendedPass: "TUI viewer feasibility / implementation",
   });
 }
 
@@ -108,33 +109,38 @@ export function formatStatusJson(status = createStatus()): string {
 
 export function formatStatusHuman(status = createStatus()): string {
   return [
-    `ShipReady status (v${status.version})`,
-    "Mode: CLI first -> MCP second -> GUI third",
+    ...formatTerminalReviewHeader(`ShipReady status (v${status.version})`, {
+      mode: "CLI first -> MCP second -> GUI third",
+      status: "Ready",
+      next: status.nextRecommendedCommand,
+    }),
     "",
     "Capabilities",
-    `  CLI: ${status.capabilities.cli.join(", ")}`,
+    `  CLI commands: ${status.capabilities.cli.length} implemented`,
+    `  Core workflow: audit, inspect-repo, plan-fixes, fix --dry-run, patch-export, github-pr-draft, ui-report, gui, mcp`,
+    `  Evidence checks: crawl, social-preview, smells, recheck, dns status, search-console status`,
     `  MCP: stdio; ${status.capabilities.mcp.readOnlyTools.length} read-only tools; write tool: ${status.capabilities.mcp.writeTools.join(", ")}`,
     "  GUI: local, preview/copy-only, no write endpoint",
     "",
+    "Terminal review",
+    "  Human CLI output uses verdict/target/next-action headers and compact safety labels.",
+    "  Interactive TUI is not implemented in this pass; use the existing commands or local GUI.",
+    "",
     "Safety",
     `  ${status.writePolicy.name}: ${status.writePolicy.summary}`,
-    "  Search Console: spec exists, mock prototype available, live integration not implemented",
-    "  DNS readiness: read-only status checks implemented; provider writes/integrations not implemented",
-    "  Post-write recheck: implemented read-only; local changes still require external deployment",
-    "  Bounded multi-page crawl: implemented read-only; exhaustive crawler and scheduled monitoring not implemented",
-    "  Patch export: implemented as review-only artifact generation; patch application is not implemented",
-    "  GitHub PR draft: implemented as review-only handoff; live PR creation, Git command execution, branch creation, commit/push, and deployment are not implemented",
-    "  Social preview simulator: implemented read-only; social platform APIs and exact rendering guarantees not implemented",
-    "  Generated-site implementation smell detector: implemented read-only; authorship identification and auto-fixes not implemented",
-    "  Deployment automation and deploy provider integrations: not implemented",
+    "  Search Console: mock-backed only; live Google API/OAuth/token storage not implemented",
+    "  DNS readiness: read-only resolver evidence; provider writes/integrations not implemented",
+    "  Patch export: review-only; not applied to the target repository",
+    "  GitHub PR draft: draft only; no PR, GitHub API call, Git command, branch, commit, push, or deploy",
+    "  Crawl/social/smells/recheck: read-only evidence surfaces with explicit limitations",
     "  Distribution: source-checkout-only v0; npm, pnpm dlx, standalone binaries, hosted wrappers, and remote MCP are not implemented",
-    "  Remote MCP and live GitHub integrations: not implemented",
+    "  Deployment automation, live GitHub integration, DNS writes, live Search Console, remote MCP, telemetry, auth, accounts, and billing: not implemented",
     "",
     "Demo artifacts",
     `  ${status.demos.fodmappShare}`,
     `  ${status.demos.fodmappVoiceover}`,
     "",
-    `Next: ${status.nextRecommendedCommand}`,
+    `Next pass: ${status.nextRecommendedPass}`,
     "",
   ].join("\n");
 }

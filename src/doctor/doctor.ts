@@ -19,6 +19,7 @@ import {
   resolvePackageRoot,
 } from "../mcp/resources";
 import { resolveAllowedRoots } from "../mcp/config";
+import { formatCountSummary, formatTerminalReviewHeader } from "../report/terminalReview";
 
 const MINIMUM_NODE_MAJOR = 20;
 const REQUIRED_DEMO_ARTIFACTS = [
@@ -593,17 +594,50 @@ export function formatDoctorJson(report: DoctorJsonContract): string {
 }
 
 export function formatDoctorHuman(report: DoctorJsonContract): string {
-  const lines = ["ShipReady doctor"];
-  for (const check of report.checks) {
-    lines.push(`[${check.status.toUpperCase()}] ${check.label}: ${check.message}`);
-  }
-  lines.push(
+  const failed = report.checks.filter((check) => check.status === "fail");
+  const warned = report.checks.filter((check) => check.status === "warn");
+  const skipped = report.checks.filter((check) => check.status === "skip");
+  const passed = report.checks.filter((check) => check.status === "pass");
+  const lines = [
+    ...formatTerminalReviewHeader("ShipReady doctor", {
+      status: report.ok ? "Ready" : "Needs attention",
+      next: report.ok
+        ? "Run the intended ShipReady command."
+        : "Resolve failed checks and run: pnpm shipready doctor",
+    }),
     "",
     `Summary: ${report.summary.pass} pass, ${report.summary.warn} warn, ${report.summary.fail} fail, ${report.summary.skip} skip`,
-    report.ok ? "Ready: yes" : "Ready: no; resolve failed checks and run `pnpm shipready doctor` again.",
+  ];
+
+  lines.push("", "Needs attention", ...formatDoctorChecks(failed));
+  lines.push("", "Warnings", ...formatDoctorChecks(warned));
+  if (skipped.length > 0) {
+    lines.push("", "Skipped", ...formatDoctorChecks(skipped));
+  }
+  lines.push("", "Passed checks", ...formatPassedDoctorChecks(passed));
+  lines.push(
+    "",
+    "Safety",
+    "- Local readiness checks only. Doctor does not inspect a target repo, access the network, deploy, write artifacts, or call providers.",
+    "- Use --json for the full check list and stable contract output.",
     "",
   );
   return lines.join("\n");
+}
+
+function formatDoctorChecks(checks: DoctorCheck[]): string[] {
+  if (checks.length === 0) return ["- None"];
+  return checks.map((check) => `- [${check.status.toUpperCase()}] ${check.label}: ${check.message}`);
+}
+
+function formatPassedDoctorChecks(checks: DoctorCheck[]): string[] {
+  if (checks.length === 0) return ["- None"];
+  const visible = checks.slice(0, 8);
+  return [
+    `- ${formatCountSummary(checks.length, "passed", 8)}`,
+    ...visible.map((check) => `- ${check.label}: ${check.message}`),
+    ...(checks.length > visible.length ? ["- Remaining passed checks are available with --json."] : []),
+  ];
 }
 
 function commandVersion(command: string, args: string[]): string | undefined {

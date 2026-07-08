@@ -1,14 +1,22 @@
 import type { SkippedFixAction } from "../types/dryRunFix";
 import type { BlockedWriteChange, SafetyCheck, WriteFixResult, WrittenFile } from "../types/writeFix";
+import {
+  formatJsonMoreLine,
+  formatTerminalReviewHeader,
+  type TerminalReviewStatus,
+} from "./terminalReview";
 
 export function formatWriteFixHumanReport(result: WriteFixResult): string {
+  const nextStep = formatRecommendedNextStep(result);
   const lines: string[] = [
-    "ShipReady write result",
-    `URL: ${result.url}`,
-    `Repo: ${result.repoPath}`,
-    "",
-    "Mode: write",
-    "Policy: creation-only robots/sitemap",
+    ...formatTerminalReviewHeader("ShipReady write result", {
+      target: result.url,
+      repo: result.repoPath,
+      mode: "write",
+      status: formatWriteStatus(result),
+      next: nextStep,
+    }),
+    "Policy: creation-only robots/sitemap under WRITE_POLICY_V1",
     `Files actually changed: ${result.createdFiles.length}`,
     "",
     `Created files: ${result.createdFiles.length}`,
@@ -21,6 +29,7 @@ export function formatWriteFixHumanReport(result: WriteFixResult): string {
     ...formatSkippedActions(result.skippedActions),
     "",
     "Safety:",
+    "- Safe write: Only eligible missing robots/sitemap files can be created under WRITE_POLICY_V1.",
     "- No existing files overwritten.",
     "- No files outside repo root touched.",
     "- No Git operations performed.",
@@ -32,8 +41,7 @@ export function formatWriteFixHumanReport(result: WriteFixResult): string {
     ...formatSafetyChecks(result.safetyChecks),
     ...formatRollback(result),
     "",
-    "Recommended next step:",
-    `- ${formatRecommendedNextStep(result)}`,
+    formatJsonMoreLine(),
   ];
 
   return `${lines.join("\n")}\n`;
@@ -105,4 +113,10 @@ function formatRecommendedNextStep(result: WriteFixResult): string {
   }
 
   return "No changes needed.";
+}
+
+function formatWriteStatus(result: WriteFixResult): TerminalReviewStatus {
+  if (result.blockedChanges.length > 0 || result.skippedActions.length > 0) return "Manual review";
+  if (result.createdFiles.length > 0) return "Needs attention";
+  return "Ready";
 }

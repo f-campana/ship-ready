@@ -21,9 +21,12 @@ describe("doctor", () => {
     const report = await runDoctor();
     const output = formatDoctorHuman(report);
     expect(output).toContain("ShipReady doctor");
-    expect(output).toContain("[PASS] Node.js");
+    expect(output).toContain("Status:");
+    expect(output).toContain("Next:");
     expect(output).toContain("Summary:");
-    expect(output).toContain("Ready:");
+    expect(output).toContain("Passed checks");
+    expect(output).toContain("Remaining passed checks are available with --json.");
+    expect(output).toContain("Doctor does not inspect a target repo");
   });
 
   it("emits a stable JSON contract whose summary matches its checks", async () => {

@@ -104,5 +104,5 @@
     "fodmappVoiceover": "validation/demo-fodmapp-voiceover-final/"
   },
   "nextRecommendedCommand": "pnpm shipready doctor",
-  "nextRecommendedPass": "Terminal output polish / TUI viewer"
+  "nextRecommendedPass": "TUI viewer feasibility / implementation"
 }

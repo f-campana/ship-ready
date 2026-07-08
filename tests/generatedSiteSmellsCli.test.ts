@@ -26,7 +26,9 @@ describe("smells CLI", () => {
 
     expect(stderr).toBe("");
     for (const section of [
-      "Generated-site implementation smells",
+      "ShipReady implementation smell review",
+      "Status:",
+      "Next:",
       "Summary",
       "Top findings",
       "Metadata / preview risks",
@@ -39,7 +41,9 @@ describe("smells CLI", () => {
     ]) {
       expect(stdout).toContain(section);
     }
-    expect(stdout).toContain("not proof");
+    expect(stdout).toContain("Not authorship proof");
+    expect(stdout).toContain("Read-only. No fixes");
+    expect(stdout).toContain("More: Run with --json for full contract output.");
   });
 
   it("emits JSON for repo-only, URL-plus-mock, and clean mock modes without writing files", async () => {

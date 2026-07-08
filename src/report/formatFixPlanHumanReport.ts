@@ -1,10 +1,24 @@
 import type { FixPlanAction, FixPlanCategory, FixPlanResult, NoActionCheck } from "../types/fixPlan";
+import {
+  formatCountSummary,
+  formatJsonMoreLine,
+  formatTerminalReviewHeader,
+  truncateTerminalValue,
+  type TerminalReviewStatus,
+} from "./terminalReview";
 
 export function formatFixPlanHumanReport(result: FixPlanResult): string {
+  const nextStep = formatRecommendedNextStep(result.recommendedNextStep, result);
   const lines: string[] = [
-    "ShipReady fix plan",
-    `URL: ${result.url}`,
-    `Repo: ${result.repoPath}`,
+    ...formatTerminalReviewHeader("ShipReady fix plan", {
+      target: result.url,
+      repo: result.repoPath,
+      status: formatPlanStatus(result),
+      next: nextStep,
+    }),
+    "",
+    "Top findings",
+    ...formatTopActions(result.actions),
     "",
     "Audit summary",
     `- Score: ${result.auditSummary.score}/100`,
@@ -17,19 +31,41 @@ export function formatFixPlanHumanReport(result: FixPlanResult): string {
     `- Framework: ${result.repoSummary.frameworkName}`,
     `- Confidence: ${result.repoSummary.confidence}`,
     `- Package manager: ${result.repoSummary.packageManager}`,
-    "",
-    "Recommended next step",
-    `- ${formatRecommendedNextStep(result.recommendedNextStep)}`,
   ];
 
-  lines.push("", "Safe automated later", ...formatActions(result.actions, "safe_automated_later"));
-  lines.push("", "Automated with review", ...formatActions(result.actions, "automated_with_review"));
+  lines.push("", "Safe candidates", ...formatActions(result.actions, "safe_automated_later"));
+  lines.push("", "Review required", ...formatActions(result.actions, "automated_with_review"));
   lines.push("", "Manual recommendations", ...formatActions(result.actions, "manual_recommendation"));
-  lines.push("", "No action", ...formatNoAction(result.noActionChecks));
+  lines.push("", "Passed checks", ...formatNoAction(result.noActionChecks));
   lines.push("", "Optional polish", ...formatOptionalNotes(result.optionalNotes));
-  lines.push("", "Limitations", ...formatList(result.limitations));
+  lines.push(
+    "",
+    "Safety",
+    "- Plan only. No files were modified and no patches were generated.",
+    "- Safe-write eligibility still requires a fresh dry-run and WRITE_POLICY_V1 validation.",
+    "",
+    "Limitations",
+    ...formatList(result.limitations),
+    "",
+    formatJsonMoreLine(),
+  );
 
   return `${lines.join("\n")}\n`;
+}
+
+function formatTopActions(actions: FixPlanAction[]): string[] {
+  const ordered = [
+    ...actions.filter((action) => action.category === "safe_automated_later"),
+    ...actions.filter((action) => action.category === "automated_with_review"),
+    ...actions.filter((action) => action.category === "manual_recommendation"),
+  ].slice(0, 5);
+
+  if (ordered.length === 0) {
+    return ["- No launch-readiness actions were recommended."];
+  }
+
+  return ordered.map((action) =>
+    `- ${formatCategoryLabel(action.category)}: ${action.title} (${action.priority}; ${action.risk}; ${formatTargets(action)})`);
 }
 
 function formatActions(actions: FixPlanAction[], category: FixPlanCategory): string[] {
@@ -45,9 +81,9 @@ function formatActions(actions: FixPlanAction[], category: FixPlanCategory): str
     lines.push(`   Risk: ${action.risk}`);
     lines.push(`   Confidence: ${action.confidence}`);
     lines.push(`   Target: ${formatTargets(action)}`);
-    lines.push(`   Reason: ${action.description}`);
-    lines.push(`   Strategy: ${action.frameworkStrategy}`);
-    lines.push(`   Future automation: ${formatFutureAutomation(action)}`);
+    lines.push(`   Reason: ${truncateTerminalValue(action.description, 116)}`);
+    lines.push(`   Strategy: ${truncateTerminalValue(action.frameworkStrategy, 116)}`);
+    lines.push(`   Safety label: ${formatFutureAutomation(action)}`);
   }
 
   return lines;
@@ -82,7 +118,12 @@ function formatNoAction(checks: NoActionCheck[]): string[] {
     return ["- None"];
   }
 
-  return checks.map((check) => `- ${check.title}`);
+  const visible = checks.slice(0, 5).map((check) => `- ${check.title}`);
+  return [
+    `- ${formatCountSummary(checks.length, "passed", 5)}`,
+    ...visible,
+    ...(checks.length > 5 ? ["- Remaining passed checks are available with --json."] : []),
+  ];
 }
 
 function formatOptionalNotes(notes: string[]): string[] {
@@ -107,9 +148,30 @@ function formatStatus(status: FixPlanResult["auditSummary"]["status"]): string {
   return "Critical";
 }
 
-function formatRecommendedNextStep(step: FixPlanResult["recommendedNextStep"]): string {
-  if (step === "no_changes_needed") return "No changes needed";
-  if (step === "review_plan") return "Review plan before generating patches";
-  if (step === "manual_review_required") return "Manual review required before patching";
+function formatRecommendedNextStep(
+  step: FixPlanResult["recommendedNextStep"],
+  result: FixPlanResult,
+): string {
+  if (step === "no_changes_needed") return "No changes needed; keep this as a baseline and rerun before launch.";
+  if (step === "review_plan") return `Review the plan, then run: pnpm shipready fix ${result.repoPath} --url ${result.url} --dry-run`;
+  if (step === "manual_review_required") return "Manual review required before generating or applying any patch outside ShipReady.";
   return "Unsupported project; inspect manually before attempting automated fixes";
+}
+
+function formatPlanStatus(result: FixPlanResult): TerminalReviewStatus {
+  if (result.recommendedNextStep === "no_changes_needed") return "Ready";
+  if (
+    result.actions.some((action) =>
+      action.category === "automated_with_review" || action.category === "manual_recommendation")
+  ) {
+    return "Manual review";
+  }
+  if (result.actions.length > 0 || result.auditSummary.status !== "good") return "Needs attention";
+  return "Unknown";
+}
+
+function formatCategoryLabel(category: FixPlanCategory): string {
+  if (category === "safe_automated_later") return "safe candidate";
+  if (category === "automated_with_review") return "review required";
+  return "manual";
 }

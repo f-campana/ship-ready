@@ -23,19 +23,19 @@ describe("status", () => {
     const output = formatStatusHuman();
     expect(output).toContain("ShipReady status (v0.1.0)");
     expect(output).toContain("CLI first -> MCP second -> GUI third");
+    expect(output).toContain("Status: Ready");
+    expect(output).toContain("Next: pnpm shipready doctor");
     expect(output).toContain("shipready.write_safe_crawl_files");
     expect(output).toContain("no write endpoint");
-    expect(output).toContain("pnpm shipready doctor");
-    expect(output).toContain("mock prototype available, live integration not implemented");
-    expect(output).toContain("DNS readiness: read-only status checks implemented");
-    expect(output).toContain("Post-write recheck: implemented read-only");
-    expect(output).toContain("Bounded multi-page crawl: implemented read-only");
-    expect(output).toContain("Patch export: implemented as review-only artifact generation");
-    expect(output).toContain("GitHub PR draft: implemented as review-only handoff");
-    expect(output).toContain("Social preview simulator: implemented read-only");
-    expect(output).toContain("Generated-site implementation smell detector: implemented read-only");
-    expect(output).toContain("Deployment automation and deploy provider integrations: not implemented");
+    expect(output).toContain("Human CLI output uses verdict/target/next-action headers");
+    expect(output).toContain("Interactive TUI is not implemented in this pass");
+    expect(output).toContain("Search Console: mock-backed only");
+    expect(output).toContain("DNS readiness: read-only resolver evidence");
+    expect(output).toContain("Patch export: review-only; not applied");
+    expect(output).toContain("GitHub PR draft: draft only");
+    expect(output).toContain("Deployment automation, live GitHub integration");
     expect(output).toContain("Distribution: source-checkout-only v0");
+    expect(output).toContain("Next pass: TUI viewer feasibility / implementation");
   });
 
   it("emits the stable JSON capability and safety contract", async () => {
@@ -78,7 +78,7 @@ describe("status", () => {
       deployProviderIntegrations: "not_implemented",
     });
     expect(status.writePolicy.id).toBe(WRITE_POLICY_V1);
-    expect(status.nextRecommendedPass).toBe("Terminal output polish / TUI viewer");
+    expect(status.nextRecommendedPass).toBe("TUI viewer feasibility / implementation");
   });
 
   it("stays synchronized with the MCP registry", () => {

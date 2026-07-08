@@ -11,6 +11,7 @@ ShipReady v0 is a local, skill-guided launch-readiness engine for generated webs
 - CLI first: `pnpm shipready ...` is the source of truth.
 - MCP second: the local stdio MCP server wraps stable CLI contracts and has exactly one guarded V1 crawl-file write tool.
 - GUI third: the loopback-only review cockpit makes the engine understandable to humans and remains read-only.
+- Terminal review output: existing human CLI commands now start with target/status/next action, summarize passed checks, truncate long values, and show safety labels close to risky-to-misunderstand evidence.
 - Write policy: `WRITE_POLICY_V1` is canonical and remains limited to creation-only missing robots/sitemap files.
 - Distribution: v0 is source-checkout-only; npm, `pnpm dlx`, standalone binaries, hosted wrappers, remote MCP, and auto-update behavior are not implemented. See [DISTRIBUTION.md](DISTRIBUTION.md).
 - Release posture: ready to present as a v0 local/agent release candidate after the validation matrix in this checkpoint passed.
@@ -20,6 +21,7 @@ ShipReady v0 is a local, skill-guided launch-readiness engine for generated webs
 ## Implemented surfaces
 
 - `status` and `doctor` local diagnostics.
+- Polished terminal review output for existing human CLI commands.
 - Single-page public URL audit.
 - Bounded same-origin multi-page crawl.
 - Repository inspection.
@@ -51,8 +53,8 @@ Do not imply `pnpm dlx`, npm publication, or default global installation for thi
 
 | Command | Purpose | Read/write class | Contract | Network behavior | Repo behavior and safety boundary | Status |
 |---|---|---|---|---|---|---|
-| `status` | Static capability and safety inventory | Local read-only | `shipready.status.v1` with `--json` | None | Reads no target repo; writes nothing | Implemented |
-| `doctor` | Bounded local runtime/content readiness checks | Local read-only | `shipready.doctor.v1` with `--json` | None | Reads package/docs/fixtures/dependencies only; writes nothing | Implemented |
+| `status` | Static capability, safety inventory, and terminal review pass status | Local read-only | `shipready.status.v1` with `--json` | None | Reads no target repo; writes nothing | Implemented |
+| `doctor` | Bounded local runtime/content readiness checks with scan-friendly terminal summary | Local read-only | `shipready.doctor.v1` with `--json` | None | Reads package/docs/fixtures/dependencies only; writes nothing | Implemented |
 | `audit <url>` | Audit one public HTTP(S) page | Network read-only | `shipready.audit.v1` with `--json` | Fetches URL, crawl resources, optional rendered pass | No repo required; not a crawler or outcome guarantee | Implemented |
 | `inspect-repo <path>` | Detect local project shape and supported fix surfaces | Local read-only | `shipready.repoInspection.v1` with `--json` | None | Bounded scan; no writes | Implemented |
 | `plan-fixes <path> --url <url>` | Combine audit and repo inspection into fix plan | Network/local read-only | `shipready.fixPlan.v1` with `--json` | Reads URL and optional rendered page | Reads repo; plan fields are not authorization | Implemented |
@@ -157,10 +159,11 @@ Repo-capable tools require allowed-root authorization before local inspection or
 - Generated-site smell detector is read-only, heuristic, and authorship-neutral.
 - Bounded crawl is read-only, same-origin, capped, and non-exhaustive.
 - Fodmapp is not a write target for validation or demos.
+- Human terminal output remains plain text with no ANSI dependency; JSON output remains the stable machine boundary.
 
 ## Known limitations
 
-- No npm package, `pnpm dlx` path, standalone binary, hosted wrapper, remote MCP transport, auto-update behavior, or default global install exists.
+- No npm package, `pnpm dlx` path, standalone binary, hosted wrapper, remote MCP transport, auto-update behavior, aggregate `review` command, interactive TUI, or default global install exists.
 - No hosted SaaS, accounts, billing, auth, or remote workspace model exists.
 - No live Search Console provider exists.
 - No DNS provider integration or DNS mutation exists.
@@ -227,7 +230,7 @@ Do not describe v0 as hosted SaaS, production SaaS, fully automated SEO repair, 
 
 ## Next roadmap
 
-1. Terminal output polish / TUI viewer.
+1. TUI viewer feasibility / implementation for a true interactive terminal interface.
 2. npm/package publish preparation with packed-tarball smoke tests and a reviewed publish checklist.
 3. Live GitHub integration with explicit opt-in, auth, Git worktree safety, and mutation tests.
 4. Live Search Console integration with explicit OAuth/token design and read-only scope review.
@@ -237,4 +240,4 @@ Do not describe v0 as hosted SaaS, production SaaS, fully automated SEO repair, 
 
 ## Recommended immediate next pass
 
-Terminal output polish / TUI viewer. Keep v0 source-checkout-only unless a separate package publish preparation pass completes the checklist in [DISTRIBUTION.md](DISTRIBUTION.md).
+TUI viewer feasibility / implementation. Terminal output polish is complete for the existing human CLI commands without adding dependencies, a new aggregate command, or an interactive TUI. Keep v0 source-checkout-only unless a separate package publish preparation pass completes the checklist in [DISTRIBUTION.md](DISTRIBUTION.md).

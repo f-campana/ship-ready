@@ -64,11 +64,64 @@ describe("formatHumanReport", () => {
 
     const report = formatHumanReport(result);
 
+    expect(report).toContain("ShipReady audit");
+    expect(report).toContain(`Target: ${baseUrl}`);
+    expect(report).toContain("Status: Ready");
+    expect(report).toContain("Next: No immediate metadata or crawlability action is needed.");
     expect(report).toContain("No immediate metadata or crawlability action is needed.");
     expect(report).not.toContain("Fix missing or render-only metadata");
-    expect(report).toContain("- twitter:image present");
-    expect(report).toContain("- sitemap.xml found");
-    expect(report).toContain("- robots meta: raw=index,follow; rendered=index,follow");
-    expect(report).toContain("- theme-color: raw=#111111; rendered=#111111");
+    expect(report).toContain("Passed checks");
+    expect(report).toContain("Remaining passed checks are available with --json.");
+    expect(report).toContain("- robots meta: raw/rendered=index,follow");
+    expect(report).toContain("- theme-color: raw/rendered=#111111");
+    expect(report).toContain("More: Run with --json for full contract output.");
+  });
+
+  it("truncates long raw and rendered values in terminal output", () => {
+    const raw = extractMetadata(fixture("complete-head.html"), {
+      source: "raw",
+      url: baseUrl,
+    });
+    const rendered = raw;
+    const comparison = compareMetadata(raw, rendered);
+    const checks = checkMetadata({
+      url: baseUrl,
+      finalUrl: baseUrl,
+      httpStatus: 200,
+      raw,
+      rendered,
+      comparison,
+      resources,
+    });
+    const longTitle = "Launch readiness ".repeat(12);
+
+    const result: AuditResult = {
+      url: baseUrl,
+      finalUrl: baseUrl,
+      auditedAt: "2026-06-14T00:00:00.000Z",
+      httpStatus: 200,
+      score: 100,
+      status: "good",
+      raw,
+      rendered,
+      comparison: {
+        fields: comparison.fields.map((field) =>
+          field.field === "title"
+            ? {
+                field: "title",
+                rawValue: longTitle,
+                renderedValue: longTitle,
+                status: "present_in_raw",
+              }
+            : field),
+      },
+      checks,
+      resources,
+    };
+
+    const report = formatHumanReport(result);
+
+    expect(report).toContain("- title: raw/rendered=Launch readiness Launch readiness Launch readiness Launch readiness Launch readiness ...");
+    expect(report).not.toContain(longTitle);
   });
 });

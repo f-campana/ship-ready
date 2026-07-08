@@ -2,6 +2,11 @@ import {
   SearchConsoleStatusJsonContractSchema,
   type SearchConsoleStatusJsonContract,
 } from "../types/contracts";
+import {
+  formatJsonMoreLine,
+  formatTerminalReviewHeader,
+  type TerminalReviewStatus,
+} from "../report/terminalReview";
 import { normalizeAuditUrl } from "../utils/url";
 import { mockSearchConsoleProvider } from "./mockSearchConsoleProvider";
 import type { SearchConsoleStatusProvider } from "./searchConsoleTypes";
@@ -31,9 +36,12 @@ export function formatSearchConsoleStatusJson(status: SearchConsoleStatusJsonCon
 
 export function formatSearchConsoleStatusHuman(status: SearchConsoleStatusJsonContract): string {
   const lines = [
-    "Search Console status",
-    `Mode: ${status.mode} (read-only)`,
-    `URL: ${status.requestedUrl}`,
+    ...formatTerminalReviewHeader("ShipReady Search Console status", {
+      target: status.requestedUrl,
+      mode: `${status.mode} (read-only)`,
+      status: formatTerminalStatus(status),
+      next: status.nextActions[0],
+    }),
     "",
     "Connection",
     `  ${formatAuthorization(status.authorization.status)}`,
@@ -65,8 +73,16 @@ export function formatSearchConsoleStatusHuman(status: SearchConsoleStatusJsonCo
     }
   }
 
-  lines.push("", "Limitations", ...status.limitations.map((item) => `  - ${item}`));
+  lines.push(
+    "",
+    "Safety",
+    "  - Mock-backed only. No live Google API, OAuth, token storage, property changes, sitemap submission, indexing request, or DNS write.",
+    "",
+    "Limitations",
+    ...status.limitations.map((item) => `  - ${item}`),
+  );
   lines.push("", "Next actions", ...status.nextActions.map((item) => `  - ${item}`), "");
+  lines.push(formatJsonMoreLine(), "");
   return lines.join("\n");
 }
 
@@ -75,4 +91,11 @@ function formatAuthorization(status: SearchConsoleStatusJsonContract["authorizat
     return "Search Console live integration is not configured in ShipReady yet. This prototype is mock-backed.";
   }
   return `${status} (deterministic mock state; no live Google authorization was used)`;
+}
+
+function formatTerminalStatus(status: SearchConsoleStatusJsonContract): TerminalReviewStatus {
+  if (status.authorization.status === "not_configured") return "Unknown";
+  if (status.propertyMatch.status === "matched" && status.sitemaps.status === "available") return "Ready";
+  if (status.propertyMatch.status === "not_accessible" || status.sitemaps.status === "error") return "Needs attention";
+  return "Manual review";
 }

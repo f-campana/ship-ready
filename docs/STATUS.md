@@ -13,6 +13,7 @@ Distribution classification: **source-checkout-only v0**. ShipReady is not publi
 - Public single-page audit with raw and Playwright-rendered metadata comparison.
 - Read-only bounded multi-page crawl with `shipready.crawl.v1`, same-origin discovery, strict max page/depth limits, repeated findings, metadata consistency summaries, skipped URL reasons, and deterministic mock scenarios.
 - Read-only `status` capability inventory and bounded local `doctor` readiness checks, each with stable human and JSON output.
+- Polished terminal review output for existing human CLI commands: verdict/target/next action first, compact top findings, summarized passed checks, truncated long metadata, and visible safety/limitation labels.
 - Crawl-resource, metadata, social-preview, structure, accessibility, and launch-hygiene checks.
 - Read-only `social-preview` simulator with `shipready.socialPreview.v1`, raw/rendered source modes, deterministic mock scenarios, and simulated Google/social/X/Slack/Discord/LinkedIn-style surfaces.
 - Read-only generated-site implementation smell detector with `shipready.generatedSiteSmells.v1`, bounded repo scanning, optional single-page URL cross-check evidence, deterministic mock scenarios, and heuristic implementation signals rather than authorship identification.
@@ -45,7 +46,7 @@ When present, `validation/e2e-project-review/` supplies preserved end-to-end evi
 - GUI write execution.
 - Patch application.
 - Broader safe apply or writes to metadata, content, JSON-LD, packages, configuration, or existing files.
-- Exhaustive crawler, monitoring/scheduled crawl, or terminal output polish/TUI viewer.
+- Exhaustive crawler, monitoring/scheduled crawl, aggregate terminal `review` command, or interactive TUI viewer.
 - Authorship identification, generator/vendor attribution, or auto-fixes from generated-site smell findings.
 - Social platform APIs, platform-specific preview scraping endpoints, screenshot rendering, image generation, and third-party rendering guarantees for preview simulation.
 - Authentication, accounts, billing, hosted SaaS, or secret-management product features.
@@ -66,4 +67,4 @@ Read-only inspection and preview are the default. CLI write mode requires `fix -
 
 ## Next pass
 
-**Terminal output polish / TUI viewer.** The packaging/distribution decision is complete for v0: stay source-checkout-only, document `pnpm --dir` for from-anywhere usage, and treat local linking as developer-local only. npm package publication, standalone binaries, live GitHub PR creation, live Search Console, hosted SaaS, and broader framework/write support remain future work and require separate explicit designs, authorization boundaries, and tests.
+**TUI viewer feasibility / implementation.** Terminal output polish is complete for the existing CLI commands without adding dependencies, a new aggregate command, or an interactive TUI. The packaging/distribution decision remains complete for v0: stay source-checkout-only, document `pnpm --dir` for from-anywhere usage, and treat local linking as developer-local only. npm package publication, standalone binaries, live GitHub PR creation, live Search Console, hosted SaaS, and broader framework/write support remain future work and require separate explicit designs, authorization boundaries, and tests.
