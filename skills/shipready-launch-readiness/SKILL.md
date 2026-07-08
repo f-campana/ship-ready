@@ -26,11 +26,12 @@ Do not use ShipReady for keyword research, rank tracking, backlink analysis, gen
 
 | State | Current capability |
 |---|---|
+| Release posture | v0 local/agent release candidate; see [RELEASE_READINESS.md](../../docs/RELEASE_READINESS.md) |
 | Implemented | Single-page audit; bounded multi-page crawl; bounded repo inspection; generated-site implementation smell detector; social preview simulator; planning; dry-run; review-only patch export; review-only GitHub PR draft handoff; status/doctor; versioned JSON; UI and HTML reports; local read-only GUI review cockpit; stdio MCP |
 | Mock-backed | Search Console status only; no Google OAuth, tokens, or live API calls |
 | Read-only | Audit, bounded crawl, inspection, social preview simulation, planning, dry-run, post-write recheck, UI report, GUI, Search Console mocks, and DNS status; live DNS uses resolver observations only |
 | Write-guarded | CLI and the sole MCP write tool may create only eligible missing robots/sitemap files under `WRITE_POLICY_V1` |
-| Future | Terminal output polish/TUI viewer and live GitHub PR creation only if explicitly approved |
+| Future | Packaging/distribution decision, terminal output polish/TUI viewer, live GitHub with explicit opt-in, live Search Console with OAuth/token design, hosted SaaS exploration, broader framework support, and stronger demos/reporting |
 
 Never infer future behavior from a roadmap name. A single-page audit covers one page; bounded crawl covers only a small same-origin sample under strict limits. The current social preview simulator is a metadata-based approximation, not platform output.
 
@@ -39,8 +40,8 @@ Never infer future behavior from a roadmap name. A single-page audit covers one 
 Start read-only and preserve structured output:
 
 ```bash
-pnpm shipready doctor --json
 pnpm shipready status --json
+pnpm shipready doctor --json
 pnpm shipready audit <url> --json
 pnpm shipready recheck --url <url> --json
 pnpm shipready inspect-repo <path> --json
@@ -58,6 +59,13 @@ pnpm shipready crawl --url <url> --json
 pnpm shipready search-console status --url <url> --json
 pnpm shipready ui-report <path> --url <url> --json
 pnpm shipready html-report <path> --url <url> --output shipready-report.html
+```
+
+When running from outside the checkout, use a repository-local form:
+
+```bash
+cd /Users/fabiencampana/Documents/ship-ready && pnpm shipready status --json
+pnpm --dir /Users/fabiencampana/Documents/ship-ready shipready status --json
 ```
 
 - Use URL-only `audit` and `ui-report` when no repository is available; do not claim local fixes can be planned.
@@ -323,4 +331,4 @@ State whether each command was URL-only, repo-backed, mock-backed, or live read-
 - Read [safe-crawl-files.md](examples/safe-crawl-files.md) only when explicit crawl-file creation is being considered.
 - Read [post-write-recheck.md](examples/post-write-recheck.md) after local crawl-file creation and external deployment.
 
-Use the latest `validation/e2e-project-review/` package when present as evidence of current behavior, especially `SUMMARY.md`, `FEATURE_MATRIX.md`, `SAFETY_REPORT.md`, and `SCREENSHOT_INDEX.md`. Do not regenerate that package for routine use and do not treat validation writes on disposable fixtures as authority to write a real repository.
+Use `validation/e2e-project-review/` when present as preserved validation evidence, especially `SUMMARY.md`, `FEATURE_MATRIX.md`, `SAFETY_REPORT.md`, and `SCREENSHOT_INDEX.md`, but prefer [RELEASE_READINESS.md](../../docs/RELEASE_READINESS.md) plus the latest validation run for the current v0 checkpoint. Do not regenerate that package for routine use and do not treat validation writes on disposable fixtures as authority to write a real repository.

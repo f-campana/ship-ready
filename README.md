@@ -6,7 +6,18 @@ For an agent-ready operating workflow, use the repository-local [ShipReady Launc
 
 ## Current status
 
-Implemented: read-only `status` and `doctor` diagnostics, CLI audit and repo inspection, read-only bounded multi-page crawl, the read-only social preview simulator, the read-only generated-site implementation smell detector, fix planning, dry-run previews, review-only patch export, review-only GitHub PR draft handoff, guarded creation-only writes, a read-only post-write recheck, UI and static HTML reports, a local read-only review cockpit GUI, a local stdio MCP server, Fodmapp demo tooling, a deterministic mock-backed Search Console status prototype, and read-only DNS readiness status. MCP exposes fifteen read-only tools and exactly one guarded write tool for the same creation-only crawl-file policy. Live GitHub PR creation, Git command execution, branch creation, commits, pushes, patch application, exhaustive site crawling, monitoring, authorship identification, smell-detector auto-fixes, social platform APIs, live Search Console/OAuth, DNS provider writes/integrations, deployment automation/provider integrations, accounts, billing, hosted SaaS, and remote MCP are not built.
+ShipReady is a **v0 local/agent release candidate** after the original 18-pass roadmap. Implemented: read-only `status` and `doctor` diagnostics, CLI audit and repo inspection, read-only bounded multi-page crawl, the read-only social preview simulator, the read-only generated-site implementation smell detector, fix planning, dry-run previews, review-only patch export, review-only GitHub PR draft handoff, guarded creation-only writes, a read-only post-write recheck, UI and static HTML reports, a local read-only review cockpit GUI, a local stdio MCP server, Fodmapp demo tooling, a deterministic mock-backed Search Console status prototype, and read-only DNS readiness status. MCP exposes fifteen read-only tools and exactly one guarded write tool for the same creation-only crawl-file policy. Live GitHub PR creation, Git command execution, branch creation, commits, pushes, patch application, exhaustive site crawling, monitoring, authorship identification, smell-detector auto-fixes, social platform APIs, live Search Console/OAuth, DNS provider writes/integrations, deployment automation/provider integrations, accounts, billing, hosted SaaS, and remote MCP are not built.
+
+See [docs/RELEASE_READINESS.md](docs/RELEASE_READINESS.md) for the release-readiness checkpoint, command matrix, contract matrix, MCP/GUI boundaries, validation checklist, and next roadmap.
+
+## Repository-local usage
+
+Run commands from this checkout. Do not assume a global install or published package for local development:
+
+```bash
+cd /Users/fabiencampana/Documents/ship-ready && pnpm shipready status
+pnpm --dir /Users/fabiencampana/Documents/ship-ready shipready status
+```
 
 ## Core commands
 
@@ -77,12 +88,13 @@ See [docs/DEMO.md](docs/DEMO.md) for provenance, reproduction commands, and reco
 5. [Write policy V1](docs/WRITE_POLICY_V1.md) — canonical creation-only write policy.
 6. [Claims policy](docs/CLAIMS_POLICY.md) — approved and prohibited product language.
 7. [Demo](docs/DEMO.md) — approved artifacts and recording workflow.
-8. [Status](docs/STATUS.md) — implemented scope, omissions, and next pass.
-9. [Roadmap](docs/ROADMAP.md) — ordered pass sequence.
-10. [Local-first GUI spec](docs/LOCAL_FIRST_GUI_SPEC.md) — canonical GUI direction.
-11. [Search Console readiness spec](docs/SEARCH_CONSOLE_READINESS_SPEC.md) — mock prototype contract and deferred live OAuth/provider boundary.
-12. [DNS readiness spec](docs/DNS_READINESS_SPEC.md) — read-only DNS status checks and DNS claim boundaries.
-13. [Post-write recheck](docs/POST_WRITE_RECHECK.md) — external deployment handoff and conservative live verification.
+8. [Release readiness](docs/RELEASE_READINESS.md) — v0 local/agent release checkpoint, matrices, validation, and next roadmap.
+9. [Status](docs/STATUS.md) — implemented scope, omissions, and next pass.
+10. [Roadmap](docs/ROADMAP.md) — completed original roadmap and future candidates.
+11. [Local-first GUI spec](docs/LOCAL_FIRST_GUI_SPEC.md) — canonical GUI direction.
+12. [Search Console readiness spec](docs/SEARCH_CONSOLE_READINESS_SPEC.md) — mock prototype contract and deferred live OAuth/provider boundary.
+13. [DNS readiness spec](docs/DNS_READINESS_SPEC.md) — read-only DNS status checks and DNS claim boundaries.
+14. [Post-write recheck](docs/POST_WRITE_RECHECK.md) — external deployment handoff and conservative live verification.
 
 ## What ShipReady is not
 

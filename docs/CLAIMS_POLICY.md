@@ -57,6 +57,15 @@ The following are forbidden claims, except when quoted here or clearly labeled a
 - “official LinkedIn preview”
 - “official X preview”
 - “official Slack preview”
+- “AI-generated proof”
+- “AI authorship proof”
+- “detects AI authorship”
+- “full-site crawl”
+- “complete SEO audit”
+- “ranking analysis”
+- “traffic improvement”
+- “one-click deploy”
+- “patch applied”
 - “PR opened”
 - “GitHub PR created”
 - “branch created”

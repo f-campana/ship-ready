@@ -4,6 +4,8 @@
 
 ShipReady is a CLI-first, agent-friendly launch-readiness engine for generated websites. **CLI first. MCP second. GUI third.** Agents are the primary operational audience; the GUI explains stable engine output to humans.
 
+Release classification: **v0 local/agent release candidate**. The original 18-pass roadmap is closed; see [RELEASE_READINESS.md](RELEASE_READINESS.md) for the checkpoint, command matrix, contract matrix, validation status, and next roadmap.
+
 ## What exists
 
 - Public single-page audit with raw and Playwright-rendered metadata comparison.
@@ -30,7 +32,7 @@ ShipReady is a CLI-first, agent-friendly launch-readiness engine for generated w
 - Repository-local [ShipReady Launch Readiness skill](../skills/shipready-launch-readiness/SKILL.md) packaging current CLI, MCP, GUI/report, Search Console mock, DNS, write-policy, claims, reporting, and troubleshooting workflows for agents.
 - Practical [post-write recheck guide](POST_WRITE_RECHECK.md) that keeps deployment external and classifies network uncertainty without overclaiming.
 
-When present, `validation/e2e-project-review/` supplies current end-to-end evidence for these surfaces, including its summary, feature matrix, safety report, and screenshot index. The skill references this evidence without treating disposable-fixture writes as authorization for real repositories.
+When present, `validation/e2e-project-review/` supplies preserved end-to-end evidence for earlier surfaces, including its summary, feature matrix, safety report, and screenshot index. Treat [RELEASE_READINESS.md](RELEASE_READINESS.md) plus the latest validation run as the current v0 checkpoint. The skill references validation evidence without treating disposable-fixture writes as authorization for real repositories.
 
 ## What is not built
 
@@ -60,4 +62,4 @@ Read-only inspection and preview are the default. CLI write mode requires `fix -
 
 ## Next pass
 
-**Roadmap closure / release-readiness review.** Pass 18 shipped review-only GitHub PR draft / handoff. Live GitHub PR creation remains future work and would require explicit authorization, GitHub auth/token design, Git worktree safety checks, and separate mutation tests.
+**Packaging / distribution decision.** Decide whether v0 remains source-checkout-only, ships a packaged binary, supports `pnpm dlx`, or uses another installation path. Live GitHub PR creation, live Search Console, hosted SaaS, and broader framework/write support remain future work and require separate explicit designs, authorization boundaries, and tests.

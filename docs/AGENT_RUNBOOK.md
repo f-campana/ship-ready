@@ -40,17 +40,18 @@ For launch-readiness operations, start with the repository-local [ShipReady Laun
 2. `skills/shipready-launch-readiness/SKILL.md` for operating ShipReady
 3. `docs/AGENT_RUNBOOK.md`
 4. `docs/STATUS.md`
-5. `docs/COMMANDS.md`
-6. `docs/CONTRACTS.md`
-7. `docs/MCP_PLAN.md` before any MCP work
-8. `docs/WRITE_POLICY_V1.md` for any fix or write work
-9. `docs/CLAIMS_POLICY.md` for UI, demo, report, or public copy
-10. `docs/SEARCH_CONSOLE_READINESS_SPEC.md` before any Search Console or Google OAuth work
-11. `docs/DNS_READINESS_SPEC.md` before any DNS/domain-readiness work
-12. `docs/POST_WRITE_RECHECK.md` before post-write follow-up work
-13. `docs/LOCAL_FIRST_GUI_SPEC.md` for GUI direction
-14. `docs/DEMO.md` for demo work
-15. `docs/ROADMAP.md` for sequencing
+5. `docs/RELEASE_READINESS.md`
+6. `docs/COMMANDS.md`
+7. `docs/CONTRACTS.md`
+8. `docs/MCP_PLAN.md` before any MCP work
+9. `docs/WRITE_POLICY_V1.md` for any fix or write work
+10. `docs/CLAIMS_POLICY.md` for UI, demo, report, or public copy
+11. `docs/SEARCH_CONSOLE_READINESS_SPEC.md` before any Search Console or Google OAuth work
+12. `docs/DNS_READINESS_SPEC.md` before any DNS/domain-readiness work
+13. `docs/POST_WRITE_RECHECK.md` before post-write follow-up work
+14. `docs/LOCAL_FIRST_GUI_SPEC.md` for GUI direction
+15. `docs/DEMO.md` for demo work
+16. `docs/ROADMAP.md` for sequencing
 
 ## Before any implementation
 

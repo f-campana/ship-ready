@@ -1,29 +1,58 @@
 # Roadmap
 
-Order is contractual: harden CLI interfaces before wrapping them, ship read-only integrations before mutation, and defer broader write surfaces until policy and evidence exist. “Write-bearing” means the pass can create project artifacts or mutate external state; it does not authorize that work now.
+## Original Roadmap Status
 
-| Pass | Status | Goal | Why now | Risk | Prior dependency |
-|---:|---|---|---|---|---|
-| 1 | Complete | Close the voiceover decision and preserve the silent fallback. | Removes media ambiguity before docs name canonical artifacts. | Read-only/media | None |
-| 2 | Complete | Consolidate agent-first operational documentation. | Establishes one navigation and safety contract before interface changes. | Read-only/docs | Pass 1 |
-| 3 | Complete | Harden CLI JSON, errors, versions, and compatibility contracts. | Stable machine interfaces are required by every client. | Read-only contract | Pass 2 |
-| 4 | Complete | Specify MCP tools, schemas, authorization, failure behavior, lifecycle, and tests in [MCP_PLAN.md](MCP_PLAN.md). | The wrapper must follow hardened CLI contracts. | Read-only/spec | Pass 3 |
-| 5 | Complete | Implement the strictly read-only MCP tools, resources, and prompts specified in [MCP_PLAN.md](MCP_PLAN.md). | Validates the wrapper without mutation risk. | Read-only | Pass 4 |
-| 6 | Complete | Wrap the existing guarded V1 write through MCP. | Mutation follows proven read-only transport and explicit authorization. | Write-bearing | Pass 5 |
-| 7 | Complete | Polish CLI UX and define `doctor`/`status` contracts. | Improves operability after core machine contracts stabilize. | Read-only | Pass 3 |
-| 8 | Complete | Research and specify Search Console readiness boundaries in [SEARCH_CONSOLE_READINESS_SPEC.md](SEARCH_CONSOLE_READINESS_SPEC.md). | Establishes claims, auth, and data limits before integration. | Read-only/spec | Pass 7 |
-| 9 | Complete | Prototype mock-backed read-only Search Console status. | Tests stable CLI/MCP status contracts without OAuth, tokens, live Google calls, or third-party mutation. | Read-only | Pass 8 |
-| 10 | Complete | Specify DNS readiness checks and provider-neutral evidence in [DNS_READINESS_SPEC.md](DNS_READINESS_SPEC.md). | Avoids provider coupling and unsafe remediation claims. | Read-only/spec | Pass 7 |
-| 11 | Complete | Implement read-only DNS checks. | Adds evidence only after the check contract is reviewed. | Read-only | Pass 10 |
-| 12A | Complete | Package current capabilities as the repository-local [ShipReady Launch Readiness skill](../skills/shipready-launch-readiness/SKILL.md). | Gives agents one concise, safety-bounded operating guide before post-write workflow design. | Read-only/docs | Pass 11 |
-| 12 | Complete | Implement the external deployment handoff and read-only live recheck in [POST_WRITE_RECHECK.md](POST_WRITE_RECHECK.md). | Connects local effects to public evidence without adding deployment behavior. | Read-only | Pass 6 |
-| 13 | Complete | Add a social preview simulator. | Builds on stable audit/report metadata contracts. | Read-only | Pass 3 |
-| 14 | Complete | Detect generated-site implementation smells. | Adds bounded repository diagnostics after inspection contracts harden. | Read-only | Pass 3 |
-| 15 | Complete | Add a bounded multi-page crawl. | Expands audit scope only after single-page contracts stabilize. | Read-only | Pass 3 |
-| 16 | Complete | Revisit and polish the GUI. | Lets human UX consume proven CLI/MCP/report behavior. | Read-only | Passes 7, 13–15 |
-| 17 | Complete | Export reviewed patches as explicit artifacts. | Introduces a portable review artifact after preview contracts mature. | Write-bearing | Passes 6, 16 |
-| 18 | Complete | Add GitHub PR draft / PR handoff artifacts. | Gives humans a PR-ready review artifact after patch export without adding live GitHub or Git mutation. | Read-only artifact | Pass 17 |
-| 19 | Planned | Roadmap closure / release-readiness review. | Consolidates docs, contracts, demos, and validation after the launch-readiness surface is broad enough to package. | Read-only review | Pass 18 |
-| Later | Planned | Live GitHub PR creation, if explicitly approved. | External repository-host mutation requires separate GitHub auth/token design, Git worktree safety checks, and explicit authorization. | Write-bearing | Pass 18 |
+The original 18-pass ShipReady roadmap is **complete and closed**. The closure/release-readiness pass is also complete as the v0 checkpoint in [RELEASE_READINESS.md](RELEASE_READINESS.md).
 
-Planned names are goals, not implemented commands or interfaces. Each pass must update [STATUS.md](STATUS.md), [COMMANDS.md](COMMANDS.md), [CONTRACTS.md](CONTRACTS.md), applicable policy, tests, and validation evidence when it ships.
+Order remains contractual for future work: harden CLI interfaces before wrapping them, ship read-only integrations before mutation, and defer broader write surfaces until policy and evidence exist. “Write-bearing” means a future pass can create project artifacts or mutate external state after explicit design and authorization; it does not authorize that work now.
+
+## Completed Passes
+
+| Pass | Status | Goal | Risk | Prior dependency |
+|---:|---|---|---|---|
+| 1 | Complete | Close the voiceover decision and preserve the silent fallback. | Read-only/media | None |
+| 2 | Complete | Consolidate agent-first operational documentation. | Read-only/docs | Pass 1 |
+| 3 | Complete | Harden CLI JSON, errors, versions, and compatibility contracts. | Read-only contract | Pass 2 |
+| 4 | Complete | Specify MCP tools, schemas, authorization, failure behavior, lifecycle, and tests in [MCP_PLAN.md](MCP_PLAN.md). | Read-only/spec | Pass 3 |
+| 5 | Complete | Implement the strictly read-only MCP tools, resources, and prompts specified in [MCP_PLAN.md](MCP_PLAN.md). | Read-only | Pass 4 |
+| 6 | Complete | Wrap the existing guarded V1 write through MCP. | Write-bearing | Pass 5 |
+| 7 | Complete | Polish CLI UX and define `doctor`/`status` contracts. | Read-only | Pass 3 |
+| 8 | Complete | Research and specify Search Console readiness boundaries in [SEARCH_CONSOLE_READINESS_SPEC.md](SEARCH_CONSOLE_READINESS_SPEC.md). | Read-only/spec | Pass 7 |
+| 9 | Complete | Prototype mock-backed read-only Search Console status. | Read-only | Pass 8 |
+| 10 | Complete | Specify DNS readiness checks and provider-neutral evidence in [DNS_READINESS_SPEC.md](DNS_READINESS_SPEC.md). | Read-only/spec | Pass 7 |
+| 11 | Complete | Implement read-only DNS checks. | Read-only | Pass 10 |
+| 12A | Complete | Package current capabilities as the repository-local [ShipReady Launch Readiness skill](../skills/shipready-launch-readiness/SKILL.md). | Read-only/docs | Pass 11 |
+| 12 | Complete | Implement the external deployment handoff and read-only live recheck in [POST_WRITE_RECHECK.md](POST_WRITE_RECHECK.md). | Read-only | Pass 6 |
+| 13 | Complete | Add a social preview simulator. | Read-only | Pass 3 |
+| 14 | Complete | Detect generated-site implementation smells. | Read-only | Pass 3 |
+| 15 | Complete | Add a bounded multi-page crawl. | Read-only | Pass 3 |
+| 16 | Complete | Revisit and polish the GUI. | Read-only | Passes 7, 13-15 |
+| 17 | Complete | Export reviewed patches as explicit artifacts. | Write-bearing artifact | Passes 6, 16 |
+| 18 | Complete | Add GitHub PR draft / PR handoff artifacts. | Read-only artifact | Pass 17 |
+| Closure | Complete | Add the v0 release-readiness checkpoint and align docs/status with current product state. | Read-only/docs | Pass 18 |
+
+## V0 Release Position
+
+ShipReady v0 is a **local/agent release candidate**. It is a local, skill-guided launch-readiness engine for generated websites. It audits, explains, previews, exports, and hands off safe review artifacts while preserving strict mutation boundaries.
+
+Do not present v0 as hosted SaaS, production SaaS, fully automated SEO repair, deployment automation, live GitHub automation, live Search Console integration, DNS management, social platform preview authority, or a general site editor.
+
+## Next Roadmap Candidates
+
+These candidates are future work only. None is implemented by the closed roadmap unless explicitly listed above.
+
+1. Packaging / distribution decision.
+2. Terminal output polish / TUI viewer.
+3. Live GitHub integration with explicit opt-in, GitHub auth/token design, Git worktree safety checks, and mutation tests.
+4. Live Search Console integration with explicit OAuth/token custody design and read-only scope review.
+5. Hosted SaaS exploration with separate auth, data custody, remote execution, billing, and account-boundary design.
+6. More framework support, without broadening `WRITE_POLICY_V1` by default.
+7. Stronger demo/reporting package for the local/agent release story.
+
+## Future-Pass Rules
+
+- Update [STATUS.md](STATUS.md), [COMMANDS.md](COMMANDS.md), [CONTRACTS.md](CONTRACTS.md), applicable policy, tests, and validation evidence when a future pass ships.
+- Label every planned command or integration as future until implemented and validated.
+- Do not broaden `WRITE_POLICY_V1` incidentally.
+- Preserve the GUI read-only boundary and `POST /api/fix = 404` unless a separate, explicit product decision changes that boundary.
+- Preserve stdio-only MCP unless a remote-transport threat model and implementation pass is approved.

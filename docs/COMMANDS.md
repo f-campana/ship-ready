@@ -1,8 +1,19 @@
 # Commands
 
-Run source commands from the repository with `pnpm shipready`. The built binary name is `shipready`. `--timeout` defaults to `15000` milliseconds. `--no-render` skips Playwright rendering; `--user-agent <ua>` overrides the default user agent.
+Run source commands from the repository with `pnpm shipready`. The built binary name is `shipready`, but this checkout does not imply a global install, package publish, or `pnpm dlx` distribution path.
+
+Repository-local examples:
+
+```bash
+cd /Users/fabiencampana/Documents/ship-ready && pnpm shipready status
+pnpm --dir /Users/fabiencampana/Documents/ship-ready shipready status
+```
+
+`--timeout` defaults to `15000` milliseconds. `--no-render` skips Playwright rendering; `--user-agent <ua>` overrides the default user agent.
 
 Agents should use [ShipReady Launch Readiness](../skills/shipready-launch-readiness/SKILL.md) for the canonical multi-command workflow, safety checklist, MCP tool names, reporting template, troubleshooting, and examples. This file remains the detailed flag and command contract.
+
+For the v0 command, contract, MCP, and GUI matrices, see [RELEASE_READINESS.md](RELEASE_READINESS.md).
 
 ## `status`
 

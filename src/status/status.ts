@@ -98,7 +98,7 @@ export function createStatus(): StatusJsonContract {
       fodmappVoiceover: "validation/demo-fodmapp-voiceover-final/",
     },
     nextRecommendedCommand: "pnpm shipready doctor",
-    nextRecommendedPass: "Roadmap closure / release-readiness review",
+    nextRecommendedPass: "Packaging / distribution decision",
   });
 }
 

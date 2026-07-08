@@ -2,6 +2,8 @@
 
 The CLI is the source of truth. Future MCP tools should invoke or faithfully wrap these named CLI boundaries rather than exposing internal helper return values.
 
+See [RELEASE_READINESS.md](RELEASE_READINESS.md) for the v0 command and contract matrices.
+
 ## Hardening decision
 
 This pass chose **Path A: small runtime hardening**.
@@ -248,7 +250,7 @@ Top-level keys: `contract`, `url`, `checkedAt`, `mode`, `sourceMode`, optional `
 
 Internal source and formatter: `src/socialPreview/socialPreview.ts` and `src/report/formatSocialPreviewReport.ts`. Exit behavior: `0` after an emitted simulated preview; `1` for invalid URL/source/mock/timeout; `2` for operational or contract failure.
 
-Consumers: CLI users, MCP clients, contract fixtures, tests, and future report/GUI work. Current GUI and HTML report surfaces do not consume this contract.
+Consumers: CLI users, MCP clients, contract fixtures, tests, and the GUI on-demand review surface. Static HTML reports still derive from `shipready.uiReport.v1`.
 
 ### `shipready.generatedSiteSmells.v1`
 
@@ -256,7 +258,7 @@ Top-level keys: `contract`, `checkedAt`, `mode`, `repoPath`, optional `url`, `fr
 
 Internal source and formatter: `src/smells/generatedSiteSmells.ts`, `src/smells/repoSmellScanner.ts`, `src/smells/mockGeneratedSiteSmells.ts`, and `src/report/formatGeneratedSiteSmellsReport.ts`. Exit behavior: `0` after an emitted smell report, including clean, manual-review, and needs-attention results; `1` for invalid repo path, invalid URL, unsupported mock, invalid timeout, or invalid scan-limit input; `2` for operational or contract failure.
 
-Consumers: CLI users, MCP clients, contract fixtures, tests, and future report/GUI work. Current GUI and HTML report surfaces do not consume this contract.
+Consumers: CLI users, MCP clients, contract fixtures, tests, and the GUI on-demand review surface. Static HTML reports still derive from `shipready.uiReport.v1`.
 
 ### `shipready.crawl.v1`
 
@@ -264,7 +266,7 @@ Top-level keys: `contract`, `checkedAt`, `mode`, `startUrl`, `origin`, `options`
 
 Internal source and formatter: `src/crawl/crawl.ts`, `src/crawl/linkDiscovery.ts`, `src/crawl/mockCrawl.ts`, and `src/report/formatCrawlReport.ts`. Exit behavior: `0` after an emitted bounded crawl result, including `needs_attention` or `unknown`; `1` for invalid URL/source/mock/timeout/limit input; `2` for operational or contract failure.
 
-Consumers: CLI users, MCP clients, contract fixtures, tests, and future report/GUI work. Current GUI and HTML report surfaces do not consume this contract.
+Consumers: CLI users, MCP clients, contract fixtures, tests, and the GUI on-demand review surface. Static HTML reports still derive from `shipready.uiReport.v1`.
 
 ### `shipready.patchExport.v1`
 
