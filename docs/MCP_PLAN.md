@@ -532,6 +532,8 @@ On failure, a tool returns exactly once with `isError: true`, a `shipready.error
 
 All static paths are resolved from the installed ShipReady package root through a hard-coded URI/path allowlist. They are not joined from arbitrary request text. Markdown is UTF-8 `text/markdown`; fixtures and generated indexes are UTF-8 `application/json`.
 
+The package publish preparation pass verified that this resource model survives a clean packed-tarball install when the package includes `README.md`, `docs/`, `skills/shipready-launch-readiness/`, and `validation/contracts/`. That pass did not add remote MCP transport, new MCP write tools, or arbitrary document paths. `docs/PACKAGE_PUBLISH_PREPARATION.md` is packaged as documentation but is not a new MCP resource URI unless a later pass explicitly expands the allowlist.
+
 | Resource URI | Purpose | Canonical source | Nature/media type | Safe consumption and missing behavior |
 |---|---|---|---|---|
 | `shipready://docs/readme` | Product entry point | `README.md` | Static `text/markdown` | Missing packaged file is a sanitized internal resource error |

@@ -18,9 +18,10 @@ Do not use ShipReady for keyword research, rank tracking, backlink analysis, gen
 1. Work from a source ShipReady checkout after `pnpm install`; v0 is not published to npm and `pnpm dlx shipready` is not expected to work.
 2. Obtain a public HTTP(S) URL.
 3. Obtain a repository path only for repo inspection, planning, previews, or guarded creation.
-4. Run `pnpm shipready doctor --json` when local readiness is uncertain.
-5. Run `pnpm shipready status --json` before assuming a capability exists.
-6. Require explicit user approval before any guarded write.
+4. Run `pnpm playwright:install` if `doctor` reports that Playwright Chromium is missing; package install does not download browsers automatically.
+5. Run `pnpm shipready doctor --json` when local readiness is uncertain.
+6. Run `pnpm shipready status --json` before assuming a capability exists.
+7. Require explicit user approval before any guarded write.
 
 ## Distinguish capability states
 
@@ -31,8 +32,8 @@ Do not use ShipReady for keyword research, rank tracking, backlink analysis, gen
 | Mock-backed | Search Console status only; no Google OAuth, tokens, or live API calls |
 | Read-only | Audit, bounded crawl, inspection, social preview simulation, planning, dry-run, post-write recheck, UI report, GUI, Search Console mocks, and DNS status; live DNS uses resolver observations only |
 | Write-guarded | CLI and the sole MCP write tool may create only eligible missing robots/sitemap files under `WRITE_POLICY_V1` |
-| Distribution | Source-checkout-only v0; `pnpm --dir /Users/fabiencampana/Documents/ship-ready shipready ...` is the supported from-anywhere form; `pnpm link --global` is developer-local only after `pnpm build` |
-| Future | npm/package publish preparation, standalone binary exploration, live GitHub with explicit opt-in, live Search Console with OAuth/token design, hosted SaaS exploration, broader framework support, and stronger demos/reporting |
+| Distribution | Source-checkout-only v0; `pnpm --dir /Users/fabiencampana/Documents/ship-ready shipready ...` is the supported from-anywhere form; `pnpm link --global` is developer-local only after `pnpm build`; local tarball smoke passed as publish-readiness evidence only |
+| Future | npm package name / publish authorization decision, standalone binary exploration, live GitHub with explicit opt-in, live Search Console with OAuth/token design, hosted SaaS exploration, broader framework support, and stronger demos/reporting |
 
 Never infer future behavior from a roadmap name. A single-page audit covers one page; bounded crawl covers only a small same-origin sample under strict limits. The current social preview simulator is a metadata-based approximation, not platform output.
 
@@ -73,7 +74,7 @@ pnpm --dir /Users/fabiencampana/Documents/ship-ready shipready status --json
 pnpm --dir /Users/fabiencampana/Documents/ship-ready shipready audit https://example.com --json
 ```
 
-Do not use `pnpm dlx shipready` for v0. It is not a supported path until a future package-publish pass is completed and verified.
+Do not use `pnpm dlx shipready` for v0. It is not a supported path until a future publish authorization pass approves publication and verifies post-publish behavior. See [PACKAGE_PUBLISH_PREPARATION.md](../../docs/PACKAGE_PUBLISH_PREPARATION.md) for tarball smoke evidence and remaining publish blockers.
 
 - Use URL-only `audit` and `ui-report` when no repository is available; do not claim local fixes can be planned.
 - Use repo-backed commands for framework evidence, fix classification, and exact previews.

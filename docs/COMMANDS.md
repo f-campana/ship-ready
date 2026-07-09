@@ -1,6 +1,6 @@
 # Commands
 
-Run source commands from the repository with `pnpm shipready`. The built binary name is `shipready`, but this checkout does not imply a global install, package publish, or `pnpm dlx` distribution path. ShipReady v0 is repository-local; `pnpm dlx shipready` is not expected to work until a future package-publish pass.
+Run source commands from the repository with `pnpm shipready`. The built binary name is `shipready`, but this checkout does not imply a global install, package publish, or `pnpm dlx` distribution path. ShipReady v0 is repository-local; `pnpm dlx shipready` is not expected to work until a future publish decision approves and verifies it. Package preparation evidence is documented in [PACKAGE_PUBLISH_PREPARATION.md](PACKAGE_PUBLISH_PREPARATION.md).
 
 Repository-local examples:
 
@@ -25,6 +25,8 @@ shipready status
 
 This is a local symlink to the checkout, not npm distribution. See [DISTRIBUTION.md](DISTRIBUTION.md) for the v0 decision and future publish checklist.
 
+Rendered checks require Playwright Chromium. Install it explicitly with `pnpm playwright:install` if `doctor` reports it missing; package install no longer runs a `postinstall` browser download.
+
 `--timeout` defaults to `15000` milliseconds. `--no-render` skips Playwright rendering; `--user-agent <ua>` overrides the default user agent.
 
 Agents should use [ShipReady Launch Readiness](../skills/shipready-launch-readiness/SKILL.md) for the canonical multi-command workflow, safety checklist, MCP tool names, reporting template, troubleshooting, and examples. This file remains the detailed flag and command contract.
@@ -46,7 +48,7 @@ pnpm shipready status --json
 
 - Purpose: report the installed version, CLI/MCP/GUI ordering, implemented command/tool surfaces, write-policy posture, absent integrations, demo artifact locations, and a copyable next command.
 - Behavior: reads no target repository, makes no network request, starts no server, and writes nothing.
-- Human output: compact terminal review summary with current source-checkout status, safety boundaries, and the next pass. It reports terminal output polish as complete and the read-only TUI viewer as implemented.
+- Human output: compact terminal review summary with current source-checkout status, safety boundaries, and the next pass. It reports terminal output polish as complete, the read-only TUI viewer as implemented, and package publication as still future.
 - JSON contract: `shipready.status.v1`; fixture: [`status.default.json`](../validation/contracts/status.default.json).
 - Exit behavior: `0` after the status report is emitted.
 - Agent use: run before selecting a ShipReady workflow or assuming an integration exists; follow with `pnpm shipready doctor` when local readiness matters.

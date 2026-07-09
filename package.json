@@ -2,12 +2,28 @@
   "name": "shipready",
   "version": "0.1.0",
   "private": true,
+  "license": "UNLICENSED",
   "type": "module",
   "bin": {
     "shipready": "./dist/index.js"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/f-campana/ship-ready.git"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "files": [
+    "dist/",
+    "README.md",
+    "docs/",
+    "skills/shipready-launch-readiness/SKILL.md",
+    "skills/shipready-launch-readiness/agents/",
+    "skills/shipready-launch-readiness/examples/",
+    "validation/contracts/"
+  ],
   "scripts": {
-    "postinstall": "playwright install chromium",
     "shipready": "tsx src/cli/index.ts",
     "dev": "tsx src/cli/index.ts",
     "build": "tsup",

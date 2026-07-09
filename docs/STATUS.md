@@ -6,7 +6,7 @@ ShipReady is a CLI-first, agent-friendly launch-readiness engine for generated w
 
 Release classification: **v0 local/agent release candidate**. The original 18-pass roadmap is closed; see [RELEASE_READINESS.md](RELEASE_READINESS.md) for the checkpoint, command matrix, contract matrix, validation status, and next roadmap.
 
-Distribution classification: **source-checkout-only v0**. ShipReady is not published to npm, `pnpm dlx shipready` is not expected to work, and default global installation is not part of v0. See [DISTRIBUTION.md](DISTRIBUTION.md).
+Distribution classification: **source-checkout-only v0**. ShipReady is not published to npm, `pnpm dlx shipready` is not expected to work, and default global installation is not part of v0. The package preparation pass made ShipReady packable and locally smoke-testable from a tarball without authorizing publication; see [PACKAGE_PUBLISH_PREPARATION.md](PACKAGE_PUBLISH_PREPARATION.md) and [DISTRIBUTION.md](DISTRIBUTION.md).
 
 ## What exists
 
@@ -36,7 +36,8 @@ Distribution classification: **source-checkout-only v0**. ShipReady is not publi
 - Repository-local [ShipReady Launch Readiness skill](../skills/shipready-launch-readiness/SKILL.md) packaging current CLI, MCP, GUI/report, Search Console mock, DNS, write-policy, claims, reporting, and troubleshooting workflows for agents.
 - Practical [post-write recheck guide](POST_WRITE_RECHECK.md) that keeps deployment external and classifies network uncertainty without overclaiming.
 - Source-checkout distribution decision with from-anywhere `pnpm --dir /Users/fabiencampana/Documents/ship-ready shipready ...` usage and a verified developer-local `pnpm link --global` path after `pnpm build`.
-- TUI framework evaluation in [TUI_FRAMEWORK_EVALUATION.md](TUI_FRAMEWORK_EVALUATION.md): current dependency-free TUI should receive one manual polish pass before any Ink/OpenTUI prototype or package publish preparation.
+- Package publish preparation with conservative package metadata, no `postinstall` browser download, a reviewed `files` whitelist, and local packed-tarball smoke evidence while keeping v0 source-checkout-only.
+- TUI framework evaluation in [TUI_FRAMEWORK_EVALUATION.md](TUI_FRAMEWORK_EVALUATION.md): current dependency-free TUI should receive one manual polish pass before any Ink/OpenTUI prototype.
 
 When present, `validation/e2e-project-review/` supplies preserved end-to-end evidence for earlier surfaces, including its summary, feature matrix, safety report, and screenshot index. Treat [RELEASE_READINESS.md](RELEASE_READINESS.md) plus the latest validation run as the current v0 checkpoint. The skill references validation evidence without treating disposable-fixture writes as authorization for real repositories.
 
@@ -69,4 +70,4 @@ Read-only inspection and preview are the default. CLI write mode requires `fix -
 
 ## Next pass
 
-**Manual TUI polish.** Decision: `Improve current TUI manually`. The TUI viewer remains read-only, dependency-free, source-checkout-only, and backed by `ui-report-v1`; optional sections run only when requested with `--include`, and CI/non-TTY streams receive plain terminal output. The evaluation in [TUI_FRAMEWORK_EVALUATION.md](TUI_FRAMEWORK_EVALUATION.md) recommends improving the existing renderer's layout, section navigation, spacing, borders, keyboard handling, and render snapshots before package publish preparation resumes. Do not adopt Ink or OpenTUI yet, add runtime dependencies, start package publish preparation, broaden `WRITE_POLICY_V1`, or change JSON/write/product behavior. npm package publication, standalone binaries, live GitHub PR creation, live Search Console, hosted SaaS, framework adoption, and broader write support remain future work and require separate explicit designs, authorization boundaries, and tests.
+**npm package name / publish authorization decision.** The package is packable and locally smoke-testable from a tarball, but ShipReady v0 remains source-checkout-only. The next pass should decide package name/scope, publish authorization, license, npm token/provenance handling, browser install instructions, rollback criteria, post-publish smoke checks, and whether CLI-only metadata should continue without `main`/`exports`. Do not publish, claim `pnpm dlx`, adopt Ink or OpenTUI, broaden `WRITE_POLICY_V1`, or change JSON/write/product behavior without a separate approved pass.

@@ -1,22 +1,28 @@
 # Distribution
 
-Checkpoint date: 2026-07-08
+Checkpoint date: 2026-07-09
 
 ## Current truth
 
 ShipReady v0 is a repository-local tool. Humans and agents run it from a source checkout with pnpm. It is not published to npm, is not globally installed by default, and `pnpm dlx shipready` is not expected to work.
+
+The package publish preparation pass in [PACKAGE_PUBLISH_PREPARATION.md](PACKAGE_PUBLISH_PREPARATION.md) verified that ShipReady can be built, packed, installed into a clean temp consumer, and smoked from a local tarball. That is publish-readiness evidence only; it does not change the v0 distribution decision.
 
 The current package metadata contains:
 
 - `name`: `shipready`
 - `version`: `0.1.0`
 - `private`: `true`
+- `license`: `UNLICENSED`
 - `type`: `module`
 - `bin.shipready`: `./dist/index.js`
-- scripts for `shipready`, `build`, `test`, `typecheck`, contract fixtures, Playwright install, and demo tooling
+- `repository`: `git+https://github.com/f-campana/ship-ready.git`
+- `engines.node`: `>=20`
+- a `files` whitelist for built output, docs, skill resources, and contract fixtures
+- scripts for `shipready`, `build`, `test`, `typecheck`, contract fixtures, explicit Playwright install, and demo tooling
 - `packageManager`: `pnpm@10.28.2`
 
-The current package metadata does not contain publish-ready `files`, `main`, `exports`, `license`, `repository`, or `engines` fields. There is no `pnpm-workspace.yaml` in this checkout. The build output is `dist/index.js` plus `dist/index.d.ts`.
+The current package metadata does not contain `main` or `exports` because ShipReady does not claim a supported import API. There is no `pnpm-workspace.yaml` in this checkout. The build output is `dist/index.js` plus `dist/index.d.ts`. There is no `postinstall` browser download; run `pnpm playwright:install` explicitly when `doctor` reports a missing Chromium executable.
 
 ## User-facing problem
 
@@ -92,7 +98,7 @@ This was verified in the current checkout after `pnpm build`: `shipready status 
 
 Option C - npm package / pnpm dlx:
 
-Future preparation only. Do not publish in v0. Before this path can be claimed, ShipReady needs a package-name and ownership decision, publish metadata, a reviewed `files` whitelist, license and repository metadata, Node engine requirements, packed-tarball smoke tests, a Playwright/browser install story, MCP stdio launch guidance, GUI asset packaging checks, publish authorization, rollback planning, and package docs that distinguish installed usage from source-checkout usage.
+Future decision only. Do not publish in v0. The package preparation pass has added conservative metadata, a reviewed `files` whitelist, and local packed-tarball smoke evidence. Before this path can be claimed, ShipReady still needs a package-name and ownership decision, explicit publish authorization, license decision, npm token/provenance handling, rollback planning, installed-usage docs, browser install guidance for npm and `pnpm dlx`, and post-publish smoke checks.
 
 Option D - Standalone binary:
 
@@ -157,12 +163,10 @@ Current blockers and unknowns:
 
 - `private` is `true`.
 - Package name ownership and availability are not decided here.
-- License and repository metadata are absent.
-- `files`, `main`, `exports`, and `engines` are absent.
-- `bin.shipready` points to the built CLI, but packed-tarball behavior has not been accepted as a release path.
-- Playwright Chromium installation and cache behavior need an explicit package story.
-- MCP stdio launch from an installed package needs smoke tests.
-- GUI static assets and canonical docs/fixtures need packed-package smoke tests.
+- Package license is currently `UNLICENSED`; a publishable license decision is not approved.
+- `main` and `exports` remain absent because no supported import API is claimed.
+- `bin.shipready` points to the built CLI and local tarball smoke passed, but packed-tarball behavior has not been accepted as a release path.
+- Playwright Chromium installation and cache behavior need explicit npm and `pnpm dlx` docs.
 - Publish credentials, npm token handling, CI/release workflow, and rollback plan are not designed.
 - Public docs must separate installed usage from source-checkout usage before publish.
 
@@ -226,10 +230,10 @@ This distribution decision does not change product behavior.
 Before npm publication or an installed CLI claim:
 
 - Confirm package name availability, ownership, and npm scope.
-- Decide and add license metadata.
-- Add repository and issue metadata.
-- Add `engines` and confirm supported Node versions.
-- Add a reviewed `files` whitelist that includes built CLI output, required docs, fixtures, GUI assets, and skills, and excludes secrets, local validation artifacts, local paths, and development-only files.
+- Decide the publish license; the current package metadata is `UNLICENSED`.
+- Confirm repository and issue metadata.
+- Confirm `engines` and supported Node versions.
+- Maintain the reviewed `files` whitelist that includes built CLI output, required docs, fixtures, GUI assets, and skills, and excludes secrets, local validation artifacts, local paths, and development-only files.
 - Confirm `bin.shipready` points to the built CLI in a packed package.
 - Decide `main` and `exports`, or explicitly document why CLI-only distribution omits them.
 - Verify the build includes GUI assets, canonical docs, contract fixtures, and skill content needed by doctor/MCP.

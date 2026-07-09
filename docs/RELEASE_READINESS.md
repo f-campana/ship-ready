@@ -1,6 +1,6 @@
 # Release Readiness
 
-Checkpoint date: 2026-07-08
+Checkpoint date: 2026-07-09
 
 Classification: **v0 local/agent release candidate**.
 
@@ -12,12 +12,12 @@ ShipReady v0 is a local, skill-guided launch-readiness engine for generated webs
 - MCP second: the local stdio MCP server wraps stable CLI contracts and has exactly one guarded V1 crawl-file write tool.
 - GUI third: the loopback-only review cockpit makes the engine understandable to humans and remains read-only.
 - Terminal review output: existing human CLI commands now start with target/status/next action, summarize passed checks, truncate long values, and show safety labels close to risky-to-misunderstand evidence.
-- TUI viewer: implemented read-only over `ui-report-v1`, with no new dependency, no JSON contract change, optional read-only includes, and plain-output fallback when CI or non-TTY streams are detected.
+- TUI viewer: implemented read-only over `ui-report-v1`, with no new dependency, no JSON contract change, optional read-only includes, and plain-output fallback when CI or non-TTY streams are detected. Decision: `Implement minimal TUI now`.
 - Write policy: `WRITE_POLICY_V1` is canonical and remains limited to creation-only missing robots/sitemap files.
-- Distribution: v0 is source-checkout-only; npm, `pnpm dlx`, standalone binaries, hosted wrappers, remote MCP, and auto-update behavior are not implemented. See [DISTRIBUTION.md](DISTRIBUTION.md).
+- Distribution: v0 is source-checkout-only; npm, `pnpm dlx`, standalone binaries, hosted wrappers, remote MCP, and auto-update behavior are not implemented. Package publish preparation has verified local tarball pack/install smoke without authorizing publication. See [PACKAGE_PUBLISH_PREPARATION.md](PACKAGE_PUBLISH_PREPARATION.md) and [DISTRIBUTION.md](DISTRIBUTION.md).
 - Release posture: ready to present as a v0 local/agent release candidate after the validation matrix in this checkpoint passed.
 
-`agents/openai.yaml` was requested for inspection but is absent in this checkout. No agent integration file was added during this closure pass.
+`skills/shipready-launch-readiness/agents/openai.yaml` is present as skill metadata and is included in the package whitelist. It does not add product runtime behavior or distribution support.
 
 ## Implemented surfaces
 
@@ -41,6 +41,7 @@ ShipReady v0 is a local, skill-guided launch-readiness engine for generated webs
 - Local stdio MCP server with read-only tools, canonical reads, prompts, and one safe-write wrapper.
 - Repository-local ShipReady Launch Readiness skill.
 - Source-checkout-only distribution decision with verified developer-local link guidance.
+- Package publish preparation with a reviewed package files whitelist, explicit browser-install story, and local packed-tarball smoke evidence while keeping `private: true`.
 
 ## Command matrix
 
@@ -167,7 +168,7 @@ Repo-capable tools require allowed-root authorization before local inspection or
 
 ## Known limitations
 
-- No npm package, `pnpm dlx` path, standalone binary, hosted wrapper, remote MCP transport, auto-update behavior, aggregate `review` command, or default global install exists.
+- No published npm package, `pnpm dlx` path, standalone binary, hosted wrapper, remote MCP transport, auto-update behavior, aggregate `review` command, or default global install exists.
 - No hosted SaaS, accounts, billing, auth, or remote workspace model exists.
 - No live Search Console provider exists.
 - No DNS provider integration or DNS mutation exists.
@@ -181,19 +182,20 @@ Repo-capable tools require allowed-root authorization before local inspection or
 
 ## Validation status
 
-Release-readiness validation for this checkpoint passed on 2026-07-08:
+Release-readiness validation for this checkpoint passed on 2026-07-09:
 
 | Check | Status |
 |---|---|
-| `pnpm test` | Passed, 48 files and 403 tests |
+| `pnpm test` | Passed, 53 files and 422 tests |
 | `pnpm typecheck` | Passed |
 | `pnpm build` | Passed |
 | `git diff --check` | Passed before staging; staged check required before commit |
-| `pnpm shipready status --json` | Passed; distribution decision documented; next pass should not imply published/global usage |
+| `pnpm shipready status --json` | Passed; source-checkout distribution retained; next pass is npm package name / publish authorization decision |
 | `pnpm shipready doctor --json` | Passed; `ok: true`, 20 pass, 0 warn/fail/skip |
 | Representative CLI smokes | Passed: `audit`, `social-preview`, `crawl`, `smells`, `patch-export --stdout`, and `github-pr-draft --stdout` |
 | MCP smoke | Passed: initialized stdio server, listed 16 tools, verified 15 read-only and sole write tool, called `shipready.crawl_site` |
 | GUI smoke | Passed: `GET /`, `POST /api/review`, `POST /api/ui-report`, and `POST /api/fix = 404` |
+| Packed tarball smoke | Passed: pack, clean temp install, version/status/doctor/audit/TUI/GUI/MCP smokes; tarball deleted before commit |
 | Claims scan | Passed with occurrences confined to forbidden-example lists, tests, or explicit negated limitations |
 | Contract fixture validation | Passed through `pnpm test` and `doctor` fixture parsing |
 | Target repo mutation guard | Passed: disposable patch-export/PR-draft repo hash unchanged |
@@ -235,7 +237,7 @@ Do not describe v0 as hosted SaaS, production SaaS, fully automated SEO repair, 
 
 ## Next roadmap
 
-1. npm/package publish preparation with packed-tarball smoke tests and a reviewed publish checklist.
+1. npm package name / publish authorization decision, including license, token/provenance, browser install, rollback, and post-publish smoke design.
 2. Live GitHub integration with explicit opt-in, auth, Git worktree safety, and mutation tests.
 3. Live Search Console integration with explicit OAuth/token design and read-only scope review.
 4. Hosted SaaS exploration with a separate auth, data custody, and remote execution design.
@@ -244,4 +246,4 @@ Do not describe v0 as hosted SaaS, production SaaS, fully automated SEO repair, 
 
 ## Recommended immediate next pass
 
-Package publish preparation. Decision: `Implement minimal TUI now`. Terminal output polish is complete and the TUI viewer is implemented as a read-only, dependency-free human layer over `ui-report-v1`, with CI/non-TTY fallback and no JSON contract or write-policy change. Keep v0 source-checkout-only unless a separate package publish preparation pass completes the checklist in [DISTRIBUTION.md](DISTRIBUTION.md).
+npm package name / publish authorization decision. Decision: `Keep v0 source-checkout-only`. Package publish preparation verified local tarball pack/install smoke, but it did not publish, authorize `pnpm dlx`, add hosted behavior, change MCP transport, or alter product write surfaces. Use [PACKAGE_PUBLISH_PREPARATION.md](PACKAGE_PUBLISH_PREPARATION.md) and [DISTRIBUTION.md](DISTRIBUTION.md) as the evidence base for any future publish decision.
