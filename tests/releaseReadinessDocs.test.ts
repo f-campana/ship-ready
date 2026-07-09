@@ -44,8 +44,8 @@ describe("release-readiness documentation", () => {
     expect(combined).toContain("pnpm shipready status");
     expect(combined).toContain("pnpm --dir /Users/fabiencampana/Documents/ship-ready shipready status");
     expect(combined).toContain("does not imply a global install");
-    expect(combined).toContain("pnpm dlx");
-    expect(combined).toContain("not expected to work");
+    expect(combined).toContain("@shipready/cli");
+    expect(combined).toContain("not yet published");
   });
 
   it("marks the original roadmap closed and future integrations as future", async () => {
@@ -56,6 +56,7 @@ describe("release-readiness documentation", () => {
     expect(roadmap).toContain("| Distribution | Complete |");
     expect(roadmap).toContain("| Terminal output polish | Complete |");
     expect(roadmap).toContain("| TUI viewer | Complete |");
+    expect(roadmap).toContain("| Publish readiness closure | Complete |");
     expect(roadmap).toContain("These candidates are future work only.");
     expect(roadmap).toContain("Live Search Console integration with explicit OAuth/token custody design");
   });

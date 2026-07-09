@@ -34,8 +34,8 @@ describe("status", () => {
     expect(output).toContain("Patch export: review-only; not applied");
     expect(output).toContain("GitHub PR draft: draft only");
     expect(output).toContain("Deployment automation, live GitHub integration");
-    expect(output).toContain("Distribution: source-checkout-only v0");
-    expect(output).toContain("Next pass: Package publish blockers closure");
+    expect(output).toContain("Distribution: repository-local now; future npm direction is @shipready/cli");
+    expect(output).toContain("Next pass: Publish workflow wiring");
   });
 
   it("emits the stable JSON capability and safety contract", async () => {
@@ -79,7 +79,7 @@ describe("status", () => {
     });
     expect(status.writePolicy.id).toBe(WRITE_POLICY_V1);
     expect(status.capabilities.cli).toContain("tui");
-    expect(status.nextRecommendedPass).toBe("Package publish blockers closure");
+    expect(status.nextRecommendedPass).toBe("Publish workflow wiring");
   });
 
   it("stays synchronized with the MCP registry", () => {

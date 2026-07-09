@@ -28,21 +28,22 @@ describe("distribution documentation", () => {
       expect(doc).toContain(heading);
     }
 
-    expect(doc).toContain("ShipReady v0 is a repository-local tool");
+    expect(doc).toContain("ShipReady is currently a repository-local tool");
     expect(doc).toContain("pnpm --dir /Users/fabiencampana/Documents/ship-ready shipready audit https://example.com");
     expect(doc).toContain("pnpm --dir /Users/fabiencampana/Documents/ship-ready --silent shipready mcp --allow-root /path/to/repo");
     expect(doc).toContain("pnpm --dir /Users/fabiencampana/Documents/ship-ready shipready gui");
-    expect(doc).toContain("Do not claim `pnpm dlx shipready ...` works");
+    expect(doc).toContain("Preferred future package: `@shipready/cli`.");
+    expect(doc).toContain("Do not claim this works yet.");
   });
 
-  it("keeps README and command docs clear about source-checkout usage", async () => {
+  it("keeps README and command docs clear about current and future usage", async () => {
     const readme = await readFile(join(root, "README.md"), "utf8");
     const commands = await readFile(join(root, "docs", "COMMANDS.md"), "utf8");
 
     for (const doc of [readme, commands]) {
       expect(doc).toContain("repository-local");
-      expect(doc).toContain("pnpm dlx");
-      expect(doc).toContain("not expected to work");
+      expect(doc).toContain("@shipready/cli");
+      expect(doc).toContain("not yet published");
       expect(doc).toContain("pnpm --dir /Users/fabiencampana/Documents/ship-ready shipready audit https://example.com");
     }
 
@@ -55,9 +56,9 @@ describe("distribution documentation", () => {
     const roadmap = await readFile(join(root, "docs", "ROADMAP.md"), "utf8");
 
     expect(releaseReadiness).toContain("[DISTRIBUTION.md](DISTRIBUTION.md)");
-    expect(status).toContain("Distribution classification: **source-checkout-only v0**");
+    expect(status).toContain("Distribution classification: **repository-local now; npm-ready direction documented, not published**");
     expect(roadmap).toContain("| Distribution | Complete |");
-    expect(status).not.toContain("Packaging / distribution decision.");
+    expect(status).toContain("Publish workflow wiring");
     expect(releaseReadiness).toContain("Decision: `Implement minimal TUI now`");
     expect(releaseReadiness).toContain("Package publish preparation");
   });

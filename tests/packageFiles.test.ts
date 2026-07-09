@@ -13,6 +13,7 @@ describe("package files whitelist", () => {
 
     for (const required of [
       "dist/",
+      "LICENSE",
       "README.md",
       "docs/",
       "skills/shipready-launch-readiness/SKILL.md",

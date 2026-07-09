@@ -67,7 +67,7 @@ describe("TUI viewer", () => {
     expect(text).toContain("Smells: Heuristic implementation signals. Not authorship proof.");
     expect(text).toContain("Search Console: Mock-backed only. No live Google API or OAuth.");
     expect(text).toContain("DNS: Read-only DNS evidence. No provider writes.");
-    expect(text).toContain("Distribution: Repository-local v0. Use pnpm --dir from outside the checkout.");
+    expect(text).toContain("Installed npm usage, standalone binaries, hosted app behavior, and remote MCP are not supported until a publish execution pass verifies them.");
   });
 
   it("wraps and truncates long values to the terminal width", () => {

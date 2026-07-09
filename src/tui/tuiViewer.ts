@@ -569,7 +569,7 @@ function commandsSection(report: UiReport): TuiSection {
       ...(repo ? [`- pnpm shipready github-pr-draft ${repo} --url ${target} --stdout`] : []),
       "",
       "Distribution boundary",
-      "- pnpm dlx shipready, npm install -g shipready, standalone binaries, hosted app behavior, and remote MCP are not supported in v0.",
+      "- Installed npm usage, standalone binaries, hosted app behavior, and remote MCP are not supported until a publish execution pass verifies them.",
     ],
   };
 }

@@ -4,7 +4,7 @@ Evaluation date: 2026-07-09
 
 Decision: **improve current TUI manually**.
 
-ShipReady should not adopt Ink or OpenTUI before the next polish pass. The current dependency-free TUI is safe, functional, and already aligned with the source-checkout-only v0 posture, but it should get a second manual layout pass before package publish preparation resumes if the terminal cockpit is meant to feel polished rather than report-like.
+ShipReady should not adopt Ink or OpenTUI before the next polish pass. The current dependency-free TUI is safe, functional, and aligned with the current repository-local / future-package posture, but it should get a second manual layout pass before any terminal framework dependency is considered.
 
 Sources checked: current `src/tui/tuiViewer.ts`, `tests/tui.test.ts`, `package.json`, `pnpm-lock.yaml`, [Ink README](https://github.com/vadimdemedes/ink), [Ink npm package](https://www.npmjs.com/package/ink), [OpenTUI docs](https://opentui.com/docs/getting-started/), [OpenTUI homepage](https://opentui.com/), [OpenTUI GitHub](https://github.com/anomalyco/opentui), [@opentui/core npm package](https://www.npmjs.com/package/@opentui/core), and [@opentui/react npm package](https://www.npmjs.com/package/@opentui/react).
 
@@ -121,7 +121,7 @@ Implications:
 - Build/install requirements: OpenTUI examples use Bun. The docs say Node can import packages without FFI, but creating the native renderer in Node requires Node.js 26.4.0 with `--experimental-ffi`; Node permissions also require `--allow-ffi` and filesystem permissions.
 - Cross-platform behavior: likely promising, but ShipReady would need explicit macOS/Linux/Windows smoke tests before claiming package readiness.
 - Package publish implications: much heavier than Ink because packed-tarball, postinstall, native library, Node version, Bun/Node split, FFI flags, and CI matrix behavior all become release questions.
-- `pnpm dlx` implications: a published CLI depending on OpenTUI would need a clean ephemeral install/run story for native assets and runtime flags. That conflicts with the current source-checkout-only v0 posture.
+- `pnpm dlx` implications: a published CLI depending on OpenTUI would need a clean ephemeral install/run story for native assets and runtime flags. That conflicts with the current conservative package-readiness posture.
 - CI implications: CI would need to decide whether to skip native renderer tests, run Bun, or run Node 26.4.0 with experimental FFI. That is not appropriate as incidental TUI polish work.
 - Layout quality: highest of the options for a rich cockpit.
 - Long-term maintenance risk: higher than Ink because the native core and Node FFI requirements are newer and more operationally specific.
@@ -196,4 +196,4 @@ Run a scoped manual TUI polish pass before package publish preparation resumes:
 - do not add write behavior;
 - do not publish or prepare publishing.
 
-After that polish pass, package publish preparation can resume with the source-checkout-only v0 boundary still intact.
+After that polish pass, publish workflow wiring can continue with the repository-local current boundary still intact.

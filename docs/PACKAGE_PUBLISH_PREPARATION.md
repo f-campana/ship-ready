@@ -1,49 +1,43 @@
 # Package Publish Preparation
 
-Checkpoint date: 2026-07-09
+Checkpoint date: 2026-07-10
 
-ShipReady remains a **v0 local/agent release candidate** and **source-checkout-only**. This pass prepares and smokes a local tarball so future npm or `pnpm dlx shipready` claims can be decided from evidence. It does not authorize publication. The follow-up name, license, browser, authority, and process decision is documented in [PACKAGE_PUBLISH_DECISION.md](PACKAGE_PUBLISH_DECISION.md).
+ShipReady remains unpublished and `private: true`, but it is now prepared for a future npm publish execution plan. This pass incorporated owner publish decisions, selected MIT, added package smoke automation, and kept actual publication blocked.
 
 ## Current status
 
-ShipReady can be built, packed, installed into a clean temp consumer, and run through the core local smoke matrix from the packed tarball after this pass. The packed package contains the built CLI, package metadata, README, canonical docs, the ShipReady skill resources, and deterministic contract fixtures.
-
-Current supported usage remains:
+Current supported usage remains repository-local:
 
 ```bash
 cd /Users/fabiencampana/Documents/ship-ready && pnpm shipready ...
 pnpm --dir /Users/fabiencampana/Documents/ship-ready shipready ...
 ```
 
-Current unsupported usage remains:
+Future intended npm usage, after publish approval and post-publish smoke, is:
 
-- `pnpm dlx shipready`
-- `npm install -g shipready`
-- published npm package
-- standalone binary
-- hosted app
-- remote MCP
-- auto-update
+```bash
+pnpm dlx @shipready/cli audit https://example.com
+```
+
+Do not claim this works yet. The package is not published.
 
 ## Goals
 
-- Verify that ShipReady can be packaged without source-checkout-only layout assumptions.
-- Keep `private: true` and prevent accidental npm publication.
-- Include runtime resources needed by doctor, MCP canonical reads, docs, contract fixtures, skill workflows, TUI, and GUI.
-- Exclude source, tests, local validation artifacts, screenshots, videos, temp files, logs, secrets, and untracked validation evidence from the tarball.
-- Smoke the built CLI from a clean tarball consumer.
-- Document blockers before any npm publish or `pnpm dlx` claim.
+- Keep accidental npm publication blocked with `private: true`.
+- Prepare public metadata for an eventual early-preview CLI package.
+- Keep ShipReady CLI-only.
+- Keep browser installation explicit and side-effect-free.
+- Add repeatable local/CI package smoke without putting it in normal `pnpm test`.
+- Keep package contents focused on runtime resources.
+- Preserve all product safety boundaries.
 
 ## Non-goals
 
 - Publish to npm.
-- Create a GitHub release, release tag, or uploaded artifact.
-- Commit a tarball.
-- Add hosted SaaS behavior.
-- Add remote MCP transport.
-- Add telemetry.
-- Add auth, accounts, billing, OAuth, token storage, or package-publish automation.
-- Add live GitHub, deployment, DNS provider, Search Console, or social platform behavior.
+- Run `npm publish`, `npm login`, or token-based commands.
+- Create a GitHub release or release tag.
+- Upload artifacts.
+- Add hosted SaaS behavior, remote MCP, telemetry, auth/accounts/billing, OAuth/token storage, provider writes, live GitHub behavior, deployment, live Search Console, social platform APIs, or DNS writes.
 - Broaden `WRITE_POLICY_V1`.
 - Change product safety behavior.
 - Mutate Fodmapp.
@@ -52,34 +46,29 @@ Current unsupported usage remains:
 
 Current package metadata after this pass:
 
-| Field | Value | Publish-prep decision |
+| Field | Value | Decision |
 |---|---|---|
-| `name` | `shipready` | Kept. Future pass must confirm npm name availability and ownership. |
-| `version` | `0.1.0` | Kept. Future publish may need a versioning decision. |
-| `private` | `true` | Kept. This pass does not enable npm publication. |
-| `license` | `UNLICENSED` | Added conservatively because no open-source license has been approved. Future publish needs an explicit license decision. |
-| `type` | `module` | Kept. |
-| `bin.shipready` | `./dist/index.js` | Kept and smoke-tested from the tarball. |
-| `scripts.shipready` | `tsx src/cli/index.ts` | Kept for source-checkout usage. |
-| `scripts.build` | `tsup` | Kept. |
-| `scripts.test` | `vitest run` | Kept. |
-| `scripts.typecheck` | `tsc --noEmit` | Kept. |
-| `scripts.playwright:install` | `playwright install chromium` | Kept as the explicit browser install command. |
-| `scripts.postinstall` | absent | Removed to avoid install-time browser downloads and other package-manager side effects. |
-| `dependencies` | `@modelcontextprotocol/sdk`, `cheerio`, `commander`, `playwright`, `zod` | Kept. No dependency was added. |
-| `devDependencies` | `@types/node`, `tsup`, `tsx`, `typescript`, `vitest` | Kept. |
-| `packageManager` | `pnpm@10.28.2` | Kept. |
-| `repository` | `git+https://github.com/f-campana/ship-ready.git` | Added from the configured origin. |
-| `engines.node` | `>=20` | Added to match doctor and runtime support. |
-| `files` | focused whitelist | Added and smoke-tested. |
-| `main` | absent | Still omitted. ShipReady is a CLI package today; no supported import API is claimed. |
-| `exports` | absent | Still omitted. ShipReady is a CLI package today; no supported import API is claimed. |
+| `name` | `shipready` | Kept for now because package-root lookup expects it. Future publish should change to `@shipready/cli` only with lookup updates and smoke. |
+| `version` | `0.1.0` | Kept as likely first public SemVer version. |
+| `description` | `Local launch-readiness CLI for generated websites.` | Added for npm-facing clarity. |
+| `private` | `true` | Kept; publication remains blocked. |
+| `license` | `MIT` | Changed from `UNLICENSED` after owner open-source decision. |
+| `bin.shipready` | `./dist/index.js` | Kept. |
+| `main` / `exports` | absent | Kept absent; no public JS import API is claimed. |
+| `repository` | `git+https://github.com/f-campana/ship-ready.git` | Kept. |
+| `bugs` | GitHub issues URL | Added for public issues. |
+| `homepage` | GitHub README URL | Added. |
+| `engines.node` | `>=20` | Kept. |
+| `scripts.package:smoke` | `node scripts/package-smoke.mjs` | Added; not part of normal `pnpm test`. |
+| `scripts.postinstall` | absent | Kept absent; browser install remains explicit. |
+| `files` | focused whitelist including `LICENSE` | Updated for MIT package contents. |
 
 ## Files to include
 
 The package whitelist includes:
 
 - `dist/`
+- `LICENSE`
 - `README.md`
 - `docs/`
 - `skills/shipready-launch-readiness/SKILL.md`
@@ -87,13 +76,7 @@ The package whitelist includes:
 - `skills/shipready-launch-readiness/examples/`
 - `validation/contracts/`
 
-These cover:
-
-- CLI entrypoint and bundled runtime code.
-- README and canonical docs used by MCP resources and doctor checks.
-- The repository-local skill file and example resources.
-- Contract fixtures used by doctor and MCP canonical resource reads.
-- GUI and TUI code, because both are bundled into `dist/index.js`.
+These cover the built CLI, public docs, MIT license, agent skill resources, and deterministic contract fixtures.
 
 ## Files to exclude
 
@@ -104,95 +87,75 @@ The whitelist excludes:
 - `coverage/`
 - `node_modules/`
 - `.git/`
-- `validation/e2e-project-review/`
+- untracked `validation/e2e-project-review/`
 - validation screenshots, videos, local run logs, and demo media outside `validation/contracts/`
-- local absolute-path demos and temporary artifacts
 - `.env` and secret files
-- `*.log`
 - generated package tarballs
-
-The initial dry-run without a whitelist would have included source, tests, screenshots, demo videos, and the pre-existing untracked `validation/e2e-project-review/` tree. The whitelist fixes that package-shape blocker.
 
 ## Runtime resource requirements
 
-Runtime resources currently resolve from the installed package root by walking upward from the compiled entrypoint until `package.json` with `name: "shipready"` is found.
+Runtime resources currently resolve from the installed package root by walking upward from the compiled entrypoint until `package.json` with `name: "shipready"` is found. Because of that, this pass does not change `package.json.name` to `@shipready/cli`.
+
+Before publish execution, update the lookup to accept the approved final package name and rerun packed-package smoke.
 
 Required package-root resources:
 
 - `README.md`
-- canonical docs exposed as MCP resources:
-  - `docs/WRITE_POLICY_V1.md`
-  - `docs/CLAIMS_POLICY.md`
-  - `docs/COMMANDS.md`
-  - `docs/CONTRACTS.md`
-  - `docs/AGENT_RUNBOOK.md`
-  - `docs/STATUS.md`
-  - `docs/ROADMAP.md`
-  - `docs/DISTRIBUTION.md`
-  - `docs/MCP_PLAN.md`
-  - `docs/SEARCH_CONSOLE_READINESS_SPEC.md`
-  - `docs/DNS_READINESS_SPEC.md`
-  - `docs/POST_WRITE_RECHECK.md`
-- `docs/LOCAL_FIRST_GUI_SPEC.md`
+- `LICENSE`
+- canonical docs under `docs/`
 - `skills/shipready-launch-readiness/SKILL.md`
+- skill agent/example resources
 - `validation/contracts/*.json`
-
-Source checkout, built `dist`, and clean packed install all satisfy these runtime resource requirements after the whitelist. Linked package behavior should follow the same package root lookup because the global bin resolves back to the checkout.
-
-Optional demo media under `validation/demo-fodmapp-share/` and `validation/demo-fodmapp-voiceover-final/` are intentionally excluded from the package. In a packed install, doctor may warn that optional demo artifacts are absent; that does not block core CLI, TUI, GUI, MCP, docs, fixtures, or skill resources.
 
 ## CLI smoke matrix
 
-| Command | Source checkout | Packed tarball | Notes |
-|---|---|---|---|
-| `shipready --version` | Pass | Pass | Confirms `bin.shipready` points at built CLI. |
-| `shipready status --json` | Pass | Pass | Confirms package status contract works outside checkout. |
-| `shipready doctor --json` | Pass | Pass with 19 pass / 1 warn when demo media is absent | Required docs, skill, fixtures, MCP SDK, and browser checks survive packaging. |
-| `shipready audit https://example.com --json` | Pass | Pass | Uses installed dependency graph and local Playwright browser cache. |
-| `shipready audit https://example.com --no-render --json` | Pass | Pass | Works without launching Chromium. |
-| `shipready tui --url https://example.com` | Pass | Pass | Non-TTY smoke falls back to plain UI report. |
-| `shipready gui` | Pass | Pass | Starts loopback-only server. |
-| `shipready mcp --allow-root <temp-repo>` | Pass | Pass | Starts stdio server without stdout pollution when invoked directly through `pnpm exec`. |
+The repeatable smoke path is now:
+
+```bash
+pnpm package:smoke
+```
+
+It runs:
+
+- `pnpm build`
+- `pnpm pack` into a temp directory
+- clean temp consumer install from the tarball
+- `shipready --version`
+- `shipready status --json`
+- `shipready doctor --json`
+- `shipready audit <local fixture URL> --no-render --json`
+- `shipready tui --url <local fixture URL> --no-render` with `CI=true`
+- repository tarball check before and after smoke
+
+The audit/TUI URL is a deterministic local fixture server, not a network-sensitive live site.
 
 ## TUI packaging behavior
 
-The TUI command is bundled into `dist/index.js` and needs no external assets or additional runtime dependency. In non-TTY smoke it does not enter raw terminal mode; it prints the normal human `ui-report` output and exits with the UI report exit code. It has no JSON contract and optional sections are not run unless requested with `--include`.
+The TUI is bundled into `dist/index.js`, has no extra asset directory, and falls back to plain output when CI or non-TTY streams are detected. Package smoke exercises that fallback.
 
 ## GUI packaging behavior
 
-The GUI is bundled into `dist/index.js`; HTML, CSS, and JS are compiled string modules. No separate GUI static asset directory is required. Packed smoke verifies:
-
-- `GET /` returns the local cockpit HTML.
-- `POST /api/review` returns a read-only review envelope.
-- `POST /api/fix` remains `404`.
-- The server binds to `127.0.0.1` by default.
+GUI code remains bundled into `dist/index.js`. Package smoke does not start the GUI because the current publish-readiness requirement focuses on the lightweight CLI path. Prior packed smoke verified GUI startup; future publish execution can add GUI smoke if it remains needed.
 
 ## MCP packaging behavior
 
-The MCP server is bundled into `dist/index.js` and resolves canonical docs and contract fixtures from the installed package root. Packed smoke verifies startup with an explicit `--allow-root` temp repository. The MCP surface remains local stdio-only with exactly one write tool, `shipready.write_safe_crawl_files`, and canonical resources available from the packaged docs and fixtures.
-
-For package-manager-launched MCP sessions, keep using `--silent` when a package manager could print script banners to stdout. Direct `pnpm exec shipready mcp ...` smoke did not add package-manager output before MCP startup.
+MCP code remains bundled into `dist/index.js`, stdio-only, with fifteen read-only tools and one guarded write tool. Package smoke does not start MCP in this pass. Future publish execution should re-smoke MCP after the final package name is selected because canonical resource lookup depends on package-root resolution.
 
 ## Playwright/browser story
 
-ShipReady depends on Playwright for rendered audits, TUI base reports, GUI review, and browser-backed checks. This pass intentionally avoids postinstall side effects:
+No `postinstall` browser download exists.
 
-- No `postinstall` browser download remains.
-- Source-checkout users can run `pnpm playwright:install`.
-- Tarball consumers can run the package's `playwright:install` script from their package manager if Chromium is missing.
-- `doctor` reports a missing Chromium executable as a required failure with the install guidance.
-- `--no-render` audit paths remain available without launching Chromium.
+Rendered checks require explicit Playwright Chromium installation. `doctor` reports browser availability. `audit --no-render --json` remains the lightweight path for CI and eventual `pnpm dlx` use. The package smoke workflow installs Chromium explicitly before running `pnpm package:smoke`; the script itself does not perform browser installation.
 
-Future publish docs must explain the browser install step for npm, pnpm, CI, and `pnpm dlx` if publication is approved.
+Graceful raw-only fallback when Chromium is missing remains a future publish-ergonomics improvement candidate. This pass does not change audit behavior.
 
 ## Security and mutation boundaries
 
 This preparation pass did not change product safety behavior:
 
 - No npm publish.
-- No GitHub release.
-- No release tag.
-- No artifact upload.
+- No npm login or token use.
+- No GitHub release, release tag, or artifact upload.
 - No hosted behavior.
 - No remote MCP.
 - No telemetry.
@@ -210,50 +173,41 @@ This preparation pass did not change product safety behavior:
 
 ## Local tarball smoke results
 
-Smoke environment:
+This pass adds the automated smoke script and workflow. The current local validation command for this pass is:
 
-- Source repo: `/Users/fabiencampana/Documents/ship-ready`
-- Clean temp consumer: `/tmp/shipready-pack-smoke`
-- Package manager: `pnpm@10.28.2`
-- Node runtime in this environment: Node.js 25.8.1
+```bash
+pnpm package:smoke
+```
 
-Results recorded during this pass:
+Expected behavior:
 
-| Step | Result |
-|---|---|
-| `pnpm build` | Pass |
-| `pnpm pack` | Pass; tarball created locally for smoke only |
-| `pnpm add /path/to/shipready-0.1.0.tgz` in clean temp consumer | Pass |
-| `pnpm exec shipready --version` | Pass |
-| `pnpm exec shipready status --json` | Pass |
-| `pnpm exec shipready doctor --json` | Pass with `ok: true`, 19 pass, 1 warn; optional demo artifact warning is expected because demo media is excluded |
-| `pnpm exec shipready audit https://example.com --json` | Pass |
-| `pnpm exec shipready audit https://example.com --no-render --json` | Pass |
-| `pnpm exec shipready tui --url https://example.com` | Pass; non-TTY fallback emitted plain UI report |
-| `pnpm exec shipready gui --port <temp-port>` | Pass; loopback-only startup, `GET /`, `POST /api/review`, and `POST /api/fix = 404` verified |
-| `pnpm exec shipready mcp --allow-root <temp-repo>` | Pass; startup smoke and process stop verified |
-| Browser-unavailable story | Pass: with an empty `PLAYWRIGHT_BROWSERS_PATH`, `doctor` fails actionably with `pnpm playwright:install` guidance and `audit --no-render --json` still passes |
-| Tarball cleanup | Tarball deleted before commit |
+- tarball is created only in a temp directory;
+- temp consumer install uses the packed tarball;
+- JSON commands parse;
+- TUI non-TTY fallback exits;
+- temp directories are removed;
+- `find . -maxdepth 3 -name "*.tgz"` prints nothing afterward.
 
 ## Remaining publish blockers
 
-- `private` remains `true`; publishing is intentionally disabled.
-- npm package name availability was checked in [PACKAGE_PUBLISH_DECISION.md](PACKAGE_PUBLISH_DECISION.md), and `@f-campana/shipready` is the recommended future scoped package if publication is later approved. Availability remains time-bound and scope ownership is not confirmed.
-- Open-source/commercial license choice is not decided; package currently says `UNLICENSED`.
-- Publish authorization, npm token handling, provenance, rollback, unpublish/deprecate criteria, and post-publish smoke process are not designed.
-- Installed-usage docs are not written because v0 remains source-checkout-only.
-- Browser install guidance needs a dedicated publish-path decision, especially for `pnpm dlx`.
-- `main`/`exports` remain intentionally omitted until a supported import API is approved or explicitly rejected for publication.
-- CI package smoke is not wired into the default test suite; current tarball smoke is manual/local evidence.
+- Actual npm publish remains unauthorized.
+- `private` remains `true`.
+- Preferred `@shipready` npm scope ownership is not confirmed.
+- `package.json.name` remains `shipready`; final package-name transition needs lookup changes.
+- Trusted publishing is not wired as an active publish workflow.
+- Changelog or release notes are required.
+- Published-package browser install behavior must be verified.
+- Post-publish smoke cannot run until publication is approved.
+- GitHub tag/release creation is not approved.
+
+See [PACKAGE_PUBLISH_BLOCKERS.md](PACKAGE_PUBLISH_BLOCKERS.md).
 
 ## Recommendation
 
-Keep ShipReady v0 source-checkout-only. The package is now packable and locally smoke-testable from a tarball, but that should be treated as publish-readiness evidence, not publish authorization.
-
-Do not claim `pnpm dlx shipready`, npm global install, npm package availability, standalone binaries, hosted app, remote MCP, or auto-update behavior until a separate publish decision approves those claims and runs post-publish smoke checks.
+Keep ShipReady unpublished. Treat this pass as publish readiness closure plus smoke automation, not publish execution.
 
 ## Next step
 
-Recommended next pass: **Package publish blockers closure**.
+Recommended next pass: **Publish workflow wiring**.
 
-That pass should close or explicitly defer the blockers from [PACKAGE_PUBLISH_DECISION.md](PACKAGE_PUBLISH_DECISION.md): license approval, npm scope ownership, exact package metadata change plan, trusted-publishing or token process, local/CI packed-package smoke automation, installed usage docs, browser install verification, rollback/deprecate checklist, and GitHub tag/release policy. It should not publish by default.
+That pass should confirm/control the `@shipready` npm scope, update package-root lookup for the final package name if needed, prepare a gated trusted-publishing workflow, draft release notes, and keep publication blocked until owner approval names the exact release.

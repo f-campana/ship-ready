@@ -100,7 +100,7 @@ export function createStatus(): StatusJsonContract {
       fodmappVoiceover: "validation/demo-fodmapp-voiceover-final/",
     },
     nextRecommendedCommand: "pnpm shipready doctor",
-    nextRecommendedPass: "Package publish blockers closure",
+    nextRecommendedPass: "Publish workflow wiring",
   });
 }
 
@@ -134,7 +134,7 @@ export function formatStatusHuman(status = createStatus()): string {
     "  Patch export: review-only; not applied to the target repository",
     "  GitHub PR draft: draft only; no PR, GitHub API call, Git command, branch, commit, push, or deploy",
     "  Crawl/social/smells/recheck: read-only evidence surfaces with explicit limitations",
-    "  Distribution: source-checkout-only v0; npm, pnpm dlx, standalone binaries, hosted wrappers, and remote MCP are not implemented",
+    "  Distribution: repository-local now; future npm direction is @shipready/cli, but publication remains blocked",
     "  Deployment automation, live GitHub integration, DNS writes, live Search Console, remote MCP, telemetry, auth, accounts, and billing: not implemented",
     "",
     "Demo artifacts",

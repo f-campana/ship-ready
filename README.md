@@ -1,14 +1,16 @@
 # ShipReady
 
-ShipReady is a CLI-first, agent-friendly launch-readiness engine for generated websites. It audits a public URL, inspects a local repository, plans fixes, previews file changes, and can create a narrow set of missing crawl files under an explicit V1 policy. **CLI first. MCP second. GUI third.** The CLI is the source of truth; the local stdio MCP server wraps stable CLI contracts and exposes exactly one guarded V1 write tool, while the GUI explains the engine to humans.
+ShipReady is a local launch-readiness CLI for generated websites. It checks what crawlers and preview bots can see before launch, shows safe next actions, and can create a narrow set of missing crawl files under an explicit V1 policy. **CLI first. MCP second. GUI third.** The CLI is the source of truth; the local stdio MCP server wraps stable CLI contracts and exposes exactly one guarded V1 write tool, while the GUI explains the engine to humans.
 
 For an agent-ready operating workflow, use the repository-local [ShipReady Launch Readiness skill](skills/shipready-launch-readiness/SKILL.md). It packages current commands, MCP tools, safety gates, reporting guidance, and concise examples without expanding product behavior.
 
 ## Current status
 
-ShipReady is a **v0 local/agent release candidate** after the original 18-pass roadmap. Implemented: read-only `status` and `doctor` diagnostics, CLI audit and repo inspection, polished terminal review output for existing human commands, a read-only terminal review viewer (`tui`) with CI/non-TTY fallback, read-only bounded multi-page crawl, the read-only social preview simulator, the read-only generated-site implementation smell detector, fix planning, dry-run previews, review-only patch export, review-only GitHub PR draft handoff, guarded creation-only writes, a read-only post-write recheck, UI and static HTML reports, a local read-only review cockpit GUI, a local stdio MCP server, Fodmapp demo tooling, a deterministic mock-backed Search Console status prototype, and read-only DNS readiness status. MCP exposes fifteen read-only tools and exactly one guarded write tool for the same creation-only crawl-file policy. A new aggregate `review` command was not added. Live GitHub PR creation, Git command execution, branch creation, commits, pushes, patch application, exhaustive site crawling, monitoring, authorship identification, smell-detector auto-fixes, social platform APIs, live Search Console/OAuth, DNS provider writes/integrations, deployment automation/provider integrations, accounts, billing, hosted SaaS, and remote MCP are not built.
+ShipReady is a **v0 local/agent release candidate** after the original roadmap. Implemented: read-only `status` and `doctor` diagnostics, CLI audit and repo inspection, polished terminal review output, a read-only terminal review viewer (`tui`) with CI/non-TTY fallback, read-only bounded multi-page crawl, the read-only social preview simulator, the read-only generated-site implementation smell detector, fix planning, dry-run previews, review-only patch export, review-only GitHub PR draft handoff, guarded creation-only writes, a read-only post-write recheck, UI and static HTML reports, a local read-only review cockpit GUI, a local stdio MCP server, deterministic mock-backed Search Console status, and read-only DNS readiness status. MCP exposes fifteen read-only tools and exactly one guarded write tool for the same creation-only crawl-file policy. Live GitHub PR creation, Git command execution, branch creation, commits, pushes, patch application, exhaustive site crawling, monitoring, authorship identification, smell-detector auto-fixes, social platform APIs, live Search Console/OAuth, DNS provider writes/integrations, deployment automation/provider integrations, accounts, billing, hosted SaaS, and remote MCP are not built.
 
-Current v0 usage is repository-local. ShipReady is not yet published to npm and `pnpm dlx shipready` is not expected to work. A package preparation pass has made the project packable and locally smoke-testable from a tarball without authorizing publication; see [docs/PACKAGE_PUBLISH_PREPARATION.md](docs/PACKAGE_PUBLISH_PREPARATION.md). The package publish decision keeps publication blocked, recommends `@f-campana/shipready` only for a future approved scoped publish path, and preserves no-`postinstall`/CLI-only metadata decisions; see [docs/PACKAGE_PUBLISH_DECISION.md](docs/PACKAGE_PUBLISH_DECISION.md). See [docs/DISTRIBUTION.md](docs/DISTRIBUTION.md) for the distribution decision, source-checkout commands, verified developer-local link path, and future publish checklist. See [docs/RELEASE_READINESS.md](docs/RELEASE_READINESS.md) for the release-readiness checkpoint, command matrix, contract matrix, MCP/GUI boundaries, validation checklist, and next roadmap.
+Current usage is repository-local. ShipReady is not yet published to npm. Future intended npm usage is `pnpm dlx @shipready/cli audit https://example.com`, but that path is not live until an approved publish execution pass and post-publish smoke. Package readiness now includes MIT metadata, a `LICENSE`, public issues metadata, package-smoke automation, a public safety review, and a publish runbook while keeping `private: true`; see [docs/PACKAGE_PUBLISH_PREPARATION.md](docs/PACKAGE_PUBLISH_PREPARATION.md), [docs/PACKAGE_PUBLISH_DECISION.md](docs/PACKAGE_PUBLISH_DECISION.md), and [docs/PACKAGE_PUBLISH_BLOCKERS.md](docs/PACKAGE_PUBLISH_BLOCKERS.md).
+
+ShipReady is early preview software. Issues are welcome at [GitHub issues](https://github.com/f-campana/ship-ready/issues); support is limited.
 
 ## Repository-local usage
 
@@ -99,18 +101,21 @@ See [docs/DEMO.md](docs/DEMO.md) for provenance, reproduction commands, and reco
 7. [Demo](docs/DEMO.md) — approved artifacts and recording workflow.
 8. [Release readiness](docs/RELEASE_READINESS.md) — v0 local/agent release checkpoint, matrices, validation, and next roadmap.
 9. [Distribution](docs/DISTRIBUTION.md) — source-checkout v0 decision, local-link guidance, and future publish checklist.
-10. [Package publish preparation](docs/PACKAGE_PUBLISH_PREPARATION.md) — package metadata audit, files whitelist, tarball smoke results, and publish blockers.
-11. [Package publish decision](docs/PACKAGE_PUBLISH_DECISION.md) — future package name recommendation, license blocker, browser install, authority, rollback, and smoke decisions.
-12. [Status](docs/STATUS.md) — implemented scope, omissions, and next pass.
-13. [Roadmap](docs/ROADMAP.md) — completed original roadmap and future candidates.
-14. [Local-first GUI spec](docs/LOCAL_FIRST_GUI_SPEC.md) — canonical GUI direction.
-15. [Search Console readiness spec](docs/SEARCH_CONSOLE_READINESS_SPEC.md) — mock prototype contract and deferred live OAuth/provider boundary.
-16. [DNS readiness spec](docs/DNS_READINESS_SPEC.md) — read-only DNS status checks and DNS claim boundaries.
-17. [Post-write recheck](docs/POST_WRITE_RECHECK.md) — external deployment handoff and conservative live verification.
+10. [Package publish preparation](docs/PACKAGE_PUBLISH_PREPARATION.md) — package metadata audit, files whitelist, smoke automation, and publish blockers.
+11. [Package publish decision](docs/PACKAGE_PUBLISH_DECISION.md) — future package name recommendation, MIT license, browser install, authority, rollback, and smoke decisions.
+12. [Package publish blockers](docs/PACKAGE_PUBLISH_BLOCKERS.md) — closed and remaining publish gates.
+13. [Public package safety review](docs/PUBLIC_PACKAGE_SAFETY_REVIEW.md) — safety checklist before public package release.
+14. [Publish runbook](docs/PUBLISH_RUNBOOK.md) — future trusted-publishing execution outline.
+15. [Status](docs/STATUS.md) — implemented scope, omissions, and next pass.
+16. [Roadmap](docs/ROADMAP.md) — completed original roadmap and future candidates.
+17. [Local-first GUI spec](docs/LOCAL_FIRST_GUI_SPEC.md) — canonical GUI direction.
+18. [Search Console readiness spec](docs/SEARCH_CONSOLE_READINESS_SPEC.md) — mock prototype contract and deferred live OAuth/provider boundary.
+19. [DNS readiness spec](docs/DNS_READINESS_SPEC.md) — read-only DNS status checks and DNS claim boundaries.
+20. [Post-write recheck](docs/POST_WRITE_RECHECK.md) — external deployment handoff and conservative live verification.
 
 ## What ShipReady is not
 
-ShipReady is not an SEO dashboard, Lighthouse clone, Search Console replacement, deployment system, or unrestricted site editor. It does not promise crawler behavior, indexing, or ranking outcomes.
+ShipReady does not publish sites, manage provider accounts, mutate DNS, call live Search Console, create GitHub PRs, or promise crawler behavior, indexing, ranking, or exact third-party preview outcomes.
 
 ## Validation
 
@@ -119,6 +124,7 @@ pnpm test
 pnpm typecheck
 pnpm build
 git diff --check
+pnpm package:smoke
 ```
 
 For documentation-only changes, `git diff --check` and focused path/claims checks are the minimum. Run tests, typecheck, and build whenever source, scripts, package behavior, generated behavior, or product contracts change.

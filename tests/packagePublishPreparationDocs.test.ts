@@ -31,7 +31,7 @@ describe("package publish preparation documentation", () => {
     }
   });
 
-  it("keeps public docs source-checkout-only until publish is approved", async () => {
+  it("keeps public docs clear that installed usage is future until publish is approved", async () => {
     const readme = await readFile(join(root, "README.md"), "utf8");
     const commands = await readFile(join(root, "docs", "COMMANDS.md"), "utf8");
     const distribution = await readFile(join(root, "docs", "DISTRIBUTION.md"), "utf8");
@@ -39,10 +39,11 @@ describe("package publish preparation documentation", () => {
     const combined = `${readme}\n${distribution}\n${status}`;
     const commandSurface = `${readme}\n${commands}\n${status}`;
 
-    expect(combined).toContain("source-checkout-only");
-    expect(combined).toContain("pnpm dlx");
-    expect(combined).toContain("not expected to work");
+    expect(combined).toContain("repository-local");
+    expect(combined).toContain("@shipready/cli");
+    expect(combined).toContain("not yet published");
     expect(combined).toContain("PACKAGE_PUBLISH_PREPARATION.md");
+    expect(combined).toContain("package-smoke");
     expect(commandSurface).not.toContain("pnpm dlx shipready audit");
   });
 });

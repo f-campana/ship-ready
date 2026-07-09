@@ -1,33 +1,28 @@
 # Release Readiness
 
-Checkpoint date: 2026-07-09
+Checkpoint date: 2026-07-10
 
 Classification: **v0 local/agent release candidate**.
 
-ShipReady v0 is a local, skill-guided launch-readiness engine for generated websites. It audits, explains, previews, exports, and hands off safe review artifacts while preserving strict mutation boundaries. It is not a hosted SaaS product, deployment system, DNS manager, Search Console integration, GitHub bot, or fully automated SEO fixer.
+ShipReady is a local launch-readiness CLI for generated websites. It checks what crawlers and preview bots can see before launch, explains safe next actions, and preserves strict mutation boundaries.
 
 ## Current product shape
 
 - CLI first: `pnpm shipready ...` is the source of truth.
-- MCP second: the local stdio MCP server wraps stable CLI contracts and has exactly one guarded V1 crawl-file write tool.
-- GUI third: the loopback-only review cockpit makes the engine understandable to humans and remains read-only.
-- Terminal review output: existing human CLI commands now start with target/status/next action, summarize passed checks, truncate long values, and show safety labels close to risky-to-misunderstand evidence.
-- TUI viewer: implemented read-only over `ui-report-v1`, with no new dependency, no JSON contract change, optional read-only includes, and plain-output fallback when CI or non-TTY streams are detected. Decision: `Implement minimal TUI now`.
-- Write policy: `WRITE_POLICY_V1` is canonical and remains limited to creation-only missing robots/sitemap files.
-- Distribution: v0 is source-checkout-only; npm, `pnpm dlx`, standalone binaries, hosted wrappers, remote MCP, and auto-update behavior are not implemented. Package publish preparation has verified local tarball pack/install smoke without authorizing publication. The package publish decision recommends `@f-campana/shipready` only for a future approved publish path and keeps publication blocked. See [PACKAGE_PUBLISH_PREPARATION.md](PACKAGE_PUBLISH_PREPARATION.md), [PACKAGE_PUBLISH_DECISION.md](PACKAGE_PUBLISH_DECISION.md), and [DISTRIBUTION.md](DISTRIBUTION.md).
-- Release posture: ready to present as a v0 local/agent release candidate after the validation matrix in this checkpoint passed.
-
-`skills/shipready-launch-readiness/agents/openai.yaml` is present as skill metadata and is included in the package whitelist. It does not add product runtime behavior or distribution support.
+- MCP second: local stdio MCP wraps stable CLI contracts.
+- GUI third: loopback-only read-only review cockpit.
+- TUI viewer: implemented read-only over `ui-report-v1`.
+- Decision: `Implement minimal TUI now`.
+- Write policy: `WRITE_POLICY_V1` remains limited to creation-only missing robots/sitemap files.
+- Distribution: repository-local now; future npm direction is `@shipready/cli` with bin `shipready`, but publication remains blocked. Package publish preparation is documented in [PACKAGE_PUBLISH_PREPARATION.md](PACKAGE_PUBLISH_PREPARATION.md). See also [DISTRIBUTION.md](DISTRIBUTION.md), [PACKAGE_PUBLISH_DECISION.md](PACKAGE_PUBLISH_DECISION.md), [PACKAGE_PUBLISH_BLOCKERS.md](PACKAGE_PUBLISH_BLOCKERS.md), [PUBLIC_PACKAGE_SAFETY_REVIEW.md](PUBLIC_PACKAGE_SAFETY_REVIEW.md), and [PUBLISH_RUNBOOK.md](PUBLISH_RUNBOOK.md).
 
 ## Implemented surfaces
 
-- `status` and `doctor` local diagnostics.
-- Polished terminal review output for existing human CLI commands.
-- Read-only terminal review viewer: `tui`.
-- Single-page public URL audit.
-- Bounded same-origin multi-page crawl.
+- `status` and `doctor`.
+- Single-page URL audit with raw/rendered metadata comparison and `--no-render`.
+- Bounded same-origin crawl.
 - Repository inspection.
-- Fix planning and exact dry-run previews.
+- Fix planning and dry-run previews.
 - Guarded CLI write for V1-eligible missing crawl files only.
 - Review-only patch export.
 - Review-only GitHub PR draft handoff.
@@ -36,215 +31,166 @@ ShipReady v0 is a local, skill-guided launch-readiness engine for generated webs
 - Read-only generated-site implementation smell detector.
 - Mock-backed Search Console status prototype.
 - Read-only DNS readiness status.
-- `ui-report` JSON normalization and static `html-report` output.
-- Local read-only GUI review cockpit.
-- Local stdio MCP server with read-only tools, canonical reads, prompts, and one safe-write wrapper.
+- `ui-report`, `html-report`, local GUI, TUI, and stdio MCP.
 - Repository-local ShipReady Launch Readiness skill.
-- Source-checkout-only distribution decision with verified developer-local link guidance.
-- Package publish preparation with a reviewed package files whitelist, explicit browser-install story, and local packed-tarball smoke evidence while keeping `private: true`.
-- Package publish decision covering registry checks, recommended future scoped name, license blocker, no-`postinstall` browser story, CLI-only metadata, publish authority, rollback/deprecate criteria, and package smoke automation blocker without publishing.
+- Package readiness docs, MIT license, package smoke script, and package-smoke workflow.
 
 ## Command matrix
 
-Use ShipReady from this repository checkout:
+Run from this checkout:
 
 ```bash
-cd /Users/fabiencampana/Documents/ship-ready && pnpm shipready <command>
-pnpm --dir /Users/fabiencampana/Documents/ship-ready shipready <command>
+cd /Users/fabiencampana/Documents/ship-ready
+pnpm shipready status
+pnpm shipready doctor
+pnpm shipready audit https://example.com
+pnpm shipready audit https://example.com --no-render --json
+pnpm shipready tui --url https://example.com
+pnpm --dir /Users/fabiencampana/Documents/ship-ready shipready status
 ```
 
-Do not imply `pnpm dlx`, npm publication, or default global installation for this checkout. A verified `pnpm link --global` path exists only as a developer-local symlink to the source tree; it is not distribution.
+Future installed usage remains blocked until publish approval and smoke:
 
-| Command | Purpose | Read/write class | Contract | Network behavior | Repo behavior and safety boundary | Status |
-|---|---|---|---|---|---|---|
-| `status` | Static capability, safety inventory, and terminal review pass status | Local read-only | `shipready.status.v1` with `--json` | None | Reads no target repo; writes nothing | Implemented |
-| `doctor` | Bounded local runtime/content readiness checks with scan-friendly terminal summary | Local read-only | `shipready.doctor.v1` with `--json` | None | Reads package/docs/fixtures/dependencies only; writes nothing | Implemented |
-| `audit <url>` | Audit one public HTTP(S) page | Network read-only | `shipready.audit.v1` with `--json` | Fetches URL, crawl resources, optional rendered pass | No repo required; not a crawler or outcome guarantee | Implemented |
-| `inspect-repo <path>` | Detect local project shape and supported fix surfaces | Local read-only | `shipready.repoInspection.v1` with `--json` | None | Bounded scan; no writes | Implemented |
-| `plan-fixes <path> --url <url>` | Combine audit and repo inspection into fix plan | Network/local read-only | `shipready.fixPlan.v1` with `--json` | Reads URL and optional rendered page | Reads repo; plan fields are not authorization | Implemented |
-| `fix <path> --url <url> --dry-run` | Generate exact file-change previews | Network/local read-only | `shipready.dryRunFix.v1` with `--json` | Reads URL and optional rendered page | Reads repo; `wroteFiles: false`; mandatory before any write | Implemented |
-| `fix <path> --url <url> --write --allow-create` | Create only eligible missing crawl files | Guarded target-repo write | `shipready.writeFix.v1` with `--json` | Reads URL while regenerating preview | Writes only V1-eligible missing robots/sitemap files; no overwrites, metadata, content, JSON-LD, Git, deploy, DNS, or provider mutation | Implemented |
-| `patch-export <path> --url <url>` | Export dry-run changes as review-only patch text/file | Artifact write or stdout; no target repo mutation | `shipready.patchExport.v1` with `--json` | Reads URL while regenerating dry-run | Requires output outside inspected repo or `--stdout`; never applies patches | Implemented |
-| `github-pr-draft <path> --url <url>` | Generate PR title/body/checklists and copyable command text | Artifact write or stdout; no target repo mutation | `shipready.githubPrDraft.v1` with `--json` | Reads URL while regenerating dry-run/patch evidence | Requires output outside inspected repo or `--stdout`; no GitHub API, `gh`, Git, branch, commit, push, PR, deploy, or patch application | Implemented |
-| `recheck [path] --url <url>` | Compare live crawl-resource evidence with optional local expected files after external deployment | Network/optional local read-only | `shipready.recheck.v1` with `--json` | Reads live crawl resources | Optional repo inspection; never writes or deploys | Implemented |
-| `search-console status --url <url>` | Deterministic Search Console status prototype | Mock-backed local read-only | `shipready.searchConsoleStatus.v1` with `--json` | No Google API calls | No repo required; no OAuth, tokens, property mutation, sitemap submission, or indexing request | Implemented mock |
-| `dns status --url <url>` | DNS readiness observations | Read-only DNS/optional HTTP evidence | `shipready.dnsStatus.v1` with `--json` | Node DNS reads by default; optional HTTP canonical check; mocks for CI | No repo required; no provider credentials or DNS writes | Implemented |
-| `social-preview --url <url>` | Simulate likely preview inputs from observed metadata | Network read-only or deterministic mock | `shipready.socialPreview.v1` with `--json` | Reads one URL unless mock-backed | No repo required; no platform APIs, screenshots, image generation, tokens, writes, or exact rendering guarantee | Implemented |
-| `smells <path>` | Detect heuristic generated-site implementation signals | Local read-only or optional network read | `shipready.generatedSiteSmells.v1` with `--json` | Optional one-page URL evidence | Bounded repo scan; not authorship proof and no auto-fixes | Implemented |
-| `crawl --url <url>` | Sample a small same-origin set of launch-readiness pages | Network read-only or deterministic mock | `shipready.crawl.v1` with `--json` | Bounded URL/sitemap/link reads | No repo required; not exhaustive, not monitoring, not indexing evidence | Implemented |
-| `ui-report [path] --url <url>` | Normalize URL-only or repo-backed evidence for UI consumers | Network/optional local read-only | `shipready.uiReport.v1` with `--json` | Reads URL | Optional repo read; no writes | Implemented |
-| `tui [path] --url <url>` | Interactive terminal review viewer over `ui-report-v1`, with CI/non-TTY fallback | Network/optional local read-only | None; human-only surface | Reads URL; optional `--include` sections run only when requested | Optional repo read; no writes, no JSON contract changes, no GUI server, no Git/GitHub/deploy/DNS/Search Console mutation | Implemented |
-| `html-report [path] --url <url> --output <file>` | Write a self-contained static HTML review artifact | Explicit report-file write | None | Reads URL | Writes only requested HTML output path; does not mutate inspected repo | Implemented |
-| `gui` | Start local review cockpit | Local HTTP read-only surface | None | GUI-triggered review reads URL/on-demand evidence | Loopback-only; `POST /api/review` and compatibility `POST /api/ui-report`; no write endpoint; `POST /api/fix` returns 404 | Implemented |
-| `mcp --allow-root <path>` | Start local stdio MCP server | Stdio server with read-only tools plus one guarded write tool | Tool outputs preserve named contracts | Tool-dependent | Allowed-root required for repo tools; stdio-only; no remote transport | Implemented |
+```bash
+pnpm dlx @shipready/cli audit https://example.com
+```
+
+| Command | Class | Status |
+|---|---|---|
+| `status`, `doctor` | local read-only | Implemented |
+| `audit`, `crawl`, `social-preview`, `dns status`, `search-console status`, `recheck` | network/mock read-only | Implemented |
+| `inspect-repo`, `smells` | local read-only | Implemented |
+| `plan-fixes`, `fix --dry-run`, `ui-report`, `tui` | read-only planning/review | Implemented |
+| `fix --write --allow-create` | guarded target-repo write | Implemented under `WRITE_POLICY_V1` |
+| `patch-export`, `github-pr-draft`, `html-report` | explicit review artifact output | Implemented |
+| `gui` | local read-only HTTP surface | Implemented |
+| `mcp` | local stdio server | Implemented |
 
 ## Contract matrix
 
-| Contract | Producer command/tool | Consumers | Stability notes | Read/write behavior | Fixture coverage |
-|---|---|---|---|---|---|
-| `shipready.status.v1` | `status --json` | CLI users, status tests, fixtures | V1 static capability boundary | Local read-only | `status.default.json` |
-| `shipready.doctor.v1` | `doctor --json` | CLI users, doctor tests, fixtures | V1 local readiness boundary | Local read-only | `doctor.default.json` |
-| `shipready.audit.v1` | `audit --json`, MCP `shipready.audit_site` | Planning, UI normalization, MCP, fixtures | V1 page audit boundary | Network read-only | `audit.clean.json`, `audit.needs-work.json` |
-| `shipready.repoInspection.v1` | `inspect-repo --json`, MCP `shipready.inspect_repo` | Planning, UI normalization, MCP, fixtures | V1 repo inspection boundary | Local read-only | `inspect-repo.next-app.json`, `inspect-repo.vite.json` |
-| `shipready.fixPlan.v1` | `plan-fixes --json`, MCP `shipready.plan_fixes` | Dry-run, UI normalization, MCP, fixtures | V1 planning boundary | Network/local read-only | `plan-fixes.safe-apply.json`, `plan-fixes.review-required.json` |
-| `shipready.dryRunFix.v1` | `fix --dry-run --json`, MCP `shipready.preview_fixes` | Write validation, patch export, PR draft, UI, MCP | V1 dry-run boundary; MCP adds non-CLI `previewReceipt` when eligible | Network/local read-only | `fix-dry-run.*.json` |
-| `shipready.writeFix.v1` | `fix --write --allow-create --json`, MCP `shipready.write_safe_crawl_files` | Write reports, MCP safe-write wrapper, fixtures | V1 policy-bound mutation result | Creation-only crawl-file writes | `fix-write.*.json` |
-| `shipready.uiReport.v1` | `ui-report --json`, MCP `shipready.get_ui_report` | GUI, static HTML, MCP, fixtures | V1 CLI boundary plus `schemaVersion: "ui-report-v1"` | Network/optional local read-only | `ui-report.safe-apply.json`, `ui-report.url-only.json` |
-| `shipready.searchConsoleStatus.v1` | `search-console status --json`, MCP `shipready.search_console_status` | CLI/MCP users, fixtures, GUI on-demand review | V1 mock prototype boundary | Mock-backed local read-only | `search-console.*.json` |
-| `shipready.dnsStatus.v1` | `dns status --json`, MCP `shipready.dns_status` | CLI/MCP users, fixtures, GUI on-demand review | V1 DNS readiness boundary | DNS/optional HTTP read-only or mock | `dns.*.json` |
-| `shipready.recheck.v1` | `recheck --json`, MCP `shipready.recheck` | CLI/MCP users, fixtures, GUI on-demand review | V1 post-write follow-up boundary | Network/optional local read-only | `recheck.*.json` |
-| `shipready.socialPreview.v1` | `social-preview --json`, MCP `shipready.social_preview` | CLI/MCP users, fixtures, GUI on-demand review | V1 simulated preview boundary | Network read-only or mock | `social-preview.*.json` |
-| `shipready.generatedSiteSmells.v1` | `smells --json`, MCP `shipready.generated_site_smells` | CLI/MCP users, fixtures, GUI on-demand review | V1 heuristic smell boundary | Local read-only, optional URL read, or mock | `generated-site-smells.*.json` |
-| `shipready.crawl.v1` | `crawl --json`, MCP `shipready.crawl_site` | CLI/MCP users, fixtures, GUI on-demand review | V1 bounded crawl boundary | Network read-only or mock | `crawl.*.json` |
-| `shipready.patchExport.v1` | `patch-export --json`, MCP `shipready.export_patch` | CLI/MCP users, PR draft, fixtures | V1 review export boundary | Explicit CLI artifact write or stdout; MCP inline no-write | `patch-export.*.json` |
-| `shipready.githubPrDraft.v1` | `github-pr-draft --json`, MCP `shipready.github_pr_draft` | CLI/MCP users, fixtures, copy-only GUI handoff text | V1 review handoff boundary | Explicit CLI artifact write or stdout; MCP inline no-write | `github-pr-draft.*.json` |
-| `shipready.error.v1` | JSON action failures and MCP boundary errors | CLI/MCP users, tests, fixtures | V1 error boundary; Commander pre-action gaps documented | No additional effects | `error.invalid-url.json` |
+Versioned JSON contracts remain the machine boundary:
+
+- `shipready.status.v1`
+- `shipready.doctor.v1`
+- `shipready.audit.v1`
+- `shipready.crawl.v1`
+- `shipready.repoInspection.v1`
+- `shipready.fixPlan.v1`
+- `shipready.dryRunFix.v1`
+- `shipready.writeFix.v1`
+- `shipready.uiReport.v1`
+- `shipready.searchConsoleStatus.v1`
+- `shipready.dnsStatus.v1`
+- `shipready.recheck.v1`
+- `shipready.socialPreview.v1`
+- `shipready.generatedSiteSmells.v1`
+- `shipready.patchExport.v1`
+- `shipready.githubPrDraft.v1`
+- `shipready.error.v1`
+
+Contract fixtures live under `validation/contracts/` and are included in the package whitelist.
 
 ## MCP surface
 
-MCP remains local stdio-only. It does not expose HTTP, SSE, remote auth, remote transport, provider credentials, OAuth, or arbitrary write paths.
+MCP remains local stdio-only. It exposes fifteen read-only tools and one write tool:
 
-Read-only tools:
-
-- `shipready.audit_site`
-- `shipready.crawl_site`
-- `shipready.search_console_status`
-- `shipready.dns_status`
-- `shipready.recheck`
-- `shipready.social_preview`
-- `shipready.generated_site_smells`
-- `shipready.export_patch`
-- `shipready.github_pr_draft`
-- `shipready.inspect_repo`
-- `shipready.plan_fixes`
-- `shipready.preview_fixes`
-- `shipready.get_ui_report`
-- `shipready.get_contract_fixture`
-- `shipready.get_policy_doc`
-
-Sole write tool:
-
-- `shipready.write_safe_crawl_files`
-
-Repo-capable tools require allowed-root authorization before local inspection or inline review artifacts are produced. The safe-write wrapper also requires a fresh `shipready.preview_fixes` receipt, same URL, same authorized canonical repo path, and exact confirmation `CREATE_SAFE_CRAWL_FILES_ONLY`. The wrapper regenerates the current dry-run and validates `WRITE_POLICY_V1` before creating only eligible missing robots/sitemap files.
+- Sole write tool: `shipready.write_safe_crawl_files`.
+- Repo-capable tools require allowed-root authorization.
+- The write tool requires a fresh preview receipt, same URL, same authorized canonical repo path, exact confirmation, and regenerated validation.
+- No remote transport, arbitrary file path write, OAuth, provider credential, hosted endpoint, or telemetry exists.
 
 ## GUI surface
 
-- Runs only on loopback hosts (`127.0.0.1`, `localhost`, or `::1`).
-- Serves `/`, static local CSS/JS, `POST /api/review`, and compatibility `POST /api/ui-report`.
-- `POST /api/review` returns a compact `ui-review-v1` aggregate and drives the client.
-- `POST /api/ui-report` remains available for `ui-report-v1` compatibility.
-- `POST /api/fix` is absent and must return 404.
-- Social preview, bounded crawl, generated-site smells, DNS, Search Console mock status, and recheck are on-demand read-only sections.
-- Safe crawl-file creation, patch export, and PR draft handoff are copy-only CLI handoffs in the GUI. The GUI does not execute them.
-- No GUI write execution, deploy, Git, GitHub API, provider API, DNS write, Search Console live call, social platform API, OAuth, token storage, metadata write, content write, JSON-LD write, package write, or config write is implemented.
+- Runs only on loopback hosts.
+- Serves `/`, `POST /api/review`, and compatibility `POST /api/ui-report`.
+- `POST /api/fix` remains `404`.
+- Safe crawl-file creation, patch export, and PR draft are shown as copyable CLI handoffs only.
+- No GUI write execution, deploy, Git/GitHub, DNS provider, Google, social platform, OAuth, token storage, metadata write, content write, JSON-LD write, package write, or config write exists.
 
 ## Write policy
 
-`docs/WRITE_POLICY_V1.md` remains canonical and unchanged in meaning. The only product write mode is creation-only and may create eligible missing robots/sitemap files at exact framework-aware allowlisted paths. Patch export and PR draft handoff are separate review artifacts. They do not apply patches, create PRs, run Git, create branches, commit, push, deploy, or authorize target-repo mutation.
+`docs/WRITE_POLICY_V1.md` remains canonical and unchanged. The only product write mode can create eligible missing robots/sitemap files at framework-aware allowlisted paths. It cannot overwrite existing files or write metadata, content, JSON-LD, package files, configuration, Git state, deployments, DNS, Search Console, or provider state.
 
 ## Safety boundaries
 
-- GUI remains local and read-only.
-- `POST /api/fix` remains 404.
-- GUI may copy guarded commands but must not execute writes.
-- MCP remains stdio-only.
-- MCP has exactly one target-repo write tool: `shipready.write_safe_crawl_files`.
-- MCP write remains limited to creation-only robots/sitemap files.
-- Patch export is review-only and does not apply patches.
-- GitHub PR draft is review-only and does not call GitHub or Git.
-- No metadata/content/JSON-LD writes are applied.
-- No live GitHub PR creation, branch creation, commit, push, or target-repo Git execution is implemented.
-- No deployments or deploy-provider integrations are implemented.
-- No Search Console live behavior, OAuth, token storage, provider mutation, or DNS writes are implemented.
-- Search Console remains mock-backed only.
-- DNS readiness is read-only.
-- Post-write recheck is read-only and does not deploy.
-- Social preview simulator is read-only and platform-API-free.
-- Generated-site smell detector is read-only, heuristic, and authorship-neutral.
-- Bounded crawl is read-only, same-origin, capped, and non-exhaustive.
-- Fodmapp is not a write target for validation or demos.
-- Human terminal output remains plain text with no ANSI dependency; JSON output remains the stable machine boundary.
-- The TUI viewer is a human-only read-only surface. It reuses `ui-report-v1`, starts no GUI server, has no JSON contract, writes nothing, runs optional sections only when requested, and prints the plain UI report instead of entering raw mode in CI or non-TTY streams.
+- GUI local/read-only; `POST /api/fix = 404`.
+- TUI read-only/human-only.
+- MCP stdio-only with exactly one target-repo write tool.
+- Patch export review-only.
+- GitHub PR draft review-only; no GitHub or Git execution.
+- Search Console mock-backed only.
+- DNS read-only.
+- Recheck read-only and no deploy.
+- Social preview platform-API-free.
+- Smells heuristic/authorship-neutral.
+- Crawl bounded/non-exhaustive.
+- No hosted SaaS, remote MCP, telemetry, auth/accounts/billing, OAuth/token storage, live GitHub behavior, deployments, DNS writes, live Search Console, social platform APIs, or `WRITE_POLICY_V1` broadening.
 
 ## Known limitations
 
-- No published npm package, `pnpm dlx` path, standalone binary, hosted wrapper, remote MCP transport, auto-update behavior, aggregate `review` command, or default global install exists.
-- No hosted SaaS, accounts, billing, auth, or remote workspace model exists.
-- No live Search Console provider exists.
-- No DNS provider integration or DNS mutation exists.
-- No live GitHub PR creation exists.
-- No deployment automation exists.
-- No metadata/content/JSON-LD write mode exists.
-- No exhaustive crawler, scheduled monitoring, rank tracking, backlink analysis, traffic forecasting, or broad SEO dashboard exists.
-- Social previews are approximations from observed metadata.
-- Smell findings are heuristic implementation signals, not authorship or generator identity proof.
+- No published npm package yet.
+- No verified installed `pnpm dlx @shipready/cli` behavior yet.
+- `package.json.name` remains `shipready` until final package-root lookup work.
+- `@shipready` npm scope ownership is not confirmed.
+- No standalone binary, hosted wrapper, remote MCP transport, auto-update behavior, aggregate `review` command, or default global install exists.
 - Live URL, DNS, and rendered checks remain environment/network dependent.
 
 ## Validation status
 
-Release-readiness validation for this checkpoint passed on 2026-07-09:
+Required validation for this pass:
 
-| Check | Status |
-|---|---|
-| `pnpm test` | Passed, 54 files and 426 tests |
-| `pnpm typecheck` | Passed |
-| `pnpm build` | Passed |
-| `git diff --check` | Passed before staging; staged check required before commit |
-| `pnpm shipready status --json` | Passed; source-checkout distribution retained; next pass is Package publish blockers closure |
-| `pnpm shipready doctor --json` | Passed; `ok: true`, 20 pass, 0 warn/fail/skip |
-| Representative CLI smokes | Passed: `audit`, `social-preview`, `crawl`, `smells`, `patch-export --stdout`, and `github-pr-draft --stdout` |
-| MCP smoke | Passed: initialized stdio server, listed 16 tools, verified 15 read-only and sole write tool, called `shipready.crawl_site` |
-| GUI smoke | Passed: `GET /`, `POST /api/review`, `POST /api/ui-report`, and `POST /api/fix = 404` |
-| Packed tarball smoke | Passed: pack, clean temp install, version/status/doctor/audit/TUI/GUI/MCP smokes; tarball deleted before commit |
-| Claims scan | Passed with occurrences confined to forbidden-example lists, tests, or explicit negated limitations |
-| Contract fixture validation | Passed through `pnpm test` and `doctor` fixture parsing |
-| Target repo mutation guard | Passed: disposable patch-export/PR-draft repo hash unchanged |
-| Fodmapp unchanged confirmation | Passed: `apps/marketing` status showed no changes |
+```bash
+pnpm test
+pnpm typecheck
+pnpm build
+git diff --check
+pnpm shipready status --json
+pnpm shipready doctor --json
+pnpm package:smoke
+find . -maxdepth 3 -name "*.tgz"
+```
+
+The final tarball check must print nothing.
 
 ## Demo / dogfood commands
 
-Run from the repository checkout:
-
 ```bash
-cd /Users/fabiencampana/Documents/ship-ready && pnpm shipready status --json
-cd /Users/fabiencampana/Documents/ship-ready && pnpm shipready doctor --json
-cd /Users/fabiencampana/Documents/ship-ready && pnpm shipready audit https://example.com --json
-cd /Users/fabiencampana/Documents/ship-ready && pnpm shipready social-preview --url https://example.com --mock complete --json
-cd /Users/fabiencampana/Documents/ship-ready && pnpm shipready crawl --url https://example.com --mock clean-small-site --json
-cd /Users/fabiencampana/Documents/ship-ready && pnpm shipready smells . --mock clean --json
-cd /Users/fabiencampana/Documents/ship-ready && pnpm shipready tui --url https://example.com
-pnpm --dir /Users/fabiencampana/Documents/ship-ready shipready patch-export <temp-repo> --url https://example.com --stdout
-pnpm --dir /Users/fabiencampana/Documents/ship-ready shipready github-pr-draft <temp-repo> --url https://example.com --stdout
-pnpm --dir /Users/fabiencampana/Documents/ship-ready shipready gui
+pnpm shipready status --json
+pnpm shipready doctor --json
+pnpm shipready audit https://example.com --no-render --json
+pnpm shipready tui --url https://example.com
+pnpm shipready gui
 pnpm --dir /Users/fabiencampana/Documents/ship-ready --silent shipready mcp --allow-root /Users/fabiencampana/Documents/ship-ready
 ```
 
-Use disposable temp repositories for patch export and PR draft validation. Do not use Fodmapp as a write target.
-
-For source-checkout, from-anywhere, verified local-link, MCP, GUI, npm, and binary distribution decisions, see [DISTRIBUTION.md](DISTRIBUTION.md).
+Use disposable temp repositories for patch export, PR draft, and write validation. Do not use Fodmapp as a write target.
 
 ## Release blockers
 
-No product-scope release blocker is known in the current codebase. The validation matrix passed and the existing safety boundaries were preserved.
+Product safety is not the current blocker. Publish blockers are:
+
+- owner approval for the exact release;
+- `@shipready` scope ownership;
+- `package.json.name` and package-root lookup transition;
+- active trusted-publishing workflow;
+- release notes/changelog;
+- published browser-install and post-publish smoke verification;
+- GitHub tag/release approval.
 
 ## Release recommendation
 
-Recommend presenting ShipReady as a **v0 local/agent release candidate**:
-
-> ShipReady v0 is a local, skill-guided launch-readiness engine for generated websites. It audits, explains, previews, exports, and hands off safe review artifacts while preserving strict mutation boundaries.
-
-Do not describe v0 as hosted SaaS, production SaaS, fully automated SEO repair, deployment automation, live GitHub automation, live Search Console integration, DNS management, or social platform preview authority.
+Present ShipReady as an early-preview local launch-readiness CLI for generated websites. Issues are welcome and support is limited. Do not describe it as hosted SaaS, deployment automation, live GitHub automation, live Search Console integration, DNS management, social platform preview authority, or an unrestricted site editor.
 
 ## Next roadmap
 
-1. Package publish blockers closure, including license approval, npm scope ownership, trusted publishing or token process, browser install verification, local/CI package smoke automation, rollback/deprecate checklist, installed usage docs, and GitHub tag/release policy.
-2. Live GitHub integration with explicit opt-in, auth, Git worktree safety, and mutation tests.
-3. Live Search Console integration with explicit OAuth/token design and read-only scope review.
-4. Hosted SaaS exploration with a separate auth, data custody, and remote execution design.
-5. More framework support without broadening `WRITE_POLICY_V1` by default.
-6. Stronger demo/reporting package for the local/agent release story.
+1. Publish workflow wiring.
+2. Publish execution plan, after workflow/scope blockers are closed.
+3. Manual TUI polish without dependencies.
+4. Live GitHub integration only with explicit opt-in, auth, Git worktree safety, and mutation tests.
+5. Live Search Console integration only with explicit OAuth/token design and read-only scope review.
+6. Hosted SaaS exploration with separate auth, data custody, and remote execution design.
+7. More framework support without broadening `WRITE_POLICY_V1` by default.
 
 ## Recommended immediate next pass
 
-Package publish blockers closure. Decision: `Keep v0 source-checkout-only`. Package publish preparation verified local tarball pack/install smoke, and the package publish decision recommends `@f-campana/shipready` only for a future approved scoped publish path. Neither pass published, authorized `pnpm dlx`, added hosted behavior, changed MCP transport, or altered product write surfaces. Use [PACKAGE_PUBLISH_PREPARATION.md](PACKAGE_PUBLISH_PREPARATION.md), [PACKAGE_PUBLISH_DECISION.md](PACKAGE_PUBLISH_DECISION.md), and [DISTRIBUTION.md](DISTRIBUTION.md) as the evidence base for any future publish work.
+Publish workflow wiring. Confirm/control the `@shipready` npm scope, update package-root lookup for the final package name if needed, draft release notes, and prepare an explicitly gated trusted-publishing workflow. Do not publish until owner approval names the exact package, version, and release mechanism.

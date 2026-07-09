@@ -1,6 +1,8 @@
 # Commands
 
-Run source commands from the repository with `pnpm shipready`. The built binary name is `shipready`, but this checkout does not imply a global install, package publish, or `pnpm dlx` distribution path. ShipReady v0 is repository-local; `pnpm dlx shipready` is not expected to work until a future publish execution is explicitly approved and verified. Package preparation evidence is documented in [PACKAGE_PUBLISH_PREPARATION.md](PACKAGE_PUBLISH_PREPARATION.md), and the package publish decision is documented in [PACKAGE_PUBLISH_DECISION.md](PACKAGE_PUBLISH_DECISION.md).
+Run current commands from the repository with `pnpm shipready`. The built binary name is `shipready`, but this checkout does not imply a global install or published npm package. ShipReady is not yet published. Future intended usage after an approved publish execution pass is `pnpm dlx @shipready/cli audit https://example.com`.
+
+Package preparation evidence is documented in [PACKAGE_PUBLISH_PREPARATION.md](PACKAGE_PUBLISH_PREPARATION.md), the package decision in [PACKAGE_PUBLISH_DECISION.md](PACKAGE_PUBLISH_DECISION.md), blockers in [PACKAGE_PUBLISH_BLOCKERS.md](PACKAGE_PUBLISH_BLOCKERS.md), and publish execution guidance in [PUBLISH_RUNBOOK.md](PUBLISH_RUNBOOK.md).
 
 Repository-local examples:
 
@@ -23,9 +25,9 @@ pnpm link --global
 shipready status
 ```
 
-This is a local symlink to the checkout, not npm distribution. See [DISTRIBUTION.md](DISTRIBUTION.md) for the v0 decision and future publish checklist.
+This is a local symlink to the checkout, not npm distribution. See [DISTRIBUTION.md](DISTRIBUTION.md) for the current distribution decision and future publish checklist.
 
-Rendered checks require Playwright Chromium. Install it explicitly with `pnpm playwright:install` if `doctor` reports it missing; package install no longer runs a `postinstall` browser download.
+Rendered checks require Playwright Chromium. Install it explicitly with `pnpm playwright:install` if `doctor` reports it missing; package install does not run a `postinstall` browser download. Use `--no-render` for lightweight checks when Chromium is unavailable or intentionally skipped.
 
 `--timeout` defaults to `15000` milliseconds. `--no-render` skips Playwright rendering; `--user-agent <ua>` overrides the default user agent.
 

@@ -1,0 +1,52 @@
+name: Package Smoke
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  package-smoke:
+    name: Package smoke
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Test
+        run: pnpm test
+
+      - name: Build
+        run: pnpm build
+
+      - name: Install Playwright Chromium explicitly
+        run: pnpm playwright:install
+
+      - name: Run package smoke
+        run: pnpm package:smoke
+
+      - name: Verify no tarball remains
+        run: |
+          if find . -maxdepth 3 -name "*.tgz" | grep -q .; then
+            find . -maxdepth 3 -name "*.tgz"
+            exit 1
+          fi

@@ -34,8 +34,9 @@ Order remains contractual for future work: harden CLI interfaces before wrapping
 | Terminal output polish | Complete | Polish existing human terminal output with verdict/target/next-action headers, compact findings, safety labels, and source-checkout-friendly plain text. No new dependency, aggregate command, or interactive TUI was added. | Read-only | Distribution |
 | TUI viewer | Complete | Implement a minimal dependency-free terminal review viewer over `ui-report-v1` with CI/non-TTY fallback, optional read-only includes, safety sections, and no JSON contract or write-policy changes. | Read-only | Terminal output polish |
 | TUI framework evaluation | Complete | Evaluate whether to keep the current dependency-free TUI, improve it manually, or adopt Ink/OpenTUI. Recommendation: improve the current TUI manually before any framework adoption. | Read-only/docs | TUI viewer |
-| Package publish preparation | Complete | Add conservative package metadata, a package files whitelist, local packed-tarball smoke evidence, and publish blockers while keeping v0 source-checkout-only. | Read-only/package/docs | Distribution |
-| Package publish decision | Complete | Decide the future npm name/scope recommendation, license blocker, no-postinstall browser story, CLI-only metadata posture, publish authority/process, rollback criteria, and package smoke requirement without publishing. | Read-only/docs | Package publish preparation |
+| Package publish preparation | Complete | Add package metadata, MIT license posture, package files whitelist, local package-smoke automation, and publish blockers while keeping publication blocked. | Read-only/package/docs | Distribution |
+| Package publish decision | Complete | Incorporate owner publish decisions: prefer `@shipready/cli`, keep bin `shipready`, use MIT, keep CLI-only/no-postinstall/private posture, add package-smoke workflow, and keep publish execution blocked. | Read-only/docs | Package publish preparation |
+| Publish readiness closure | Complete | Add blocker ledger, public package safety review, publish runbook, package smoke script, and package-smoke CI workflow without publishing. | Read-only/package/docs/CI | Package publish decision |
 
 ## TUI Feasibility Decision
 
@@ -61,14 +62,15 @@ Do not present v0 as hosted SaaS, production SaaS, fully automated SEO repair, d
 
 These candidates are future work only. None is implemented by the closed roadmap unless explicitly listed above.
 
-1. Package publish blockers closure, using [PACKAGE_PUBLISH_DECISION.md](PACKAGE_PUBLISH_DECISION.md), [PACKAGE_PUBLISH_PREPARATION.md](PACKAGE_PUBLISH_PREPARATION.md), and the checklist in [DISTRIBUTION.md](DISTRIBUTION.md). This is the recommended immediate next pass if publication is being considered, and it should not publish by default.
-2. Manual TUI polish without dependencies, using the evaluation in [TUI_FRAMEWORK_EVALUATION.md](TUI_FRAMEWORK_EVALUATION.md).
-3. Standalone binary exploration, including Playwright/browser, GUI asset, MCP stdio, artifact, and signing implications.
-4. Live GitHub integration with explicit opt-in, GitHub auth/token design, Git worktree safety checks, and mutation tests.
-5. Live Search Console integration with explicit OAuth/token custody design and read-only scope review.
-6. Hosted SaaS exploration with separate auth, data custody, remote execution, billing, and account-boundary design.
-7. More framework support, without broadening `WRITE_POLICY_V1` by default.
-8. Stronger demo/reporting package for the local/agent release story.
+1. Publish workflow wiring: confirm/control `@shipready`, update package-root lookup for the final package name if needed, draft release notes, and prepare an explicitly gated trusted-publishing workflow. This should not publish by default.
+2. Publish execution plan, only after workflow/scope blockers are closed and owner approval names the exact release.
+3. Manual TUI polish without dependencies, using the evaluation in [TUI_FRAMEWORK_EVALUATION.md](TUI_FRAMEWORK_EVALUATION.md).
+4. Standalone binary exploration, including Playwright/browser, GUI asset, MCP stdio, artifact, and signing implications.
+5. Live GitHub integration with explicit opt-in, GitHub auth/token design, Git worktree safety checks, and mutation tests.
+6. Live Search Console integration with explicit OAuth/token custody design and read-only scope review.
+7. Hosted SaaS exploration with separate auth, data custody, remote execution, billing, and account-boundary design.
+8. More framework support, without broadening `WRITE_POLICY_V1` by default.
+9. Stronger demo/reporting package for the local/agent release story.
 
 ## Future-Pass Rules
 

@@ -1,74 +1,68 @@
 # Distribution
 
-Checkpoint date: 2026-07-09
+Checkpoint date: 2026-07-10
 
 ## Current truth
 
-ShipReady v0 is a repository-local tool. Humans and agents run it from a source checkout with pnpm. It is not published to npm, is not globally installed by default, and `pnpm dlx shipready` is not expected to work.
+ShipReady is currently a repository-local tool. Humans and agents run it from this source checkout with pnpm. It is not published to npm, is not globally installed by default, and installed usage remains future-labeled until a publish execution pass is approved and post-publish smoke passes.
 
-The package publish preparation pass in [PACKAGE_PUBLISH_PREPARATION.md](PACKAGE_PUBLISH_PREPARATION.md) verified that ShipReady can be built, packed, installed into a clean temp consumer, and smoked from a local tarball. The package publish decision in [PACKAGE_PUBLISH_DECISION.md](PACKAGE_PUBLISH_DECISION.md) recommends `@f-campana/shipready` only as a future scoped package if publication is later approved. Both are publish-readiness evidence only; neither changes the v0 distribution decision.
-
-The current package metadata contains:
+Current package metadata contains:
 
 - `name`: `shipready`
 - `version`: `0.1.0`
+- `description`: `Local launch-readiness CLI for generated websites.`
 - `private`: `true`
-- `license`: `UNLICENSED`
-- `type`: `module`
+- `license`: `MIT`
 - `bin.shipready`: `./dist/index.js`
 - `repository`: `git+https://github.com/f-campana/ship-ready.git`
+- `bugs`: `https://github.com/f-campana/ship-ready/issues`
+- `homepage`: `https://github.com/f-campana/ship-ready#readme`
 - `engines.node`: `>=20`
-- a `files` whitelist for built output, docs, skill resources, and contract fixtures
-- scripts for `shipready`, `build`, `test`, `typecheck`, contract fixtures, explicit Playwright install, and demo tooling
-- `packageManager`: `pnpm@10.28.2`
+- `files`: focused whitelist for built output, license, docs, skill resources, and contract fixtures
+- no `main` or `exports`
+- no `postinstall`
 
-The current package metadata does not contain `main` or `exports` because ShipReady does not claim a supported import API. There is no `pnpm-workspace.yaml` in this checkout. The build output is `dist/index.js` plus `dist/index.d.ts`. There is no `postinstall` browser download; run `pnpm playwright:install` explicitly when `doctor` reports a missing Chromium executable.
+Preferred future package: `@shipready/cli`.
+
+Fallback package: `@f-campana/shipready`.
+
+Preferred future command after publication:
+
+```bash
+pnpm dlx @shipready/cli audit https://example.com
+```
+
+Do not claim this works yet.
 
 ## User-facing problem
 
-Users can reasonably try:
-
-```bash
-pnpm shipready audit https://imageforge.dev
-```
-
-from outside the checkout and hit pnpm's package-manifest requirement for the current directory. They can also try:
-
-```bash
-pnpm dlx shipready audit https://imageforge.dev
-```
-
-and fail because ShipReady is not published as an npm package. A `bin` field in the local package is not enough to make `pnpm dlx` or global install workflows work.
+Early users need a simple command eventually, but the public package is not live. A local `bin` field does not make `pnpm dlx` work. The current trustworthy path remains source checkout, local link for developers, or packed tarball smoke for release validation.
 
 ## Goals
 
-- Make source-checkout usage impossible to miss.
-- Give humans and agents a reliable from-anywhere command form.
-- Separate verified developer-local linking from npm distribution.
-- Document what must be true before npm, `pnpm dlx`, standalone binaries, MCP packaging, or GUI packaging can be claimed.
-- Preserve the current local/agent v0 safety boundary.
+- Make current source-checkout usage clear.
+- Keep future npm usage visible but labeled as future.
+- Preserve CLI-only package shape.
+- Document why `@shipready/cli` is preferred and why unscoped/ImageForge names are avoided.
+- Keep browser install explicit.
+- Keep package smoke automation separate from normal tests.
+- Preserve safety boundaries and avoid publish execution.
 
 ## Non-goals
 
 - Publish to npm.
-- Create a GitHub release.
-- Upload release artifacts.
+- Create a GitHub release or tag.
+- Upload artifacts.
 - Build standalone binaries.
-- Add hosted SaaS behavior.
-- Add remote MCP transport.
-- Add auto-update behavior.
-- Add telemetry.
-- Add auth, accounts, billing, OAuth, token storage, or package-publish automation.
-- Add live GitHub, deployment, DNS provider, Search Console, social platform, or provider mutation behavior.
+- Add hosted SaaS behavior, remote MCP, auto-update, telemetry, auth/accounts/billing, OAuth/token storage, provider writes, live GitHub behavior, deployment, live Search Console, social platform APIs, or DNS writes.
 - Broaden `WRITE_POLICY_V1`.
-- Change product safety behavior.
 
 ## Options considered
 
-Option A - Source-checkout-only v0:
+Option A - Source-checkout-only current usage:
 
 ```bash
-cd /path/to/ship-ready
+cd /Users/fabiencampana/Documents/ship-ready
 pnpm install
 pnpm shipready status
 pnpm shipready audit https://example.com
@@ -77,50 +71,57 @@ pnpm shipready audit https://example.com
 From anywhere:
 
 ```bash
-pnpm --dir /path/to/ship-ready shipready audit https://example.com
+pnpm --dir /Users/fabiencampana/Documents/ship-ready shipready audit https://example.com
 ```
 
-Pros: lowest risk, matches current behavior, avoids new packaging/security surface, works well for internal dogfood and agent use.
-
-Cons: not friendly for normal users, `pnpm dlx` does not work, and users cannot treat ShipReady as a normal installed CLI.
+Decision: current supported usage.
 
 Option B - Local developer link:
 
 ```bash
-cd /path/to/ship-ready
+cd /Users/fabiencampana/Documents/ship-ready
 pnpm install
 pnpm build
 pnpm link --global
 shipready status
 ```
 
-This was verified in the current checkout after `pnpm build`: `shipready status --json` and `shipready --version` worked outside the repository. This is a developer-local linked command, not npm distribution. It depends on the user's pnpm global bin setup and the linked checkout remaining present.
+Decision: acceptable developer-local convenience, not distribution.
 
-Option C - npm package / pnpm dlx:
+Option C - Public npm package:
 
-Future execution only. Do not publish in v0. The package preparation pass has added conservative metadata, a reviewed `files` whitelist, and local packed-tarball smoke evidence. The package publish decision recommends `@f-campana/shipready` with bin `shipready` if publication is later approved, keeps `UNLICENSED` as a blocker, chooses no `postinstall`, and keeps CLI-only metadata without `main`/`exports`. Before this path can be claimed, ShipReady still needs explicit publish authorization, approved license, npm scope ownership confirmation, trusted-publishing or token handling, local/CI packed-package smoke automation, installed-usage docs, browser install verification for npm and `pnpm dlx`, rollback planning, and post-publish smoke checks.
+Preferred future:
+
+```bash
+pnpm dlx @shipready/cli audit https://example.com
+```
+
+Decision: future execution only. Requires owner approval, `@shipready` scope control, package-root lookup update, `private` removal approval, trusted-publishing wiring, release notes, package safety review, package smoke, and post-publish smoke.
 
 Option D - Standalone binary:
 
-Future exploration only. This path would need single-file or platform-specific build decisions, Playwright/browser handling, GUI static asset inclusion, MCP stdio behavior, release artifact generation, checksums, and later codesigning/notarization where relevant. Do not implement binary packaging for v0.
+Decision: future exploration only.
 
 Option E - Hosted/local app wrapper:
 
-Future only. A hosted or app-wrapped experience would require separate product, auth, data custody, remote workspace, billing, update, telemetry, and security designs. Do not implement it for v0.
+Decision: future exploration only; not part of npm publish readiness.
 
 ## Recommendation
 
-ShipReady v0 remains source-checkout-only. Document `pnpm --dir /path/to/ship-ready ...` as the supported from-anywhere usage. Document `pnpm link --global` only as a verified developer-local convenience after `pnpm build`. Treat npm, `pnpm dlx`, standalone binaries, hosted app wrappers, remote MCP, and package auto-update behavior as future work.
+ShipReady remains repository-local until a publish execution pass is explicitly approved. Prepare for `@shipready/cli` but keep current docs honest: source checkout works now; installed npm usage is future.
 
 ## Source-checkout usage
 
-Current v0 usage:
+Current usage:
 
 ```bash
 cd /Users/fabiencampana/Documents/ship-ready
 pnpm install
 pnpm shipready status
+pnpm shipready doctor
 pnpm shipready audit https://example.com
+pnpm shipready audit https://example.com --no-render --json
+pnpm shipready tui --url https://example.com
 ```
 
 From anywhere:
@@ -130,13 +131,17 @@ pnpm --dir /Users/fabiencampana/Documents/ship-ready shipready status
 pnpm --dir /Users/fabiencampana/Documents/ship-ready shipready audit https://example.com
 ```
 
-Use this form for humans and agents that are not already inside the checkout. It avoids relying on the caller's current directory, global pnpm links, or npm publication.
+Rendered checks require Playwright Chromium:
 
-Human terminal output is optimized for this source-checkout flow. It is plain text with no ANSI color requirement, so `pnpm --dir /Users/fabiencampana/Documents/ship-ready shipready ...` remains usable from other directories, CI logs, redirected files, and agent terminals. The read-only `tui` command is also repository-local; in CI or non-TTY streams it prints the same plain `ui-report` summary instead of entering raw terminal mode. This terminal review work does not add an installed CLI, `pnpm dlx` path, standalone binary, hosted app, remote MCP transport, aggregate `review` command, or package-publish behavior.
+```bash
+pnpm playwright:install
+```
+
+Use `--no-render` for lightweight checks when Chromium is not installed or not desired.
 
 ## Local link / global developer usage
 
-Verified developer-local path:
+Developer-local link usage:
 
 ```bash
 cd /Users/fabiencampana/Documents/ship-ready
@@ -144,80 +149,73 @@ pnpm install
 pnpm build
 pnpm link --global
 shipready status
-shipready audit https://example.com
 ```
 
-Use this only when a developer explicitly wants a local global command backed by this checkout. It is not npm distribution, does not prove package publish readiness, and should not be used in docs or reports where the reader may assume a published CLI.
-
-If you just created this local link and need to remove it:
-
-```bash
-pnpm remove --global shipready
-```
+This is a symlink to the checkout. It is not npm publication and should not be used as evidence that public installed usage works.
 
 ## npm / pnpm dlx readiness
 
-ShipReady is not ready for npm publication or `pnpm dlx` usage in v0.
+ShipReady is not yet ready to claim npm installed usage.
 
-Current blockers and unknowns:
+Prepared:
 
-- `private` is `true`.
-- Package name ownership and availability are not decided here.
-- Package license is currently `UNLICENSED`; a publishable license decision is not approved.
-- `main` and `exports` remain absent because no supported import API is claimed.
-- `bin.shipready` points to the built CLI and local tarball smoke passed, but packed-tarball behavior has not been accepted as a release path.
-- Playwright Chromium installation and cache behavior need explicit npm and `pnpm dlx` docs.
-- Publish credentials, npm token handling, CI/release workflow, and rollback plan are not designed.
-- Public docs must separate installed usage from source-checkout usage before publish.
+- MIT license and `LICENSE`.
+- npm-facing description, issues URL, homepage, repository, keywords, and engines.
+- Preferred package direction: `@shipready/cli`.
+- Fallback package direction: `@f-campana/shipready`.
+- `pnpm package:smoke`.
+- Pull-request/manual package-smoke workflow.
+- Public package safety review checklist.
+- Publish runbook.
 
-Do not claim `pnpm dlx shipready ...` works until the package is published and verified from a clean environment.
+Blocked:
+
+- `private` remains `true`.
+- `@shipready` scope ownership is not confirmed.
+- Local npm auth returned `E401`.
+- `package.json.name` remains `shipready` because package-root lookup expects it.
+- Active trusted-publishing workflow is not wired.
+- Release notes/changelog are not prepared.
+- Post-publish smoke cannot run yet.
+
+Do not claim installed usage works until publication and post-publish smoke pass.
 
 ## Standalone binary readiness
 
-Standalone binaries are not implemented for v0. A future pass should evaluate:
-
-- target platforms and architectures;
-- whether to bundle or separately install Playwright browsers;
-- whether GUI HTML/CSS/JS, docs, and contract fixtures are embedded or external;
-- MCP stdio startup behavior from a binary;
-- artifact checksums and provenance;
-- upgrade and rollback story;
-- macOS codesigning/notarization and Windows signing requirements if distributed beyond internal dogfood.
+Standalone binaries are not implemented. A future pass would need browser handling, GUI assets, MCP stdio behavior, checksums, signing, and release artifact policy.
 
 ## MCP installation considerations
 
-For v0, launch MCP from the source checkout:
+For current usage, launch MCP from the source checkout:
 
 ```bash
 pnpm --dir /Users/fabiencampana/Documents/ship-ready --silent shipready mcp --allow-root /path/to/repo
 ```
 
-`--silent` matters for stdio MCP because package-manager script output must not appear on stdout before or during MCP JSON-RPC traffic. MCP remains local stdio-only. There is no remote MCP transport, hosted MCP endpoint, token-based MCP auth, or arbitrary write path.
+`--silent` matters for stdio MCP because package-manager output must not corrupt JSON-RPC traffic. MCP remains local stdio-only.
 
 ## GUI launch considerations
 
-For v0, launch the GUI from the source checkout:
+For current usage, launch the GUI from the source checkout:
 
 ```bash
 pnpm --dir /Users/fabiencampana/Documents/ship-ready shipready gui
 ```
 
-The GUI is loopback-only and local. It is not hosted SaaS, has no accounts, no remote workspace, no auth, no billing, no telemetry, no deployment controls, and no write endpoint. `POST /api/fix` remains absent and must return `404`.
+The GUI is loopback-only and read-only. `POST /api/fix` remains absent and must return `404`.
 
 ## Security and mutation boundaries
 
-This distribution decision does not change product behavior.
+Distribution work does not change product behavior:
 
 - No npm publish.
-- No GitHub release.
-- No artifact upload.
+- No GitHub release, tag, or upload.
 - No hosted behavior.
 - No remote MCP.
 - No telemetry.
 - No auth, accounts, billing, OAuth, or token storage.
 - No live GitHub behavior.
-- No Git command execution in target repositories.
-- No branch, commit, push, or pull request creation in target repositories.
+- No target-repo Git command execution, branch creation, commit, push, or PR creation.
 - No deployment behavior.
 - No DNS writes.
 - No live Search Console.
@@ -227,25 +225,21 @@ This distribution decision does not change product behavior.
 
 ## Release checklist before publishing
 
-Before npm publication or an installed CLI claim:
+Before npm publication or installed CLI claims:
 
-- Confirm package name availability, ownership, and npm scope. The current recommended future scoped name is `@f-campana/shipready`, but registry state must be rechecked.
-- Decide the publish license; the current package metadata is `UNLICENSED`.
-- Confirm repository and issue metadata.
-- Confirm `engines` and supported Node versions.
-- Maintain the reviewed `files` whitelist that includes built CLI output, required docs, fixtures, GUI assets, and skills, and excludes secrets, local validation artifacts, local paths, and development-only files.
-- Confirm `bin.shipready` points to the built CLI in a packed package.
-- Decide `main` and `exports`, or explicitly document why CLI-only distribution omits them.
-- Verify the build includes GUI assets, canonical docs, contract fixtures, and skill content needed by doctor/MCP.
-- Define Playwright Chromium install/cache behavior for npm, CI, and `pnpm dlx`.
-- Verify MCP stdio launch from a packed package, including `--silent` guidance where a package manager is involved.
-- Smoke test from a packed tarball in a clean temporary directory: `shipready --version`, `shipready status --json`, `shipready doctor --json`, `shipready audit https://example.com --json`, `shipready gui` startup, and `shipready mcp --allow-root <temp-repo>`.
-- Confirm no secrets, `.env`, local absolute paths, validation-only artifacts, npm tokens, or private data are in the package.
-- Update docs to distinguish installed CLI usage from source-checkout usage.
-- Confirm claims policy still passes.
-- Define publish authorization, npm token handling or trusted publishing, provenance, rollback, unpublish/deprecate criteria, and post-publish smoke checks.
-- Add repeatable local or CI packed-package smoke automation before publishing.
+- Confirm owner approval for exact package, version, license, and publish mechanism.
+- Confirm `@shipready` scope ownership or choose approved fallback.
+- Update `package.json.name` and package-root lookup together.
+- Remove `private: true` only with explicit approval.
+- Confirm `bin`, `files`, `repository`, `bugs`, `homepage`, `engines`, `license`, and CLI-only `main`/`exports`.
+- Confirm no `postinstall`.
+- Run public package safety review.
+- Run `pnpm test`, `pnpm typecheck`, `pnpm build`, `git diff --check`, `pnpm shipready status --json`, `pnpm shipready doctor --json`, and `pnpm package:smoke`.
+- Inspect package contents for secrets, `.env`, npm tokens, local artifacts, validation media, private data, and generated tarballs.
+- Prepare changelog or release notes.
+- Use trusted publishing if feasible.
+- Run post-publish smoke before updating docs to installed usage.
 
 ## Decision
 
-For ShipReady v0, the supported installation/run model is source checkout plus pnpm. The supported from-anywhere form is `pnpm --dir /Users/fabiencampana/Documents/ship-ready shipready ...`. A verified local developer link is acceptable for developer convenience after `pnpm build`, but it is not distribution. npm, `pnpm dlx`, standalone binaries, hosted wrappers, remote MCP, auto-update behavior, and package-publish automation remain future work. If npm publication is later approved, the current recommendation is a scoped package, `@f-campana/shipready`, after the blockers in [PACKAGE_PUBLISH_DECISION.md](PACKAGE_PUBLISH_DECISION.md) are closed.
+Current distribution remains source checkout plus pnpm. Future public npm direction is `@shipready/cli` with bin `shipready`, MIT license, early-preview positioning, explicit browser install, no `postinstall`, CLI-only metadata, and trusted publishing if feasible. Actual publication remains blocked.
