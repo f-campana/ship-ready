@@ -8,7 +8,7 @@ For an agent-ready operating workflow, use the repository-local [ShipReady Launc
 
 ShipReady is a **v0 local/agent release candidate** after the original 18-pass roadmap. Implemented: read-only `status` and `doctor` diagnostics, CLI audit and repo inspection, polished terminal review output for existing human commands, a read-only terminal review viewer (`tui`) with CI/non-TTY fallback, read-only bounded multi-page crawl, the read-only social preview simulator, the read-only generated-site implementation smell detector, fix planning, dry-run previews, review-only patch export, review-only GitHub PR draft handoff, guarded creation-only writes, a read-only post-write recheck, UI and static HTML reports, a local read-only review cockpit GUI, a local stdio MCP server, Fodmapp demo tooling, a deterministic mock-backed Search Console status prototype, and read-only DNS readiness status. MCP exposes fifteen read-only tools and exactly one guarded write tool for the same creation-only crawl-file policy. A new aggregate `review` command was not added. Live GitHub PR creation, Git command execution, branch creation, commits, pushes, patch application, exhaustive site crawling, monitoring, authorship identification, smell-detector auto-fixes, social platform APIs, live Search Console/OAuth, DNS provider writes/integrations, deployment automation/provider integrations, accounts, billing, hosted SaaS, and remote MCP are not built.
 
-Current v0 usage is repository-local. ShipReady is not yet published to npm and `pnpm dlx shipready` is not expected to work. A package preparation pass has made the project packable and locally smoke-testable from a tarball without authorizing publication; see [docs/PACKAGE_PUBLISH_PREPARATION.md](docs/PACKAGE_PUBLISH_PREPARATION.md). See [docs/DISTRIBUTION.md](docs/DISTRIBUTION.md) for the distribution decision, source-checkout commands, verified developer-local link path, and future publish checklist. See [docs/RELEASE_READINESS.md](docs/RELEASE_READINESS.md) for the release-readiness checkpoint, command matrix, contract matrix, MCP/GUI boundaries, validation checklist, and next roadmap.
+Current v0 usage is repository-local. ShipReady is not yet published to npm and `pnpm dlx shipready` is not expected to work. A package preparation pass has made the project packable and locally smoke-testable from a tarball without authorizing publication; see [docs/PACKAGE_PUBLISH_PREPARATION.md](docs/PACKAGE_PUBLISH_PREPARATION.md). The package publish decision keeps publication blocked, recommends `@f-campana/shipready` only for a future approved scoped publish path, and preserves no-`postinstall`/CLI-only metadata decisions; see [docs/PACKAGE_PUBLISH_DECISION.md](docs/PACKAGE_PUBLISH_DECISION.md). See [docs/DISTRIBUTION.md](docs/DISTRIBUTION.md) for the distribution decision, source-checkout commands, verified developer-local link path, and future publish checklist. See [docs/RELEASE_READINESS.md](docs/RELEASE_READINESS.md) for the release-readiness checkpoint, command matrix, contract matrix, MCP/GUI boundaries, validation checklist, and next roadmap.
 
 ## Repository-local usage
 
@@ -100,12 +100,13 @@ See [docs/DEMO.md](docs/DEMO.md) for provenance, reproduction commands, and reco
 8. [Release readiness](docs/RELEASE_READINESS.md) — v0 local/agent release checkpoint, matrices, validation, and next roadmap.
 9. [Distribution](docs/DISTRIBUTION.md) — source-checkout v0 decision, local-link guidance, and future publish checklist.
 10. [Package publish preparation](docs/PACKAGE_PUBLISH_PREPARATION.md) — package metadata audit, files whitelist, tarball smoke results, and publish blockers.
-11. [Status](docs/STATUS.md) — implemented scope, omissions, and next pass.
-12. [Roadmap](docs/ROADMAP.md) — completed original roadmap and future candidates.
-13. [Local-first GUI spec](docs/LOCAL_FIRST_GUI_SPEC.md) — canonical GUI direction.
-14. [Search Console readiness spec](docs/SEARCH_CONSOLE_READINESS_SPEC.md) — mock prototype contract and deferred live OAuth/provider boundary.
-15. [DNS readiness spec](docs/DNS_READINESS_SPEC.md) — read-only DNS status checks and DNS claim boundaries.
-16. [Post-write recheck](docs/POST_WRITE_RECHECK.md) — external deployment handoff and conservative live verification.
+11. [Package publish decision](docs/PACKAGE_PUBLISH_DECISION.md) — future package name recommendation, license blocker, browser install, authority, rollback, and smoke decisions.
+12. [Status](docs/STATUS.md) — implemented scope, omissions, and next pass.
+13. [Roadmap](docs/ROADMAP.md) — completed original roadmap and future candidates.
+14. [Local-first GUI spec](docs/LOCAL_FIRST_GUI_SPEC.md) — canonical GUI direction.
+15. [Search Console readiness spec](docs/SEARCH_CONSOLE_READINESS_SPEC.md) — mock prototype contract and deferred live OAuth/provider boundary.
+16. [DNS readiness spec](docs/DNS_READINESS_SPEC.md) — read-only DNS status checks and DNS claim boundaries.
+17. [Post-write recheck](docs/POST_WRITE_RECHECK.md) — external deployment handoff and conservative live verification.
 
 ## What ShipReady is not
 

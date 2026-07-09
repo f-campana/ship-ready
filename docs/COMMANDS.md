@@ -1,6 +1,6 @@
 # Commands
 
-Run source commands from the repository with `pnpm shipready`. The built binary name is `shipready`, but this checkout does not imply a global install, package publish, or `pnpm dlx` distribution path. ShipReady v0 is repository-local; `pnpm dlx shipready` is not expected to work until a future publish decision approves and verifies it. Package preparation evidence is documented in [PACKAGE_PUBLISH_PREPARATION.md](PACKAGE_PUBLISH_PREPARATION.md).
+Run source commands from the repository with `pnpm shipready`. The built binary name is `shipready`, but this checkout does not imply a global install, package publish, or `pnpm dlx` distribution path. ShipReady v0 is repository-local; `pnpm dlx shipready` is not expected to work until a future publish execution is explicitly approved and verified. Package preparation evidence is documented in [PACKAGE_PUBLISH_PREPARATION.md](PACKAGE_PUBLISH_PREPARATION.md), and the package publish decision is documented in [PACKAGE_PUBLISH_DECISION.md](PACKAGE_PUBLISH_DECISION.md).
 
 Repository-local examples:
 

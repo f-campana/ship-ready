@@ -2,7 +2,7 @@
 
 Checkpoint date: 2026-07-09
 
-ShipReady remains a **v0 local/agent release candidate** and **source-checkout-only**. This pass prepares and smokes a local tarball so future npm or `pnpm dlx shipready` claims can be decided from evidence. It does not authorize publication.
+ShipReady remains a **v0 local/agent release candidate** and **source-checkout-only**. This pass prepares and smokes a local tarball so future npm or `pnpm dlx shipready` claims can be decided from evidence. It does not authorize publication. The follow-up name, license, browser, authority, and process decision is documented in [PACKAGE_PUBLISH_DECISION.md](PACKAGE_PUBLISH_DECISION.md).
 
 ## Current status
 
@@ -238,7 +238,7 @@ Results recorded during this pass:
 ## Remaining publish blockers
 
 - `private` remains `true`; publishing is intentionally disabled.
-- npm package name availability and ownership are not decided.
+- npm package name availability was checked in [PACKAGE_PUBLISH_DECISION.md](PACKAGE_PUBLISH_DECISION.md), and `@f-campana/shipready` is the recommended future scoped package if publication is later approved. Availability remains time-bound and scope ownership is not confirmed.
 - Open-source/commercial license choice is not decided; package currently says `UNLICENSED`.
 - Publish authorization, npm token handling, provenance, rollback, unpublish/deprecate criteria, and post-publish smoke process are not designed.
 - Installed-usage docs are not written because v0 remains source-checkout-only.
@@ -254,6 +254,6 @@ Do not claim `pnpm dlx shipready`, npm global install, npm package availability,
 
 ## Next step
 
-Recommended next pass: **npm package name / publish authorization decision**.
+Recommended next pass: **Package publish blockers closure**.
 
-That pass should decide the package name/scope, license, publish authority, npm token/provenance process, browser install instructions, CI tarball smoke, rollback criteria, and whether to keep CLI-only metadata without `main`/`exports`.
+That pass should close or explicitly defer the blockers from [PACKAGE_PUBLISH_DECISION.md](PACKAGE_PUBLISH_DECISION.md): license approval, npm scope ownership, exact package metadata change plan, trusted-publishing or token process, local/CI packed-package smoke automation, installed usage docs, browser install verification, rollback/deprecate checklist, and GitHub tag/release policy. It should not publish by default.

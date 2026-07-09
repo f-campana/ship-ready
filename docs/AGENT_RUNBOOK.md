@@ -42,17 +42,18 @@ For launch-readiness operations, start with the repository-local [ShipReady Laun
 4. `docs/STATUS.md`
 5. `docs/RELEASE_READINESS.md`
 6. `docs/DISTRIBUTION.md`
-7. `docs/COMMANDS.md`
-8. `docs/CONTRACTS.md`
-9. `docs/MCP_PLAN.md` before any MCP work
-10. `docs/WRITE_POLICY_V1.md` for any fix or write work
-11. `docs/CLAIMS_POLICY.md` for UI, demo, report, or public copy
-12. `docs/SEARCH_CONSOLE_READINESS_SPEC.md` before any Search Console or Google OAuth work
-13. `docs/DNS_READINESS_SPEC.md` before any DNS/domain-readiness work
-14. `docs/POST_WRITE_RECHECK.md` before post-write follow-up work
-15. `docs/LOCAL_FIRST_GUI_SPEC.md` for GUI direction
-16. `docs/DEMO.md` for demo work
-17. `docs/ROADMAP.md` for sequencing
+7. `docs/PACKAGE_PUBLISH_DECISION.md` before any package publish planning
+8. `docs/COMMANDS.md`
+9. `docs/CONTRACTS.md`
+10. `docs/MCP_PLAN.md` before any MCP work
+11. `docs/WRITE_POLICY_V1.md` for any fix or write work
+12. `docs/CLAIMS_POLICY.md` for UI, demo, report, or public copy
+13. `docs/SEARCH_CONSOLE_READINESS_SPEC.md` before any Search Console or Google OAuth work
+14. `docs/DNS_READINESS_SPEC.md` before any DNS/domain-readiness work
+15. `docs/POST_WRITE_RECHECK.md` before post-write follow-up work
+16. `docs/LOCAL_FIRST_GUI_SPEC.md` for GUI direction
+17. `docs/DEMO.md` for demo work
+18. `docs/ROADMAP.md` for sequencing
 
 ## Before any implementation
 
@@ -84,7 +85,7 @@ For GitHub PR draft work, use `pnpm shipready github-pr-draft <path> --url <url>
 
 For GUI work, preserve the Pass 16 local review cockpit. The browser client fetches only `POST /api/review`; `POST /api/ui-report` remains a compatibility endpoint. Extra evidence sections are on-demand and read-only: social preview approximation, bounded crawl sample, generated-site smell signals, DNS status, Search Console mock status, and post-deploy recheck. The GUI may copy guarded CLI commands but must not execute `fix --write`, call `shipready.write_safe_crawl_files`, deploy, run Git/GitHub behavior, write DNS, call live Search Console or social platform APIs, or write metadata/content/JSON-LD/package/config files. `POST /api/fix` must remain absent and return `404`.
 
-For distribution or installation questions, read [DISTRIBUTION.md](DISTRIBUTION.md). V0 remains source-checkout-only. Do not recommend `pnpm dlx shipready` or npm/global install as supported distribution. Use `pnpm --dir /Users/fabiencampana/Documents/ship-ready shipready ...` from outside the checkout. `pnpm link --global` is verified only as a developer-local symlink after `pnpm build`.
+For distribution or installation questions, read [DISTRIBUTION.md](DISTRIBUTION.md). For package publish planning, read [PACKAGE_PUBLISH_DECISION.md](PACKAGE_PUBLISH_DECISION.md). V0 remains source-checkout-only. Do not recommend `pnpm dlx shipready` or npm/global install as supported distribution. Use `pnpm --dir /Users/fabiencampana/Documents/ship-ready shipready ...` from outside the checkout. `pnpm link --global` is verified only as a developer-local symlink after `pnpm build`. If npm publication is later approved, the current recommendation is `@f-campana/shipready` with bin `shipready`, no `postinstall`, CLI-only metadata, an approved license, and repeatable packed-package smoke before publish.
 
 For terminal output work, preserve JSON contracts and keep changes in human formatters or the read-only TUI viewer unless a deliberate versioned contract decision is made. Current v0 human output is a plain-text terminal review experience: target/status/next action first, compact top findings, summarized passed checks, truncated long values, visible safety labels, and `--json` pointers. The `tui` command is implemented as a dependency-free read-only viewer over `ui-report-v1`, with CI/non-TTY fallback to plain output and no JSON contract. No aggregate `review` command is implemented; treat it as future until separately designed and tested.
 

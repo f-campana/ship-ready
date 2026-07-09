@@ -35,6 +35,7 @@ Order remains contractual for future work: harden CLI interfaces before wrapping
 | TUI viewer | Complete | Implement a minimal dependency-free terminal review viewer over `ui-report-v1` with CI/non-TTY fallback, optional read-only includes, safety sections, and no JSON contract or write-policy changes. | Read-only | Terminal output polish |
 | TUI framework evaluation | Complete | Evaluate whether to keep the current dependency-free TUI, improve it manually, or adopt Ink/OpenTUI. Recommendation: improve the current TUI manually before any framework adoption. | Read-only/docs | TUI viewer |
 | Package publish preparation | Complete | Add conservative package metadata, a package files whitelist, local packed-tarball smoke evidence, and publish blockers while keeping v0 source-checkout-only. | Read-only/package/docs | Distribution |
+| Package publish decision | Complete | Decide the future npm name/scope recommendation, license blocker, no-postinstall browser story, CLI-only metadata posture, publish authority/process, rollback criteria, and package smoke requirement without publishing. | Read-only/docs | Package publish preparation |
 
 ## TUI Feasibility Decision
 
@@ -60,7 +61,7 @@ Do not present v0 as hosted SaaS, production SaaS, fully automated SEO repair, d
 
 These candidates are future work only. None is implemented by the closed roadmap unless explicitly listed above.
 
-1. npm package name / publish authorization decision, using [PACKAGE_PUBLISH_PREPARATION.md](PACKAGE_PUBLISH_PREPARATION.md) and the checklist in [DISTRIBUTION.md](DISTRIBUTION.md). This is the recommended immediate next pass if publication is being considered.
+1. Package publish blockers closure, using [PACKAGE_PUBLISH_DECISION.md](PACKAGE_PUBLISH_DECISION.md), [PACKAGE_PUBLISH_PREPARATION.md](PACKAGE_PUBLISH_PREPARATION.md), and the checklist in [DISTRIBUTION.md](DISTRIBUTION.md). This is the recommended immediate next pass if publication is being considered, and it should not publish by default.
 2. Manual TUI polish without dependencies, using the evaluation in [TUI_FRAMEWORK_EVALUATION.md](TUI_FRAMEWORK_EVALUATION.md).
 3. Standalone binary exploration, including Playwright/browser, GUI asset, MCP stdio, artifact, and signing implications.
 4. Live GitHub integration with explicit opt-in, GitHub auth/token design, Git worktree safety checks, and mutation tests.

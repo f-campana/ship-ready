@@ -6,7 +6,7 @@ Checkpoint date: 2026-07-09
 
 ShipReady v0 is a repository-local tool. Humans and agents run it from a source checkout with pnpm. It is not published to npm, is not globally installed by default, and `pnpm dlx shipready` is not expected to work.
 
-The package publish preparation pass in [PACKAGE_PUBLISH_PREPARATION.md](PACKAGE_PUBLISH_PREPARATION.md) verified that ShipReady can be built, packed, installed into a clean temp consumer, and smoked from a local tarball. That is publish-readiness evidence only; it does not change the v0 distribution decision.
+The package publish preparation pass in [PACKAGE_PUBLISH_PREPARATION.md](PACKAGE_PUBLISH_PREPARATION.md) verified that ShipReady can be built, packed, installed into a clean temp consumer, and smoked from a local tarball. The package publish decision in [PACKAGE_PUBLISH_DECISION.md](PACKAGE_PUBLISH_DECISION.md) recommends `@f-campana/shipready` only as a future scoped package if publication is later approved. Both are publish-readiness evidence only; neither changes the v0 distribution decision.
 
 The current package metadata contains:
 
@@ -98,7 +98,7 @@ This was verified in the current checkout after `pnpm build`: `shipready status 
 
 Option C - npm package / pnpm dlx:
 
-Future decision only. Do not publish in v0. The package preparation pass has added conservative metadata, a reviewed `files` whitelist, and local packed-tarball smoke evidence. Before this path can be claimed, ShipReady still needs a package-name and ownership decision, explicit publish authorization, license decision, npm token/provenance handling, rollback planning, installed-usage docs, browser install guidance for npm and `pnpm dlx`, and post-publish smoke checks.
+Future execution only. Do not publish in v0. The package preparation pass has added conservative metadata, a reviewed `files` whitelist, and local packed-tarball smoke evidence. The package publish decision recommends `@f-campana/shipready` with bin `shipready` if publication is later approved, keeps `UNLICENSED` as a blocker, chooses no `postinstall`, and keeps CLI-only metadata without `main`/`exports`. Before this path can be claimed, ShipReady still needs explicit publish authorization, approved license, npm scope ownership confirmation, trusted-publishing or token handling, local/CI packed-package smoke automation, installed-usage docs, browser install verification for npm and `pnpm dlx`, rollback planning, and post-publish smoke checks.
 
 Option D - Standalone binary:
 
@@ -229,7 +229,7 @@ This distribution decision does not change product behavior.
 
 Before npm publication or an installed CLI claim:
 
-- Confirm package name availability, ownership, and npm scope.
+- Confirm package name availability, ownership, and npm scope. The current recommended future scoped name is `@f-campana/shipready`, but registry state must be rechecked.
 - Decide the publish license; the current package metadata is `UNLICENSED`.
 - Confirm repository and issue metadata.
 - Confirm `engines` and supported Node versions.
@@ -243,8 +243,9 @@ Before npm publication or an installed CLI claim:
 - Confirm no secrets, `.env`, local absolute paths, validation-only artifacts, npm tokens, or private data are in the package.
 - Update docs to distinguish installed CLI usage from source-checkout usage.
 - Confirm claims policy still passes.
-- Define publish authorization, npm token handling, provenance, rollback, unpublish/deprecate criteria, and post-publish smoke checks.
+- Define publish authorization, npm token handling or trusted publishing, provenance, rollback, unpublish/deprecate criteria, and post-publish smoke checks.
+- Add repeatable local or CI packed-package smoke automation before publishing.
 
 ## Decision
 
-For ShipReady v0, the supported installation/run model is source checkout plus pnpm. The supported from-anywhere form is `pnpm --dir /Users/fabiencampana/Documents/ship-ready shipready ...`. A verified local developer link is acceptable for developer convenience after `pnpm build`, but it is not distribution. npm, `pnpm dlx`, standalone binaries, hosted wrappers, remote MCP, auto-update behavior, and package-publish automation remain future work.
+For ShipReady v0, the supported installation/run model is source checkout plus pnpm. The supported from-anywhere form is `pnpm --dir /Users/fabiencampana/Documents/ship-ready shipready ...`. A verified local developer link is acceptable for developer convenience after `pnpm build`, but it is not distribution. npm, `pnpm dlx`, standalone binaries, hosted wrappers, remote MCP, auto-update behavior, and package-publish automation remain future work. If npm publication is later approved, the current recommendation is a scoped package, `@f-campana/shipready`, after the blockers in [PACKAGE_PUBLISH_DECISION.md](PACKAGE_PUBLISH_DECISION.md) are closed.
