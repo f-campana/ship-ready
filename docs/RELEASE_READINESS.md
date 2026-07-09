@@ -12,6 +12,7 @@ ShipReady v0 is a local, skill-guided launch-readiness engine for generated webs
 - MCP second: the local stdio MCP server wraps stable CLI contracts and has exactly one guarded V1 crawl-file write tool.
 - GUI third: the loopback-only review cockpit makes the engine understandable to humans and remains read-only.
 - Terminal review output: existing human CLI commands now start with target/status/next action, summarize passed checks, truncate long values, and show safety labels close to risky-to-misunderstand evidence.
+- TUI viewer: implemented read-only over `ui-report-v1`, with no new dependency, no JSON contract change, optional read-only includes, and plain-output fallback when CI or non-TTY streams are detected.
 - Write policy: `WRITE_POLICY_V1` is canonical and remains limited to creation-only missing robots/sitemap files.
 - Distribution: v0 is source-checkout-only; npm, `pnpm dlx`, standalone binaries, hosted wrappers, remote MCP, and auto-update behavior are not implemented. See [DISTRIBUTION.md](DISTRIBUTION.md).
 - Release posture: ready to present as a v0 local/agent release candidate after the validation matrix in this checkpoint passed.
@@ -22,6 +23,7 @@ ShipReady v0 is a local, skill-guided launch-readiness engine for generated webs
 
 - `status` and `doctor` local diagnostics.
 - Polished terminal review output for existing human CLI commands.
+- Read-only terminal review viewer: `tui`.
 - Single-page public URL audit.
 - Bounded same-origin multi-page crawl.
 - Repository inspection.
@@ -69,6 +71,7 @@ Do not imply `pnpm dlx`, npm publication, or default global installation for thi
 | `smells <path>` | Detect heuristic generated-site implementation signals | Local read-only or optional network read | `shipready.generatedSiteSmells.v1` with `--json` | Optional one-page URL evidence | Bounded repo scan; not authorship proof and no auto-fixes | Implemented |
 | `crawl --url <url>` | Sample a small same-origin set of launch-readiness pages | Network read-only or deterministic mock | `shipready.crawl.v1` with `--json` | Bounded URL/sitemap/link reads | No repo required; not exhaustive, not monitoring, not indexing evidence | Implemented |
 | `ui-report [path] --url <url>` | Normalize URL-only or repo-backed evidence for UI consumers | Network/optional local read-only | `shipready.uiReport.v1` with `--json` | Reads URL | Optional repo read; no writes | Implemented |
+| `tui [path] --url <url>` | Interactive terminal review viewer over `ui-report-v1`, with CI/non-TTY fallback | Network/optional local read-only | None; human-only surface | Reads URL; optional `--include` sections run only when requested | Optional repo read; no writes, no JSON contract changes, no GUI server, no Git/GitHub/deploy/DNS/Search Console mutation | Implemented |
 | `html-report [path] --url <url> --output <file>` | Write a self-contained static HTML review artifact | Explicit report-file write | None | Reads URL | Writes only requested HTML output path; does not mutate inspected repo | Implemented |
 | `gui` | Start local review cockpit | Local HTTP read-only surface | None | GUI-triggered review reads URL/on-demand evidence | Loopback-only; `POST /api/review` and compatibility `POST /api/ui-report`; no write endpoint; `POST /api/fix` returns 404 | Implemented |
 | `mcp --allow-root <path>` | Start local stdio MCP server | Stdio server with read-only tools plus one guarded write tool | Tool outputs preserve named contracts | Tool-dependent | Allowed-root required for repo tools; stdio-only; no remote transport | Implemented |
@@ -160,10 +163,11 @@ Repo-capable tools require allowed-root authorization before local inspection or
 - Bounded crawl is read-only, same-origin, capped, and non-exhaustive.
 - Fodmapp is not a write target for validation or demos.
 - Human terminal output remains plain text with no ANSI dependency; JSON output remains the stable machine boundary.
+- The TUI viewer is a human-only read-only surface. It reuses `ui-report-v1`, starts no GUI server, has no JSON contract, writes nothing, runs optional sections only when requested, and prints the plain UI report instead of entering raw mode in CI or non-TTY streams.
 
 ## Known limitations
 
-- No npm package, `pnpm dlx` path, standalone binary, hosted wrapper, remote MCP transport, auto-update behavior, aggregate `review` command, interactive TUI, or default global install exists.
+- No npm package, `pnpm dlx` path, standalone binary, hosted wrapper, remote MCP transport, auto-update behavior, aggregate `review` command, or default global install exists.
 - No hosted SaaS, accounts, billing, auth, or remote workspace model exists.
 - No live Search Console provider exists.
 - No DNS provider integration or DNS mutation exists.
@@ -206,6 +210,7 @@ cd /Users/fabiencampana/Documents/ship-ready && pnpm shipready audit https://exa
 cd /Users/fabiencampana/Documents/ship-ready && pnpm shipready social-preview --url https://example.com --mock complete --json
 cd /Users/fabiencampana/Documents/ship-ready && pnpm shipready crawl --url https://example.com --mock clean-small-site --json
 cd /Users/fabiencampana/Documents/ship-ready && pnpm shipready smells . --mock clean --json
+cd /Users/fabiencampana/Documents/ship-ready && pnpm shipready tui --url https://example.com
 pnpm --dir /Users/fabiencampana/Documents/ship-ready shipready patch-export <temp-repo> --url https://example.com --stdout
 pnpm --dir /Users/fabiencampana/Documents/ship-ready shipready github-pr-draft <temp-repo> --url https://example.com --stdout
 pnpm --dir /Users/fabiencampana/Documents/ship-ready shipready gui
@@ -230,14 +235,13 @@ Do not describe v0 as hosted SaaS, production SaaS, fully automated SEO repair, 
 
 ## Next roadmap
 
-1. TUI viewer feasibility / implementation for a true interactive terminal interface.
-2. npm/package publish preparation with packed-tarball smoke tests and a reviewed publish checklist.
-3. Live GitHub integration with explicit opt-in, auth, Git worktree safety, and mutation tests.
-4. Live Search Console integration with explicit OAuth/token design and read-only scope review.
-5. Hosted SaaS exploration with a separate auth, data custody, and remote execution design.
-6. More framework support without broadening `WRITE_POLICY_V1` by default.
-7. Stronger demo/reporting package for the local/agent release story.
+1. npm/package publish preparation with packed-tarball smoke tests and a reviewed publish checklist.
+2. Live GitHub integration with explicit opt-in, auth, Git worktree safety, and mutation tests.
+3. Live Search Console integration with explicit OAuth/token design and read-only scope review.
+4. Hosted SaaS exploration with a separate auth, data custody, and remote execution design.
+5. More framework support without broadening `WRITE_POLICY_V1` by default.
+6. Stronger demo/reporting package for the local/agent release story.
 
 ## Recommended immediate next pass
 
-TUI viewer feasibility / implementation. Terminal output polish is complete for the existing human CLI commands without adding dependencies, a new aggregate command, or an interactive TUI. Keep v0 source-checkout-only unless a separate package publish preparation pass completes the checklist in [DISTRIBUTION.md](DISTRIBUTION.md).
+Package publish preparation. Decision: `Implement minimal TUI now`. Terminal output polish is complete and the TUI viewer is implemented as a read-only, dependency-free human layer over `ui-report-v1`, with CI/non-TTY fallback and no JSON contract or write-policy change. Keep v0 source-checkout-only unless a separate package publish preparation pass completes the checklist in [DISTRIBUTION.md](DISTRIBUTION.md).

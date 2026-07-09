@@ -32,6 +32,13 @@ Order remains contractual for future work: harden CLI interfaces before wrapping
 | Closure | Complete | Add the v0 release-readiness checkpoint and align docs/status with current product state. | Read-only/docs | Pass 18 |
 | Distribution | Complete | Decide v0 remains source-checkout-only, document from-anywhere usage, verify developer-local linking, and defer npm/binary/hosted distribution. | Read-only/docs | Closure |
 | Terminal output polish | Complete | Polish existing human terminal output with verdict/target/next-action headers, compact findings, safety labels, and source-checkout-friendly plain text. No new dependency, aggregate command, or interactive TUI was added. | Read-only | Distribution |
+| TUI viewer | Complete | Implement a minimal dependency-free terminal review viewer over `ui-report-v1` with CI/non-TTY fallback, optional read-only includes, safety sections, and no JSON contract or write-policy changes. | Read-only | Terminal output polish |
+
+## TUI Feasibility Decision
+
+Decision: `Implement minimal TUI now`.
+
+The terminal output polish pass already solved the immediate readability issue for non-interactive logs. The TUI implementation shipped only because it stayed small, dependency-free, read-only, testable, backed by `ui-report-v1`, and safe in CI/non-TTY contexts. It does not add a new readiness engine, aggregate `review` command, JSON contract, GUI/browser behavior, write executor, deploy path, Git/GitHub behavior, DNS writes, live Search Console behavior, social platform APIs, telemetry, auth/accounts/billing, remote MCP, or any broadening of `WRITE_POLICY_V1`.
 
 ## V0 Release Position
 
@@ -43,14 +50,13 @@ Do not present v0 as hosted SaaS, production SaaS, fully automated SEO repair, d
 
 These candidates are future work only. None is implemented by the closed roadmap unless explicitly listed above.
 
-1. TUI viewer feasibility / implementation for a true interactive terminal interface, with dependency, non-TTY fallback, accessibility, snapshot, and maintenance review.
-2. npm/package publish preparation with the checklist in [DISTRIBUTION.md](DISTRIBUTION.md), packed-tarball smoke tests, and explicit publish authorization.
-3. Standalone binary exploration, including Playwright/browser, GUI asset, MCP stdio, artifact, and signing implications.
-4. Live GitHub integration with explicit opt-in, GitHub auth/token design, Git worktree safety checks, and mutation tests.
-5. Live Search Console integration with explicit OAuth/token custody design and read-only scope review.
-6. Hosted SaaS exploration with separate auth, data custody, remote execution, billing, and account-boundary design.
-7. More framework support, without broadening `WRITE_POLICY_V1` by default.
-8. Stronger demo/reporting package for the local/agent release story.
+1. npm/package publish preparation with the checklist in [DISTRIBUTION.md](DISTRIBUTION.md), packed-tarball smoke tests, and explicit publish authorization.
+2. Standalone binary exploration, including Playwright/browser, GUI asset, MCP stdio, artifact, and signing implications.
+3. Live GitHub integration with explicit opt-in, GitHub auth/token design, Git worktree safety checks, and mutation tests.
+4. Live Search Console integration with explicit OAuth/token custody design and read-only scope review.
+5. Hosted SaaS exploration with separate auth, data custody, remote execution, billing, and account-boundary design.
+6. More framework support, without broadening `WRITE_POLICY_V1` by default.
+7. Stronger demo/reporting package for the local/agent release story.
 
 ## Future-Pass Rules
 

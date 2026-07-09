@@ -27,16 +27,16 @@ Do not use ShipReady for keyword research, rank tracking, backlink analysis, gen
 | State | Current capability |
 |---|---|
 | Release posture | v0 local/agent release candidate; see [RELEASE_READINESS.md](../../docs/RELEASE_READINESS.md) |
-| Implemented | Single-page audit; bounded multi-page crawl; bounded repo inspection; generated-site implementation smell detector; social preview simulator; planning; dry-run; review-only patch export; review-only GitHub PR draft handoff; status/doctor; versioned JSON; UI and HTML reports; local read-only GUI review cockpit; stdio MCP |
+| Implemented | Single-page audit; bounded multi-page crawl; bounded repo inspection; generated-site implementation smell detector; social preview simulator; planning; dry-run; review-only patch export; review-only GitHub PR draft handoff; status/doctor; versioned JSON; UI and HTML reports; read-only TUI viewer; local read-only GUI review cockpit; stdio MCP |
 | Mock-backed | Search Console status only; no Google OAuth, tokens, or live API calls |
 | Read-only | Audit, bounded crawl, inspection, social preview simulation, planning, dry-run, post-write recheck, UI report, GUI, Search Console mocks, and DNS status; live DNS uses resolver observations only |
 | Write-guarded | CLI and the sole MCP write tool may create only eligible missing robots/sitemap files under `WRITE_POLICY_V1` |
 | Distribution | Source-checkout-only v0; `pnpm --dir /Users/fabiencampana/Documents/ship-ready shipready ...` is the supported from-anywhere form; `pnpm link --global` is developer-local only after `pnpm build` |
-| Future | Interactive TUI viewer, npm/package publish preparation, standalone binary exploration, live GitHub with explicit opt-in, live Search Console with OAuth/token design, hosted SaaS exploration, broader framework support, and stronger demos/reporting |
+| Future | npm/package publish preparation, standalone binary exploration, live GitHub with explicit opt-in, live Search Console with OAuth/token design, hosted SaaS exploration, broader framework support, and stronger demos/reporting |
 
 Never infer future behavior from a roadmap name. A single-page audit covers one page; bounded crawl covers only a small same-origin sample under strict limits. The current social preview simulator is a metadata-based approximation, not platform output.
 
-Default human CLI output is the terminal review experience in v0. It is plain text and should surface target, status, next action, top findings, safety labels, and a `--json` pointer. Use `--json` when a stable contract is needed. Do not infer an aggregate `review` command or interactive TUI; neither is implemented in this pass.
+Default human CLI output is the terminal review experience in v0. It is plain text and should surface target, status, next action, top findings, safety labels, and a `--json` pointer. Use `--json` when a stable contract is needed. The `tui` command is implemented as a read-only terminal review viewer over `ui-report-v1`; it falls back to plain output in CI/non-TTY streams and has no JSON contract. Do not infer an aggregate `review` command; it is not implemented.
 
 ## Run the canonical CLI workflow
 
@@ -61,6 +61,7 @@ pnpm shipready smells <path> --url <url> --json
 pnpm shipready crawl --url <url> --json
 pnpm shipready search-console status --url <url> --json
 pnpm shipready ui-report <path> --url <url> --json
+pnpm shipready tui <path> --url <url>
 pnpm shipready html-report <path> --url <url> --output shipready-report.html
 ```
 
@@ -82,6 +83,7 @@ Do not use `pnpm dlx shipready` for v0. It is not a supported path until a futur
 - Treat `fix --dry-run` as mandatory before a write; it writes nothing.
 - Treat `patch-export` as a review-only dry-run artifact; it does not apply patches, mutate the target repository, commit, push, open pull requests, or deploy.
 - Treat `github-pr-draft` as a review-only PR draft handoff; it did not create a PR, call a GitHub API, run Git commands, create a branch, commit, push, deploy, apply patches, or mutate the target repository.
+- Treat `tui` as a human-only read-only viewer over `ui-report-v1`. It does not write files, start the GUI server, produce JSON, change contracts, apply patches, call Git/GitHub, deploy, write DNS, call live Search Console, call social platform APIs, or broaden `WRITE_POLICY_V1`.
 - Treat JSON `contract` discriminators as versioned public boundaries. See [CONTRACTS.md](../../docs/CONTRACTS.md).
 - Separate safe candidates, review-required changes, manual actions, already-good checks, limitations, and local-versus-live state.
 
@@ -245,12 +247,16 @@ Treat `shipready.write_safe_crawl_files` as the only MCP write tool. Before call
 
 MCP remains stdio-only. Do not add or imply remote transport, arbitrary file writes, client-supplied write paths, detector auto-fixes, patch application, live PR creation, or DNS, Search Console, GitHub, Git, or deployment mutation. Read [MCP_PLAN.md](../../docs/MCP_PLAN.md) for schemas, resources, prompts, and failure behavior.
 
-## Produce GUI and HTML reports
+## Produce TUI, GUI, and HTML reports
 
 ```bash
+pnpm shipready tui <path> --url <url>
+pnpm shipready tui --url <url> --include social-preview,crawl --mock-profile demo
 pnpm --dir /Users/fabiencampana/Documents/ship-ready shipready gui
 pnpm shipready html-report <path> --url <url> --output report.html
 ```
+
+Use `tui` for a local terminal review viewer when a human wants section navigation. It reuses `ui-report-v1`; default mode runs only the base UI report, and optional sections run only when named with `--include`. In CI or non-TTY streams it prints the plain UI report and exits without raw terminal mode.
 
 Use the GUI for local human review. Keep it read-only and preview/copy-only: it writes no project files, and `POST /api/fix` remains unavailable with `404`. The browser client uses `POST /api/review`, while `POST /api/ui-report` remains available for compatibility. The main review loads first; social preview, bounded crawl, generated-site smells, DNS status, Search Console mock status, and recheck are on-demand read-only sections. Treat copied guarded commands and copied PR draft commands as text, not authorization.
 

@@ -126,7 +126,7 @@ pnpm --dir /Users/fabiencampana/Documents/ship-ready shipready audit https://exa
 
 Use this form for humans and agents that are not already inside the checkout. It avoids relying on the caller's current directory, global pnpm links, or npm publication.
 
-Human terminal output is optimized for this source-checkout flow. It is plain text with no ANSI color requirement, so `pnpm --dir /Users/fabiencampana/Documents/ship-ready shipready ...` remains usable from other directories, CI logs, redirected files, and agent terminals. This terminal review polish does not add an installed CLI, `pnpm dlx` path, standalone binary, hosted app, remote MCP transport, aggregate `review` command, or interactive TUI.
+Human terminal output is optimized for this source-checkout flow. It is plain text with no ANSI color requirement, so `pnpm --dir /Users/fabiencampana/Documents/ship-ready shipready ...` remains usable from other directories, CI logs, redirected files, and agent terminals. The read-only `tui` command is also repository-local; in CI or non-TTY streams it prints the same plain `ui-report` summary instead of entering raw terminal mode. This terminal review work does not add an installed CLI, `pnpm dlx` path, standalone binary, hosted app, remote MCP transport, aggregate `review` command, or package-publish behavior.
 
 ## Local link / global developer usage
 

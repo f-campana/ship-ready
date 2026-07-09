@@ -28,14 +28,14 @@ describe("status", () => {
     expect(output).toContain("shipready.write_safe_crawl_files");
     expect(output).toContain("no write endpoint");
     expect(output).toContain("Human CLI output uses verdict/target/next-action headers");
-    expect(output).toContain("Interactive TUI is not implemented in this pass");
+    expect(output).toContain("TUI viewer: implemented read-only");
     expect(output).toContain("Search Console: mock-backed only");
     expect(output).toContain("DNS readiness: read-only resolver evidence");
     expect(output).toContain("Patch export: review-only; not applied");
     expect(output).toContain("GitHub PR draft: draft only");
     expect(output).toContain("Deployment automation, live GitHub integration");
     expect(output).toContain("Distribution: source-checkout-only v0");
-    expect(output).toContain("Next pass: TUI viewer feasibility / implementation");
+    expect(output).toContain("Next pass: Package publish preparation");
   });
 
   it("emits the stable JSON capability and safety contract", async () => {
@@ -78,7 +78,8 @@ describe("status", () => {
       deployProviderIntegrations: "not_implemented",
     });
     expect(status.writePolicy.id).toBe(WRITE_POLICY_V1);
-    expect(status.nextRecommendedPass).toBe("TUI viewer feasibility / implementation");
+    expect(status.capabilities.cli).toContain("tui");
+    expect(status.nextRecommendedPass).toBe("Package publish preparation");
   });
 
   it("stays synchronized with the MCP registry", () => {

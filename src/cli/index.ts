@@ -68,6 +68,11 @@ import {
   formatGithubPrDraftJsonReport,
 } from "../report/formatGithubPrDraftReport";
 import { formatCrawlHuman, formatCrawlJson } from "../report/formatCrawlReport";
+import {
+  parseTuiInclude,
+  parseTuiMockProfile,
+  runTuiCommand,
+} from "../tui/tuiViewer";
 
 const program = new Command();
 
@@ -792,6 +797,58 @@ program
   });
 
 program
+  .command("tui")
+  .description("Open a read-only terminal review viewer; falls back to plain output in CI or non-TTY streams.")
+  .argument("[path]", "Optional local repository path to inspect")
+  .requiredOption("--url <url>", "Public HTTP(S) URL to review")
+  .option("--include <sections>", "Optional read-only sections: social-preview,crawl,smells,dns,search-console,recheck")
+  .option("--mock-profile <profile>", "Use deterministic mock data for optional sections: demo")
+  .option("--no-render", "Skip the Playwright rendered pass")
+  .option("--timeout <ms>", "Network and render timeout in milliseconds", "15000")
+  .option("--user-agent <ua>", "Override the default user agent")
+  .action(async (path: string | undefined, options: TuiCommandOptions) => {
+    const timeoutMs = Number(options.timeout);
+    if (!Number.isFinite(timeoutMs) || timeoutMs <= 0) {
+      writeTypedCommandError(
+        "tui",
+        "invalid_timeout",
+        "Invalid timeout. Provide a positive number of milliseconds.",
+        false,
+        1,
+      );
+      return;
+    }
+
+    const include = parseTuiInclude(options.include);
+    if (include instanceof Error) {
+      writeTypedCommandError("tui", "invalid_mode", include.message, false, 1);
+      return;
+    }
+
+    const mockProfile = parseTuiMockProfile(options.mockProfile);
+    if (mockProfile instanceof Error) {
+      writeTypedCommandError("tui", "invalid_mode", mockProfile.message, false, 1);
+      return;
+    }
+
+    try {
+      const exitCode = await runTuiCommand({
+        url: options.url,
+        repoPath: path,
+        include,
+        mockProfile,
+        timeoutMs,
+        userAgent: options.userAgent,
+        render: options.render,
+      });
+      if (exitCode !== 0) process.exitCode = exitCode;
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Unexpected TUI viewer failure.";
+      writeCommandError("tui", message, false, isInputError(message) ? 1 : 2);
+    }
+  });
+
+program
   .command("gui")
   .description("Start the local ShipReady UI.")
   .option("--host <host>", "Host address to bind", "127.0.0.1")
@@ -1020,6 +1077,15 @@ type FixCommandOptions = {
 type UiReportCommandOptions = {
   url: string;
   json?: boolean;
+  timeout: string;
+  render: boolean;
+  userAgent?: string;
+};
+
+type TuiCommandOptions = {
+  url: string;
+  include?: string;
+  mockProfile?: string;
   timeout: string;
   render: boolean;
   userAgent?: string;

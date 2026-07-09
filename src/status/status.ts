@@ -25,6 +25,7 @@ export const STATUS_CLI_COMMANDS = [
   "fix --dry-run",
   "fix --write --allow-create",
   "ui-report",
+  "tui",
   "html-report",
   "gui",
   "mcp",
@@ -99,7 +100,7 @@ export function createStatus(): StatusJsonContract {
       fodmappVoiceover: "validation/demo-fodmapp-voiceover-final/",
     },
     nextRecommendedCommand: "pnpm shipready doctor",
-    nextRecommendedPass: "TUI viewer feasibility / implementation",
+    nextRecommendedPass: "Package publish preparation",
   });
 }
 
@@ -124,7 +125,7 @@ export function formatStatusHuman(status = createStatus()): string {
     "",
     "Terminal review",
     "  Human CLI output uses verdict/target/next-action headers and compact safety labels.",
-    "  Interactive TUI is not implemented in this pass; use the existing commands or local GUI.",
+    "  TUI viewer: implemented read-only; it reuses ui-report data and falls back to plain output in CI/non-TTY streams.",
     "",
     "Safety",
     `  ${status.writePolicy.name}: ${status.writePolicy.summary}`,

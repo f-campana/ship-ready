@@ -35,7 +35,7 @@ For the v0 command, contract, MCP, and GUI matrices, see [RELEASE_READINESS.md](
 
 Default human output is the terminal review experience for v0 source-checkout users. Existing commands now put the verdict/status, target, and one next action near the top; summarize passed checks instead of dumping every success; truncate long raw/rendered metadata values; and keep safety/limitation copy close to the evidence that could be misunderstood.
 
-No new aggregate `review` command was added in this pass. No interactive TUI was added. Human output remains plain text without ANSI color, so non-TTY logs and redirected output stay readable. Use `--json` for full versioned contract output.
+No new aggregate `review` command was added. Decision: `Implement minimal TUI now`. The `tui` command is a read-only terminal review viewer over `ui-report-v1`, not a new readiness engine. It has no JSON contract, no write behavior, no GUI server, no browser behavior, and no default expensive optional checks. Human fallback output remains plain text without ANSI color, so non-TTY logs and redirected output stay readable. Use `--json` on the contract-producing commands for full versioned output.
 
 ## `status`
 
@@ -46,7 +46,7 @@ pnpm shipready status --json
 
 - Purpose: report the installed version, CLI/MCP/GUI ordering, implemented command/tool surfaces, write-policy posture, absent integrations, demo artifact locations, and a copyable next command.
 - Behavior: reads no target repository, makes no network request, starts no server, and writes nothing.
-- Human output: compact terminal review summary with current source-checkout status, safety boundaries, and the next pass. It reports terminal output polish as complete and interactive TUI as deferred.
+- Human output: compact terminal review summary with current source-checkout status, safety boundaries, and the next pass. It reports terminal output polish as complete and the read-only TUI viewer as implemented.
 - JSON contract: `shipready.status.v1`; fixture: [`status.default.json`](../validation/contracts/status.default.json).
 - Exit behavior: `0` after the status report is emitted.
 - Agent use: run before selecting a ShipReady workflow or assuming an integration exists; follow with `pnpm shipready doctor` when local readiness matters.
@@ -272,6 +272,29 @@ pnpm shipready ui-report --url https://example.com --json
 - Exit behavior: `0` when `errors` is empty; `1` when a report is emitted with normalized stage errors. Invalid timeout/action failures use `shipready.error.v1`.
 - Agent use: stable current input for GUI/report consumers and contract fixtures.
 - Safety: safe-apply fields describe eligibility and a guarded CLI command workflow; this command never applies changes.
+
+## `tui`
+
+```bash
+pnpm shipready tui --url https://example.com
+pnpm shipready tui <path> --url https://example.com
+pnpm shipready tui <path> --url https://example.com --include social-preview,crawl,smells,dns,search-console,recheck
+pnpm shipready tui --url https://example.com --mock-profile demo
+pnpm --dir /Users/fabiencampana/Documents/ship-ready shipready tui --url https://example.com
+```
+
+- Purpose: open a true interactive terminal review viewer for humans, with sections for Overview, Findings, Internet view, Social preview, Crawl, Project smells, Fix plan, Handoff, Safety, and Commands.
+- Decision: `Implement minimal TUI now`.
+- Behavior: read-only; reuses the existing `ui-report-v1` model for the default review. It does not create a new engine, change JSON contracts, start the GUI server, launch a browser UI, write files, apply patches, call GitHub/Git, deploy, write DNS, call live Search Console, call social platform APIs, or broaden `WRITE_POLICY_V1`.
+- Default URL-only mode: runs only the existing `ui-report` audit summary for the supplied URL.
+- Default repo-backed mode: runs the existing `ui-report` URL + repo summary, including fix-plan and dry-run preview data already used by UI/report surfaces.
+- Optional sections: `--include social-preview,crawl,smells,dns,search-console,recheck` runs only the named additional read-only sections. By default these sections show `Not run` guidance, for example `Not run. Use --include crawl to run bounded crawl.`
+- Mock profile: `--mock-profile demo` applies deterministic mock scenarios to optional sections where supported. It does not mock or change the base `ui-report` audit.
+- Non-TTY/CI fallback: if stdin or stdout is not a TTY, or `CI=true`, ShipReady does not enter raw terminal mode. It prints the plain `ui-report` terminal summary and exits without ANSI screen-control sequences.
+- Interactive navigation: `q` quits, `Ctrl+C` exits and restores terminal state, left/right changes sections, up/down scrolls, and `?` toggles help.
+- Output surface: human-only. There is no `--json`; use `ui-report --json` for the stable machine contract.
+- Safety labels: the viewer keeps these visible: patch export is review-only and not applied; GitHub PR draft is draft-only with no PR/Git/GitHub action; safe write is limited to eligible missing robots/sitemap files under `WRITE_POLICY_V1`; social preview is an approximation; crawl is bounded and non-exhaustive; smells are heuristic and not authorship proof; Search Console is mock-backed only; DNS is read-only; distribution remains repository-local v0.
+- Exit behavior: `0` for a completed review with no normalized UI-report errors, `1` for invalid input or normalized report errors, and `2` for unexpected command failure.
 
 ## `html-report`
 

@@ -31,7 +31,8 @@ describe("release-readiness documentation", () => {
     expect(doc).toContain("shipready.write_safe_crawl_files");
     expect(doc).toContain("POST /api/fix");
     expect(doc).toContain("DISTRIBUTION.md");
-    expect(doc).toContain("TUI viewer feasibility / implementation");
+    expect(doc).toContain("TUI viewer: implemented read-only");
+    expect(doc).toContain("Decision: `Implement minimal TUI now`");
   });
 
   it("documents source-checkout command usage without implying distribution", async () => {
@@ -54,6 +55,7 @@ describe("release-readiness documentation", () => {
     expect(roadmap).toContain("| 18 | Complete | Add GitHub PR draft / PR handoff artifacts.");
     expect(roadmap).toContain("| Distribution | Complete |");
     expect(roadmap).toContain("| Terminal output polish | Complete |");
+    expect(roadmap).toContain("| TUI viewer | Complete |");
     expect(roadmap).toContain("These candidates are future work only.");
     expect(roadmap).toContain("Live Search Console integration with explicit OAuth/token custody design");
   });

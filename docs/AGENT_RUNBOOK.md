@@ -86,7 +86,7 @@ For GUI work, preserve the Pass 16 local review cockpit. The browser client fetc
 
 For distribution or installation questions, read [DISTRIBUTION.md](DISTRIBUTION.md). V0 remains source-checkout-only. Do not recommend `pnpm dlx shipready` or npm/global install as supported distribution. Use `pnpm --dir /Users/fabiencampana/Documents/ship-ready shipready ...` from outside the checkout. `pnpm link --global` is verified only as a developer-local symlink after `pnpm build`.
 
-For terminal output work, preserve JSON contracts and keep changes in human formatters unless a deliberate versioned contract decision is made. Current v0 human output is a plain-text terminal review experience: target/status/next action first, compact top findings, summarized passed checks, truncated long values, visible safety labels, and `--json` pointers. No aggregate `review` command or interactive TUI is implemented; treat both as future until separately designed and tested.
+For terminal output work, preserve JSON contracts and keep changes in human formatters or the read-only TUI viewer unless a deliberate versioned contract decision is made. Current v0 human output is a plain-text terminal review experience: target/status/next action first, compact top findings, summarized passed checks, truncated long values, visible safety labels, and `--json` pointers. The `tui` command is implemented as a dependency-free read-only viewer over `ui-report-v1`, with CI/non-TTY fallback to plain output and no JSON contract. No aggregate `review` command is implemented; treat it as future until separately designed and tested.
 
 ## Main commands
 
@@ -116,7 +116,7 @@ pnpm --dir /Users/fabiencampana/Documents/ship-ready --silent shipready mcp --al
 
 Use `status` before assuming a capability or integration exists. Use `doctor` after installation and before workflows that require Playwright or MCP canonical content. Both are read-only, non-networked, require no target path, and must not be treated as evidence of indexing, DNS/Search Console state, deployment state, or live-site readiness.
 
-When a human asks for terminal output, start with the default human command output. Use `--json` only when a consumer needs the full versioned contract. Do not add ANSI-only signals, dependency-heavy terminal UI behavior, or a broad aggregate command as part of routine formatting work.
+When a human asks for terminal output, start with the default human command output or `tui` when section navigation is useful. Use `--json` only when a consumer needs the full versioned contract. Do not add ANSI-only signals, dependency-heavy terminal UI behavior, or a broad aggregate command as part of routine formatting work.
 
 `dns status` is implemented as read-only advisory evidence. Use `--mock <scenario>` for deterministic tests and fixtures. Live mode reads DNS through Node built-ins; it does not write records, call provider APIs, use provider credentials, verify Search Console ownership, deploy, or mutate repositories.
 

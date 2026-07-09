@@ -24,6 +24,7 @@
       "fix --dry-run",
       "fix --write --allow-create",
       "ui-report",
+      "tui",
       "html-report",
       "gui",
       "mcp"
@@ -104,5 +105,5 @@
     "fodmappVoiceover": "validation/demo-fodmapp-voiceover-final/"
   },
   "nextRecommendedCommand": "pnpm shipready doctor",
-  "nextRecommendedPass": "TUI viewer feasibility / implementation"
+  "nextRecommendedPass": "Package publish preparation"
 }
