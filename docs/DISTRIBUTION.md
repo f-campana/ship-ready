@@ -8,7 +8,7 @@ ShipReady is currently a repository-local tool. Humans and agents run it from th
 
 Current package metadata contains:
 
-- `name`: `shipready`
+- `name`: `@ship-ready/cli`
 - `version`: `0.1.0`
 - `description`: `Local launch-readiness CLI for generated websites.`
 - `private`: `true`
@@ -22,14 +22,14 @@ Current package metadata contains:
 - no `main` or `exports`
 - no `postinstall`
 
-Preferred future package: `@shipready/cli`.
+Preferred future package: `@ship-ready/cli`.
 
 Fallback package: `@f-campana/shipready`.
 
 Preferred future command after publication:
 
 ```bash
-pnpm dlx @shipready/cli audit https://example.com
+pnpm dlx @ship-ready/cli audit https://example.com
 ```
 
 Do not claim this works yet.
@@ -43,7 +43,7 @@ Early users need a simple command eventually, but the public package is not live
 - Make current source-checkout usage clear.
 - Keep future npm usage visible but labeled as future.
 - Preserve CLI-only package shape.
-- Document why `@shipready/cli` is preferred and why unscoped/ImageForge names are avoided.
+- Document why `@ship-ready/cli` is preferred and why unscoped/ImageForge names are avoided.
 - Keep browser install explicit.
 - Keep package smoke automation separate from normal tests.
 - Preserve safety boundaries and avoid publish execution.
@@ -93,10 +93,10 @@ Option C - Public npm package:
 Preferred future:
 
 ```bash
-pnpm dlx @shipready/cli audit https://example.com
+pnpm dlx @ship-ready/cli audit https://example.com
 ```
 
-Decision: future execution only. Requires owner approval, `@shipready` scope control or fallback approval, package-name transition smoke, `private` removal approval, active trusted-publishing release wiring, package safety review, package smoke, and post-publish smoke. Package-root readiness and unreleased notes are complete.
+Decision: future execution only. Requires owner approval, `@ship-ready` scope control or fallback approval, package-name transition smoke, `private` removal approval, active trusted-publishing release wiring, package safety review, package smoke, and post-publish smoke. Package-root readiness and unreleased notes are complete.
 
 Option D - Standalone binary:
 
@@ -108,7 +108,7 @@ Decision: future exploration only; not part of npm publish readiness.
 
 ## Recommendation
 
-ShipReady remains repository-local until a publish execution pass is explicitly approved. Prepare for `@shipready/cli` but keep current docs honest: source checkout works now; installed npm usage is future.
+ShipReady remains repository-local until a publish execution pass is explicitly approved. Prepare for `@ship-ready/cli` but keep current docs honest: source checkout works now; installed npm usage is future.
 
 ## Source-checkout usage
 
@@ -161,7 +161,7 @@ Prepared:
 
 - MIT license and `LICENSE`.
 - npm-facing description, issues URL, homepage, repository, keywords, and engines.
-- Preferred package direction: `@shipready/cli`.
+- Preferred package direction: `@ship-ready/cli`.
 - Fallback package direction: `@f-campana/shipready`.
 - `pnpm package:smoke`.
 - Pull-request/manual package-smoke workflow.
@@ -174,9 +174,9 @@ Prepared:
 Blocked:
 
 - `private` remains `true`.
-- `@shipready` scope ownership is not confirmed.
-- Local npm auth returned `E401`.
-- `package.json.name` remains `shipready` because scope control and exact owner approval are not confirmed; lookup readiness is complete.
+- Read-only npm verification confirms `kobol909` owns the `ship-ready` organization.
+- Local npm auth identifies `kobol909`; the `ship-ready` org check reports owner access.
+- `package.json.name` is `@ship-ready/cli`; lookup and packed-install readiness are complete while `private: true` remains.
 - Active trusted-publishing workflow is not wired.
 - Post-publish smoke cannot run yet.
 
@@ -230,7 +230,7 @@ Distribution work does not change product behavior:
 Before npm publication or installed CLI claims:
 
 - Confirm owner approval for exact package, version, license, and publish mechanism.
-- Confirm `@shipready` scope ownership or choose approved fallback.
+- Confirm `@ship-ready` scope ownership or choose approved fallback.
 - Update `package.json.name` only after scope control and owner approval, then rerun package-root and packed-install smoke.
 - Remove `private: true` only with explicit approval.
 - Confirm `bin`, `files`, `repository`, `bugs`, `homepage`, `engines`, `license`, and CLI-only `main`/`exports`.
@@ -244,4 +244,4 @@ Before npm publication or installed CLI claims:
 
 ## Decision
 
-Current distribution remains source checkout plus pnpm. Future public npm direction is `@shipready/cli` with bin `shipready`, MIT license, early-preview positioning, explicit browser install, no `postinstall`, CLI-only metadata, and trusted publishing if feasible. Actual publication remains blocked.
+Current distribution remains source checkout plus pnpm. Future public npm direction is `@ship-ready/cli` with bin `shipready`, MIT license, early-preview positioning, explicit browser install, no `postinstall`, CLI-only metadata, and trusted publishing if feasible. Actual publication remains blocked.

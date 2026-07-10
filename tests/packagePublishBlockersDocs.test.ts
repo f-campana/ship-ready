@@ -18,12 +18,12 @@ describe("package publish blockers documentation", () => {
       expect(doc).toContain(heading);
     }
 
-    expect(doc).toContain("Preferred future package recorded: `@shipready/cli`.");
+    expect(doc).toContain("Preferred future package recorded: `@ship-ready/cli`.");
     expect(doc).toContain("Fallback package recorded: `@f-campana/shipready`.");
     expect(doc).toContain("Actual npm publish remains unauthorized.");
     expect(doc).toContain("`private` remains `true`.");
-    expect(doc).toContain("Local npm auth is invalid");
-    expect(doc).toContain("`npm view @shipready/cli --json` returned `E404`.");
+    expect(doc).toContain("`npm whoami` returned `kobol909`");
+    expect(doc).toContain("`npm view @ship-ready/cli --json` returned `E404`.");
     expect(doc).toContain("An `E404` package view is not ownership.");
   });
 

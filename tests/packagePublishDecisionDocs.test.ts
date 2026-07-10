@@ -35,7 +35,7 @@ describe("package publish decision documentation", () => {
 
     for (const packageName of [
       "`shipready`",
-      "`@shipready/cli`",
+      "`@ship-ready/cli`",
       "`@f-campana/shipready`",
     ]) {
       expect(doc).toContain(packageName);
@@ -43,9 +43,9 @@ describe("package publish decision documentation", () => {
 
     expect(doc).toContain("No `npm login`, token use, owner mutation, org mutation, access mutation, publish, tag, release, or upload command was run.");
     expect(doc).toContain("Publish ShipReady to npm eventually, but do not publish in this pass.");
-    expect(doc).toContain("Recommended future package name: `@shipready/cli`.");
+    expect(doc).toContain("Recommended future package name: `@ship-ready/cli`.");
     expect(doc).toContain("Fallback: `@f-campana/shipready`.");
-    expect(doc).toContain("Local npm auth appears invalid");
+    expect(doc).toContain("Returned `kobol909`");
   });
 
   it("keeps package metadata private and installed usage future-labeled", async () => {
@@ -70,7 +70,7 @@ describe("package publish decision documentation", () => {
     expect(packageJson.main).toBeUndefined();
     expect(packageJson.exports).toBeUndefined();
 
-    expect(publicDocs).toContain("@shipready/cli");
+    expect(publicDocs).toContain("@ship-ready/cli");
     expect(publicDocs).toContain("future");
     expect(publicDocs).toContain("not yet published");
     expect(publicDocs).toContain("Do not publish");
@@ -79,7 +79,7 @@ describe("package publish decision documentation", () => {
     expect(readme).not.toContain("pnpm dlx shipready audit");
   });
 
-  it("keeps status pointed at scope control and package-name transition planning", () => {
-    expect(createStatus().nextRecommendedPass).toBe("npm scope control confirmation and package-name transition planning");
+  it("keeps status pointed at trusted publish workflow scaffolding", () => {
+    expect(createStatus().nextRecommendedPass).toBe("trusted publish workflow scaffolding");
   });
 });

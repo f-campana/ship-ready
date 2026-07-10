@@ -16,10 +16,10 @@ pnpm --dir /Users/fabiencampana/Documents/ship-ready shipready ...
 Future intended package usage, after an approved publish execution pass, is:
 
 ```bash
-pnpm dlx @shipready/cli audit https://example.com
+pnpm dlx @ship-ready/cli audit https://example.com
 ```
 
-That future command is not live yet. The package still has `private: true`; publication is blocked. `package.json.name` remains `shipready` because `@shipready` control and exact owner approval are not confirmed. Runtime package-root lookup is now hardened for the current, preferred future, and fallback names, but an approved name transition still requires packed-install verification.
+That future command is not live yet. The package still has `private: true`; publication is blocked. `package.json.name` is `@ship-ready/cli`, owner control of the scope is confirmed, and package-root plus packed-install transition smoke pass.
 
 ## Decision summary
 
@@ -28,8 +28,8 @@ That future command is not live yet. The package still has `private: true`; publ
 - Use MIT for the open-source license; no concrete reason to prefer Apache-2.0 was found.
 - Add `LICENSE` with `Copyright (c) 2026 Fabien Campana`.
 - Keep the CLI-only package shape: bin `shipready`; no `main` or `exports`.
-- Preferred future package name: `@shipready/cli`.
-- Fallback package name if the `@shipready` scope cannot be controlled soon: `@f-campana/shipready`.
+- Preferred future package name: `@ship-ready/cli`.
+- Fallback package name if the `@ship-ready` scope cannot be controlled soon: `@f-campana/shipready`.
 - Avoid `@imageforge/*` because ImageForge remains separate and is not ShipReady's umbrella brand.
 - Avoid unscoped `shipready` for the first public release to avoid spending the brand name too early.
 - First public version remains likely `0.1.0`; use SemVer from day one.
@@ -41,7 +41,7 @@ That future command is not live yet. The package still has `private: true`; publ
 
 ## Name / scope options
 
-Option A - `@shipready/cli`:
+Option A - `@ship-ready/cli`:
 
 Pros:
 
@@ -52,11 +52,10 @@ Pros:
 
 Cons:
 
-- Requires creating or controlling the `@shipready` npm scope.
-- Current npm auth did not prove org or scope ownership.
-- Requires changing `package.json.name` and package-root lookup safely before publish.
+- Requires maintaining control of the `@ship-ready` npm scope.
+- Requires rechecking time-bound availability immediately before any approved publish execution.
 
-Decision: preferred future package name, assuming owner controls the scope before publish.
+Decision: selected future package name; owner control is confirmed, but publication remains blocked.
 
 Option B - `@f-campana/shipready`:
 
@@ -68,10 +67,10 @@ Pros:
 
 Cons:
 
-- Less clean as a product brand than `@shipready/cli`.
+- Less clean as a product brand than `@ship-ready/cli`.
 - Still requires npm account/scope ownership confirmation.
 
-Decision: fallback if `@shipready` cannot be controlled soon.
+Decision: fallback only if the selected scope becomes unavailable before publication.
 
 Option C - unscoped `shipready`:
 
@@ -93,15 +92,14 @@ Decision: avoid unless ImageForge is explicitly turned into an umbrella brand la
 
 ## npm registry check
 
-Read-only npm checks were run at `2026-07-09T23:01Z`. No `npm login`, token use, owner mutation, org mutation, access mutation, publish, tag, release, or upload command was run.
+Read-only npm checks were re-run on 2026-07-10. No `npm login`, token use, owner mutation, org mutation, access mutation, publish, tag, release, or upload command was run.
 
 | Check | Result | Interpretation |
 |---|---|---|
-| `npm whoami` | Failed with `E401 Unauthorized`. | Local npm auth appears invalid; do not assume publish authority. |
-| `npm owner ls @imageforge/cli` | Succeeded and showed existing package ownership for `@imageforge/cli`. | Confirms ImageForge package ownership evidence only; does not imply `@shipready` control. |
-| `npm org ls imageforge --json` | Failed with `E401`. | ImageForge org membership/ownership not confirmed in this pass. |
-| `npm org ls shipready --json` | Failed with `E401`. | `@shipready` org/scope ownership not confirmed; owner must create/control it before publish. |
-| `npm view @shipready/cli --json` | Failed with `E404`. | Package document was not found or not accessible at check time; this is not scope ownership. |
+| `npm whoami` | Returned `kobol909`. | Confirms the authenticated npm identity for this read-only check. |
+| `npm owner ls @imageforge/cli` | Returned `kobol909 <campana.fabien@gmail.com>`. | Confirms ImageForge package ownership evidence only; ImageForge remains separate. |
+| `npm org ls ship-ready --json` | Returned `{ "kobol909": "owner" }`. | Confirms owner control of the `@ship-ready` scope at check time. |
+| `npm view @ship-ready/cli --json` | Failed with `E404`. | Package document was not found or not accessible at check time; this is not scope ownership. |
 | `npm view @f-campana/shipready --json` | Failed with `E404`. | Package document was not found or not accessible at check time; ownership still must be confirmed. |
 | `npm view shipready --json` | Failed with `E404`. | Unscoped package document was not found or not accessible at check time; still not recommended first. |
 
@@ -109,7 +107,7 @@ These results are time-bound and advisory. They do not reserve a name or prove d
 
 ## Recommended package name
 
-Recommended future package name: `@shipready/cli`.
+Recommended future package name: `@ship-ready/cli`.
 
 Recommended future bin name: `shipready`.
 
@@ -117,12 +115,12 @@ Fallback: `@f-campana/shipready`.
 
 Reasoning:
 
-- `@shipready/cli` matches ShipReady as its own product brand.
+- `@ship-ready/cli` matches ShipReady as its own product brand.
 - It keeps ImageForge separate.
 - It avoids spending the unscoped `shipready` package name on the first early-preview release.
 - It still gives users the clean executable: `shipready`.
 
-Do not change `package.json.name` to `@shipready/cli` until scope ownership is confirmed and package-root resource lookup is updated and smoke-tested.
+`package.json.name` is now `@ship-ready/cli`; scope ownership, package-root resource lookup, and packed-install smoke are verified while `private: true` remains.
 
 ## License decision
 
@@ -170,8 +168,8 @@ Preferred mechanism: GitHub Actions trusted publishing / OIDC if feasible. Do no
 A future publish execution plan must, at minimum:
 
 1. Confirm owner approval for the exact package/version/license.
-2. Confirm `@shipready` scope ownership or choose the approved fallback.
-3. Update `package.json.name` only after lookup-readiness tests pass, with confirmed scope control, explicit owner approval, and packed-install smoke under the selected name.
+2. Reconfirm `@ship-ready` scope ownership and package availability immediately before execution.
+3. Confirm the already-transitioned package name, lookup-readiness tests, and packed-install smoke remain green.
 4. Confirm `private` removal is explicitly approved for the publish commit.
 5. Confirm `license`, `bin`, `files`, `repository`, `bugs`, `homepage`, `engines`, and CLI-only `main`/`exports`.
 6. Run public package safety review.
@@ -221,9 +219,8 @@ The workflow runs on `pull_request` and `workflow_dispatch`. It installs depende
 
 - Actual npm publish remains unauthorized.
 - `private` remains `true`.
-- `@shipready` npm scope ownership is not confirmed.
-- Local npm auth is invalid; `npm whoami` and org checks returned `E401`.
-- `package.json.name` is still `shipready`; changing it needs confirmed scope control, owner approval, and transition smoke even though lookup is now ready.
+- `@ship-ready` npm scope ownership is confirmed for `kobol909` by read-only verification.
+- `package.json.name` is `@ship-ready/cli`; package-root and packed-install transition smoke pass.
 - Trusted publishing is documented but not wired as an active publish workflow.
 - `CHANGELOG.md` is prepared as `0.1.0 - Unreleased`; it must not be marked released before execution.
 - Browser install behavior for published `pnpm dlx` rendered checks must be verified after publication.
@@ -232,10 +229,10 @@ The workflow runs on `pull_request` and `workflow_dispatch`. It installs depende
 
 ## Recommendation
 
-Keep ShipReady private and unpublished for this pass. Do not publish now. Prepare the next pass as npm scope control confirmation and package-name transition planning, not publish execution.
+Keep ShipReady private and unpublished for this pass. Do not publish now. Prepare the next pass as trusted publish workflow scaffolding, not publish execution.
 
-Target package: `@shipready/cli` with bin `shipready`, MIT license, SemVer `0.1.0`, early-preview positioning, no `postinstall`, CLI-only metadata, trusted publishing if feasible, package smoke automation, and public safety review before publish.
+Target package: `@ship-ready/cli` with bin `shipready`, MIT license, SemVer `0.1.0`, early-preview positioning, no `postinstall`, CLI-only metadata, trusted publishing if feasible, package smoke automation, and public safety review before publish.
 
 ## Next step
 
-Recommended next pass: **npm scope control confirmation and package-name transition planning**. Confirm authenticated control of `@shipready` or approve the fallback before authorizing any package metadata transition. Actual npm publication remains a later pass requiring exact owner approval.
+Recommended next pass: **trusted publish workflow scaffolding**. Keep it validation-only. Actual npm publication remains a later pass requiring exact owner approval.

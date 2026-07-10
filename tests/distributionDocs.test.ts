@@ -32,7 +32,7 @@ describe("distribution documentation", () => {
     expect(doc).toContain("pnpm --dir /Users/fabiencampana/Documents/ship-ready shipready audit https://example.com");
     expect(doc).toContain("pnpm --dir /Users/fabiencampana/Documents/ship-ready --silent shipready mcp --allow-root /path/to/repo");
     expect(doc).toContain("pnpm --dir /Users/fabiencampana/Documents/ship-ready shipready gui");
-    expect(doc).toContain("Preferred future package: `@shipready/cli`.");
+    expect(doc).toContain("Preferred future package: `@ship-ready/cli`.");
     expect(doc).toContain("Do not claim this works yet.");
   });
 
@@ -42,7 +42,7 @@ describe("distribution documentation", () => {
 
     for (const doc of [readme, commands]) {
       expect(doc).toContain("repository-local");
-      expect(doc).toContain("@shipready/cli");
+      expect(doc).toContain("@ship-ready/cli");
       expect(doc).toContain("not yet published");
       expect(doc).toContain("pnpm --dir /Users/fabiencampana/Documents/ship-ready shipready audit https://example.com");
     }
@@ -58,7 +58,7 @@ describe("distribution documentation", () => {
     expect(releaseReadiness).toContain("[DISTRIBUTION.md](DISTRIBUTION.md)");
     expect(status).toContain("Distribution classification: **repository-local now; npm-ready direction documented, not published**");
     expect(roadmap).toContain("| Distribution | Complete |");
-    expect(status).toContain("npm scope control confirmation and package-name transition planning");
+    expect(status.toLowerCase()).toContain("trusted publish workflow scaffolding");
     expect(releaseReadiness).toContain("Decision: `Implement minimal TUI now`");
     expect(releaseReadiness).toContain("Package publish preparation");
   });

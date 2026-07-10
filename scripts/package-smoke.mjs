@@ -3,7 +3,7 @@ import { execFile } from "node:child_process";
 import { createServer } from "node:http";
 import { mkdir, mkdtemp, readdir, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
-import { dirname, join, relative, resolve } from "node:path";
+import { basename, dirname, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { promisify } from "node:util";
 
@@ -23,6 +23,9 @@ try {
   await run("pnpm", ["pack", "--pack-destination", packDir], { cwd: repoRoot });
 
   const tarballPath = await findSingleTarball(packDir);
+  if (basename(tarballPath) !== "ship-ready-cli-0.1.0.tgz") {
+    throw new Error(`Expected scoped package tarball ship-ready-cli-0.1.0.tgz; found ${basename(tarballPath)}.`);
+  }
   await writeFile(join(consumerDir, "package.json"), JSON.stringify({
     name: "shipready-package-smoke-consumer",
     private: true,

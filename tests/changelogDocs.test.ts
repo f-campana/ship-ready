@@ -36,7 +36,7 @@ describe("0.1.0 release notes", () => {
 
     expect(combined).toContain("pnpm --dir /Users/fabiencampana/Documents/ship-ready shipready");
     expect(combined).toContain("Future intended");
-    expect(combined).toContain("pnpm dlx @shipready/cli audit https://example.com");
+    expect(combined).toContain("pnpm dlx @ship-ready/cli audit https://example.com");
     expect(combined).toContain("not live yet");
   });
 });

@@ -16,7 +16,7 @@ pnpm --dir /Users/fabiencampana/Documents/ship-ready shipready ...
 Future intended npm usage, after publish approval and post-publish smoke, is:
 
 ```bash
-pnpm dlx @shipready/cli audit https://example.com
+pnpm dlx @ship-ready/cli audit https://example.com
 ```
 
 Do not claim this works yet. The package is not published.
@@ -48,7 +48,7 @@ Current package metadata after this pass:
 
 | Field | Value | Decision |
 |---|---|---|
-| `name` | `shipready` | Kept because scope control and exact owner approval are not confirmed. Lookup is now ready for `@shipready/cli` or the approved fallback, but the transition still needs its own packed-install smoke. |
+| `name` | `@ship-ready/cli` | Transitioned after read-only verification confirmed owner control of the `ship-ready` npm organization; packed-install smoke passes while publication remains disabled. |
 | `version` | `0.1.0` | Kept as likely first public SemVer version. |
 | `description` | `Local launch-readiness CLI for generated websites.` | Added for npm-facing clarity. |
 | `private` | `true` | Kept; publication remains blocked. |
@@ -95,9 +95,9 @@ The whitelist excludes:
 
 ## Runtime resource requirements
 
-Runtime resources resolve through a bounded, fail-closed walk from the source or compiled entrypoint. A candidate root must use one of the explicitly supported names (`shipready`, `@shipready/cli`, or `@f-campana/shipready`), retain `bin.shipready: ./dist/index.js`, and contain canonical ShipReady markers under `docs/` and `validation/contracts/`. Resolution from `dist/` additionally requires the built entrypoint.
+Runtime resources resolve through a bounded, fail-closed walk from the source or compiled entrypoint. A candidate root must use one of the explicitly supported names (`shipready`, `@ship-ready/cli`, or `@f-campana/shipready`), retain `bin.shipready: ./dist/index.js`, and contain canonical ShipReady markers under `docs/` and `validation/contracts/`. Resolution from `dist/` additionally requires the built entrypoint.
 
-Focused tests simulate all three supported names, reject unrelated or incomplete packages, and preserve MCP resource allowlists. The current packed-install smoke proves today’s `shipready` package shape. A future approved name transition must still rerun package smoke under the selected final name.
+Focused tests simulate all three supported names, reject unrelated or incomplete packages, and preserve MCP resource allowlists. The packed-install smoke now proves the `@ship-ready/cli` package shape and the `shipready` executable from a temporary consumer.
 
 Required package-root resources:
 
@@ -193,8 +193,8 @@ Expected behavior:
 
 - Actual npm publish remains unauthorized.
 - `private` remains `true`.
-- Preferred `@shipready` npm scope ownership is not confirmed.
-- `package.json.name` remains `shipready`; final package-name transition needs scope control, owner approval, and transition smoke.
+- The `@ship-ready` npm scope is owner-controlled by `kobol909` per read-only org verification.
+- `package.json.name` is `@ship-ready/cli`; `private: true` still blocks publication.
 - Trusted publishing is not wired as an active publish workflow.
 - Published-package browser install behavior must be verified.
 - Post-publish smoke cannot run until publication is approved.
@@ -208,6 +208,6 @@ Keep ShipReady unpublished. Treat this pass as publish readiness closure plus sm
 
 ## Next step
 
-Recommended next pass: **npm scope control confirmation and package-name transition planning**.
+Recommended next pass: **trusted publish workflow scaffolding**.
 
-That pass should record authenticated proof of `@shipready` control or approve the fallback, then decide whether a separate package-name transition commit is authorized. Actual publication remains blocked until the owner approves the exact release.
+That pass may scaffold a validation-only trusted-publishing design without enabling publication. Actual publication remains blocked until the owner separately approves the exact release.

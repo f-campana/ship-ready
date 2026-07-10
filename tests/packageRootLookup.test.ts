@@ -30,7 +30,7 @@ describe("ShipReady package-root lookup", () => {
     expect(status.contract).toBe("shipready.status.v1");
   });
 
-  it.each(["shipready", "@shipready/cli", "@f-campana/shipready"])(
+  it.each(["@ship-ready/cli", "shipready", "@f-campana/shipready"])(
     "accepts the approved package identity %s with required runtime markers",
     async (name) => {
       const packageRoot = await createSimulatedPackage(name);
@@ -44,7 +44,7 @@ describe("ShipReady package-root lookup", () => {
       "could not locate its installed canonical content root",
     );
 
-    const incomplete = await createSimulatedPackage("@shipready/cli");
+    const incomplete = await createSimulatedPackage("@ship-ready/cli");
     await rm(join(incomplete, "docs", "COMMANDS.md"));
     await expect(resolvePackageRootFrom(join(incomplete, "dist"))).rejects.toThrow(
       "could not locate its installed canonical content root",

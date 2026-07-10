@@ -1,5 +1,5 @@
 {
-  "name": "shipready",
+  "name": "@ship-ready/cli",
   "version": "0.1.0",
   "description": "Local launch-readiness CLI for generated websites.",
   "private": true,

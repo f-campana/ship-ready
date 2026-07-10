@@ -44,7 +44,7 @@ describe("release-readiness documentation", () => {
     expect(combined).toContain("pnpm shipready status");
     expect(combined).toContain("pnpm --dir /Users/fabiencampana/Documents/ship-ready shipready status");
     expect(combined).toContain("does not imply a global install");
-    expect(combined).toContain("@shipready/cli");
+    expect(combined).toContain("@ship-ready/cli");
     expect(combined).toContain("not yet published");
   });
 

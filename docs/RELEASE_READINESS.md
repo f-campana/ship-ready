@@ -14,7 +14,7 @@ ShipReady is a local launch-readiness CLI for generated websites. It checks what
 - TUI viewer: implemented read-only over `ui-report-v1`.
 - Decision: `Implement minimal TUI now`.
 - Write policy: `WRITE_POLICY_V1` remains limited to creation-only missing robots/sitemap files.
-- Distribution: repository-local now; future npm direction is `@shipready/cli` with bin `shipready`, but publication remains blocked. Package publish preparation is documented in [PACKAGE_PUBLISH_PREPARATION.md](PACKAGE_PUBLISH_PREPARATION.md). See also [DISTRIBUTION.md](DISTRIBUTION.md), [PACKAGE_PUBLISH_DECISION.md](PACKAGE_PUBLISH_DECISION.md), [PACKAGE_PUBLISH_BLOCKERS.md](PACKAGE_PUBLISH_BLOCKERS.md), [PUBLIC_PACKAGE_SAFETY_REVIEW.md](PUBLIC_PACKAGE_SAFETY_REVIEW.md), and [PUBLISH_RUNBOOK.md](PUBLISH_RUNBOOK.md).
+- Distribution: repository-local now; future npm direction is `@ship-ready/cli` with bin `shipready`, but publication remains blocked. Package publish preparation is documented in [PACKAGE_PUBLISH_PREPARATION.md](PACKAGE_PUBLISH_PREPARATION.md). See also [DISTRIBUTION.md](DISTRIBUTION.md), [PACKAGE_PUBLISH_DECISION.md](PACKAGE_PUBLISH_DECISION.md), [PACKAGE_PUBLISH_BLOCKERS.md](PACKAGE_PUBLISH_BLOCKERS.md), [PUBLIC_PACKAGE_SAFETY_REVIEW.md](PUBLIC_PACKAGE_SAFETY_REVIEW.md), and [PUBLISH_RUNBOOK.md](PUBLISH_RUNBOOK.md).
 
 ## Implemented surfaces
 
@@ -52,7 +52,7 @@ pnpm --dir /Users/fabiencampana/Documents/ship-ready shipready status
 Future installed usage remains blocked until publish approval and smoke:
 
 ```bash
-pnpm dlx @shipready/cli audit https://example.com
+pnpm dlx @ship-ready/cli audit https://example.com
 ```
 
 | Command | Class | Status |
@@ -129,9 +129,9 @@ MCP remains local stdio-only. It exposes fifteen read-only tools and one write t
 ## Known limitations
 
 - No published npm package yet.
-- No verified installed `pnpm dlx @shipready/cli` behavior yet.
-- `package.json.name` remains `shipready` until final package-root lookup work.
-- `@shipready` npm scope ownership is not confirmed.
+- No verified installed `pnpm dlx @ship-ready/cli` behavior yet.
+- `package.json.name` is `@ship-ready/cli` until final package-root lookup work.
+- `@ship-ready` npm scope ownership is confirmed for `kobol909` by read-only npm verification.
 - No standalone binary, hosted wrapper, remote MCP transport, auto-update behavior, aggregate `review` command, or default global install exists.
 - Live URL, DNS, and rendered checks remain environment/network dependent.
 
@@ -170,7 +170,7 @@ Use disposable temp repositories for patch export, PR draft, and write validatio
 Product safety is not the current blocker. Publish blockers are:
 
 - owner approval for the exact release;
-- `@shipready` scope ownership;
+- `@ship-ready` scope ownership;
 - `package.json.name` and package-root lookup transition;
 - active trusted-publishing workflow;
 - release notes/changelog;
@@ -183,7 +183,7 @@ Present ShipReady as an early-preview local launch-readiness CLI for generated w
 
 ## Next roadmap
 
-1. npm scope control confirmation and package-name transition planning.
+1. trusted publish workflow scaffolding.
 2. Publish execution plan, after workflow/scope blockers are closed.
 3. Manual TUI polish without dependencies.
 4. Live GitHub integration only with explicit opt-in, auth, Git worktree safety, and mutation tests.
@@ -193,4 +193,4 @@ Present ShipReady as an early-preview local launch-readiness CLI for generated w
 
 ## Recommended immediate next pass
 
-npm scope control confirmation and package-name transition planning. Package-root readiness, non-publishing preflight gates, and unreleased notes are complete. Confirm authenticated control of `@shipready` or approve the fallback, then explicitly authorize any package-name transition. Do not publish until owner approval names the exact package, version, and release mechanism.
+Trusted publish workflow scaffolding. Package-root readiness, the package-name transition, packed-install smoke, non-publishing preflight gates, and unreleased notes are complete. Do not publish until owner approval names the exact package, version, and release mechanism.

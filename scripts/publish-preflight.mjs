@@ -6,8 +6,8 @@ import { fileURLToPath } from "node:url";
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const packageJson = JSON.parse(await readFile(join(repoRoot, "package.json"), "utf8"));
 
-if (packageJson.name !== "shipready") {
-  throw new Error(`Publish preflight expected package name shipready; found ${String(packageJson.name)}.`);
+if (packageJson.name !== "@ship-ready/cli") {
+  throw new Error(`Publish preflight expected package name @ship-ready/cli; found ${String(packageJson.name)}.`);
 }
 if (packageJson.private !== true) {
   throw new Error("Publish preflight requires private: true until an approved publish execution commit.");

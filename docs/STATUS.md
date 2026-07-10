@@ -6,7 +6,7 @@ ShipReady is a local launch-readiness CLI for generated websites. It checks what
 
 Release classification: **v0 local/agent release candidate**.
 
-Distribution classification: **repository-local now; npm-ready direction documented, not published**. ShipReady is not yet published to npm. Current usage is source checkout. Future preferred package usage is `pnpm dlx @shipready/cli audit https://example.com`, but that remains blocked until publish approval and post-publish smoke pass.
+Distribution classification: **repository-local now; npm-ready direction documented, not published**. ShipReady is not yet published to npm. Current usage is source checkout. Future preferred package usage is `pnpm dlx @ship-ready/cli audit https://example.com`, but that remains blocked until publish approval and post-publish smoke pass.
 
 ## What exists
 
@@ -32,14 +32,14 @@ Distribution classification: **repository-local now; npm-ready direction documen
 - MIT license and public package metadata while `private: true` remains.
 - Package smoke script and package-smoke GitHub Actions workflow.
 - Non-publishing publish-preflight workflow with explicit metadata, workflow, and tarball stop gates.
-- Package-root lookup readiness for `shipready`, `@shipready/cli`, and `@f-campana/shipready` with fail-closed runtime markers.
+- Package-root lookup readiness for `shipready`, `@ship-ready/cli`, and `@f-campana/shipready` with fail-closed runtime markers.
 - `0.1.0 - Unreleased` experimental preview changelog.
 - Public package safety review and publish runbook.
 
 ## What is not built
 
 - Published npm package.
-- Verified installed `pnpm dlx @shipready/cli` path.
+- Verified installed `pnpm dlx @ship-ready/cli` path.
 - Active npm publish workflow.
 - Any MCP write tool beyond `shipready.write_safe_crawl_files`.
 - Remote MCP transport.
@@ -56,13 +56,13 @@ Distribution classification: **repository-local now; npm-ready direction documen
 
 ## Package position
 
-- Preferred future package: `@shipready/cli`.
+- Preferred future package: `@ship-ready/cli`.
 - Fallback: `@f-campana/shipready`.
 - Avoid: `@imageforge/*` and first public release as unscoped `shipready`.
 - Bin remains `shipready`.
 - License is MIT.
 - `private` remains `true`.
-- `package.json.name` remains `shipready` until scope control, exact owner approval, and a transition smoke are available.
+- `package.json.name` is `@ship-ready/cli`; `private: true` still blocks publication.
 - First public version likely remains `0.1.0` and should be marked experimental / early preview.
 
 ## Safety posture
@@ -73,4 +73,4 @@ The public package safety review recommends keeping the guarded write command en
 
 ## Next pass
 
-**npm scope control confirmation and package-name transition planning.** The owner must authenticate outside the repository, prove `@shipready` control or approve the fallback, and explicitly authorize any package-name transition. Actual npm publication remains a later pass.
+**Trusted publish workflow scaffolding.** Keep it validation-only; actual npm publication remains a later, separately authorized pass.

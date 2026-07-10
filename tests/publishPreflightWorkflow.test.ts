@@ -32,7 +32,7 @@ describe("publish preflight workflow", () => {
       private?: boolean;
       scripts?: Record<string, string>;
     };
-    expect(packageJson.name).toBe("shipready");
+    expect(packageJson.name).toBe("@ship-ready/cli");
     expect(packageJson.private).toBe(true);
     expect(packageJson.scripts?.["publish:preflight"]).toBe("node scripts/publish-preflight.mjs");
 

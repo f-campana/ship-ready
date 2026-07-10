@@ -75,4 +75,4 @@ Confirm these are absent:
 
 ## Current result
 
-The current product safety boundary passes re-review. Package-root and preflight changes add no product write surface and leave `WRITE_POLICY_V1` unchanged. Remaining publish blockers are process and ownership blockers: owner approval, `@shipready` scope control or fallback approval, `package.json.name` transition, active trusted-publishing release wiring, published browser-install verification, post-publish smoke, and GitHub tag/release approval. Release notes are prepared but remain explicitly unreleased.
+The current product safety boundary passes re-review. Package-root and preflight changes add no product write surface and leave `WRITE_POLICY_V1` unchanged. Remaining publish blockers are process and ownership blockers: owner approval, `@ship-ready` scope control or fallback approval, `package.json.name` transition, active trusted-publishing release wiring, published browser-install verification, post-publish smoke, and GitHub tag/release approval. Release notes are prepared but remain explicitly unreleased.

@@ -40,7 +40,7 @@ describe("package publish preparation documentation", () => {
     const commandSurface = `${readme}\n${commands}\n${status}`;
 
     expect(combined).toContain("repository-local");
-    expect(combined).toContain("@shipready/cli");
+    expect(combined).toContain("@ship-ready/cli");
     expect(combined).toContain("not yet published");
     expect(combined).toContain("PACKAGE_PUBLISH_PREPARATION.md");
     expect(combined).toContain("package-smoke");

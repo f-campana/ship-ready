@@ -1,6 +1,6 @@
 # Commands
 
-Run current commands from the repository with `pnpm shipready`. The built binary name is `shipready`, but this checkout does not imply a global install or published npm package. ShipReady is not yet published. Future intended usage after an approved publish execution pass is `pnpm dlx @shipready/cli audit https://example.com`.
+Run current commands from the repository with `pnpm shipready`. The built binary name is `shipready`, but this checkout does not imply a global install or published npm package. ShipReady is not yet published. Future intended usage after an approved publish execution pass is `pnpm dlx @ship-ready/cli audit https://example.com`.
 
 Package preparation evidence is documented in [PACKAGE_PUBLISH_PREPARATION.md](PACKAGE_PUBLISH_PREPARATION.md), the package decision in [PACKAGE_PUBLISH_DECISION.md](PACKAGE_PUBLISH_DECISION.md), blockers in [PACKAGE_PUBLISH_BLOCKERS.md](PACKAGE_PUBLISH_BLOCKERS.md), and publish execution guidance in [PUBLISH_RUNBOOK.md](PUBLISH_RUNBOOK.md).
 

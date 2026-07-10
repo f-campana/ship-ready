@@ -35,7 +35,7 @@ Order remains contractual for future work: harden CLI interfaces before wrapping
 | TUI viewer | Complete | Implement a minimal dependency-free terminal review viewer over `ui-report-v1` with CI/non-TTY fallback, optional read-only includes, safety sections, and no JSON contract or write-policy changes. | Read-only | Terminal output polish |
 | TUI framework evaluation | Complete | Evaluate whether to keep the current dependency-free TUI, improve it manually, or adopt Ink/OpenTUI. Recommendation: improve the current TUI manually before any framework adoption. | Read-only/docs | TUI viewer |
 | Package publish preparation | Complete | Add package metadata, MIT license posture, package files whitelist, local package-smoke automation, and publish blockers while keeping publication blocked. | Read-only/package/docs | Distribution |
-| Package publish decision | Complete | Incorporate owner publish decisions: prefer `@shipready/cli`, keep bin `shipready`, use MIT, keep CLI-only/no-postinstall/private posture, add package-smoke workflow, and keep publish execution blocked. | Read-only/docs | Package publish preparation |
+| Package publish decision | Complete | Incorporate owner publish decisions: prefer `@ship-ready/cli`, keep bin `shipready`, use MIT, keep CLI-only/no-postinstall/private posture, add package-smoke workflow, and keep publish execution blocked. | Read-only/docs | Package publish preparation |
 | Publish readiness closure | Complete | Add blocker ledger, public package safety review, publish runbook, package smoke script, and package-smoke CI workflow without publishing. | Read-only/package/docs/CI | Package publish decision |
 | Publish preflight wiring | Complete | Harden package-root lookup for approved current/future identities, add non-publishing preflight gates, prepare unreleased notes, and document owner/trusted-publishing stop conditions. | Read-only/package/docs/CI | Publish readiness closure |
 
@@ -63,7 +63,7 @@ Do not present v0 as hosted SaaS, production SaaS, fully automated SEO repair, d
 
 These candidates are future work only. None is implemented by the closed roadmap unless explicitly listed above.
 
-1. npm scope control confirmation and package-name transition planning: prove `@shipready` control or approve the fallback, then explicitly authorize and smoke the final package identity without publishing.
+1. trusted publish workflow scaffolding: prove `@ship-ready` control or approve the fallback, then explicitly authorize and smoke the final package identity without publishing.
 2. Publish execution plan, only after scope/identity/trusted-publishing blockers are closed and owner approval names the exact release.
 3. Manual TUI polish without dependencies, using the evaluation in [TUI_FRAMEWORK_EVALUATION.md](TUI_FRAMEWORK_EVALUATION.md).
 4. Standalone binary exploration, including Playwright/browser, GUI asset, MCP stdio, artifact, and signing implications.

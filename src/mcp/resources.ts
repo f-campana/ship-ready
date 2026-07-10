@@ -26,8 +26,8 @@ import { ShipReadyMcpError } from "./errors";
 const MAX_CANONICAL_READ_BYTES = 1024 * 1024;
 const MAX_PACKAGE_ROOT_DEPTH = 6;
 const SHIPREADY_PACKAGE_NAMES = new Set([
+  "@ship-ready/cli",
   "shipready",
-  "@shipready/cli",
   "@f-campana/shipready",
 ]);
 const SHIPREADY_PACKAGE_MARKERS = [

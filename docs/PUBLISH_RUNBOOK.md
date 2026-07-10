@@ -6,7 +6,7 @@ This is a future execution runbook. It is not authorization to publish. Do not r
 
 ## Intended release shape
 
-- Package: `@shipready/cli`, if the owner controls the `@shipready` npm scope.
+- Package: `@ship-ready/cli`, if the owner controls the `@ship-ready` npm scope.
 - Fallback: `@f-campana/shipready`.
 - Bin: `shipready`.
 - Version: likely `0.1.0`.
@@ -22,7 +22,7 @@ This is a future execution runbook. It is not authorization to publish. Do not r
 Before any execution pass:
 
 1. Owner approves the exact package name, version, license, and release timing.
-2. Owner confirms `@shipready` scope ownership or approves fallback package.
+2. Owner confirms `@ship-ready` scope ownership or approves fallback package.
 3. Owner approves removal of `private: true` for the publish commit.
 4. Owner approves trusted publishing or the fallback credential process.
 5. Owner approves whether a GitHub tag/release will be created.
@@ -65,7 +65,7 @@ The final `find` command must print nothing. Any generated tarball must stay in 
 
 Preferred future approach:
 
-- Create or control the `@shipready` npm organization/scope, or explicitly approve `@f-campana/shipready` as the fallback.
+- Create or control the `@ship-ready` npm organization/scope, or explicitly approve `@f-campana/shipready` as the fallback.
 - Authenticate to npm outside the repository and confirm the selected package/scope account; do not add credentials to product code or committed files.
 - In npm, configure a trusted publisher for GitHub repository `f-campana/ship-ready` and the exact future release workflow filename and environment.
 - Use a protected release environment with required owner approval if practical.
@@ -85,11 +85,11 @@ This pass intentionally adds no active publish job. `.github/workflows/publish-p
 
 The owner must complete and record these actions before any publish execution plan can be approved:
 
-1. Authenticate locally to npm or establish the exact trusted-publishing identity; current read-only identity and org checks return `E401`.
-2. Create/control the `@shipready` npm organization/scope, or explicitly approve and verify the `@f-campana/shipready` fallback.
+1. Reconfirm the authenticated npm identity and `@ship-ready` organization ownership immediately before any separately approved execution.
+2. Preserve `@f-campana/shipready` only as the documented fallback.
 3. Configure npm trusted publishing for `f-campana/ship-ready`, restricted to the exact future release workflow and protected environment.
 4. Approve the exact package name, `0.1.0` version, MIT license, release timing, publish mechanism, and whether any GitHub tag/release is separately authorized.
-5. Approve the package-name transition and removal of `private: true` only in the future execution commit.
+5. Separately approve removal of `private: true` only in a future execution commit; the package-name transition is already complete.
 
 If any item is missing, stop. The repository preflight is evidence, not approval.
 
@@ -112,11 +112,11 @@ Only after explicit owner approval:
 After publication, verify from a clean environment:
 
 ```bash
-pnpm dlx @shipready/cli --version
-pnpm dlx @shipready/cli status --json
-pnpm dlx @shipready/cli doctor --json
-pnpm dlx @shipready/cli audit https://example.com --no-render --json
-pnpm dlx @shipready/cli tui --url https://example.com --no-render
+pnpm dlx @ship-ready/cli --version
+pnpm dlx @ship-ready/cli status --json
+pnpm dlx @ship-ready/cli doctor --json
+pnpm dlx @ship-ready/cli audit https://example.com --no-render --json
+pnpm dlx @ship-ready/cli tui --url https://example.com --no-render
 ```
 
 Rendered audit claims require explicit Playwright Chromium install verification before they are documented as supported.
@@ -126,7 +126,7 @@ Rendered audit claims require explicit Playwright Chromium install verification 
 Stop and do not publish if:
 
 - owner approval is incomplete;
-- `@shipready` scope control is not confirmed and fallback is not approved;
+- `@ship-ready` scope control cannot be reconfirmed immediately before an approved execution;
 - validation fails;
 - package contents include secrets, local artifacts, validation media, generated tarballs, or private data;
 - package behavior expands write surfaces;
