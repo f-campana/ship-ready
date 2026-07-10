@@ -79,7 +79,7 @@ describe("package publish decision documentation", () => {
     expect(readme).not.toContain("pnpm dlx shipready audit");
   });
 
-  it("keeps status pointed at publish workflow wiring", () => {
-    expect(createStatus().nextRecommendedPass).toBe("Publish workflow wiring");
+  it("keeps status pointed at scope control and package-name transition planning", () => {
+    expect(createStatus().nextRecommendedPass).toBe("npm scope control confirmation and package-name transition planning");
   });
 });

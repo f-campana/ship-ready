@@ -18,7 +18,7 @@ Current package metadata contains:
 - `bugs`: `https://github.com/f-campana/ship-ready/issues`
 - `homepage`: `https://github.com/f-campana/ship-ready#readme`
 - `engines.node`: `>=20`
-- `files`: focused whitelist for built output, license, docs, skill resources, and contract fixtures
+- `files`: focused whitelist for built output, changelog, license, docs, skill resources, and contract fixtures
 - no `main` or `exports`
 - no `postinstall`
 
@@ -96,7 +96,7 @@ Preferred future:
 pnpm dlx @shipready/cli audit https://example.com
 ```
 
-Decision: future execution only. Requires owner approval, `@shipready` scope control, package-root lookup update, `private` removal approval, trusted-publishing wiring, release notes, package safety review, package smoke, and post-publish smoke.
+Decision: future execution only. Requires owner approval, `@shipready` scope control or fallback approval, package-name transition smoke, `private` removal approval, active trusted-publishing release wiring, package safety review, package smoke, and post-publish smoke. Package-root readiness and unreleased notes are complete.
 
 Option D - Standalone binary:
 
@@ -165,6 +165,9 @@ Prepared:
 - Fallback package direction: `@f-campana/shipready`.
 - `pnpm package:smoke`.
 - Pull-request/manual package-smoke workflow.
+- Bounded package-root lookup ready for current, preferred future, and fallback names.
+- Pull-request/manual publish-preflight workflow that validates but cannot publish.
+- `CHANGELOG.md` with `0.1.0 - Unreleased` experimental preview notes.
 - Public package safety review checklist.
 - Publish runbook.
 
@@ -173,9 +176,8 @@ Blocked:
 - `private` remains `true`.
 - `@shipready` scope ownership is not confirmed.
 - Local npm auth returned `E401`.
-- `package.json.name` remains `shipready` because package-root lookup expects it.
+- `package.json.name` remains `shipready` because scope control and exact owner approval are not confirmed; lookup readiness is complete.
 - Active trusted-publishing workflow is not wired.
-- Release notes/changelog are not prepared.
 - Post-publish smoke cannot run yet.
 
 Do not claim installed usage works until publication and post-publish smoke pass.
@@ -229,14 +231,14 @@ Before npm publication or installed CLI claims:
 
 - Confirm owner approval for exact package, version, license, and publish mechanism.
 - Confirm `@shipready` scope ownership or choose approved fallback.
-- Update `package.json.name` and package-root lookup together.
+- Update `package.json.name` only after scope control and owner approval, then rerun package-root and packed-install smoke.
 - Remove `private: true` only with explicit approval.
 - Confirm `bin`, `files`, `repository`, `bugs`, `homepage`, `engines`, `license`, and CLI-only `main`/`exports`.
 - Confirm no `postinstall`.
 - Run public package safety review.
 - Run `pnpm test`, `pnpm typecheck`, `pnpm build`, `git diff --check`, `pnpm shipready status --json`, `pnpm shipready doctor --json`, and `pnpm package:smoke`.
 - Inspect package contents for secrets, `.env`, npm tokens, local artifacts, validation media, private data, and generated tarballs.
-- Prepare changelog or release notes.
+- Finalize the prepared unreleased changelog without marking it released early.
 - Use trusted publishing if feasible.
 - Run post-publish smoke before updating docs to installed usage.
 

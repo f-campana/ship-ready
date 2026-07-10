@@ -65,22 +65,40 @@ The final `find` command must print nothing. Any generated tarball must stay in 
 
 Preferred future approach:
 
-- Use npm trusted publishing / OIDC from GitHub Actions.
-- Keep workflow permissions minimal.
-- Use a protected release environment if practical.
-- Trigger publish only from an explicitly approved release workflow.
+- Create or control the `@shipready` npm organization/scope, or explicitly approve `@f-campana/shipready` as the fallback.
+- Authenticate to npm outside the repository and confirm the selected package/scope account; do not add credentials to product code or committed files.
+- In npm, configure a trusted publisher for GitHub repository `f-campana/ship-ready` and the exact future release workflow filename and environment.
+- Use a protected release environment with required owner approval if practical.
+- Keep workflow permissions minimal and grant trusted-publishing permissions only to the future release job that needs them.
+- Require explicit owner approval naming package, version, timing, workflow, and environment.
+- Run `.github/workflows/publish-preflight.yml` successfully before preparing any release commit.
+- Remove `private: true` only in the approved publish execution commit.
+- Publish only from the separately approved release workflow.
+- Run clean registry-backed post-publish smoke before changing docs to claim installed usage.
 - Do not store npm tokens in product code.
 - Do not print secrets or registry credentials.
 - Do not publish from pull-request workflows.
 
-This pass intentionally adds no active publish job. The current `.github/workflows/package-smoke.yml` workflow only validates package smoke on pull requests and manual dispatch.
+This pass intentionally adds no active publish job. `.github/workflows/publish-preflight.yml` and `.github/workflows/package-smoke.yml` validate readiness only, with read-only repository permissions and no trusted-publishing permission, release job, tag, upload, or registry credential.
+
+## Owner actions outside this repository
+
+The owner must complete and record these actions before any publish execution plan can be approved:
+
+1. Authenticate locally to npm or establish the exact trusted-publishing identity; current read-only identity and org checks return `E401`.
+2. Create/control the `@shipready` npm organization/scope, or explicitly approve and verify the `@f-campana/shipready` fallback.
+3. Configure npm trusted publishing for `f-campana/ship-ready`, restricted to the exact future release workflow and protected environment.
+4. Approve the exact package name, `0.1.0` version, MIT license, release timing, publish mechanism, and whether any GitHub tag/release is separately authorized.
+5. Approve the package-name transition and removal of `private: true` only in the future execution commit.
+
+If any item is missing, stop. The repository preflight is evidence, not approval.
 
 ## Execution outline
 
 Only after explicit owner approval:
 
-1. Re-run read-only npm scope and package checks.
-2. Update package name if needed and verify package-root lookup.
+1. Run publish preflight and re-run read-only npm scope and package checks.
+2. Update package name only if approved, then rerun package-root tests and packed-install smoke.
 3. Remove `private: true` only in the approved publish execution commit.
 4. Run the required validation matrix.
 5. Inspect packed contents.

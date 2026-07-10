@@ -1,4 +1,4 @@
-import { readFile, realpath } from "node:fs/promises";
+import { access, readFile, realpath } from "node:fs/promises";
 import { dirname, isAbsolute, relative, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 import type { ZodType } from "zod";
@@ -24,6 +24,16 @@ import {
 import { ShipReadyMcpError } from "./errors";
 
 const MAX_CANONICAL_READ_BYTES = 1024 * 1024;
+const MAX_PACKAGE_ROOT_DEPTH = 6;
+const SHIPREADY_PACKAGE_NAMES = new Set([
+  "shipready",
+  "@shipready/cli",
+  "@f-campana/shipready",
+]);
+const SHIPREADY_PACKAGE_MARKERS = [
+  "docs/COMMANDS.md",
+  "validation/contracts/status.default.json",
+] as const;
 
 export const FIXTURE_NAMES = [
   "audit.clean.json",
@@ -132,18 +142,51 @@ export type CanonicalContent = {
 };
 
 export async function resolvePackageRoot(): Promise<string> {
-  let current = dirname(fileURLToPath(import.meta.url));
-  for (let depth = 0; depth < 4; depth += 1) {
+  return resolvePackageRootFrom(dirname(fileURLToPath(import.meta.url)));
+}
+
+export async function resolvePackageRootFrom(startDirectory: string): Promise<string> {
+  const normalizedStart = resolve(startDirectory);
+  let current = normalizedStart;
+  for (let depth = 0; depth < MAX_PACKAGE_ROOT_DEPTH; depth += 1) {
     const packageJson = resolve(current, "package.json");
     try {
-      const parsed = JSON.parse(await readFile(packageJson, "utf8")) as { name?: string };
-      if (parsed.name === "shipready") return current;
+      const parsed = JSON.parse(await readFile(packageJson, "utf8")) as {
+        name?: string;
+        bin?: Record<string, string>;
+      };
+      if (await isShipReadyPackageRoot(current, normalizedStart, parsed)) return current;
     } catch {
       // Continue the bounded search from source and bundled entry locations.
     }
-    current = dirname(current);
+    const parent = dirname(current);
+    if (parent === current) break;
+    current = parent;
   }
   throw new Error("ShipReady MCP could not locate its installed canonical content root.");
+}
+
+async function isShipReadyPackageRoot(
+  candidate: string,
+  startDirectory: string,
+  packageJson: { name?: string; bin?: Record<string, string> },
+): Promise<boolean> {
+  if (!packageJson.name || !SHIPREADY_PACKAGE_NAMES.has(packageJson.name)) return false;
+  if (packageJson.bin?.shipready !== "./dist/index.js") return false;
+
+  const requiredPaths: string[] = [...SHIPREADY_PACKAGE_MARKERS];
+  if (isContained(resolve(candidate, "dist"), startDirectory)) {
+    requiredPaths.push("dist/index.js");
+  }
+
+  return (await Promise.all(requiredPaths.map(async (path) => {
+    try {
+      await access(resolve(candidate, path));
+      return true;
+    } catch {
+      return false;
+    }
+  }))).every(Boolean);
 }
 
 export async function validateCanonicalContent(packageRoot: string): Promise<void> {

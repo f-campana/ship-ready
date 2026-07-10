@@ -31,6 +31,9 @@ Distribution classification: **repository-local now; npm-ready direction documen
 - Repository-local ShipReady Launch Readiness skill.
 - MIT license and public package metadata while `private: true` remains.
 - Package smoke script and package-smoke GitHub Actions workflow.
+- Non-publishing publish-preflight workflow with explicit metadata, workflow, and tarball stop gates.
+- Package-root lookup readiness for `shipready`, `@shipready/cli`, and `@f-campana/shipready` with fail-closed runtime markers.
+- `0.1.0 - Unreleased` experimental preview changelog.
 - Public package safety review and publish runbook.
 
 ## What is not built
@@ -59,7 +62,7 @@ Distribution classification: **repository-local now; npm-ready direction documen
 - Bin remains `shipready`.
 - License is MIT.
 - `private` remains `true`.
-- `package.json.name` remains `shipready` until final package-root lookup work is done.
+- `package.json.name` remains `shipready` until scope control, exact owner approval, and a transition smoke are available.
 - First public version likely remains `0.1.0` and should be marked experimental / early preview.
 
 ## Safety posture
@@ -70,4 +73,4 @@ The public package safety review recommends keeping the guarded write command en
 
 ## Next pass
 
-**Publish workflow wiring.** Confirm/control the `@shipready` npm scope, update package-root lookup for the final package name if needed, prepare an explicitly gated trusted-publishing workflow, draft release notes, and keep actual npm publication blocked until owner approval names the exact release.
+**npm scope control confirmation and package-name transition planning.** The owner must authenticate outside the repository, prove `@shipready` control or approve the fallback, and explicitly authorize any package-name transition. Actual npm publication remains a later pass.

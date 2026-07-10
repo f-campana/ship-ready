@@ -2,7 +2,7 @@
 
 Checkpoint date: 2026-07-10
 
-This review must pass before any public npm publish execution. Current result: **pass with blockers unrelated to product safety**. The product write surface remains acceptable for an early-preview package if all checklist items below stay true.
+This review must pass before any public npm publish execution. Current result after the publish-preflight wiring pass: **pass with blockers unrelated to product safety**. The product write surface remains acceptable for an early-preview package if all checklist items below stay true.
 
 ## Recommendation
 
@@ -54,6 +54,7 @@ Required public posture:
 Before publish execution, inspect the packed contents and confirm only intended package resources are present:
 
 - `dist/`
+- `CHANGELOG.md`
 - `LICENSE`
 - `README.md`
 - `docs/`
@@ -74,4 +75,4 @@ Confirm these are absent:
 
 ## Current result
 
-The current product safety boundary passes review. Remaining publish blockers are process and ownership blockers: owner approval, `@shipready` scope control, `package.json.name` transition, trusted-publishing wiring, release notes, published browser-install verification, post-publish smoke, and GitHub tag/release approval.
+The current product safety boundary passes re-review. Package-root and preflight changes add no product write surface and leave `WRITE_POLICY_V1` unchanged. Remaining publish blockers are process and ownership blockers: owner approval, `@shipready` scope control or fallback approval, `package.json.name` transition, active trusted-publishing release wiring, published browser-install verification, post-publish smoke, and GitHub tag/release approval. Release notes are prepared but remain explicitly unreleased.

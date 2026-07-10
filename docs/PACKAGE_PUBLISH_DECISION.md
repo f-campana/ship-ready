@@ -19,7 +19,7 @@ Future intended package usage, after an approved publish execution pass, is:
 pnpm dlx @shipready/cli audit https://example.com
 ```
 
-That future command is not live yet. The package still has `private: true`; publication is blocked. `package.json.name` remains `shipready` in this pass because runtime package-root lookup currently expects that name. Changing it to `@shipready/cli` should be paired with a package-root lookup update and packed-install verification.
+That future command is not live yet. The package still has `private: true`; publication is blocked. `package.json.name` remains `shipready` because `@shipready` control and exact owner approval are not confirmed. Runtime package-root lookup is now hardened for the current, preferred future, and fallback names, but an approved name transition still requires packed-install verification.
 
 ## Decision summary
 
@@ -34,7 +34,7 @@ That future command is not live yet. The package still has `private: true`; publ
 - Avoid unscoped `shipready` for the first public release to avoid spending the brand name too early.
 - First public version remains likely `0.1.0`; use SemVer from day one.
 - Mark the first npm release as experimental / early preview.
-- Prepare changelog or release notes before publish execution.
+- Keep the prepared `0.1.0 - Unreleased` changelog unreleased until publish execution.
 - Prefer GitHub Actions trusted publishing if feasible, but do not add an active publish workflow here.
 - Require owner-only approval for actual publish for now.
 - Public issues are acceptable; package metadata points to GitHub issues.
@@ -171,14 +171,14 @@ A future publish execution plan must, at minimum:
 
 1. Confirm owner approval for the exact package/version/license.
 2. Confirm `@shipready` scope ownership or choose the approved fallback.
-3. Update `package.json.name` only with matching package-root lookup changes and packed-install smoke.
+3. Update `package.json.name` only after lookup-readiness tests pass, with confirmed scope control, explicit owner approval, and packed-install smoke under the selected name.
 4. Confirm `private` removal is explicitly approved for the publish commit.
 5. Confirm `license`, `bin`, `files`, `repository`, `bugs`, `homepage`, `engines`, and CLI-only `main`/`exports`.
 6. Run public package safety review.
 7. Run `pnpm test`, `pnpm typecheck`, `pnpm build`, `git diff --check`, `pnpm shipready status --json`, and `pnpm shipready doctor --json`.
 8. Run `pnpm package:smoke`.
 9. Inspect package contents and confirm no secrets, local artifacts, validation media, `.env`, npm tokens, generated tarballs, or private data are included.
-10. Prepare changelog or release notes.
+10. Finalize the prepared changelog or release notes without marking the release published early.
 11. Wire or execute trusted publishing only after explicit approval.
 12. Create GitHub tag/release only in the actual publish execution pass if explicitly authorized.
 13. Run post-publish smoke from a fresh environment before public docs claim installed usage works.
@@ -199,7 +199,7 @@ Deprecate or otherwise withdraw guidance for a published version if any of these
 
 ## CI package smoke decision
 
-Decision: add `pnpm package:smoke` and a pull-request/manual GitHub Actions package-smoke workflow.
+Decision: keep `pnpm package:smoke`, the package-smoke workflow, and a separate non-publishing publish-preflight workflow.
 
 The smoke script:
 
@@ -223,21 +223,19 @@ The workflow runs on `pull_request` and `workflow_dispatch`. It installs depende
 - `private` remains `true`.
 - `@shipready` npm scope ownership is not confirmed.
 - Local npm auth is invalid; `npm whoami` and org checks returned `E401`.
-- `package.json.name` is still `shipready`; changing it to `@shipready/cli` needs a safe package-root lookup update.
+- `package.json.name` is still `shipready`; changing it needs confirmed scope control, owner approval, and transition smoke even though lookup is now ready.
 - Trusted publishing is documented but not wired as an active publish workflow.
-- Changelog or release notes are still required before publish.
+- `CHANGELOG.md` is prepared as `0.1.0 - Unreleased`; it must not be marked released before execution.
 - Browser install behavior for published `pnpm dlx` rendered checks must be verified after publication.
 - Public installed-usage docs must remain future-labeled until post-publish smoke passes.
 - GitHub tag/release policy remains publish-execution-only and owner-approved.
 
 ## Recommendation
 
-Keep ShipReady private and unpublished for this pass. Do not publish now. Prepare the next pass as publish workflow wiring or publish execution planning, not publish execution.
+Keep ShipReady private and unpublished for this pass. Do not publish now. Prepare the next pass as npm scope control confirmation and package-name transition planning, not publish execution.
 
 Target package: `@shipready/cli` with bin `shipready`, MIT license, SemVer `0.1.0`, early-preview positioning, no `postinstall`, CLI-only metadata, trusted publishing if feasible, package smoke automation, and public safety review before publish.
 
 ## Next step
 
-Recommended next pass: **Publish workflow wiring**.
-
-That pass should confirm or create/control the `@shipready` npm scope, update package-root lookup for the final package name if needed, prepare an explicitly gated trusted-publishing workflow, draft release notes, and keep actual npm publication blocked until owner approval is explicit for the exact release.
+Recommended next pass: **npm scope control confirmation and package-name transition planning**. Confirm authenticated control of `@shipready` or approve the fallback before authorizing any package metadata transition. Actual npm publication remains a later pass requiring exact owner approval.

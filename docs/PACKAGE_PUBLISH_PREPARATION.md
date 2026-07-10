@@ -48,7 +48,7 @@ Current package metadata after this pass:
 
 | Field | Value | Decision |
 |---|---|---|
-| `name` | `shipready` | Kept for now because package-root lookup expects it. Future publish should change to `@shipready/cli` only with lookup updates and smoke. |
+| `name` | `shipready` | Kept because scope control and exact owner approval are not confirmed. Lookup is now ready for `@shipready/cli` or the approved fallback, but the transition still needs its own packed-install smoke. |
 | `version` | `0.1.0` | Kept as likely first public SemVer version. |
 | `description` | `Local launch-readiness CLI for generated websites.` | Added for npm-facing clarity. |
 | `private` | `true` | Kept; publication remains blocked. |
@@ -68,6 +68,7 @@ Current package metadata after this pass:
 The package whitelist includes:
 
 - `dist/`
+- `CHANGELOG.md`
 - `LICENSE`
 - `README.md`
 - `docs/`
@@ -94,9 +95,9 @@ The whitelist excludes:
 
 ## Runtime resource requirements
 
-Runtime resources currently resolve from the installed package root by walking upward from the compiled entrypoint until `package.json` with `name: "shipready"` is found. Because of that, this pass does not change `package.json.name` to `@shipready/cli`.
+Runtime resources resolve through a bounded, fail-closed walk from the source or compiled entrypoint. A candidate root must use one of the explicitly supported names (`shipready`, `@shipready/cli`, or `@f-campana/shipready`), retain `bin.shipready: ./dist/index.js`, and contain canonical ShipReady markers under `docs/` and `validation/contracts/`. Resolution from `dist/` additionally requires the built entrypoint.
 
-Before publish execution, update the lookup to accept the approved final package name and rerun packed-package smoke.
+Focused tests simulate all three supported names, reject unrelated or incomplete packages, and preserve MCP resource allowlists. The current packed-install smoke proves today’s `shipready` package shape. A future approved name transition must still rerun package smoke under the selected final name.
 
 Required package-root resources:
 
@@ -193,9 +194,8 @@ Expected behavior:
 - Actual npm publish remains unauthorized.
 - `private` remains `true`.
 - Preferred `@shipready` npm scope ownership is not confirmed.
-- `package.json.name` remains `shipready`; final package-name transition needs lookup changes.
+- `package.json.name` remains `shipready`; final package-name transition needs scope control, owner approval, and transition smoke.
 - Trusted publishing is not wired as an active publish workflow.
-- Changelog or release notes are required.
 - Published-package browser install behavior must be verified.
 - Post-publish smoke cannot run until publication is approved.
 - GitHub tag/release creation is not approved.
@@ -208,6 +208,6 @@ Keep ShipReady unpublished. Treat this pass as publish readiness closure plus sm
 
 ## Next step
 
-Recommended next pass: **Publish workflow wiring**.
+Recommended next pass: **npm scope control confirmation and package-name transition planning**.
 
-That pass should confirm/control the `@shipready` npm scope, update package-root lookup for the final package name if needed, prepare a gated trusted-publishing workflow, draft release notes, and keep publication blocked until owner approval names the exact release.
+That pass should record authenticated proof of `@shipready` control or approve the fallback, then decide whether a separate package-name transition commit is authorized. Actual publication remains blocked until the owner approves the exact release.

@@ -100,7 +100,7 @@ export function createStatus(): StatusJsonContract {
       fodmappVoiceover: "validation/demo-fodmapp-voiceover-final/",
     },
     nextRecommendedCommand: "pnpm shipready doctor",
-    nextRecommendedPass: "Publish workflow wiring",
+    nextRecommendedPass: "npm scope control confirmation and package-name transition planning",
   });
 }
 

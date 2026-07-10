@@ -58,7 +58,7 @@ describe("distribution documentation", () => {
     expect(releaseReadiness).toContain("[DISTRIBUTION.md](DISTRIBUTION.md)");
     expect(status).toContain("Distribution classification: **repository-local now; npm-ready direction documented, not published**");
     expect(roadmap).toContain("| Distribution | Complete |");
-    expect(status).toContain("Publish workflow wiring");
+    expect(status).toContain("npm scope control confirmation and package-name transition planning");
     expect(releaseReadiness).toContain("Decision: `Implement minimal TUI now`");
     expect(releaseReadiness).toContain("Package publish preparation");
   });

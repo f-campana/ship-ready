@@ -183,7 +183,7 @@ Present ShipReady as an early-preview local launch-readiness CLI for generated w
 
 ## Next roadmap
 
-1. Publish workflow wiring.
+1. npm scope control confirmation and package-name transition planning.
 2. Publish execution plan, after workflow/scope blockers are closed.
 3. Manual TUI polish without dependencies.
 4. Live GitHub integration only with explicit opt-in, auth, Git worktree safety, and mutation tests.
@@ -193,4 +193,4 @@ Present ShipReady as an early-preview local launch-readiness CLI for generated w
 
 ## Recommended immediate next pass
 
-Publish workflow wiring. Confirm/control the `@shipready` npm scope, update package-root lookup for the final package name if needed, draft release notes, and prepare an explicitly gated trusted-publishing workflow. Do not publish until owner approval names the exact package, version, and release mechanism.
+npm scope control confirmation and package-name transition planning. Package-root readiness, non-publishing preflight gates, and unreleased notes are complete. Confirm authenticated control of `@shipready` or approve the fallback, then explicitly authorize any package-name transition. Do not publish until owner approval names the exact package, version, and release mechanism.

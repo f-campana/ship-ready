@@ -13,6 +13,7 @@ describe("package files whitelist", () => {
 
     for (const required of [
       "dist/",
+      "CHANGELOG.md",
       "LICENSE",
       "README.md",
       "docs/",

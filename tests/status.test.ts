@@ -35,7 +35,7 @@ describe("status", () => {
     expect(output).toContain("GitHub PR draft: draft only");
     expect(output).toContain("Deployment automation, live GitHub integration");
     expect(output).toContain("Distribution: repository-local now; future npm direction is @shipready/cli");
-    expect(output).toContain("Next pass: Publish workflow wiring");
+    expect(output).toContain("Next pass: npm scope control confirmation and package-name transition planning");
   });
 
   it("emits the stable JSON capability and safety contract", async () => {
@@ -79,7 +79,7 @@ describe("status", () => {
     });
     expect(status.writePolicy.id).toBe(WRITE_POLICY_V1);
     expect(status.capabilities.cli).toContain("tui");
-    expect(status.nextRecommendedPass).toBe("Publish workflow wiring");
+    expect(status.nextRecommendedPass).toBe("npm scope control confirmation and package-name transition planning");
   });
 
   it("stays synchronized with the MCP registry", () => {

@@ -27,6 +27,7 @@ describe("package metadata", () => {
     expect(packageJson.homepage).toBe("https://github.com/f-campana/ship-ready#readme");
     expect(packageJson.engines?.node).toBe(">=20");
     expect(packageJson.scripts?.["package:smoke"]).toBe("node scripts/package-smoke.mjs");
+    expect(packageJson.scripts?.["publish:preflight"]).toBe("node scripts/publish-preflight.mjs");
     expect(packageJson.scripts?.postinstall).toBeUndefined();
   });
 });

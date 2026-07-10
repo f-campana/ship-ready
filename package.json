@@ -28,6 +28,7 @@
   },
   "files": [
     "dist/",
+    "CHANGELOG.md",
     "LICENSE",
     "README.md",
     "docs/",
@@ -43,6 +44,7 @@
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
     "package:smoke": "node scripts/package-smoke.mjs",
+    "publish:preflight": "node scripts/publish-preflight.mjs",
     "contracts:fixtures": "tsx scripts/validation/generateContractFixtures.ts",
     "playwright:install": "playwright install chromium",
     "demo:fodmapp:record": "tsx scripts/demo/recordFodmappDemo.ts",
