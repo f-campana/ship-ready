@@ -28,6 +28,7 @@ This ledger tracks what is closed, what remains blocked, and what must stay out 
 - Non-publishing publish preflight workflow added for pull requests and manual dispatch with read-only repository permissions.
 - `CHANGELOG.md` now contains experimental `0.1.0 - Unreleased` notes and explicit product limitations.
 - Trusted-publishing owner actions and stop gates are documented without adding an active publish job.
+- Validation-only `.github/workflows/publish.yml` is scaffolded with stable workflow identity and GitHub environment `npm-publish`; it cannot publish.
 
 ## Still blocking publish
 
@@ -37,7 +38,7 @@ This ledger tracks what is closed, what remains blocked, and what must stay out 
 - `@ship-ready` npm scope ownership is confirmed for `kobol909` by read-only npm verification.
 - Read-only npm verification confirms `kobol909` is authenticated and owns the `ship-ready` organization.
 - `package.json.name` is `@ship-ready/cli`; the package-name-transition packed-install smoke passes.
-- Trusted publishing is not wired as an active release workflow.
+- The actual trusted-publishing release job is not wired; the validation-only workflow has no publishing permission or publication command.
 - Published-package browser install guidance and rendered `pnpm dlx` behavior are not verified.
 - Post-publish smoke from the registry is not executable until publication is approved.
 - GitHub tag/release creation is not approved.
@@ -72,4 +73,4 @@ An `E404` package view is not ownership. An ImageForge ownership result is not `
 
 ## Recommendation
 
-Do not publish yet. The next safe pass is **trusted publish workflow scaffolding** with validation-only stop gates. Actual publish execution remains a later, separately approved pass.
+Do not publish yet. The next safe pass is a **publish execution plan**: a final checklist and proposed diff only. Actual publish execution remains later and requires explicit owner approval.

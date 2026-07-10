@@ -1,0 +1,72 @@
+name: Publish Release Gate
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm_no_publish:
+        description: Type NO_PUBLISH to run validation only
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  release-gate:
+    name: Release gate (validation only)
+    runs-on: ubuntu-latest
+    environment: npm-publish
+    steps:
+      - name: Confirm validation-only execution
+        env:
+          CONFIRM_NO_PUBLISH: ${{ inputs.confirm_no_publish }}
+        run: |
+          if [ "$CONFIRM_NO_PUBLISH" != "NO_PUBLISH" ]; then
+            echo "Set confirm_no_publish to NO_PUBLISH."
+            exit 1
+          fi
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Verify publish stop gates
+        run: pnpm publish:preflight
+
+      - name: Test
+        run: pnpm test
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Build
+        run: pnpm build
+
+      - name: Run package smoke
+        run: pnpm package:smoke
+
+      - name: Re-verify publish stop gates
+        run: pnpm publish:preflight
+
+      - name: Verify no tarball remains
+        run: |
+          if find . -maxdepth 3 -name "*.tgz" | grep -q .; then
+            find . -maxdepth 3 -name "*.tgz"
+            exit 1
+          fi
+
+      - name: Report validation-only result
+        run: echo "No package was published. This workflow is validation-only."

@@ -32,6 +32,7 @@ Distribution classification: **repository-local now; npm-ready direction documen
 - MIT license and public package metadata while `private: true` remains.
 - Package smoke script and package-smoke GitHub Actions workflow.
 - Non-publishing publish-preflight workflow with explicit metadata, workflow, and tarball stop gates.
+- Validation-only publish release gate using stable `publish.yml` / `npm-publish` identity; it cannot publish.
 - Package-root lookup readiness for `shipready`, `@ship-ready/cli`, and `@f-campana/shipready` with fail-closed runtime markers.
 - `0.1.0 - Unreleased` experimental preview changelog.
 - Public package safety review and publish runbook.
@@ -73,4 +74,4 @@ The public package safety review recommends keeping the guarded write command en
 
 ## Next pass
 
-**Trusted publish workflow scaffolding.** Keep it validation-only; actual npm publication remains a later, separately authorized pass.
+**Publish execution plan.** Prepare the final checklist and diff proposal only; do not publish unless the owner separately and explicitly authorizes execution.

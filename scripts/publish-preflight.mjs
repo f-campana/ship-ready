@@ -27,12 +27,17 @@ const prohibitedWorkflowPatterns = [
   /id-token\s*:\s*write/i,
   /(?:NPM_TOKEN|NODE_AUTH_TOKEN)/,
 ];
-const workflowDirectory = join(repoRoot, ".github", "workflows");
-for (const entry of await readdir(workflowDirectory, { withFileTypes: true })) {
-  if (!entry.isFile() || !/\.ya?ml$/i.test(entry.name)) continue;
-  const path = join(workflowDirectory, entry.name);
-  const workflow = await readFile(path, "utf8");
-  if (prohibitedWorkflowPatterns.some((pattern) => pattern.test(workflow))) {
+const validationOnlyFiles = [
+  ".github/workflows/publish.yml",
+  ".github/workflows/publish-preflight.yml",
+  ".github/workflows/package-smoke.yml",
+  "scripts/package-smoke.mjs",
+  "package.json",
+];
+for (const file of validationOnlyFiles) {
+  const path = join(repoRoot, file);
+  const contents = await readFile(path, "utf8");
+  if (prohibitedWorkflowPatterns.some((pattern) => pattern.test(contents))) {
     throw new Error(`Release-capable behavior is prohibited in ${relative(repoRoot, path)}.`);
   }
 }

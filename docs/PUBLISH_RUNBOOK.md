@@ -79,7 +79,24 @@ Preferred future approach:
 - Do not print secrets or registry credentials.
 - Do not publish from pull-request workflows.
 
-This pass intentionally adds no active publish job. `.github/workflows/publish-preflight.yml` and `.github/workflows/package-smoke.yml` validate readiness only, with read-only repository permissions and no trusted-publishing permission, release job, tag, upload, or registry credential.
+This pass adds `.github/workflows/publish.yml` as a validation-only release gate alongside `.github/workflows/publish-preflight.yml` and `.github/workflows/package-smoke.yml`. It uses the stable future workflow and environment identity but has read-only repository permissions and no trusted-publishing permission, release job, tag, upload, or registry credential. It cannot publish.
+
+## Exact trusted-publisher setup target
+
+Owner-side GitHub setup:
+
+1. Create the GitHub environment `npm-publish` in repository `f-campana/ship-ready`.
+2. Require owner review for that environment if practical.
+3. Do not add `NPM_TOKEN`; trusted publishing must not use a repository token secret.
+
+Owner-side npm setup for `@ship-ready/cli`:
+
+1. Configure a trusted publisher with provider **GitHub Actions**.
+2. Set repository to `f-campana/ship-ready`.
+3. Set workflow filename to `publish.yml`.
+4. Set environment to `npm-publish`.
+
+Completing this setup does not publish anything. The current `publish.yml` intentionally lacks `id-token: write` and any registry publication command, and `package.json` remains `private: true`. A later, explicitly approved publish execution pass must propose and review the release-job diff, add trusted-publishing permission only to that job, and remove `private: true` before publication can be possible.
 
 ## Owner actions outside this repository
 
@@ -87,7 +104,7 @@ The owner must complete and record these actions before any publish execution pl
 
 1. Reconfirm the authenticated npm identity and `@ship-ready` organization ownership immediately before any separately approved execution.
 2. Preserve `@f-campana/shipready` only as the documented fallback.
-3. Configure npm trusted publishing for `f-campana/ship-ready`, restricted to the exact future release workflow and protected environment.
+3. Configure npm trusted publishing for `@ship-ready/cli` using GitHub Actions, repository `f-campana/ship-ready`, workflow filename `publish.yml`, and environment `npm-publish`.
 4. Approve the exact package name, `0.1.0` version, MIT license, release timing, publish mechanism, and whether any GitHub tag/release is separately authorized.
 5. Separately approve removal of `private: true` only in a future execution commit; the package-name transition is already complete.
 
