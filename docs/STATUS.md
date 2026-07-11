@@ -74,4 +74,4 @@ The public package safety review recommends keeping the guarded write command en
 
 ## Next pass
 
-**Publish execution plan.** Prepare the final checklist and diff proposal only; do not publish unless the owner separately and explicitly authorizes execution.
+**Owner trusted-publisher setup.** Configure npm trusted publishing for `@ship-ready/cli` with GitHub Actions, repository `f-campana/ship-ready`, workflow `publish.yml`, and environment `npm-publish`, without changing the validation-only workflow. See [PUBLISH_EXECUTION_PLAN.md](PUBLISH_EXECUTION_PLAN.md). Only after setup is confirmed and exact owner approvals are recorded should a later pass become publish execution approval.

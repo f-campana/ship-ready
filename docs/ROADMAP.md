@@ -39,6 +39,7 @@ Order remains contractual for future work: harden CLI interfaces before wrapping
 | Publish readiness closure | Complete | Add blocker ledger, public package safety review, publish runbook, package smoke script, and package-smoke CI workflow without publishing. | Read-only/package/docs/CI | Package publish decision |
 | Publish preflight wiring | Complete | Harden package-root lookup for approved current/future identities, add non-publishing preflight gates, prepare unreleased notes, and document owner/trusted-publishing stop conditions. | Read-only/package/docs/CI | Publish readiness closure |
 | Trusted publish workflow scaffolding | Complete | Add stable `publish.yml` / `npm-publish` identity with validation-only checks, explicit stop gates, and owner setup documentation. The workflow cannot publish. | Read-only/package/docs/CI | Publish preflight wiring |
+| Publish execution plan | Complete | Document the exact future release diff, manual trusted-publishing gates, owner approvals, registry smoke, docs switch, stop conditions, and deprecation response without enabling publication. | Read-only/docs/tests | Trusted publish workflow scaffolding |
 
 ## TUI Feasibility Decision
 
@@ -64,7 +65,7 @@ Do not present v0 as hosted SaaS, production SaaS, fully automated SEO repair, d
 
 These candidates are future work only. None is implemented by the closed roadmap unless explicitly listed above.
 
-1. Publish execution plan: prepare the final checklist and diff proposal without publishing; execution still requires explicit owner approval naming the exact release.
+1. Owner trusted-publisher setup: configure the exact npm UI identity documented in [PUBLISH_EXECUTION_PLAN.md](PUBLISH_EXECUTION_PLAN.md) without changing the validation-only workflow. Only after setup confirmation and exact owner approvals should a later pass become publish execution approval.
 2. Manual TUI polish without dependencies, using the evaluation in [TUI_FRAMEWORK_EVALUATION.md](TUI_FRAMEWORK_EVALUATION.md).
 3. Standalone binary exploration, including Playwright/browser, GUI asset, MCP stdio, artifact, and signing implications.
 4. Live GitHub integration with explicit opt-in, GitHub auth/token design, Git worktree safety checks, and mutation tests.

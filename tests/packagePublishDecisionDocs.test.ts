@@ -79,7 +79,7 @@ describe("package publish decision documentation", () => {
     expect(readme).not.toContain("pnpm dlx shipready audit");
   });
 
-  it("keeps status pointed at the publish execution plan", () => {
-    expect(createStatus().nextRecommendedPass).toBe("publish execution plan");
+  it("keeps status pointed at owner trusted-publisher setup", () => {
+    expect(createStatus().nextRecommendedPass).toBe("owner trusted-publisher setup");
   });
 });
